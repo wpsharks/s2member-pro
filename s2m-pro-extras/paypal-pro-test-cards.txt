@@ -1,0 +1,13 @@
+--------- Test card numbers ---------
+	Visa:
+		4957535575048640
+	Exp Date:
+		12/2029
+
+* All test cards require PayPal® Sandbox integration:
+http://www.s2member.com/paypal-developers
+
+* s2Member must be configured for PayPal® Sandbox Mode.
+In your Dashboard, see: `s2Member -> PayPal® Options`.
+
+* Only works w/ PayPal® Pro ( via s2Member Pro Forms ).
