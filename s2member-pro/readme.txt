@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 10000
-Stable tag: 10000
+Version: 130207
+Stable tag: 130207
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -16,7 +16,7 @@ Authorize.Net® Compatible: yes
 Google® Checkout Compatible: yes
 ClickBank® Compatible: yes
 
-Tested up to: 3.6
+Tested up to: 3.6-alpha
 Requires at least: 3.2
 Requires: s2Member® Framework
 
@@ -81,10 +81,18 @@ Please see [this FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
 
 == Upgrade Notice ==
 
-= v130203 =
-New release. Please see changelog for important details.
+= v130207 =
+(Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v130207 =
+* **(Maintenance Release) Upgrade immediately.**
+* (s2Member Pro) **Bug Fix (Issue #2)** Modification Tracking Codes not working properly under s2Member's Authorize.Net integration. Fixed in this release. Discussed in [this thread](http://www.s2member.com/forums/topic/shareasale-integration-not-working/#post-40954).
+* (s2Member) **Compatibility (Issue #4)** PayPal® integrated into a site charging in the JPY currency was incorrectly limited to an amount of 10000.00. Fixed in this release. Discussed in [this thread](http://www.s2member.com/forums/topic/default-currency-can-i-change-it-to-yen/#post-40590).
+* (s2Member) **Compatibility (Issue #5)** Incorrect `tabindex` values in WordPress® v3.5+. Fixed in this release. Discussed in [this thread](http://www.s2member.com/forums/topic/tabindex-messed-up-on-registration-page/#post-40591).
+* (s2Member/s2Member Pro) **Line Breaks (Issue #3)** Some line breaks in both s2Member® and s2Member® Pro were converted to CRLF inadvertently in the previous release. No real harm done, but this was causing some problems for the s2Member® Server Scanner because it uses a checksum against installation files; which was being thrown off balance due to the unexpected line break style. Fixed in this release. A symptom of this bug was to see invalid checksums when running diagnostics with the s2Member® Server Scanner.
+* (s2Member/s2Member Pro) **Compatibility (Issue #6)** s2Member® File Downloads (audio/video files) with spaces in a file name were not always being handled properly. Fixed in this release. Discussed in [this thread](http://www.s2member.com/forums/topic/jwplayer-filename-bug/#post-40799).
 
 = v130203 =
 * **(New Release) Please read this changelog for important details.**
