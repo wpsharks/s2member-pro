@@ -291,6 +291,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal);
 																			}
 																		/**/
+																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
+																		/**/
 																		$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 																		/**/
 																		if($post_vars["attr"]["success"] && substr($ipn["s2member_paypal_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_paypal_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
@@ -611,8 +613,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																					c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal);
 																				}
 																		/**/
-																		if($is_independent_ccaps_sale) /* Independent? */
-																			setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
+																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 																		/**/
 																		$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 																		/**/
