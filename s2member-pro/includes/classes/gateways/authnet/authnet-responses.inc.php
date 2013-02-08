@@ -438,20 +438,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(!preg_match("/[DWMYL]/", $attr["rt"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt" attribute. The Regular Term. Must be one of D,W,M,Y,L.', "s2member-admin", "s2member"), "error" => true);
 										/**/
-										else if($attr["rt"] === "D" && $attr["rp"] > 365 && $attr["rr"] !== "BN")
-											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "D", "rp" ( Regular Period ) > 365, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
 										else if($attr["rt"] === "D" && $attr["rp"] < 7 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "D", "rp" ( Regular Period ) is < 7, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
+										/**/
+										else if($attr["rt"] === "D" && $attr["rp"] > 365 && $attr["rr"] !== "BN")
+											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "D", "rp" ( Regular Period ) > 365, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
 										/**/
 										else if($attr["rt"] === "W" && $attr["rp"] > 52 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "W", "rp" ( Regular Period ) > 52, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
 										/**/
 										else if($attr["rt"] === "M" && $attr["rp"] > 12 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "M", "rp" ( Regular Period ) > 12, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
-										else if($attr["rt"] === "Y" && $attr["rp"] > 5 && $attr["rr"] !== "BN")
-											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "Y", "rp" ( Regular Period ) > 5, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
 										/**/
 										else if($attr["rt"] === "Y" && $attr["rp"] > 1 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "Y", "rp" ( Regular Period ) > 1, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
