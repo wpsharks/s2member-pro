@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 	{
 		/**
@@ -74,7 +74,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				public static function full_state ($state = FALSE, $country = FALSE)
 					{
 						static $lines; /* Optimizes this routine for repeated usage. */
-						/**/
+
 						if (strlen ($state = strtoupper ($state)) === 2 && preg_match ("/^US|CA$/", ($country = strtoupper ($country))))
 							{
 								if (!isset ($lines[$country])) /* If $lines are NOT already established. */
@@ -87,12 +87,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 											{
 												$txt = file_get_contents (dirname (dirname (__FILE__)) . "/ca-provinces.txt");
 											}
-										/**/
+
 										$lines[$country] = preg_split ("/[\r\n\t]+/", trim (strtoupper ($txt)));
 									}
-								/**/
+
 								foreach ($lines[$country] as $line) /* Find full version. */
-									/**/
+
 									if ($line = trim ($line)) /* Do NOT process empty lines. */
 										{
 											list ($full, $abbr) = preg_split ("/;/", trim ($line));
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 												return ucwords ($full);
 										}
 							}
-						/**/
+
 						return $state; /* Full state name. */
 					}
 			}

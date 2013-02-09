@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 	{
 		/**
@@ -73,10 +73,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				public static function paypal_button_after_attrs ($vars = FALSE)
 					{
 						$attr = &$vars["__refs"]["attr"]; /* By reference. */
-						/**/
+
 						$attr["success"] = str_ireplace (array ("&#038;", "&amp;"), "&", $attr["success"]);
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Handles Success Return URL for PayPal® Button Shortcodes.
@@ -93,10 +93,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				public static function paypal_button_success_return_url ($success_return_url = FALSE, $vars = FALSE)
 					{
 						$attr = $vars["attr"]; /* Shortcode Attributes. */
-						/**/
+
 						if ($attr["success"]) /* Using a custom success return URL? */
 							return ($success_return_url = add_query_arg ("s2member_paypal_return_success", rawurlencode ($attr["success"]), $success_return_url));
-						/**/
+
 						else /* Else default. */
 							return $success_return_url;
 					}

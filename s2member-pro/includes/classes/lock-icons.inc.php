@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons"))
 	{
 		/**
@@ -56,20 +56,20 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons"))
 				public static function configure_lock_icons ()
 					{
 						global $wp_post_types, $wp_taxonomies; /* Global references. */
-						/**/
+
 						do_action ("ws_plugin__s2member_pro_before_configure_lock_icons", get_defined_vars ());
-						/**/
+
 						add_action ("admin_head", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_echo_css");
-						/**/
+
 						add_filter ("manage_edit-post_tag_columns", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_return_column", 11, 1);
 						add_filter ("manage_post_tag_custom_column", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_return_value_tags", 11, 3);
-						/**/
+
 						add_filter ("manage_edit-category_columns", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_return_column", 11, 1);
 						add_filter ("manage_category_custom_column", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_return_value_categories", 11, 3);
-						/**/
+
 						add_filter ("manage_page_posts_columns", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_return_column", 11, 1);
 						add_action ("manage_page_posts_custom_column", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_echo_value_pages", 11, 2);
-						/**/
+
 						if (is_array ($wp_post_types) && !empty ($wp_post_types)) /* All; including Custom Post Types; excluding Pages. */
 							foreach (array_keys ($wp_post_types) as $type)
 								{
@@ -79,10 +79,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons"))
 											add_action ("manage_" . $type . "_posts_custom_column", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_echo_value_post_types", 11, 2);
 										}
 								}
-						/**/
+
 						do_action ("ws_plugin__s2member_pro_after_configure_lock_icons", get_defined_vars ());
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

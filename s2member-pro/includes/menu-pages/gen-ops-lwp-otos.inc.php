@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos"))
 	{
 		/**
@@ -46,25 +46,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos"))
 				public function __construct ()
 					{
 						echo '<div class="ws-menu-page-group" title="One-Time-Offers ( Upon Login )">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-one-time-offers-section">' . "\n";
 						echo '<h3>Optional One-Time-Offers ( Upon Login )</h3>' . "\n";
 						echo '<p>This is enabled by s2Member Pro. One-Time-Offers allow you to override your default Login Welcome Page, based on the number of times a User/Member has logged in previously. s2Member Pro gives you the ability to write your own configuration file for One-Time-Offers. Please follow the instructions below. It is also possible for advanced site owners to use these <a href="#" onclick="alert(\'Replacement Codes:\\n\\n%%current_user_login%% = The current User\\\'s Username, lowercase.\\n%%current_user_id%% = The current User\\\'s ID.\\n%%current_user_level%% = The current User\\\'s s2Member Level.\\n%%current_user_role%% = The current User\\\'s WordPress® Role.' . ((!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '\\n%%current_user_ccaps%% = The current User\\\'s Custom Capabilities.' : '') . '\\n%%current_user_logins%% = Number of times the current User has logged in.\\n\\nFor example, if you\\\'re using BuddyPress, and you want to redirect Members to their BuddyPress Profile page after logging in, you would use: ' . site_url ("/members/%%current_user_login%%/profile/") . '\\n\\nOr, using %%current_user_level%%, you could have a separate One-Time-Offer page for each Membership Level that you plan to offer.\'); return false;">Replacement Codes</a> in their One-Time-Offer URLs.</p>' . "\n";
 						echo (c_ws_plugin__s2member_utils_conds::bp_is_installed ()) ? '<p><em><strong>BuddyPress:</strong> s2Member integrates with BuddyPress. This configuration affects BuddyPress too.</em></p>' . "\n" : '';
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-login-welcome-page-otos">' . "\n";
 						echo 'One-Time-Offer Configuration File:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<textarea name="ws_plugin__s2member_pro_login_welcome_page_otos" id="ws-plugin--s2member-pro-login-welcome-page-otos" rows="8" wrap="off" spellcheck="false">' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_login_welcome_page_otos"]) . '</textarea><br />' . "\n";
 						echo 'This is a line-delimited list of URLs <em>( in a special format, as seen below )</em>.<br /><br />' . "\n";
@@ -79,16 +79,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos"))
 						echo '<code>3:1:http://example.com/upgrade-to-level-2/</code> <em>( displayed on 3rd login, to Level #1 Members only )</em><br />' . "\n";
 						echo '<code>1:0:http://example.com/upgrade-to-level-1/</code> <em>( displayed on 1st login, to Free Subscribers only )</em>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos ();
 ?>

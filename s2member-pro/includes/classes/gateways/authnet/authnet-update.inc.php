@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_update"))
 	{
 		/**
@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_update"))
 				*/
 				public static function authnet_update ()
 					{
-						if (!empty ($_POST["s2member_pro_authnet_update"])) /* Call inner routine? */
+						if (!empty ($_POST["s2member_pro_authnet_update"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_update_in::authnet_update ();
 							}

@@ -89,30 +89,30 @@ if(!function_exists("ws_plugin__s2member_pro_default_options"))
 		function ws_plugin__s2member_pro_default_options($default_options = array())
 			{
 				$pro_default_options = array( /* Defaults for the Pro Module. */
-				/**/
-				"pro_signup_email_recipients" => '"%%full_name%%" <%%payer_email%%>',/**/
-				"pro_signup_email_subject" => _x("Congratulations! ( your membership has been approved )", "s2member-front", "s2member"),/**/
-				"pro_signup_email_message" => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: $%%%%initial%%%%\nRecurring charges: $%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),/**/
-				/**/
-				"pro_sp_email_recipients" => '"%%full_name%%" <%%payer_email%%>',/**/
-				"pro_sp_email_subject" => _x("Thank You! ( instructions for access )", "s2member-front", "s2member"),/**/
-				"pro_sp_email_message" => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: $%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),/**/
-				/**/
-				"pro_coupon_codes" => "", /* There are NO Coupon Codes by default. */ "pro_default_tax" => "0.0%", "pro_tax_rates" => "",/**/
+
+				"pro_signup_email_recipients" => '"%%full_name%%" <%%payer_email%%>',
+				"pro_signup_email_subject" => _x("Congratulations! ( your membership has been approved )", "s2member-front", "s2member"),
+				"pro_signup_email_message" => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: $%%%%initial%%%%\nRecurring charges: $%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),
+
+				"pro_sp_email_recipients" => '"%%full_name%%" <%%payer_email%%>',
+				"pro_sp_email_subject" => _x("Thank You! ( instructions for access )", "s2member-front", "s2member"),
+				"pro_sp_email_message" => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: $%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),
+
+				"pro_coupon_codes" => "", /* There are NO Coupon Codes by default. */ "pro_default_tax" => "0.0%", "pro_tax_rates" => "",
 				"pro_affiliate_coupon_code_tracking_urls" => "", /* A line-delimited list of Coupon Code tracking URLs. */
 				"pro_affiliate_coupon_code_suffix_chars" => "-A:", /* Chars indicating an Affiliate Coupon Code suffix. */
 				"pro_login_welcome_page_otos" => "", /* A line-delimited list of Login Welcome Page offers. */
-				/**/
+
 				"pro_gateways_enabled" => array("paypal"), /* Defaults to PayPal® Pro. */
-				"pro_paypal_checkout_rdp" => "0", "pro_paypal_return_template_header" => "",/**/
-				"pro_alipay_seller_email" => "", "pro_alipay_partner_id" => "", "pro_alipay_security_code" => "", "pro_alipay_return_template_header" => "",/**/
-				"pro_authnet_api_login_id" => "", "pro_authnet_api_trans_key" => "", "pro_authnet_api_salt_key" => "", "pro_authnet_sandbox" => "0",/**/
-				"pro_ccbill_client_id" => "", "pro_ccbill_client_sid" => "0000", "pro_ccbill_form_name" => "", "pro_ccbill_dl_user" => "", "pro_ccbill_dl_pass" => "", "pro_ccbill_dl_cancellations" => "0", "pro_ccbill_salt_key" => "", "pro_ccbill_return_template_header" => "",/**/
-				"pro_clickbank_username" => "", "pro_clickbank_clerk_key" => "", "pro_clickbank_developer_key" => "", "pro_clickbank_secret_key" => "", "pro_clickbank_return_template_header" => "",/**/
-				"pro_google_merchant_id" => "", "pro_google_merchant_key" => "", "pro_google_sandbox" => "0",/**/
-				/**/
+				"pro_paypal_checkout_rdp" => "0", "pro_paypal_return_template_header" => "",
+				"pro_alipay_seller_email" => "", "pro_alipay_partner_id" => "", "pro_alipay_security_code" => "", "pro_alipay_return_template_header" => "",
+				"pro_authnet_api_login_id" => "", "pro_authnet_api_trans_key" => "", "pro_authnet_api_salt_key" => "", "pro_authnet_sandbox" => "0",
+				"pro_ccbill_client_id" => "", "pro_ccbill_client_sid" => "0000", "pro_ccbill_form_name" => "", "pro_ccbill_dl_user" => "", "pro_ccbill_dl_pass" => "", "pro_ccbill_dl_cancellations" => "0", "pro_ccbill_salt_key" => "", "pro_ccbill_return_template_header" => "",
+				"pro_clickbank_username" => "", "pro_clickbank_clerk_key" => "", "pro_clickbank_developer_key" => "", "pro_clickbank_secret_key" => "", "pro_clickbank_return_template_header" => "",
+				"pro_google_merchant_id" => "", "pro_google_merchant_key" => "", "pro_google_sandbox" => "0",
+
 				"pro_recaptcha_public_key" => "", "pro_recaptcha_private_key" => "");
-				/**/
+
 				return array_merge($default_options, $pro_default_options);
 			}
 	}
@@ -154,64 +154,64 @@ if(!function_exists("ws_plugin__s2member_pro_options_before_checksum"))
 				*/
 				if(isset($options["pro_other_gateways_enabled"]) && is_array($options["pro_other_gateways_enabled"]))
 					$options["pro_gateways_enabled"] = array_unique(array_merge($options["pro_other_gateways_enabled"], $pro_default_options["pro_gateways_enabled"]));
-				/**/
+
 				foreach($options /* $GLOBALS["WS_PLUGIN__"]["s2member"]["o"] */ as $key => &$value)
 					{
 						if(isset($pro_default_options[$key]) || preg_match("/^pro_/", $key))
 							{
 								if(!isset($pro_default_options[$key]))
 									unset($GLOBALS["WS_PLUGIN__"]["s2member"]["o"][$key]);
-								/**/
+
 								else if(preg_match("/^pro_(?:signup|sp)_email_recipients$/", $key) && !is_string($value))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_(?:signup|sp)_email_(?:subject|message)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_(?:coupon_codes|affiliate_coupon_code_(?:tracking_urls|suffix_chars))$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_default_tax" && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_tax_rates" && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_login_welcome_page_otos" && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_gateways_enabled" && !is_array($value))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_paypal_checkout_rdp" && (!is_string($value) || !is_numeric($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if($key === "pro_paypal_return_template_header" && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_alipay_(?:seller_email|partner_id|security_code|return_template_header)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_authnet_(?:api_login_id|api_trans_key|api_salt_key)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_ccbill_(?:client_id|client_sid|form_name|dl_user|dl_pass|dl_cancellations|salt_key|return_template_header)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_clickbank_(?:username|clerk_key|developer_key|secret_key|return_template_header)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_google_(?:merchant_id|merchant_key)$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_(?:google|authnet)_sandbox$/", $key) && (!is_string($value) || !is_numeric($value)))
 									$value = $pro_default_options[$key];
-								/**/
+
 								else if(preg_match("/^pro_recaptcha_(?:public|private)_key$/", $key) && (!is_string($value) || !strlen($value)))
 									$value = $pro_default_options[$key];
 							}
 					}
-				/**/
+
 				return $options; /* $GLOBALS["WS_PLUGIN__"]["s2member"]["o"] by reference. */
 			}
 	}

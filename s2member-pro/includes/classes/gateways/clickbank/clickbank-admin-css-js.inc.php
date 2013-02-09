@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_admin_css_js"))
 	{
 		/**
@@ -58,8 +58,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_admin_css_js"))
 					{
 						echo "\n"; /* Add a line break before inclusion of this file. */
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/clickbank-menu-pages-s-min.js";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

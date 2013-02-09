@@ -40,33 +40,33 @@ add_action("init", "c_ws_plugin__s2member_pro_paypal_checkout::paypal_checkout")
 add_action("init", "c_ws_plugin__s2member_pro_paypal_sp_checkout::paypal_sp_checkout");
 add_action("init", "c_ws_plugin__s2member_pro_paypal_registration::paypal_registration");
 add_action("init", "c_ws_plugin__s2member_pro_paypal_cancellation::paypal_cancellation");
-/**/
+
 add_filter("ws_plugin__s2member_during_constants_c", "c_ws_plugin__s2member_pro_paypal_constants::paypal_constants", 10, 2);
-/**/
+
 add_action("ws_plugin__s2member_after_auto_eot_system", "c_ws_plugin__s2member_pro_paypal_payflow_poll::payflow_service");
-/**/
+
 add_action("wp_ajax_ws_plugin__s2member_pro_paypal_ajax_tax", "c_ws_plugin__s2member_pro_paypal_utilities::paypal_ajax_tax");
 add_action("wp_ajax_nopriv_ws_plugin__s2member_pro_paypal_ajax_tax", "c_ws_plugin__s2member_pro_paypal_utilities::paypal_ajax_tax");
-/**/
+
 add_action("ws_plugin__s2member_during_css", "c_ws_plugin__s2member_pro_paypal_css_js::paypal_css");
 add_action("ws_plugin__s2member_during_js_w_globals", "c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_w_globals");
 add_action("ws_plugin__s2member_during_menu_pages_js", "c_ws_plugin__s2member_pro_paypal_admin_css_js::paypal_menu_pages_js");
-/**/
+
 add_filter("ws_plugin__s2member_during_add_admin_options_add_paypal_buttons_page", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_admin_options", 10, 2);
-/**/
+
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_account_details", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_details");
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_account_detail_rows", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_detail_rows");
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_account_details_after_sandbox_tip", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_sandbox_tip");
-/**/
+
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_ipn_after_quick_tip", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_ipn_tip");
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_pdt_after_quick_tip", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_pdt_tip");
-/**/
+
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_after_signup_confirmation_email", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_signup_email");
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_after_sp_confirmation_email", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_sp_email");
 add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_after_sp_confirmation_email", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_ops_page_tax_rates");
-/**/
+
 add_action("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_scripting_page_api_constants");
 add_action("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_scripting_page_api_constants");
-/**/
+
 add_filter("ws_plugin__s2member_check_force_ssl", "c_ws_plugin__s2member_pro_paypal_ssl::sc_paypal_form_auto_force_ssl", 10, 2);
 ?>

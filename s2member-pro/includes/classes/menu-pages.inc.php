@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 	{
 		/**
@@ -62,7 +62,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 							{
 								$plugin_meta[0] .= ' + <strong>s2Member Pro v' . esc_html (WS_PLUGIN__S2MEMBER_PRO_VERSION) . '</strong>';
 							}
-						/**/
+
 						return $plugin_meta; /* Now return all plugin meta; imploded by WordPress®. */
 					}
 				/**
@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function add_coupon_codes_page ($add_divider = TRUE, $vars = FALSE)
 					{
 						add_submenu_page ($vars["menu"], "s2Member Pro / Coupon Codes", "Pro Coupon Codes", "create_users", "ws-plugin--s2member-pro-coupon-codes", "c_ws_plugin__s2member_pro_menu_pages::coupon_codes_page");
-						/**/
+
 						return $add_divider; /* Now add the divider. */
 					}
 				/**
@@ -99,7 +99,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro ( User Import/Export )", "Import / Export", "create_users", "ws-plugin--s2member-pro-import-export", "c_ws_plugin__s2member_pro_menu_pages::import_export_page");
-						/**/
+
 						return $add_divider; /* Now add the divider. */
 					}
 				/**
@@ -118,7 +118,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro / Other Payment Gateways", "Other Gateways", "create_users", "ws-plugin--s2member-pro-other-gateways", "c_ws_plugin__s2member_pro_menu_pages::other_gateways_page");
-						/**/
+
 						return $add_divider; /* Now add the divider. */
 					}
 				/**
@@ -137,8 +137,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							add_submenu_page ($vars["menu"], "s2Member Pro Information", "s2Member Pro Info", "create_users", "ws-plugin--s2member-pro-info", "c_ws_plugin__s2member_pro_menu_pages::info_page");
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Add options for Login Welcome Page / One-Time-Offers.
@@ -154,8 +154,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function gen_ops_lwp_otos ($vars = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/gen-ops-lwp-otos.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Add options for captcha anti-spam preferences.
@@ -171,8 +171,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function gen_ops_captcha_ops ($vars = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/gen-ops-captcha-ops.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Add instructions to configure Membership Levels.
@@ -189,8 +189,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							include_once dirname (dirname (__FILE__)) . "/menu-pages/unlimited-level-instructions.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the documentation for the Remote Operations API.
@@ -206,7 +206,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function scripting_page_remote_ops_api ($display_api_hooks = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/scripting-api-remote-ops.inc.php";
-						/**/
+
 						return $display_api_hooks; /* Now display API Hooks. */
 					}
 				/**
@@ -223,7 +223,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function scripting_page_login_widget_api ($display_api_hooks = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/scripting-api-login-widget.inc.php";
-						/**/
+
 						return $display_api_hooks; /* Now display API Hooks. */
 					}
 				/**
@@ -240,8 +240,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function scripting_page_api_constants ($vars = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/scripting-api-constants.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds documentation for additional Shortcode Attributes integrated w/ PayPal® Buttons.
@@ -257,8 +257,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function paypal_button_attrs ($vars = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/paypal-button-attrs.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds options to customize the PayPal® Return-Page template.
@@ -274,8 +274,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function paypal_return_template ($vars = FALSE)
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/paypal-ops-return-template.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the other Payment Gateways page.
@@ -288,10 +288,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function other_gateways_page ()
 					{
 						c_ws_plugin__s2member_menu_pages::update_all_options (false, false, true, true, false, true);
-						/**/
+
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/other-gateways.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the User Import / Export page.
@@ -304,10 +304,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function import_export_page ()
 					{
 						c_ws_plugin__s2member_pro_imports::import (); /* Handles imports. */
-						/**/
+
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/import-export.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the Coupon Codes page.
@@ -320,10 +320,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function coupon_codes_page ()
 					{
 						c_ws_plugin__s2member_menu_pages::update_all_options (); /* Updates options. */
-						/**/
+
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/coupon-codes.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the s2Member Pro Info page.
@@ -336,8 +336,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function info_page ()
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/info.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

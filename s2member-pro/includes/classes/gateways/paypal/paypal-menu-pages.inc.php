@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 	{
 		/**
@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_admin_options ($add_paypal_buttons_page = TRUE, $vars = FALSE)
 					{
 						add_submenu_page ($vars["menu"], "s2Member Pro / PayPal® Pro Forms", "PayPal® Pro-Forms", "create_users", "ws-plugin--s2member-pro-paypal-forms", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_forms_page");
-						/**/
+
 						return $add_paypal_buttons_page; /* Now add the PayPal® Buttons. */
 					}
 				/**
@@ -75,8 +75,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_details ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-details.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds PayPal® Pro option detail rows into s2Member.
@@ -92,8 +92,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_detail_rows ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-detail-rows.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds PayPal® Pro Sandbox tip into s2Member.
@@ -109,8 +109,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_sandbox_tip ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-sandbox-tip.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds PayPal® Pro IPN tip into s2Member.
@@ -126,8 +126,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_ipn_tip ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-ipn-tip.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds PayPal® Pro PDT tip into s2Member.
@@ -143,8 +143,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_pdt_tip ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-pdt-tip.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the PayPal® Pro Signup Confirmation Email into s2Member.
@@ -160,8 +160,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_signup_email ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-signup-email.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the PayPal® Pro Specific Post/Page Confirmation Email into s2Member.
@@ -177,8 +177,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_sp_email ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-sp-email.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the PayPal® Pro Tax Configuration into s2Member.
@@ -194,8 +194,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_ops_page_tax_rates ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-ops-tax-rates.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the documentation for Scripting / API Constants related to this Payment Gateway.
@@ -211,8 +211,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_scripting_page_api_constants ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-s-api-c.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the Pro Forms page for this Payment Gateway.
@@ -226,10 +226,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 					{
 						if (c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors ()) /* Report error if PayPal® Options are not yet configured. */
 							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -> PayPal® Options</code> first. Once all of your PayPal® Options are configured; including your Email Address, API Username, Password, and Signature; return to this page &amp; generate your PayPal® Pro Form(s).<br /><br />*NOTE: If you\'re ONLY planning to use Free Registration Forms (e.g. you\'re NOT going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.', true);
-						/**/
+
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-forms.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

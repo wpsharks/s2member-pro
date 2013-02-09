@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_cancellation"))
 	{
 		/**
@@ -55,11 +55,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_cancellation"))
 				*/
 				public static function paypal_cancellation ()
 					{
-						if (!empty ($_POST["s2member_pro_paypal_cancellation"])) /* Call inner routine? */
+						if (!empty ($_POST["s2member_pro_paypal_cancellation"]))
 							{
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 									return c_ws_plugin__s2member_pro_paypal_cancellation_pf_in::paypal_cancellation();
-								/**/
+
 								return c_ws_plugin__s2member_pro_paypal_cancellation_in::paypal_cancellation ();
 							}
 					}

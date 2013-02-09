@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 	{
 		/**
@@ -58,13 +58,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				public static function ccbill_link_gen ($vars = FALSE)
 					{
 						$gateway = "https://bill.ccbill.com/jpost/signup.cgi";
-						/**/
+
 						$digest_vars = $vars["formPrice"] . $vars["formPeriod"]; /* These are always required. */
 						$digest_vars .= $vars["formRecurringPrice"] . $vars["formRecurringPeriod"] . $vars["formRebills"];
 						$digest_vars .= $vars["currencyCode"]; /* Add the currency code to this too ( always req ). */
-						/**/
+
 						$vars["formDigest"] = md5 ($digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]);
-						/**/
+
 						return add_query_arg (urlencode_deep ($vars), $gateway); /* ccBill® link. */
 					}
 				/**
@@ -79,9 +79,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				public static function ccbill_currency_numr ($currency_code = FALSE)
 					{
 						$currency_code = strtoupper ($currency_code); /* Force uppercase. */
-						/**/
+
 						$currencies = array ("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
-						/**/
+
 						return (!empty ($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
 					}
 				/**
@@ -96,7 +96,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				public static function ccbill_currency_code ($currency_numr = FALSE)
 					{
 						$currencies = array ("840" => "USD", "978" => "EUR", "036" => "AUD", "124" => "CAD", "826" => "GBP", "392" => "JPY");
-						/**/
+
 						return (!empty ($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
 					}
 				/**
@@ -118,7 +118,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 								$days = ($term === "M") ? 30 : $days;
 								$days = ($term === "Y") ? 365 : $days;
 								$days = ($term === "L") ? 365 : $days;
-								/**/
+
 								return (int)$period * (int)$days;
 							}
 						else
@@ -141,20 +141,20 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 						if ((isset ($_REQUEST["s2member_pro_ccbill_return"]) && strlen ($_REQUEST["s2member_pro_ccbill_return"])) || (isset ($_REQUEST["s2member_pro_ccbill_notify"]) && strlen ($_REQUEST["s2member_pro_ccbill_notify"])))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_REQUEST));
-								/**/
+
 								foreach ($postvars as $var => $value)
 									if (preg_match ("/^s2member_/", $var))
 										unset ($postvars[$var]);
-								/**/
+
 								$denial_digest_vars = $postvars["denialId"] . "0";
 								$approval_digest_vars = $postvars["subscription_id"] . "1";
-								/**/
+
 								if ($postvars["responseDigest"] === md5 ($approval_digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]))
 									return $postvars;
-								/**/
+
 								else if ($postvars["responseDigest"] === md5 ($denial_digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]))
 									return $postvars;
-								/**/
+
 								else /* Nope. */
 									return false;
 							}

@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 	{
 		/**
@@ -59,14 +59,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 							{
 								$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"] = array (); /* This holds the global response details. */
 								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"]; /* This is a shorter reference. */
-								/**/
+
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_paypal_update"]));
 								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); /* And run a Filter. */
 								$post_vars["attr"] = apply_filters ("ws_plugin__s2member_pro_paypal_update_post_attr", $post_vars["attr"], get_defined_vars ());
-								/**/
+
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim (stripslashes ($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
 								$post_vars["recaptcha_response_field"] = (!$post_vars["recaptcha_response_field"]) ? trim (stripslashes ($_POST["recaptcha_response_field"])) : $post_vars["recaptcha_response_field"];
-								/**/
+
 								if (!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors ($post_vars["attr"])) /* Must NOT have any attr errors. */
 									{
 										if (!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors ("update", $post_vars)))
@@ -82,35 +82,35 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 																if (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($paypal)) && empty ($paypal["__error"]) && strlen ($paypal["ACCT"]) === 4 && preg_match ("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 																	{
 																		$paypal = array (); /* Reset the PayPal® array. */
-																		/**/
+
 																		$paypal["METHOD"] = "UpdateRecurringPaymentsProfile";
 																		$paypal["PROFILEID"] = $cur__subscr_id;
-																		/**/
+
 																		$paypal["EMAIL"] = $user->user_email;
 																		$paypal["FIRSTNAME"] = $user->first_name;
 																		$paypal["LASTNAME"] = $user->last_name;
-																		/**/
+
 																		$paypal["CREDITCARDTYPE"] = $post_vars["card_type"];
 																		$paypal["ACCT"] = preg_replace ("/[^0-9]/", "", $post_vars["card_number"]);
 																		$paypal["EXPDATE"] = preg_replace ("/[^0-9]/", "", $post_vars["card_expiration"]);
 																		$paypal["CVV2"] = $post_vars["card_verification"];
-																		/**/
+
 																		if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
 																			if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																				$paypal["STARTDATE"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																			else /* Otherwise, we assume they provided an issue number instead. */
 																				$paypal["ISSUENUMBER"] = $post_vars["card_start_date_issue_number"];
-																		/**/
+
 																		$paypal["STREET"] = $post_vars["street"];
 																		$paypal["CITY"] = $post_vars["city"];
 																		$paypal["STATE"] = $post_vars["state"];
 																		$paypal["COUNTRYCODE"] = $post_vars["country"];
 																		$paypal["ZIP"] = $post_vars["zip"];
-																		/**/
+
 																		if (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($paypal)) && empty ($paypal["__error"]))
 																			{
 																				$global_response = array ("response" => _x ('<strong>Confirmed.</strong> Your billing information has been updated.', "s2member-front", "s2member"));
-																				/**/
+
 																				if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																					wp_redirect (c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																			}

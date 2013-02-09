@@ -32,7 +32,7 @@
 */
 if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 	{
 		/**
@@ -55,7 +55,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 					{
 						$req["headers"]["Accept"] = "application/json";
 						$req["headers"]["Authorization"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_developer_key"].":".$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_clerk_key"];
-						/**/
+
 						return $req; /* Return array with headers.*/
 					}
 				/**
@@ -74,48 +74,48 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 						if(!empty($_REQUEST["s2member_pro_clickbank_return"]) && !empty($_REQUEST["cbpop"]))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
-								/**/
+
 								foreach($postvars as $var => $value)
 									if(preg_match("/^s2member_/", $var))
 										unset($postvars[$var]);
-								/**/
+
 								$cbpop = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_secret_key"];
 								$cbpop .= "|".$postvars["cbreceipt"]."|".$postvars["time"]."|".$postvars["item"];
-								/**/
+
 								$mb = function_exists("mb_convert_encoding") ? @mb_convert_encoding($cbpop, "UTF-8", $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["mb_detection_order"]) : $cbpop;
 								$cbpop = ($mb) ? $mb : $cbpop; /* Double check this, just in case conversion fails. */
 								$cbpop = strtoupper(substr(sha1($cbpop), 0, 8));
-								/**/
+
 								if($postvars["cbpop"] === $cbpop)
 									return $postvars;
-								/**/
+
 								else /* Nope. */
 									return false;
 							}
 						else if(!empty($_REQUEST["s2member_pro_clickbank_notify"]) && !empty($_REQUEST["cverify"]))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
-								/**/
+
 								foreach($postvars as $var => $value)
 									if(preg_match("/^s2member_/", $var))
 										unset($postvars[$var]);
-								/**/
+
 								$cverify = ""; /* Initialize verification. */
-								/**/
+
 								($keys = array_keys($postvars)).sort($keys);
 								foreach($keys as $key) /* Go through keys. */
 									if($key && !preg_match("/^(cverify)$/", $key))
 										$cverify .= $postvars[$key]."|";
-								/**/
+
 								$cverify .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_secret_key"];
-								/**/
+
 								$mb = function_exists("mb_convert_encoding") ? @mb_convert_encoding($cverify, "UTF-8", $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["mb_detection_order"]) : $cverify;
 								$cverify = ($mb) ? $mb : $cverify; /* Double check this, just in case conversion fails. */
 								$cverify = strtoupper(substr(sha1($cverify), 0, 8));
-								/**/
+
 								if($postvars["cverify"] === $cverify)
 									return $postvars;
-								/**/
+
 								else /* Nope. */
 									return false;
 							}
@@ -137,15 +137,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 					{
 						wp_parse_str((string)$cvendthru, $s2vars);
 						$s2vars = c_ws_plugin__s2member_utils_strings::trim_deep($s2vars);
-						/**/
+
 						foreach($s2vars as $var => $value /* Pulls out `s2_|_s2member_sig` vars. */)
 							if(!preg_match("/^(?:s2_|_s2member_sig)/", $var))
 								unset($s2vars[$var]);
-						/**/
+
 						$is_sale = preg_match("/^(?:TEST_)?SALE$/i", (string)$type);
 						if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, null, "&")))
 							return /* Looks good. Return ``$s2vars``. */ $s2vars;
-						/**/
+
 						return /* Default empty array. */ array();
 					}
 				/**
@@ -165,7 +165,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 						if(!empty($vars["template"]) && $vars["template"] === "clickbank")
 							return $support. /* Now add the reminder below this. ClickBank® requires site owners to display this. */
 							'<div class="cc-reminder">'._x('<strong>Reminder:</strong> Purchases at this site will appear on your credit card or bank statement as: <code>ClickBank®</code> or <code>CLKBANK*COM</code>.', "s2member-front", "s2member").'</div>';
-						/**/
+
 						return $support;
 					}
 			}

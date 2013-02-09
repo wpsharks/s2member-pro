@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_unlimited_level_instructions"))
 	{
 		/**
@@ -48,15 +48,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_unlimited_level_instruct
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							{
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<p><strong>Unlimited Membership Levels ( via <code>/wp-config.php</code> )</strong><br />' . "\n";
 								echo 'With s2Member Pro installed, you may configure an unlimited number of Membership Levels. You can set the number of Membership Levels by adding this line to the top of your <a href="http://codex.wordpress.org/Editing_wp-config.php" target="_blank" rel="external">/wp-config.php</a> file: <code><span style="color:#000000"><span style="color:#0000BB">define</span><span style="color:#007700">(</span><span style="color:#DD0000">"MEMBERSHIP_LEVELS"</span><span style="color:#007700">,&nbsp;</span><span style="color:#0000BB">4</span><span style="color:#007700">);</span></span></code>. This line should be inserted at the top of your <code>/wp-config.php</code> file, right after the <code>&lt;?php</code> tag. Feel free to change the default value of <code>4</code> to whatever you need. The minimum allowed value is <code>' . esc_html ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["min_levels"]) . '</code>. The recommended maximum is <code>' . esc_html ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["max_levels"]) . '</code> <em>( when/if needed )</em>.</p>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr" style="margin-bottom:0;"></div>' . "\n";
 							}
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_unlimited_level_instructions ();
 ?>

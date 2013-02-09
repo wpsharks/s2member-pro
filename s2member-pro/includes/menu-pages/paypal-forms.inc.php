@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 	{
 		/**
@@ -46,17 +46,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 				public function __construct ()
 					{
 						echo '<div class="wrap ws-menu-page">' . "\n";
-						/**/
+
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
 						echo '<h2>s2Member® Pro / PayPal® Pro Forms</h2>' . "\n";
-						/**/
+
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
 						echo '<tr class="ws-menu-page-table-tr">' . "\n";
 						echo '<td class="ws-menu-page-table-l">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="Quick-Start Guide For PayPal® Pro">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-forms-guide-section">' . "\n";
 						echo '<img src="' . esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]) . '/images/large-icon.png" title="s2Member ( a Membership management system for WordPress® )" alt="" style="float:right; margin:0 0 0 25px; border:0;" />' . "\n";
 						echo '<h3>Quick-Start Guide For PayPal® Pro Integration</h3>' . "\n";
@@ -69,21 +69,21 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '<p><em><strong>*SSL Compatibility*</strong> All themes available at <a href="http://www.primothemes.com/" target="_blank" rel="external">PriMoThemes.com</a> include full support for SSL, as does WordPress® itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress® theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer® browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>' . "\n" : '';
 						echo '<p><em><strong>*PayPal® Pro is NOT Absolutely Required*</strong> s2Member is very flexible. It is now possible to integrate Pro Forms without a PayPal® Pro account, whereby the enhanced Form Shortcodes that s2Member provides can be integrated ONLY with PayPal® Express Checkout. In other words, if you get declined for PayPal® Pro service, you can still use s2Member Pro Forms. Ask PayPal® to activate Express Checkout for you. ( it\'s free ). Once Express Checkout is enabled, you will have access to your <a href="http://www.s2member.com/paypal-profile-api-access" target="_blank" rel="external">PayPal® API Credentials</a>. Log into your PayPal® account, and navigate to <code>Profile -> API Access (or Request API Credentials)</code>. You\'ll choose <code>( Request API Signature )</code>. Now ... here is the tricky part; whenever you generate a Pro Form Shortcode with s2Member, be sure to change  <code>accept="paypal,visa,mastercard,amex,discover,maestro,solo"</code> to just <code>accept="paypal"</code>; thereby excluding the on-site credit card processing functionality; which is available only with PayPal® Pro.</em></p>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Pro / Free Registration Forms">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">' . "\n";
 						echo '<h3>One Form Does It All For Free Registrations ( copy/paste )</h3>' . "\n";
 						echo '<p>Whenever a visitor registers without paying, they\'ll automatically become a Free Subscriber, at Level #0.</p>' . "\n";
 						echo '<p><em><strong>*Note*</strong> the use of this particular Form will override your Open Registration configuration. In other words, making this Form available is the same as turning Open Registration <code>(on)</code>. One of the benefits to this functionality, is that it makes it possible for you to integrate this Free Registration Form in creative ways ( i.e. making it available ONLY under certain circumstances ); while still leaving Open Registration <code>(off)</code> throughout the rest of the site.</em></p>' . "\n";
 						echo '<p><em><strong>*Tip ( optional )*</strong> It is also possible to change the <code>level="0"</code> Attribute to something other than the default Level #0 ( Free Subscriber ). For example, if you need to, you can change it to <code>level="1"</code>, attach Custom Capabilities with the <code>ccaps=""</code> Attribute, and even limit this access to a certain timeframe with <code>tp="30" tt="D"</code> ( i.e. 30 Days ). So this Form is very flexible. It can be used to allow free access to just about any aspect of your service. For more information on Attributes, please see the section below: Shortcode Attributes ( Explained ).</em></p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -94,27 +94,27 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-registration-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						for ($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 							{
 								echo '<div class="ws-menu-page-group" title="PayPal® Pro Forms For Level #' . $n . ' Access">' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level' . $n . '-forms-section">' . "\n";
 								echo '<h3>Pro Form Generator For Level #' . $n . ' Access</h3>' . "\n";
 								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Form Code). These special PayPal® Forms are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. When you, or a Member, cancels their Membership, or fails to make payments on time, s2Member will automatically terminate their Membership privileges. s2Member makes extensive use of the PayPal® IPN service. s2Member receives updates from PayPal® behind-the-scene.</p>' . "\n";
 								echo '<p><em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located. We suggest placing a link to this Form on your Membership Options Page. That way your visitors can get registered &amp; checkout!</em></p>' . "\n";
-								/**/
+
 								echo '<table class="form-table">' . "\n";
 								echo '<tbody>' . "\n";
 								echo '<tr>' . "\n";
-								/**/
+
 								echo '<td>' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<p id="ws-plugin--s2member-pro-level' . $n . '-trial-line">I\'ll offer the first <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-trial-period" value="0" size="6" /> <select id="ws-plugin--s2member-pro-level' . $n . '-trial-term">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-membership-trial-terms.php"))) . '</select> @ $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-trial-amount" value="0.00" size="4" /></p>' . "\n";
@@ -124,10 +124,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<p' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? ' style="display:none;"' : '') . '>Custom Capabilities ( comma-delimited ) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member -> API Scripting -> Custom Capabilities.\\n\\n*ADVANCED TIP: You can specifiy a list of Custom Capabilities that will be (Added) with this purchase. Or, you could tell s2Member to (Remove All) Custom Capabilities that may or may not already exist for a particular Member, and (Add) only the new ones that you specify. To do this, just start your list of Custom Capabilities with `-all`.\\n\\nSo instead of just (Adding) Custom Capabilities:\\nmusic,videos,archives,gifts\\n\\nYou could (Remove All) that may already exist, and then (Add) new ones:\\n-all,calendar,forums,tools\\n\\nOr to just (Remove All) and (Add) nothing:\\n-all\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-ccaps" size="40" /></p>' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
-								/**/
+
 								echo '</tr>' . "\n";
 								echo '<tr>' . "\n";
-								/**/
+
 								echo '<td>' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -138,45 +138,45 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
-								/**/
+
 								echo '</tr>' . "\n";
 								echo '</tbody>' . "\n";
 								echo '</table>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '</div>' . "\n";
 							}
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Pro Billing Modification Forms">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-modification-forms-section">' . "\n";
 						echo '<h3>Pro Form Generator For Billing Modifications</h3>' . "\n";
 						echo '<p>If you\'d like to give your Members ( and/or your Free Subscribers ) the ability to change ( modify ) their billing plan; you can generate a new PayPal® Modification Form here. Configure the updated Level, pricing, terms, etc. Then, make that new Modification Form available to Members who are logged into their existing account with you. For example, you might want to insert a "Level #2" Upgrade link into your Login Welcome Page, which would up-sell existing Level #1 Members to a more expensive plan that you offer.</p>' . "\n";
 						echo '<p><em><strong>*Modification Process*</strong> Very simple. A Member clicks a link to a special Post/Page, which contains a Modification Form you\'ve generated. The Member fills in their billing information. After a successful form submission, s2Member will update the status of their account to the Level, pricing, and terms that you configure below. If the Member already has an existing paid Subscription with you, that paid Subscription will be cancelled automatically behind-the-scene, and a new paid Subscription will be created to replace the old one. Again, the new paid Subscription is based on the Level, pricing, and terms that you specify below. If you need to give Customers some sort of grace period when/if they upgrade to a more expensive plan, please feel free to handle this through the application of free days, or with special pricing configured below.</em></p>' . "\n";
 						echo '<p><em><strong>*Integrating Conditionals*</strong> Since each Modification Form is configured for a specific Level, you may want to create multiple Modification Forms, one for each combination you intend to make available. s2Member\'s API Conditionals can help you display the proper Form to each Customer, based on the status of their existing account. For further details, see: <code>s2Member -> API Scripting</code>.</em></p>' . "\n";
 						echo (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '<p><em><strong>*Independent Custom Capabilities*</strong> If you just want to sell an existing Member new Custom Capabilities, without affecting their paid Subscription in any way, please see the next Form Generator: <code>Capability (Buy Now) Forms</code>. Independent Capability Forms facilitate Buy Now functionality, specifically for Custom Capabilities, without affecting the Customer\'s primary Subscription and Membership Level Access.</em></p>' . "\n" : '';
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
-						/**/
+
 						echo '<p>Modification: <select id="ws-plugin--s2member-pro-modification-level">' . "\n";
-						/**/
+
 						for ($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 							{
 								echo '<optgroup label="Level #' . $n . '">' . "\n";
 								echo '<option value="upgrade:' . $n . '">&uarr; Upgrade To Level #' . $n . '</option>' . "\n";
 								echo ($n < $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]) ? '<option value="downgrade:' . $n . '">&darr; Downgrade To Level #' . $n . '</option>' . "\n" : '';
 								echo '</optgroup>' . "\n";
-								/**/
+
 								echo ($n < $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]) ? '<option disabled="disabled"></option>' . "\n" : '';
 							}
-						/**/
+
 						echo '</select></p>' . "\n";
-						/**/
+
 						echo '<p id="ws-plugin--s2member-pro-modification-trial-line">I\'ll offer the first <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-trial-period" value="0" size="6" /> <select id="ws-plugin--s2member-pro-modification-trial-term">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-membership-trial-terms.php"))) . '</select> @ $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-trial-amount" value="0.00" size="4" /></p>' . "\n";
 						echo '<p><span id="ws-plugin--s2member-pro-modification-trial-then">Then, </span>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-amount" value="0.01" size="4" /> / <select id="ws-plugin--s2member-pro-modification-term">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"]) ? "payflow" : "paypal")."-membership-regular-terms.php"))) . '</select></p>' . "\n";
 						echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-desc" value="Description and pricing details here." size="68" /></p>' . "\n";
@@ -184,10 +184,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<p' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? ' style="display:none;"' : '') . '>Custom Capabilities ( comma-delimited ) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member -> API Scripting -> Custom Capabilities.\\n\\n*ADVANCED TIP: You can specifiy a list of Custom Capabilities that will be (Added) with this purchase. Or, you could tell s2Member to (Remove All) Custom Capabilities that may or may not already exist for a particular Member, and (Add) only the new ones that you specify. To do this, just start your list of Custom Capabilities with `-all`.\\n\\nSo instead of just (Adding) Custom Capabilities:\\nmusic,videos,archives,gifts\\n\\nYou could (Remove All) that may already exist, and then (Add) new ones:\\n-all,calendar,forums,tools\\n\\nOr to just (Remove All) and (Add) nothing:\\n-all\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-modification-ccaps" size="40" /></p>' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -199,42 +199,42 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							{
 								echo '<div class="ws-menu-page-group" title="PayPal® Pro Capability (Buy Now) Forms">' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-forms-section">' . "\n";
 								echo '<h3>Pro Form Generator For Independent Custom Capabilities</h3>' . "\n";
 								echo '<p>This is VERY advanced. For further details, please check your Dashboard: <code>s2Member -> API Scripting -> Custom Capabiities</code>.</p>' . "\n";
 								echo '<p>With s2Member, you can sell one or more Custom Capabilities using Buy Now functionality, to "existing" Users/Members, regardless of which Membership Level they have on your site <em>( i.e. you could even sell Independent Custom Capabilities to Users at Membership Level #0, normally referred to as Free Subscribers, if you like )</em>. So this is quite flexible. Independent Custom Capabilities do NOT rely on any specific Membership Level. That\'s why s2Member refers to these as `Independent` Custom Capabilities, because you can sell Capabilities this way, through Buy Now functionality, and the Customer\'s Membership Level Access, along with any existing paid Subscription they may already have with you, will remain completely unaffected. That being said, if you intend to charge a recurring fee for Custom Capabilities, please use a <code>Billing Modification Form</code> instead; because Independent Custom Capabilities can only be sold through Buy Now functionality.</p>' . "\n";
 								echo '<p>Independent Custom Capabilities are added to a Customer\'s account immediately after checkout, and the Customer will have the Custom Capabilities for as long as their Membership lasts, based on their primary Subscription with your site, and/or forever, if they have a Lifetime account with you. In other words, Independent Custom Capabilities will exist on the Customer\'s account forever, or until an EOT <em>( End Of Term )</em> occurs on their primary Subscription with you; in which case s2Member would demote or delete the Customer\'s account <em>( based on your EOT configuration )</em>, and all Custom Capabilities are removed as well.</p>' . "\n";
 								echo '<p>Very simple. All you do is customize the form fields provided, for each set of Custom Capabilities that you plan to sell. Then press (Generate Form Code). These special PayPal® Forms are customized to work with s2Member seamlessly. The Customer will be granted additional access to one or more Custom Capabilities that you specify; while the Customer\'s Membership Level Access and any existing paid Subscription they may already have with you, will remain completely unaffected.</p>' . "\n";
-								/**/
+
 								echo '<table class="form-table">' . "\n";
 								echo '<tbody>' . "\n";
 								echo '<tr>' . "\n";
-								/**/
+
 								echo '<td>' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
-								/**/
+
 								echo '<p>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-amount" value="0.01" size="4" /> / <select id="ws-plugin--s2member-pro-ccap-term">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-membership-ccap-terms.php"))) . '</select></p>' . "\n";
 								echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-desc" value="Description and pricing details here." size="68" /></p>' . "\n";
 								echo '<p>Checkout Page Style <a href="#" onclick="alert(\'Optional. This can be configured inside your PayPal® account. PayPal® allows you to create Custom Page Styles, and assign a unique name to them. You can add your own header image and color selection to the checkout form. Once you\\\'ve created a Custom Page Style at PayPal®, you can enter that Page Style here.\\n\\nWith PayPal® Pro integration, this is only applied to PayPal® Express Checkout pages; when/if a Customer chooses PayPal® as the Payment Method.\'); return false;" tabindex="-1">[?]</a>: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-page-style" value="paypal" size="18" /> <select id="ws-plugin--s2member-pro-ccap-currency">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-currencies.php"))) . '</select> <input type="button" value="Generate Form Code" onclick="ws_plugin__s2member_pro_paypalCcapFormGenerate();" class="button-primary" /></p>' . "\n";
 								echo '<p>Custom Capabilities ( comma-delimited ) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member -> API Scripting -> Custom Capabilities.\\n\\n*ADVANCED TIP: You can specifiy a list of Custom Capabilities that will be (Added) with this purchase. Or, you could tell s2Member to (Remove All) Custom Capabilities that may or may not already exist for a particular Member, and (Add) only the new ones that you specify. To do this, just start your list of Custom Capabilities with `-all`.\\n\\nSo instead of just (Adding) Custom Capabilities:\\nmusic,videos,archives,gifts\\n\\nYou could (Remove All) that may already exist, and then (Add) new ones:\\n-all,calendar,forums,tools\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-ccap-ccaps" size="40" /></p>' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
-								/**/
+
 								echo '</tr>' . "\n";
 								echo '<tr>' . "\n";
-								/**/
+
 								echo '<td>' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -243,25 +243,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
-								/**/
+
 								echo '</tr>' . "\n";
 								echo '</tbody>' . "\n";
 								echo '</table>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '</div>' . "\n";
 							}
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Pro Billing Update Forms">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-update-forms-section">' . "\n";
 						echo '<h3>One Form Does It All For Billing Updates ( copy/paste )</h3>' . "\n";
 						echo '<p>An Update Form can be provided to existing Members, as a way for them to update their billing information; without modifying their existing paid Subscription in any way. For instance, a Customer may need to update their billing information, because their credit card is expiring, or because they moved their bank account.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -269,25 +269,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-update-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Pro Billing Cancellation Forms">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-cancellation-forms-section">' . "\n";
 						echo '<h3>One Form Does It All For Cancellations ( copy/paste )</h3>' . "\n";
 						echo '<p>According to PayPal\'s policy on recurring billing, you MUST provide each and every Customer with an easy to way to cancel future charges. Generating a Cancellation Form here, and making that Form available to all Customers is our recommendation. For further details and legalities, please visit the <a href="https://www.x.com/" target="_blank" rel="external">PayPal® Developer Network</a>.</p>' . "\n";
 						echo '<p><em><strong>*Cancellation Process*</strong> Very simple. A Member clicks a link to a Post/Page that contains a Cancellation Form you\'ve generated. The Member clicks the Submit button to confirm the cancellation. s2Member is notified silently behind-the-scene, and will immediately cancel all future billing. s2Member will later terminate their account access, at the correct point in time. This works in conjunction with the s2Member Auto-EOT System. For further details, see: <code>s2Member -> PayPal® Options -> EOT Behavior</code>.</em></p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -295,24 +295,24 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-cancellation-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Member Registration Access Links">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">' . "\n";
 						echo '<h3>Registration Access Link Generator ( for Customer Service )</h3>' . "\n";
 						echo '<p>s2Member Pro Forms consolidate the Registration/Checkout process into a single-step solution, so it is unlikely that you will ever need this tool. That being said, if you DO need to deal with a Customer Service issue that requires a simple paid Registration Access Link to be created manually, you can use this tool for that. Alternatively, you can create their account yourself/manually by going to <code>s2Member -> Add A Member</code>. Either of these methods will work fine.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<p>Paid Membership Level#: <select id="ws-plugin--s2member-pro-reg-link-level">' . "\n";
@@ -326,16 +326,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<p id="ws-plugin--s2member-pro-reg-link" style="font-family:Consolas, monospace; display:none;"></p>' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Specific Post/Page (Buy Now) Forms">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-forms-section">' . "\n";
 						echo '<h3>Pro Form Generator For Specific Post/Page Forms</h3>' . "\n";
 						echo '<p>s2Member now supports an additional layer of functionality ( very powerful ), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress®. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" functionality. Your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>' . "\n";
@@ -343,41 +343,41 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress®. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress® Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -> Restriction Options -> Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>' . "\n";
 						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Form Code). These special PayPal® Forms are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction.</p>' . "\n";
 						echo '<p><em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located.</em></p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
-						/**/
+
 						echo '<p><select id="ws-plugin--s2member-pro-sp-leading-id">' . "\n";
 						echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>' . "\n";
-						/**/
+
 						$ws_plugin__s2member_pro_temp_a_singulars = c_ws_plugin__s2member_utils_gets::get_all_singulars_with_sp ("exclude-conflicts");
-						/**/
+
 						foreach ($ws_plugin__s2member_pro_temp_a_singulars as $ws_plugin__s2member_pro_temp_o)
 							echo '<option value="' . esc_attr ($ws_plugin__s2member_pro_temp_o->ID) . '">' . esc_html ($ws_plugin__s2member_pro_temp_o->post_title) . '</option>' . "\n";
-						/**/
+
 						echo '</select> <a href="#" onclick="alert(\'Required. The Leading Post/Page, is what your Customers will land on after checkout.\n\n*Tip* If there are no Posts/Pages in the menu, it\\\'s because you\\\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -> Restriction Options -> Specific Post/Page Access.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
-						/**/
+
 						echo '<p><select id="ws-plugin--s2member-pro-sp-additional-ids" multiple="multiple" style="height:100px;">' . "\n";
 						echo '<optgroup label="&mdash; Package Additional Posts/Pages that you\'ve protected &mdash;">' . "\n";
-						/**/
+
 						foreach ($ws_plugin__s2member_pro_temp_a_singulars as $ws_plugin__s2member_pro_temp_o)
 							echo '<option value="' . esc_attr ($ws_plugin__s2member_pro_temp_o->ID) . '">' . esc_html ($ws_plugin__s2member_pro_temp_o->post_title) . '</option>' . "\n";
-						/**/
+
 						echo '</optgroup></select> <a href="#" onclick="alert(\'Hold down your `Ctrl` key to select multiples.\\n\\nOptional. If you include Additional Posts/Pages, Customers will still land on your Leading Post/Page; BUT, they\\\'ll ALSO have access to some Additional Posts/Pages that you\\\'ve protected. This gives you the ability to create Post/Page Packages.\\n\\nIn other words, a Customer is sold a Specific Post/Page ( they\\\'ll land on your Leading Post/Page after checkout ), which might contain links to some other Posts/Pages that you\\\'ve packaged together under one transaction.\\n\\nBundling Additional Posts/Pages into one Package, authenticates the Customer for access to the Additional Posts/Pages automatically ( e.g. only one Access Link is needed, and s2Member generates this automatically ). However, you will STILL need to design your Leading Post/Page ( which is what a Customer will actually land on ), with links pointing to the other Posts/Pages. This way your Customers will have clickable links to everything they\\\'ve paid for.\\n\\n*Quick Summary* s2Member sends Customers to your Leading Post/Page, and also authenticates them for access to any Additional Posts/Pages automatically. You handle it from there.\\n\\n*Tip* If there are no Posts/Pages in this menu, it\\\'s because you\\\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -> Restriction Options -> Specific Post/Page Access.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
-						/**/
+
 						echo '<p>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-amount" value="0.01" size="4" /> / <select id="ws-plugin--s2member-pro-sp-hours">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-sp-hours.php"))) . '</select></p>' . "\n";
 						echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-desc" value="Description and pricing details here." size="68" /></p>' . "\n";
 						echo '<p>Checkout Page Style <a href="#" onclick="alert(\'Optional. This can be configured inside your PayPal® account. PayPal® allows you to create Custom Page Styles, and assign a unique name to them. You can add your own header image and color selection to the checkout form. Once you\\\'ve created a Custom Page Style at PayPal®, you can enter that Page Style here.\\n\\nWith PayPal® Pro integration, this is only applied to PayPal® Express Checkout pages; when/if a Customer chooses PayPal® as the Payment Method.\'); return false;" tabindex="-1">[?]</a>: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-page-style" value="paypal" size="18" /> <select id="ws-plugin--s2member-pro-sp-currency">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-currencies.php"))) . '</select> <input type="button" value="Generate Form Code" onclick="ws_plugin__s2member_pro_paypalSpFormGenerate();" class="button-primary" /></p>' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress® Shortcode:</strong> ( recommended for both the WordPress® Visual &amp; HTML Editors )<br />' . "\n";
@@ -386,68 +386,68 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="PayPal® Specific Post/Page Access Links">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">' . "\n";
 						echo '<h3>Specific Post/Page Link Generator ( for Customer Service )</h3>' . "\n";
 						echo '<p>s2Member automatically generates Specific Post/Page Links for your Customers after checkout, and also sends them a link in a Confirmation Email. However, if you ever need to deal with a Customer Service issue that requires a new Specific Post/Page Link to be created manually, you can use this tool for that.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
-						/**/
+
 						echo '<p><select id="ws-plugin--s2member-pro-sp-link-leading-id">' . "\n";
 						echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>' . "\n";
-						/**/
+
 						$ws_plugin__s2member_pro_temp_a_singulars = c_ws_plugin__s2member_utils_gets::get_all_singulars_with_sp ("exclude-conflicts");
-						/**/
+
 						foreach ($ws_plugin__s2member_pro_temp_a_singulars as $ws_plugin__s2member_pro_temp_o)
 							echo '<option value="' . esc_attr ($ws_plugin__s2member_pro_temp_o->ID) . '">' . esc_html ($ws_plugin__s2member_pro_temp_o->post_title) . '</option>' . "\n";
-						/**/
+
 						echo '</select> <a href="#" onclick="alert(\'Required. The Leading Post/Page, is what your Customers will land on after checkout.\n\n*Tip* If there are no Posts/Pages in the menu, it\\\'s because you\\\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -> Restriction Options -> Specific Post/Page Access.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
-						/**/
+
 						echo '<p><select id="ws-plugin--s2member-pro-sp-link-additional-ids" multiple="multiple" style="height:100px; min-width:450px;">' . "\n";
 						echo '<optgroup label="&mdash; Package Additional Posts/Pages that you\'ve protected &mdash;">' . "\n";
-						/**/
+
 						foreach ($ws_plugin__s2member_pro_temp_a_singulars as $ws_plugin__s2member_pro_temp_o)
 							echo '<option value="' . esc_attr ($ws_plugin__s2member_pro_temp_o->ID) . '">' . esc_html ($ws_plugin__s2member_pro_temp_o->post_title) . '</option>' . "\n";
-						/**/
+
 						echo '</optgroup></select> <a href="#" onclick="alert(\'Hold down your `Ctrl` key to select multiples.\\n\\nOptional. If you include Additional Posts/Pages, Customers will still land on your Leading Post/Page; BUT, they\\\'ll ALSO have access to some Additional Posts/Pages that you\\\'ve protected. This gives you the ability to create Post/Page Packages.\\n\\nIn other words, a Customer is sold a Specific Post/Page ( they\\\'ll land on your Leading Post/Page after checkout ), which might contain links to some other Posts/Pages that you\\\'ve packaged together under one transaction.\\n\\nBundling Additional Posts/Pages into one Package, authenticates the Customer for access to the Additional Posts/Pages automatically ( e.g. only one Access Link is needed, and s2Member generates this automatically ). However, you will STILL need to design your Leading Post/Page ( which is what a Customer will actually land on ), with links pointing to the other Posts/Pages. This way your Customers will have clickable links to everything they\\\'ve paid for.\\n\\n*Quick Summary* s2Member sends Customers to your Leading Post/Page, and also authenticates them for access to any Additional Posts/Pages automatically. You handle it from there.\\n\\n*Tip* If there are no Posts/Pages in this menu, it\\\'s because you\\\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -> Restriction Options -> Specific Post/Page Access.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
-						/**/
+
 						echo '<p><select id="ws-plugin--s2member-pro-sp-link-hours">' . trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/options/paypal-sp-hours.php"))) . '</select> <input type="button" value="Generate Access Link" onclick="ws_plugin__s2member_pro_paypalSpLinkGenerate();" class="button-primary" /> <img id="ws-plugin--s2member-pro-sp-link-loading" src="' . esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]) . '/images/ajax-loader.gif" alt="" style="display:none;" /></p>' . "\n";
 						echo '<p id="ws-plugin--s2member-pro-sp-link" style="font-family:Consolas, monospace; display:none;"></p>' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							{
 								echo '<div class="ws-menu-page-group" title="Custom Return URLs Upon Success">' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-forms-success-section">' . "\n";
 								echo '<h3>Custom Return URLs Upon Success ( optional, for developers )</h3>' . "\n";
 								echo '<p>s2Member Pro opens the door for Custom Return URLs upon success. You can add a special attribute to any Form Shortcode ( <code>success="/my-thank-you-page/"</code> ). This makes it possible to integrate PayPal® Pro Forms in very creative ways; and even receive/verify Replacement Code variables, as needed. For example, ( <code>success="/my-thank-you-page/?subscr_id=%%subscr_id%%"</code> ).</p>' . "\n";
 								echo '<p><em>A Custom Return URL is 100% optional. In fact, if you only need to obtain details for the purpose of tracking sales, you should just use the simpler API Tracking methods provided by s2Member, under: <code>s2Member -> API / Tracking</code>. In other words, if you don\'t use the <code>success=""</code> attribute in your Shortcode, s2Member will handle things gracefully, all on its own. So using a Custom Return URL is only necessary when you need advanced customization for one reason or another.</em></p>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Free Registration Forms ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-free-registration\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-free-registration" style="display:none;">' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
@@ -466,7 +466,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>' . "\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>' . "\n";
@@ -474,7 +474,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>' . "\n";
 								echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member -> General Options -> Registration/Profile Fields</em>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -484,9 +484,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 								echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Membership Sales / Signups &amp; Modifications ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-sales" style="display:none;">' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
@@ -513,7 +513,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>' . "\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>' . "\n";
@@ -521,7 +521,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>' . "\n";
 								echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member -> General Options -> Registration/Profile Fields</em>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -531,9 +531,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 								echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Independent Custom Capability Sales ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-ccaps\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-ccaps" style="display:none;">' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
@@ -555,7 +555,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>' . "\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>' . "\n";
@@ -563,7 +563,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>' . "\n";
 								echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member -> General Options -> Registration/Profile Fields</em>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -573,9 +573,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 								echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Specific Post/Page Transactions ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sp-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-sp-sales" style="display:none;">' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
@@ -593,7 +593,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link to the Specific Post/Page. You don\'t have to use this. You can generate your own response if you like.</li>' . "\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link to the Specific Post/Page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>' . "\n";
 								echo '</ul>' . "\n";
-								/**/
+
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -603,9 +603,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 								echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Cancellations &amp; Billing Updates ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-cancellations-updates\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-cancellations-updates" style="display:none;">' . "\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">' . "\n";
@@ -613,9 +613,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link back to their account page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>' . "\n";
 								echo '</ul>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Verify The Integrity Of Replacement Codes ( <a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-verification\').toggle(); return false;" class="ws-dotted-link">open/close</a> )</h3>' . "\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-verification" style="display:none;">' . "\n";
 								echo '<p>If you know a little PHP, you can verify the integrity of the Replacement Codes returned by s2Member. This is important, because in this particular situation, Replacement Codes are passed publicly in the query string of your Custom Return URL. In other words, a Customer could manually change one of the values; like the dollar amounts. For this reason, you should always verify the integrity of the details being returned to any processing routines that receive this information. In the PHP code for your Custom Return URL, you can use this s2Member API Function: <code>s2member_pro_paypal_s2p_v_query_ok()</code>.</p>' . "\n";
@@ -626,34 +626,34 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 								echo '<p>' . c_ws_plugin__s2member_utils_strings::highlight_php (file_get_contents (dirname (__FILE__) . "/code-samples/paypal-s2p-v-query-ok-1.x-php")) . '</p>' . "\n";
 								echo '<p>s2Member will only verify a query string for up to 10 seconds. After 10 seconds, <code>s2member_pro_paypal_s2p_v_query_ok()</code> will always return <code>false</code>, even if the integrity of the query string is valid. This prevents a Customer from bookmarking your Return URL; thereby causing duplicate commissions; in case you\'re using it for tracking purposes.</p>' . "\n";
 								echo '<p>Again, if you only need to obtain details for the purpose of tracking sales, you should just use the simpler API Tracking methods provided by s2Member, under: <code>s2Member -> API / Tracking</code>. The API Tracking methods are specifically designed for tracking sales, exactly ONE time for each Customer.</p>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<p><em>If it is your intention to allow Customers to bookmark your Custom Return URL, you can still do that. Just be aware that <code>s2member_pro_paypal_s2p_v_query_ok()</code> will return <code>false</code> after the first 10 seconds. If you want to verify after 10 seconds, you can pass a second argument to the function, like this:</em></p>' . "\n";
 								echo '<p>' . c_ws_plugin__s2member_utils_strings::highlight_php (file_get_contents (dirname (__FILE__) . "/code-samples/paypal-s2p-v-query-ok-2.x-php")) . '</p>' . "\n";
-								/**/
+
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
-								/**/
+
 								echo '<h3>Could a Customer change the timestamp in the URL?</h3>' . "\n";
 								echo '<p>Based on the structure of the URL, it would appear possible; however, it\'s NOT. s2Member uses an advanced checksum.</p>' . "\n";
 								echo '<h3>Can I get rid of the <code>s2p-v</code> variable?</h3>' . "\n";
 								echo '<p>No, this variable is always passed to your Custom Return URL, it\'s for important verification purposes.</p>' . "\n";
 								echo '</div>' . "\n";
 								echo '</div>' . "\n";
-								/**/
+
 								echo '</div>' . "\n";
 							}
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="Shortcode Attributes ( Explained )">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-shortcode-attrs-section">' . "\n";
 						echo '<h3>Shortcode Attributes ( Explained In Full Detail )</h3>' . "\n";
 						echo '<p>When you generate a Form, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress®, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Form Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table" style="margin-top:0;">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr style="padding-top:0;">' . "\n";
-						/**/
+
 						echo '<td style="padding-top:0;">' . "\n";
 						echo '<ul>' . "\n";
 						echo '<li><code>accept="paypal,visa,mastercard,amex,discover,maestro,solo"</code> Accepted Billing Methods. A comma-delimited list of Billing Methods you want to accept. Due to a PayPal® policy, you may NOT exclude PayPal® from this list; s2Member won\'t let you. Not valid when <code>cancel="1"</code>.</li>' . "\n";
@@ -691,28 +691,28 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<li><code>update="0"</code> Billing Update Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Billing Update Form, <code>1</code> = this IS a Billing Update Form.</li>' . "\n";
 						echo '</ul>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</td>' . "\n";
-						/**/
+
 						echo '<td class="ws-menu-page-table-r">' . "\n";
 						c_ws_plugin__s2member_menu_pages_rs::display ();
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_paypal_forms ();
 ?>

@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_google_co"))
 	{
 		/**
@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co"))
 				*/
 				public static function google_co ()
 					{
-						if (!empty ($_GET["s2member_pro_google_co"])) /* Call inner routine? */
+						if (!empty ($_GET["s2member_pro_google_co"]))
 							{
 								return c_ws_plugin__s2member_pro_google_co_in::google_co ();
 							}

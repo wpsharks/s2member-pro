@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"))
 	{
 		/**
@@ -46,59 +46,59 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 				public function __construct ()
 					{
 						echo '<div class="ws-menu-page-group" title="Signup Confirmation Email ( Pro Form )">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-signup-confirmation-email-section">' . "\n";
 						echo '<h3>Signup Confirmation Email ( required, but the default works fine )<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they successfully complete a PayPal® "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because PayPal® Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-signup-email-recipients">' . "\n";
 						echo 'Signup Confirmation Recipients:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_signup_email_recipients" id="ws-plugin--s2member-pro-signup-email-recipients" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_signup_email_recipients"]) . '" /><br />' . "\n";
 						echo 'This is a semicolon ( ; ) delimited list of Recipients. Here is an example:<br />' . "\n";
 						echo '<code>"%%full_name%%" &lt;%%payer_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-signup-email-subject">' . "\n";
 						echo 'Signup Confirmation Email Subject:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_signup_email_subject" id="ws-plugin--s2member-pro-signup-email-subject" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_signup_email_subject"]) . '" /><br />' . "\n";
 						echo 'Subject Line used in the email sent to a Customer after a successful signup has occurred through a PayPal® Pro Form.' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-signup-email-message">' . "\n";
 						echo 'Signup Confirmation Email Message:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<textarea name="ws_plugin__s2member_pro_signup_email_message" id="ws-plugin--s2member-pro-signup-email-message" rows="10">' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_signup_email_message"]) . '</textarea><br />' . "\n";
 						echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through a PayPal® Pro Form.<br /><br />' . "\n";
@@ -122,7 +122,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 						echo '<li><code>%%regular_cycle%%</code> = This is the <code>%%regular_term%%</code> from above, converted to a cycle representation of: <code><em>[every] X days/weeks/months/years — OR daily, weekly, bi-weekly, monthly, bi-monthly, quarterly, yearly, or lifetime</em></code>. This is a very useful Replacment Code. Its value is dynamic; depending on term length, recurring status, and period/term lengths configured.</li>' . "\n";
 						echo '<li><code>%%recurring/regular_cycle%%</code> = Example ( <code>14.95 / Monthly</code> ), or ... ( <code>0 / non-recurring</code> ); depending on the value of <code>%%recurring%%</code>.</li>' . "\n";
 						echo '</ul>' . "\n";
-						/**/
+
 						echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 						echo '<ul>' . "\n";
 						echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -131,18 +131,18 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 						echo '<strong>This example uses cv1 to record a special marketing campaign:</strong><br />' . "\n";
 						echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 						echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
-						/**/
+
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email ();
 ?>

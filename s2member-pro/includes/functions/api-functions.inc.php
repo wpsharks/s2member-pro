@@ -104,7 +104,7 @@ if (!function_exists ("s2member_pro_login_widget"))
 		function s2member_pro_login_widget ($options = FALSE, $args = FALSE)
 			{
 				$args = (is_array ($args)) ? $args : array ("before_widget" => "", "before_title" => "<h3>", "after_title" => "</h3>", "after_widget" => "");
-				/**/
+
 				return eval ('ob_start(); c_ws_plugin__s2member_pro_login_widget::widget($args, $options); $ob = ob_get_clean(); return $ob;');
 			}
 	}

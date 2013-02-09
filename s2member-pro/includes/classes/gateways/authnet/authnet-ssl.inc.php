@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_ssl"))
 	{
 		/**
@@ -58,11 +58,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_ssl"))
 				public static function sc_authnet_form_auto_force_ssl ($force = FALSE, $vars = FALSE)
 					{
 						global $post; /* Need this global object reference. */
-						/**/
+
 						if (!$force && defined ("S2MEMBER_PRO_AUTO_FORCE_SSL") && S2MEMBER_PRO_AUTO_FORCE_SSL)
 							if (is_object ($post) && strpos ($post->post_content, "[s2Member-Pro-AuthNet-Form") !== false)
 								return ($force = true);
-						/**/
+
 						return $force; /* Keep current value. */
 					}
 			}

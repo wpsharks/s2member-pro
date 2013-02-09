@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify"))
 	{
 		/**
@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify"))
 				*/
 				public static function ccbill_notify ()
 					{
-						if (isset ($_GET["s2member_pro_ccbill_notify"]) && strlen ($_GET["s2member_pro_ccbill_notify"])) /* Call inner routine? */
+						if (isset ($_GET["s2member_pro_ccbill_notify"]) && strlen ($_GET["s2member_pro_ccbill_notify"]))
 							{
 								return c_ws_plugin__s2member_pro_ccbill_notify_in::ccbill_notify ();
 							}

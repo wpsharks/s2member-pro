@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_detail_rows"))
 	{
 		/**
@@ -46,17 +46,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_detail_rows")
 				public function __construct ()
 					{
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-paypal-checkout-rdp">' . "\n";
 						echo 'PayPal® Pro Forms / Recurring Profile Behavior:<br />' . "\n";
 						echo '( only affects first payment of Recurring Profiles )<br />' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<select name="ws_plugin__s2member_pro_paypal_checkout_rdp" id="ws-plugin--s2member-pro-paypal-checkout-rdp">' . "\n";
 						echo '<option value="0"' . ((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_paypal_checkout_rdp"]) ? ' selected="selected"' : '') . '>Consolidate w/ Recurring Profile ( 1st payment charged immediately )</option>' . "\n";
@@ -64,11 +64,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_detail_rows")
 						echo '</select><br />' . "\n";
 						echo 'Applies only to "Subscriptions" ( aka: Recurring Profiles ). [ <a href="#" onclick="alert(\'This setting is ignored when/if you offer a Free Trial Period. This setting only affects PayPal® Pro Forms that use a `Subscription` configuration with an immediate charge. In other words, if your PayPal® Pro Form is configured to bill on a recurring basis ( starting the day of signup ), this setting controls the way in which s2Member handles the first payment of the Customer\\\'s Paid Subscription ( aka: Recurring Profile ).\\n\\nWe recommend: `Consolidate w/ Recurring Profile`, because this keeps all charges associated with a particular Customer organized in your PayPal® account. No matter which option you choose, a first Initial Payment ( when applicable ), will always be charged immediately. However, in cases where it is critical that a Customer NOT gain access until their first payment has been fully captured, choose: `Real-Time / Direct Pay`, which tells s2Member to authorize/capture the first payment in real-time during checkout, instead of consolidating it into the Recurring Profile.\\n\\nHere Is A Breakdown For You\\n\\n— Consolidate w/ Recurring Profile —\\ns2Member creates a Recurring Profile with an Initial Payment amount, to be charged immediately. PayPal® generates the Recurring Profile, returns a successful response to s2Member and the Customer gains access. Moments later ( usually within 30 seconds ), PayPal® will authorize/capture the first payment. If the first payment is declined, s2Member will revoke the Customer\\\'s access immediately.\\n\\n— Real-Time / Direct Pay ( mission critical ) —\\ns2Member charges the first payment separately ( in real-time during checkout ), leaving no possibility for the Customer to gain access until the first charge is fully captured. A Recurring Profile is also generated, which handles any future billing. You will have two billing records in your PayPal® account. One for the Initial Payment, and another for the Recurring Profile.\'); return false;">full details</a> ]' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_paypal_ops_detail_rows ();
 ?>

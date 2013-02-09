@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 	{
 		/**
@@ -46,28 +46,28 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 				public function __construct ()
 					{
 						echo '<div class="wrap ws-menu-page">' . "\n";
-						/**/
+
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
 						echo '<h2>s2Member® Pro / Other Payment Gateways</h2>' . "\n";
-						/**/
+
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
 						echo '<tr class="ws-menu-page-table-tr">' . "\n";
 						echo '<td class="ws-menu-page-table-l">' . "\n";
-						/**/
+
 						echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form">' . "\n";
 						echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="' . esc_attr (wp_create_nonce ("ws-plugin--s2member-options-save")) . '" />' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-group" title="Other Payment Gateways ( optional )" default-state="open">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-other-gateways-section">' . "\n";
 						echo '<h3>Other Payment Gateways ( enable / disable )</h3>' . "\n";
 						echo '<p>s2Member recommends PayPal® Pro as the best available option for payment processing. However, s2Member has also been integrated with the additional Payment Gateways listed below. If you wish to take advantage of these additional Gateway integrations, you must enable them explicitly from this page. Once enabled, options will become available in your s2Member Menu on the left-hand side. s2Member has the ability to operate with as many Gateways integrations as you like. If you\'d like to use them all, you can! Just remember, for each Payment Gateway that you integrate, you must configure the options for that Gateway, and you must use s2Member\'s Button Generator to create WordPress® Shortcodes that go into your Membership Options Page <em>( aka: your Signup Page )</em>.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<div class="ws-menu-page-scrollbox" style="height:250px;">' . "\n";
 						echo '<input type="hidden" name="ws_plugin__s2member_pro_gateways_enabled[]" value="update-signal" />' . "\n";
@@ -77,34 +77,34 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 						echo '</div>' . "\n";
 						echo 'Enable/disable Payment Gateways integrated with s2Member Pro.' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
-						/**/
+
 						echo '<p class="submit"><input type="submit" class="button-primary" value="Save Changes, ( then refresh )" /></p>' . "\n";
-						/**/
+
 						echo '</form>' . "\n";
-						/**/
+
 						echo '</td>' . "\n";
-						/**/
+
 						echo '<td class="ws-menu-page-table-r">' . "\n";
 						c_ws_plugin__s2member_menu_pages_rs::display ();
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_other_gateways ();
 ?>

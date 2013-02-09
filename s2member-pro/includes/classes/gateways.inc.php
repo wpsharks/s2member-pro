@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 	{
 		/**
@@ -54,7 +54,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				public static function available_gateways () /* Payment Gateways available. */
 					{
 						$gateways = array ("alipay" => "<strong>AliPay®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net®</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google® Checkout</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal® Website Payments Pro</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
-						/**/
+
 						return apply_filters ("ws_plugin__s2member_pro_available_gateways", $gateways, get_defined_vars ());
 					}
 				/**
@@ -71,11 +71,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				public static function profile_subscr_gateways ($gateways = FALSE)
 					{
 						$available_gateways = array_keys (c_ws_plugin__s2member_pro_gateways::available_gateways ());
-						/**/
+
 						foreach (($others = array ("alipay" => "AliPay® ( code: alipay )", "authnet" => "Authorize.Net® ( code: authnet )", "ccbill" => "ccBill® ( code: ccbill )", "clickbank" => "ClickBank® ( code: clickbank )", "google" => "Google® Checkout ( code: google )")) as $other => $gateway)
 							if (!in_array ($other, $available_gateways))
 								unset($others[$other]);
-						/**/
+
 						return apply_filters ("ws_plugin__s2member_pro_profile_subscr_gateways", array_unique (array_merge ((array)$gateways, $others)), get_defined_vars ());
 					}
 				/**
@@ -97,8 +97,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 									include_once dirname (dirname (__FILE__)) . "/separates/gateways/" . $gateway . "/" . $gateway . "-funcs.inc.php";
 									include_once dirname (dirname (__FILE__)) . "/separates/gateways/" . $gateway . "/" . $gateway . "-codes.inc.php";
 								}
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

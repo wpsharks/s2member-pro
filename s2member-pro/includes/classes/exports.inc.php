@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_exports"))
 	{
 		/**
@@ -55,11 +55,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_exports"))
 				*/
 				public static function export ()
 					{
-						if (!empty ($_POST["ws_plugin__s2member_pro_export_users"])) /* Call inner routine? */
+						if (!empty ($_POST["ws_plugin__s2member_pro_export_users"]))
 							{
 								return c_ws_plugin__s2member_pro_exports_in::export_users ();
 							}
-						if (!empty ($_GET["ws_plugin__s2member_pro_export_ops"])) /* Call routine? */
+						if (!empty ($_GET["ws_plugin__s2member_pro_export_ops"]))
 							{
 								return c_ws_plugin__s2member_pro_exports_in::export_ops ();
 							}

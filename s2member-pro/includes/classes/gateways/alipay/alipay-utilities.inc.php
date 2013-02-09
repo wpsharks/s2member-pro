@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 	{
 		/**
@@ -56,19 +56,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 					{
 						$vars["_input_charset"] = "utf-8";
 						ksort($vars) . reset ($vars);
-						/**/
+
 						$query = ""; /* Initialize query string. */
 						$_q = ""; /* Initialize the unencoded query. */
-						/**/
+
 						$gateway = "https://www.alipay.com/cooperate/gateway.do";
-						/**/
+
 						foreach (c_ws_plugin__s2member_utils_strings::trim_deep ($vars) as $var => $value)
 							if ($var && strlen ($value) && !preg_match ("/^(sign|sign_type)$/", $var))
 								{
 									$query .= (($query) ? "&" : "") . $var . "=" . ((preg_match ("/^http(s)?\:\/\//i", $value)) ? rawurlencode ($value) : urlencode ($value));
 									$_q .= (($_q) ? "&" : "") . $var . "=" . $value; /* This version is used to generate the digital signature. */
 								}
-						/**/
+
 						return $gateway . "?" . $query . "&sign=" . urlencode (md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])) . "&sign_type=MD5";
 					}
 				/**
@@ -84,25 +84,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 						if (!empty ($_REQUEST["notify_id"]) && !empty ($_REQUEST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_REQUEST["notify_type"]) && !empty ($_REQUEST["sign"]))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_REQUEST));
-								/**/
+
 								foreach ($postvars as $var => $value)
 									if (preg_match ("/^s2member_/", $var))
 										unset($postvars[$var]);
-								/**/
+
 								ksort($postvars) . reset ($postvars);
-								/**/
+
 								$_q = ""; /* Initialize unencoded query. */
-								/**/
+
 								$gateway = "https://www.alipay.com/cooperate/gateway.do";
-								/**/
+
 								foreach ($postvars as $var => $value)
 									if ($var && strlen ($value) && !preg_match ("/^(sign|sign_type)$/", $var))
 										$_q .= (($_q) ? "&" : "") . $var . "=" . $value;
-								/**/
-								if ($postvars["sign"] === md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])/**/
+
+								if ($postvars["sign"] === md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])
 								&& preg_match ("/true$/i", trim (c_ws_plugin__s2member_utils_urls::remote ($gateway . "?service=notify_verify&partner=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"]) . "&notify_id=" . urlencode ($postvars["notify_id"]), "", array ("timeout" => 20)))))
 									return $postvars;
-								/**/
+
 								else /* Nope. */
 									return false;
 							}

@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_registration"))
 	{
 		/**
@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_registration"))
 				*/
 				public static function paypal_registration ()
 					{
-						if (!empty ($_POST["s2member_pro_paypal_registration"])) /* Call inner routine? */
+						if (!empty ($_POST["s2member_pro_paypal_registration"]))
 							{
 								return c_ws_plugin__s2member_pro_paypal_registration_in::paypal_registration ();
 							}

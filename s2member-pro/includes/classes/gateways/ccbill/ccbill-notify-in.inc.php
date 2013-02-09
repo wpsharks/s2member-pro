@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 	{
 		/**
@@ -55,103 +55,103 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 				*/
 				public static function ccbill_notify ()
 					{
-						global $current_site, $current_blog; /* For Multisite support. */
-						/**/
+						global /* For Multisite support. */ $current_site, $current_blog;
+
 						if (isset ($_GET["s2member_pro_ccbill_notify"]) && strlen ($_GET["s2member_pro_ccbill_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
 							{
 								@ignore_user_abort (true); /* Continue processing even if/when connection is broken by the sender. */
-								/**/
+
 								if (is_array ($ccbill = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_postvars ()) && ($_ccbill = $ccbill))
 									{
 										$ccbill["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$ccbill["s2member_log"][] = "s2Member POST vars verified with ccBill®.";
-										/**/
+
 										if (!$ccbill["denialId"] && $ccbill["subscription_id"] && !$ccbill["recurringPeriod"])
 											{
 												$ccbill["s2member_log"][] = "ccBill® transaction identified as ( `NON-RECURRING/BUY-NOW` ).";
 												$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
 												$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "web_accept";
-												/**/
+
 												$ipn["txn_id"] = $ccbill["subscription_id"];
-												/**/
+
 												$ipn["custom"] = $ccbill["s2_custom"];
-												/**/
+
 												$ipn["mc_gross"] = number_format ($ccbill["initialPrice"], 2, ".", "");
 												$ipn["mc_currency"] = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_code ($ccbill["currencyCode"]);
 												$ipn["tax"] = number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $ccbill["email"];
 												$ipn["first_name"] = $ccbill["customer_fname"];
 												$ipn["last_name"] = $ccbill["customer_lname"];
-												/**/
+
 												$ipn["option_name1"] = ($ccbill["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($ccbill["s2_referencing"]) ? $ccbill["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $ccbill["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $ccbill["s2_invoice"];
 												$ipn["item_name"] = $ccbill["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										else if (!$ccbill["denialId"] && $ccbill["subscription_id"] && $ccbill["recurringPeriod"])
 											{
 												$ccbill["s2member_log"][] = "ccBill® transaction identified as ( `RECURRING/SUBSCRIPTION` ).";
 												$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
 												$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $ccbill["subscription_id"];
 												$ipn["recurring"] = "1"; /* Yes, recurring. */
-												/**/
+
 												$ipn["txn_id"] = $ccbill["subscription_id"];
-												/**/
+
 												$ipn["custom"] = $ccbill["s2_custom"];
-												/**/
+
 												$ipn["period1"] = $ccbill["s2_p1"];
 												$ipn["period3"] = $ccbill["s2_p3"];
-												/**/
+
 												$ipn["mc_amount1"] = number_format ($ccbill["initialPrice"], 2, ".", "");
 												$ipn["mc_amount3"] = number_format ($ccbill["recurringPrice"], 2, ".", "");
-												/**/
+
 												$ipn["mc_gross"] = (preg_match ("/^[1-9]/", $ipn["period1"])) ? $ipn["mc_amount1"] : $ipn["mc_amount3"];
-												/**/
+
 												$ipn["mc_currency"] = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_code ($ccbill["currencyCode"]);
 												$ipn["tax"] = number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $ccbill["email"];
 												$ipn["first_name"] = $ccbill["customer_fname"];
 												$ipn["last_name"] = $ccbill["customer_lname"];
-												/**/
+
 												$ipn["option_name1"] = ($ccbill["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($ccbill["s2_referencing"]) ? $ccbill["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $ccbill["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $ccbill["s2_invoice"];
 												$ipn["item_name"] = $ccbill["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; /* Use as first payment? */
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										else if (!$processed) /* If nothing was processed, here we add a message to the logs indicating the IPN was ignored. */
 											$ccbill["s2member_log"][] = "Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.";
 									}
@@ -171,16 +171,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 								$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
 								$log4 = (is_multisite () && !is_main_site ()) ? ($_log4 = $current_blog->domain . $current_blog->path) . "\n" . $log4 : $log4;
 								$log2 = (is_multisite () && !is_main_site ()) ? "ccbill-ipn-4-" . trim (preg_replace ("/[^a-z0-9]/i", "-", $_log4), "-") . ".log" : "ccbill-ipn.log";
-								/**/
+
 								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 									if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($ccbill, true) . "\n\n", FILE_APPEND);
-								/**/
+
 								status_header (200); /* Send a 200 OK status header. */
 								header ("Content-Type: text/plain; charset=utf-8"); /* Content-Type text/plain with UTF-8. */
 								eval ('while (@ob_end_clean ());'); /* End/clean all output buffers that may or may not exist. */
-								/**/
+
 								exit (); /* Exit now. */
 							}
 					}

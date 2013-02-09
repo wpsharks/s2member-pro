@@ -32,7 +32,7 @@
 */
 if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 	{
 		/**
@@ -59,10 +59,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 							{
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 									return c_ws_plugin__s2member_pro_paypal_checkout_pf_in::paypal_checkout();
-								/**/
+
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_paypal_checkout_rdp"])
 									return c_ws_plugin__s2member_pro_paypal_checkout_rdp_in::paypal_checkout();
-								/**/
+
 								return c_ws_plugin__s2member_pro_paypal_checkout_in::paypal_checkout();
 							}
 					}

@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 	{
 		/**
@@ -55,229 +55,229 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 				*/
 				public static function clickbank_notify ()
 					{
-						global $current_site, $current_blog; /* For Multisite support. */
-						/**/
+						global /* For Multisite support. */ $current_site, $current_blog;
+
 						if (!empty ($_GET["s2member_pro_clickbank_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])
 							{
 								@ignore_user_abort (true); /* Continue processing even if/when connection is broken by the sender. */
-								/**/
+
 								if (is_array ($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars ()) && ($_clickbank = $clickbank))
 									{
 										$clickbank["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank®.";
-										/**/
+
 										$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars ($clickbank["cvendthru"], $clickbank["ctransaction"]);
-										/**/
+
 										if (isset ($s2vars["s2_p1"], $s2vars["s2_p3"]) && /* No Trial defaults to Regular Period. */ $s2vars["s2_p1"] === "0 D")
 											$s2vars["s2_p1"] = /* Initial Period. No Trial defaults to Regular Period. */ $s2vars["s2_p3"];
-										/**/
+
 										$clickbank["s2vars"] = /* So they appear in the log entry for this Notification. */ $s2vars;
-										/**/
+
 										if (strcasecmp ($clickbank["ccustfirstname"] . " " . $clickbank["ccustlastname"], $clickbank["ccustfullname"]) !== 0 && preg_match ("/(?:[^ ]+)(?: +)(?:[^ ]+)/", $clickbank["ccustfullname"]))
 											list ($clickbank["ccustfirstname"], $clickbank["ccustlastname"]) = preg_split ("/ +/", $clickbank["ccustfullname"], 2);
-										/**/
+
 										if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^STANDARD$/i", $clickbank["cprodtype"]))
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/STANDARD` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "web_accept";
-												/**/
+
 												$ipn["txn_id"] = $clickbank["ctransreceipt"];
-												/**/
+
 												$ipn["custom"] = $s2vars["s2_custom"];
-												/**/
+
 												$ipn["mc_gross"] = number_format ($clickbank["corderamount"] / 100, 2, ".", "");
 												$ipn["mc_currency"] = strtoupper ($clickbank["ccurrency"]);
 												$ipn["tax"] = number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $clickbank["ccustemail"];
 												$ipn["first_name"] = ucwords (strtolower ($clickbank["ccustfirstname"]));
 												$ipn["last_name"] = ucwords (strtolower ($clickbank["ccustlastname"]));
-												/**/
+
 												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										else if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/RECURRING` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
 												$ipn["recurring"] = ($clickbank["cfuturepayments"] > 1) ? "1" : "0";
-												/**/
+
 												$ipn["txn_id"] = $clickbank["ctransreceipt"];
-												/**/
+
 												$ipn["custom"] = $s2vars["s2_custom"];
-												/**/
+
 												$ipn["period1"] = $s2vars["s2_p1"];
 												$ipn["period3"] = $s2vars["s2_p3"];
-												/**/
+
 												$ipn["mc_amount1"] = number_format ($clickbank["corderamount"] / 100, 2, ".", "");
 												$ipn["mc_amount3"] = number_format ($clickbank["crebillamnt"] / 100, 2, ".", "");
-												/**/
+
 												$ipn["mc_gross"] = (preg_match ("/^[1-9]/", $ipn["period1"])) ? $ipn["mc_amount1"] : $ipn["mc_amount3"];
-												/**/
+
 												$ipn["mc_currency"] = strtoupper ($clickbank["ccurrency"]);
 												$ipn["tax"] = number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $clickbank["ccustemail"];
 												$ipn["first_name"] = ucwords (strtolower ($clickbank["ccustfirstname"]));
 												$ipn["last_name"] = ucwords (strtolower ($clickbank["ccustlastname"]));
-												/**/
+
 												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; /* Use as first payment? */
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										else if (preg_match ("/^(?:TEST_)?BILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `BILL/RECURRING` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_payment` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "subscr_payment";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
-												/**/
+
 												$ipn["txn_id"] = $clickbank["ctransreceipt"];
-												/**/
+
 												$ipn["custom"] = $s2vars["s2_custom"];
-												/**/
+
 												$ipn["mc_gross"] = number_format ($clickbank["corderamount"] / 100, 2, ".", "");
 												$ipn["mc_currency"] = strtoupper ($clickbank["ccurrency"]);
 												$ipn["tax"] = number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $clickbank["ccustemail"];
 												$ipn["first_name"] = ucwords (strtolower ($clickbank["ccustfirstname"]));
 												$ipn["last_name"] = ucwords (strtolower ($clickbank["ccustlastname"]));
-												/**/
+
 												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) /* Product Type irrelevant here; checked below. */
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RFND|CGBK|INSF` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `payment_status` ( `refunded|reversed` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["payment_status"] = (preg_match ("/^(?:TEST_)?RFND$/", $clickbank["ctransaction"])) ? "refunded" : "reversed";
-												/**/
+
 												$ipn["parent_txn_id"] = (preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && $s2vars["s2_subscr_id"]) ? $s2vars["s2_subscr_id"] : $clickbank["ctransreceipt"];
-												/**/
+
 												$ipn["custom"] = $s2vars["s2_custom"];
-												/**/
+
 												$ipn["mc_fee"] = "-" . number_format ("0.00", 2, ".", "");
 												$ipn["mc_gross"] = "-" . number_format (abs ($clickbank["corderamount"]) / 100, 2, ".", "");
 												$ipn["mc_currency"] = strtoupper ($clickbank["ccurrency"]);
 												$ipn["tax"] = "-" . number_format ("0.00", 2, ".", "");
-												/**/
+
 												$ipn["payer_email"] = $clickbank["ccustemail"];
 												$ipn["first_name"] = ucwords (strtolower ($clickbank["ccustfirstname"]));
 												$ipn["last_name"] = ucwords (strtolower ($clickbank["ccustlastname"]));
-												/**/
+
 												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										if ( /* Here we handle Recurring cancellations, and/or EOT ( End Of Term ) through $clickbank["crebillstatus"]. */
-										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0))/**/
+										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0))
 										|| (preg_match ("/^(?:TEST_)?CANCEL-REBILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"])))
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-												/**/
+
 												$processing = $processed = true;
 												$ipn = array (); /* Reset. */
-												/**/
+
 												$ipn["txn_type"] = "subscr_cancel";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
-												/**/
+
 												$ipn["custom"] = $s2vars["s2_custom"];
-												/**/
+
 												$ipn["period1"] = $s2vars["s2_p1"];
 												$ipn["period3"] = $s2vars["s2_p3"];
-												/**/
+
 												$ipn["payer_email"] = $clickbank["ccustemail"];
 												$ipn["first_name"] = ucwords (strtolower ($clickbank["ccustfirstname"]));
 												$ipn["last_name"] = ucwords (strtolower ($clickbank["ccustlastname"]));
-												/**/
+
 												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
 												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-												/**/
+
 												$ipn["option_name2"] = "Customer IP Address";
 												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-												/**/
+
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
-												/**/
+
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-												/**/
+
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
-										/**/
+
 										if (!$processed) /* If nothing was processed, here we add a message to the logs indicating the IPN was ignored. */
 											$clickbank["s2member_log"][] = "Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.";
 									}
@@ -297,16 +297,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 								$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
 								$log4 = (is_multisite () && !is_main_site ()) ? ($_log4 = $current_blog->domain . $current_blog->path) . "\n" . $log4 : $log4;
 								$log2 = (is_multisite () && !is_main_site ()) ? "clickbank-ipn-4-" . trim (preg_replace ("/[^a-z0-9]/i", "-", $_log4), "-") . ".log" : "clickbank-ipn.log";
-								/**/
+
 								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 									if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($clickbank, true) . "\n\n", FILE_APPEND);
-								/**/
+
 								status_header (200); /* Send a 200 OK status header. */
 								header ("Content-Type: text/plain; charset=utf-8"); /* Content-Type text/plain with UTF-8. */
 								eval ('while (@ob_end_clean ());'); /* End/clean all output buffers that may or may not exist. */
-								/**/
+
 								exit (); /* Exit now. */
 							}
 					}

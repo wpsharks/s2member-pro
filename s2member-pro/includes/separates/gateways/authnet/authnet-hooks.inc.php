@@ -36,28 +36,28 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 Add the plugin Actions/Filters here.
 */
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_notify::authnet_notify", 1);
-/**/
+
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_update::authnet_update");
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_checkout::authnet_checkout");
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_sp_checkout::authnet_sp_checkout");
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_registration::authnet_registration");
 add_action ("init", "c_ws_plugin__s2member_pro_authnet_cancellation::authnet_cancellation");
-/**/
+
 add_filter ("ws_plugin__s2member_during_constants_c", "c_ws_plugin__s2member_pro_authnet_constants::authnet_constants", 10, 2);
-/**/
+
 add_action ("ws_plugin__s2member_after_auto_eot_system", "c_ws_plugin__s2member_pro_authnet_arb::authnet_arb_service");
-/**/
+
 add_action ("wp_ajax_ws_plugin__s2member_pro_authnet_ajax_tax", "c_ws_plugin__s2member_pro_authnet_utilities::authnet_ajax_tax");
 add_action ("wp_ajax_nopriv_ws_plugin__s2member_pro_authnet_ajax_tax", "c_ws_plugin__s2member_pro_authnet_utilities::authnet_ajax_tax");
-/**/
+
 add_action ("ws_plugin__s2member_during_css", "c_ws_plugin__s2member_pro_authnet_css_js::authnet_css");
 add_action ("ws_plugin__s2member_during_js_w_globals", "c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_w_globals");
 add_action ("ws_plugin__s2member_during_menu_pages_js", "c_ws_plugin__s2member_pro_authnet_admin_css_js::authnet_menu_pages_js");
-/**/
+
 add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_4", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_admin_options", 10, 2);
-/**/
+
 add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_scripting_page_api_constants");
 add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_scripting_page_api_constants");
-/**/
+
 add_filter ("ws_plugin__s2member_check_force_ssl", "c_ws_plugin__s2member_pro_authnet_ssl::sc_authnet_form_auto_force_ssl", 10, 2);
 ?>

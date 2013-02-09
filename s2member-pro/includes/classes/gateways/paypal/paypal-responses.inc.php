@@ -32,7 +32,7 @@
 */
 if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 	{
 		/**
@@ -55,9 +55,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_cancellation_response($attr = FALSE)
 					{
 						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_cancellation_response"];
-						/**/
+
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
-						/**/
+
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-cancellation-form-response-error">';
@@ -84,9 +84,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_update_response($attr = FALSE)
 					{
 						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_update_response"];
-						/**/
+
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
-						/**/
+
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-update-form-response-error">';
@@ -113,9 +113,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_registration_response($attr = FALSE)
 					{
 						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_registration_response"];
-						/**/
+
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
-						/**/
+
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-registration-form-response-error">';
@@ -142,9 +142,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_sp_checkout_response($attr = FALSE)
 					{
 						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"];
-						/**/
+
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
-						/**/
+
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-sp-checkout-form-response-error">';
@@ -171,9 +171,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_checkout_response($attr = FALSE)
 					{
 						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_checkout_response"];
-						/**/
+
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
-						/**/
+
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-checkout-form-response-error">';
@@ -203,16 +203,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 					{
 						if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"])
 							$response = array("response" => _x('PayPal® configuration error. Please configure your PayPal® Email Address.', "s2member-admin", "s2member"), "error" => true);
-						/**/
+
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_username"])
 							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Username is not yet configured.', "s2member-admin", "s2member"), "error" => true);
-						/**/
+
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_password"])
 							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Password is not yet configured.', "s2member-admin", "s2member"), "error" => true);
-						/**/
+
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_signature"])
 							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Signature is not yet configured.', "s2member-admin", "s2member"), "error" => true);
-						/**/
+
 						return (empty($response) || !empty($attr["register"])) ? null : $response;
 					}
 				/**
@@ -234,18 +234,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/**/
+
 										else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option("s2member_subscr_id", $user_id)))
 											$response = array("response" => _x('Nothing to cancel. You\'re NOT a paid Member.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 											{
 												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
@@ -255,13 +255,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 													{
 														if($paypal && !empty($paypal["__error"]) &&  /* Subscription Profile? */$paypal["L_ERRORCODE0"] === "11592")
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
-														/**/
+
 														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 													}
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
@@ -270,21 +270,21 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/**/
+
 										else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option("s2member_subscr_id", $user_id)))
 											$response = array("response" => _x('Nothing to update. You\'re NOT a paid Member.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 											{
 												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(strtoupper($paypal["TENDER"]) === "P")
 													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
-												/**/
+
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
@@ -294,16 +294,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 													{
 														if($paypal && empty($paypal["__error"]) && /* It's NOT associated with a credit card; they used PayPal®. */ strlen($paypal["ACCT"]) !== 4)
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
-														/**/
+
 														else if($paypal && !empty($paypal["__error"]) && /* Subscription Profile? */ $paypal["L_ERRORCODE0"] === "11592")
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
-														/**/
+
 														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 													}
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-												/**/
+
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
@@ -312,25 +312,25 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!is_string($attr["level"]) || !is_numeric($attr["level"]))
 											$response = array("response" => sprintf(_x('Invalid form configuration. Missing "level" attribute. Membership Level. Must be numeric [0-%s].', "s2member-admin", "s2member"), esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])), "error" => true);
-										/**/
+
 										else if($attr["level"] < 0 || $attr["level"] > $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])
 											$response = array("response" => sprintf(_x('Invalid form configuration. Invalid "level" attribute. Membership Level. Must be numeric [0-%s].', "s2member-admin", "s2member"), esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])), "error" => true);
-										/**/
+
 										else if($attr["ccaps"] && (!is_string($attr["ccaps"]) || (preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"])) && !preg_match("/^([a-z_0-9,]+)$/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"]))))))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ccaps" attribute. Custom Capabilities. When provided, must be all lowercase [a-z_0-9,]. A preceding `-all,` directive is also acceptable.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && (!is_string($attr["tp"]) || !is_numeric($attr["tp"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "tp" attribute. The Trial Period. When provided, must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && $attr["tp"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "tp" attribute. The Trial Period. When provided, must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && (!$attr["tt"] || !is_string($attr["tt"])))
 											$response = array("response" => _x('Invalid form configuration. Missing "tt" attribute. The Trial Term. When "tp" is provided, "tt" ( Trial Term ) must be one of D,W,M,Y.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && !preg_match("/[DWMY]/", $attr["tt"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "tt" attribute. The Trial Term. When "tp" is provided, "tt" ( Trial Term ) must be one of D,W,M,Y.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["custom"] && (!is_string($attr["custom"]) || !preg_match("/^".preg_quote(preg_replace("/\:([0-9]+)$/", "", $_SERVER["HTTP_HOST"]), "/")."/i", $attr["custom"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "custom" attribute. When provided, must start with your domain name.', "s2member-admin", "s2member-admin"), "error" => true);
 									}
@@ -338,73 +338,73 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!$attr["ids"] || !is_string($attr["ids"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ids" attribute. Must contain comma-delimited Post/Page IDs.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!preg_match("/^([0-9,]+)$/", $attr["ids"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ids" attribute. Must contain comma-delimited Post/Page IDs. Must contain [0-9,] only.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["exp"] || !is_string($attr["exp"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "exp" attribute. Specific Post/Page Expiration ( in hours ). Must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_numeric($attr["exp"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration ( in hours ). Must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["exp"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration ( in hours ). Must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["exp"] > 43800)
 											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration ( in hours ). Must be <= 43800.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["sp_ids_exp"] || !is_string($attr["sp_ids_exp"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "sp_ids_exp" internal attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!preg_match($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["sp_access_item_number_regex"], $attr["sp_ids_exp"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "sp_ids_exp" internal attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["desc"] || !is_string($attr["desc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "desc" attribute. Please provide a Description for this form.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($attr["desc"]) > 100 /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */)
 											$response = array("response" => _x('Invalid form configuration. Your "desc" ( Description ) attribute must be <= 100 characters long.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["custom"] || !is_string($attr["custom"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "custom" attribute. Must start with your domain name.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!preg_match("/^".preg_quote(preg_replace("/\:([0-9]+)$/", "", $_SERVER["HTTP_HOST"]), "/")."/i", $attr["custom"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "custom" attribute. Must start with your domain name.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["cc"] || !is_string($attr["cc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "cc" attribute. Must be a 3 character Currency Code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($attr["cc"]) !== 3)
 											$response = array("response" => _x('Invalid form configuration. Invalid "cc" attribute. Must be a 3 character Currency Code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!strlen($attr["dg"]) || !is_string($attr["dg"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "dg" attribute. Digital indicator. Must be numeric [0-1].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["dg"] < 0 || $attr["dg"] > 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "dg" attribute. Digital indicator. Must be numeric [0-1].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!strlen($attr["ns"]) || !is_string($attr["ns"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ns" attribute. Shipping configuration. Must be numeric [0-2].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ns"] < 0 || $attr["ns"] > 2)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ns" attribute. Shipping configuration. Must be numeric [0-2].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["dg"] && $attr["ns"] !== "1")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ns" attribute. Shipping configuration. Must be 1 with "dg" ( digital ) items.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["lc"] && strlen($attr["lc"]) !== 2)
 											$response = array("response" => _x('Invalid form configuration. Invalid "lc" attribute. Locale Code. When provided, must be a 2 character country code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["ra"] || !is_string($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_numeric($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ra"] < 0.01)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ra"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
 									}
@@ -412,163 +412,163 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if /* Must be logged in before a modification can take place. */($attr["modify"] && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">login</a> to update your billing plan.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/**/
+
 										else if /* Must be logged in before purchasing. */($attr["level"] === "*" && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">login</a> before making this purchase.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/**/
+
 										else if((!$attr["level"] || !is_string($attr["level"]) || !is_numeric($attr["level"])) && $attr["level"] !== "*")
 											$response = array("response" => sprintf(_x('Invalid form configuration. Missing "level" attribute. Membership Level. Must be numeric [1-%s], or an asterisk (*).', "s2member-admin", "s2member"), esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])), "error" => true);
-										/**/
+
 										else if(($attr["level"] < 1 || $attr["level"] > $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]) && $attr["level"] !== "*")
 											$response = array("response" => sprintf(_x('Invalid form configuration. Invalid "level" attribute. Membership Level. Must be numeric [1-%s], or an asterisk (*).', "s2member-admin", "s2member"), esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])), "error" => true);
-										/**/
+
 										else if($attr["ccaps"] && (!is_string($attr["ccaps"]) || (preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"])) && !preg_match("/^([a-z_0-9,]+)$/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"]))))))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ccaps" attribute. Custom Capabilities. When provided, must be all lowercase [a-z_0-9,]. A preceding `-all,` directive is also acceptable.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["level"] === "*" && (!is_string($attr["ccaps"]) || !preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"])) || !preg_match("/^([a-z_0-9,]+)$/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $attr["ccaps"])))))
 											$response = array("response" => _x('Invalid form configuration. Missing or invalid "ccaps" attribute. When "level" is "*" for ( Independent Custom Capabilities ), "ccaps" is required. All lowercase [a-z_0-9,]. A preceding `-all,` directive is also acceptable.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["desc"] || !is_string($attr["desc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "desc" attribute. Please provide a Description for this form.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($attr["desc"]) > 100 /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */)
 											$response = array("response" => _x('Invalid form configuration. Your "desc" ( Description ) attribute must be <= 100 characters long.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["custom"] || !is_string($attr["custom"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "custom" attribute. Must start with your domain name.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!preg_match("/^".preg_quote(preg_replace("/\:([0-9]+)$/", "", $_SERVER["HTTP_HOST"]), "/")."/i", $attr["custom"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "custom" attribute. Must start with matching domain.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["cc"] || !is_string($attr["cc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "cc" attribute. Must be a 3 character Currency Code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($attr["cc"]) !== 3)
 											$response = array("response" => _x('Invalid form configuration. Invalid "cc" attribute. Must be a 3 character Currency Code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!strlen($attr["dg"]) || !is_string($attr["dg"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "dg" attribute. Digital indicator. Must be numeric [0-1].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["dg"] < 0 || $attr["dg"] > 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "dg" attribute. Digital indicator. Must be numeric [0-1].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!strlen($attr["ns"]) || !is_string($attr["ns"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ns" attribute. Shipping configuration. Must be numeric [0-2].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ns"] < 0 || $attr["ns"] > 2)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ns" attribute. Shipping configuration. Must be numeric [0-2].', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["dg"] && $attr["ns"] !== "1")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ns" attribute. Shipping configuration. Must be 1 with "dg" ( digital ) items.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["lc"] && strlen($attr["lc"]) !== 2)
 											$response = array("response" => _x('Invalid form configuration. Invalid "lc" attribute. Locale Code. When provided, must be a 2 character country code.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && (!is_string($attr["tp"]) || !is_numeric($attr["tp"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "tp" attribute. The Trial Period. When provided, must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && $attr["tp"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "tp" attribute. The Trial Period. When provided, must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && (!$attr["tt"] || !is_string($attr["tt"])))
 											$response = array("response" => _x('Invalid form configuration. Missing "tt" attribute. The Trial Term. When "tp" is provided, "tt" ( Trial Term ) must be one of D,W,M,Y.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && !preg_match("/[DWMY]/", $attr["tt"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "tt" attribute. The Trial Term. When "tp" is provided, "tt" ( Trial Term ) must be one of D,W,M,Y.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && $attr["ta"] && !is_numeric($attr["ta"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && $attr["ta"] && $attr["ta"] < 0.00)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["tp"] && $attr["ta"] && $attr["ta"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["rp"] || !is_string($attr["rp"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "rp" attribute. The Regular Period. Must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_numeric($attr["rp"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rp" attribute. The Regular Period. Must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rp"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "rp" attribute. The Regular Period. Must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["rt"] || !is_string($attr["rt"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "rt" attribute. The Regular Term. Must be one of D,W,M,Y,L.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!preg_match("/[DWMYL]/", $attr["rt"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt" attribute. The Regular Term. Must be one of D,W,M,Y,L.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "D" && $attr["rp"] > 365 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "D", "rp" ( Regular Period ) > 365, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "W" && $attr["rp"] > 52 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "W", "rp" ( Regular Period ) > 52, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "M" && $attr["rp"] > 12 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "M", "rp" ( Regular Period ) > 12, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rr"] !== "BN" && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"] && !in_array($attr["rp"]."-".$attr["rt"], array("1-D", "1-W", "2-W", "1-M", "3-M", "6-M", "1-Y"), TRUE))
 											$response = array("response" => _x('Invalid Payflow® form configuration. Invalid "rt, rp, rr" attributes. Payflow® supports a specific set of recurring intervals. Pro Forms can be configured to charge: daily, weekly, bi-weekly, monthly, quarterly, semi-yearly or yearly. Any other combination results in this error. This is a Payflow® limitation.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "Y" && $attr["rp"] > 5 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "Y", "rp" ( Regular Period ) > 5, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "Y" && $attr["rp"] > 1 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" ( Regular Term ) attribute is "Y", "rp" ( Regular Period ) > 1, and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "L" && $attr["rp"] > 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "rp, rt" attributes. The "rt" ( Regular Term ) attribute is "L" ( Lifetime ), and "rp" ( Regular Period ) > 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rt"] === "L" && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rr" attributes. The "rt" ( Regular Term ) attribute is "L" ( Lifetime ), and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["level_ccaps_eotper"] || !is_string($attr["level_ccaps_eotper"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "level_ccaps_eotper" attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["level"] !== "*" && !preg_match($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["membership_item_number_w_level_regex"], $attr["level_ccaps_eotper"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "level_ccaps_eotper" attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["level"] === "*" && !preg_match($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["membership_item_number_wo_level_regex"], $attr["level_ccaps_eotper"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "level_ccaps_eotper" attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!$attr["ra"] || !is_string($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_numeric($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ra"] < 0.01)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ra"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rr"] && (!is_string($attr["rr"]) || !preg_match("/^([0-1]|BN)$/", $attr["rr"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr" attribute. Regular Recurring. When provided, must be 0, 1, or BN.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rr"] === "BN" && $attr["tp"])
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, tp" attributes. The "rr" ( Regular Recurring ) attribute is "BN" ( Buy Now ), and "tp" ( Trial Period ) is not "0".', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["level"] === "*" && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "level, rr" attributes. The "level" ( Level ) attribute is "*" for ( Independent Custom Capabilities ), and "rr" is not "BN" ( Buy Now ).', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["ta"] === $attr["ra"] && $attr["tp"] === $attr["rp"] && $attr["tt"] === $attr["rt"])
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta, tp, tt" attributes. Trial Period. When provided, these cannot be exactly the same as your "ra, rp, rt" attributes.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rrt"] && (!is_string($attr["rrt"]) || !is_numeric($attr["rrt"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rrt" attribute. Recurring Times ( fixed ). When provided, must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rrt"] && $attr["rrt"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "rrt" attribute. Recurring Times ( fixed ). When provided, must be >= 1.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if($attr["rrt"] && $attr["rr"] !== "1")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rrt" attributes. When "rrt" ( Recurring Times ) is provided, "rr" ( Regular Recurring ) must be 1.', "s2member-admin", "s2member"), "error" => true);
 										/****/
 										else if(($attr["rr"] === "0" || $attr["rr"] === "1") && (!is_string($attr["rra"]) || !is_numeric($attr["rra"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rra" attributes. When "rr" ( Regular Recurring ) is 0 or 1, "rra" ( Recurring Retry Attempts ) must be numeric.', "s2member-admin", "s2member"), "error" => true);
-										/**/
+
 										else if(($attr["rr"] === "0" || $attr["rr"] === "1") && $attr["rra"] < 0)
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rra" attributes. When "rr" ( Regular Recurring ) is 0 or 1, "rra" ( Recurring Retry Attempts ) must be >= 0.', "s2member-admin", "s2member"), "error" => true);
 									}
@@ -612,37 +612,37 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) || !is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"]))
 											$response = array("response" => _x('Invalid Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_number"] || !is_string($s["card_number"])))
 											$response = array("response" => _x('Missing Card Number. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_expiration"] || !is_string($s["card_expiration"])))
 											$response = array("response" => _x('Missing Card Expiration Date ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && !preg_match("/^[0-9]{2}\/[0-9]{4}$/", $s["card_expiration"]))
 											$response = array("response" => _x('Invalid Card Expiration Date. Must be in this format ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_verification"] || !is_string($s["card_verification"])))
 											$response = array("response" => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["city"] || !is_string($s["city"])))
 											$response = array("response" => _x('Missing City/Town. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["state"] || !is_string($s["state"])))
 											$response = array("response" => _x('Missing State/Province. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["country"] || !is_string($s["country"])))
 											$response = array("response" => _x('Missing Country. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
@@ -653,40 +653,40 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_names"] && (!$s["first_name"] || !is_string($s["first_name"])))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_names"] && (!$s["last_name"] || !is_string($s["last_name"])))
 											$response = array("response" => _x('Missing Last Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!$s["email"] || !is_string($s["email"]))
 											$response = array("response" => _x('Missing or invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!$s["username"] || !is_string($s["username"]))
 											$response = array("response" => _x('Missing or invalid Username. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!validate_username($s["username"]))
 											$response = array("response" => _x('Invalid Username. Please try again. Use ONLY lowercase alphanumerics.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(username_exists($s["username"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))
 											$response = array("response" => _x('That Username is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"]) && ($_response = wpmu_validate_user_signup($s["username"], $s["email"])) && is_wp_error($_errors = $_response["errors"]) && $_errors->get_error_message())
 											$response = array("response" => $_errors->get_error_message(), "error" => true);
-										/**/
+
 										else if((!$s["password1"] || !is_string($s["password1"])) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Missing Password. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($s["password1"]) < 6 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Invalid Password. Must be at least 6 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(strlen($s["password1"]) > 20 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Invalid Password. Max length is 20 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if($s["password2"] !== $s["password1"] && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
@@ -697,49 +697,49 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!$s["first_name"] || !is_string($s["first_name"]))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!$s["last_name"] || !is_string($s["last_name"]))
 											$response = array("response" => _x('Missing Last Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!$s["email"] || !is_string($s["email"]))
 											$response = array("response" => _x('Missing or invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) || !is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"]))
 											$response = array("response" => _x('Invalid Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_number"] || !is_string($s["card_number"])))
 											$response = array("response" => _x('Missing Card Number. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_expiration"] || !is_string($s["card_expiration"])))
 											$response = array("response" => _x('Missing Card Expiration Date ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && !preg_match("/^[0-9]{2}\/[0-9]{4}$/", $s["card_expiration"]))
 											$response = array("response" => _x('Invalid Card Expiration Date. Must be in this format ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_verification"] || !is_string($s["card_verification"])))
 											$response = array("response" => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["city"] || !is_string($s["city"])))
 											$response = array("response" => _x('Missing City/Town. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["state"] || !is_string($s["state"])))
 											$response = array("response" => _x('Missing State/Province. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["country"] || !is_string($s["country"])))
 											$response = array("response" => _x('Missing Country. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
@@ -759,76 +759,76 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(!$s["first_name"] || !is_string($s["first_name"]))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!$s["last_name"] || !is_string($s["last_name"]))
 											$response = array("response" => _x('Missing Last Name. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && (!$s["email"] || !is_string($s["email"])))
 											$response = array("response" => _x('Missing or invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && !is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && (!$s["username"] || !is_string($s["username"])))
 											$response = array("response" => _x('Missing or invalid Username. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && !validate_username($s["username"]))
 											$response = array("response" => _x('Invalid Username. Please try again. Use ONLY lowercase alphanumerics.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && username_exists($s["username"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))
 											$response = array("response" => _x('That Username is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"]) && ($_response = wpmu_validate_user_signup($s["username"], $s["email"])) && is_wp_error($_errors = $_response["errors"]) && $_errors->get_error_message())
 											$response = array("response" => $_errors->get_error_message(), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && (!$s["password1"] || !is_string($s["password1"])) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Missing Password. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && strlen($s["password1"]) < 6 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Invalid Password. Must be at least 6 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && strlen($s["password1"]) > 20 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Invalid Password. Max length is 20 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!is_user_logged_in() && $s["password2"] !== $s["password1"] && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) || !is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"]))
 											$response = array("response" => _x('Invalid Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_number"] || !is_string($s["card_number"])))
 											$response = array("response" => _x('Missing Card Number. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_expiration"] || !is_string($s["card_expiration"])))
 											$response = array("response" => _x('Missing Card Expiration Date ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && !preg_match("/^[0-9]{2}\/[0-9]{4}$/", $s["card_expiration"]))
 											$response = array("response" => _x('Invalid Card Expiration Date. Must be in this format ( mm/yyyy ). Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_verification"] || !is_string($s["card_verification"])))
 											$response = array("response" => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["city"] || !is_string($s["city"])))
 											$response = array("response" => _x('Missing City/Town. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["state"] || !is_string($s["state"])))
 											$response = array("response" => _x('Missing State/Province. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["country"] || !is_string($s["country"])))
 											$response = array("response" => _x('Missing Country. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/**/
+
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */

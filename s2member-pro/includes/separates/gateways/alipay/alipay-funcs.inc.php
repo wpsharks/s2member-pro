@@ -39,6 +39,6 @@ if (is_dir ($ws_plugin__s2member_pro_temp_dir = dirname (dirname (dirname (dirna
 	foreach (scandir ($ws_plugin__s2member_pro_temp_dir) as $ws_plugin__s2member_pro_temp_s) /* Scan all files in this directory. */
 		if (preg_match ("/\.php$/", $ws_plugin__s2member_pro_temp_s) && preg_match ("/^alipay-/i", $ws_plugin__s2member_pro_temp_s))
 			include_once $ws_plugin__s2member_pro_temp_dir . "/" . $ws_plugin__s2member_pro_temp_s;
-/**/
+
 unset ($ws_plugin__s2member_pro_temp_dir, $ws_plugin__s2member_pro_temp_s);
 ?>

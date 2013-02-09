@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 	{
 		/**
@@ -63,13 +63,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 				public static function authnet_arb_service ($vars = FALSE)
 					{
 						global $wpdb; /* Need global DB obj. */
-						global $current_site, $current_blog; /* For Multisite support. */
-						/**/
+						global /* For Multisite support. */ $current_site, $current_blog;
+
 						if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"])
 							{
 								$scan_time = apply_filters ("ws_plugin__s2member_pro_arb_service_status_scan_time", strtotime ("-1 day"), get_defined_vars ());
 								$per_process = apply_filters ("ws_plugin__s2member_pro_arb_service_ipns_per_process", $vars["per_process"], get_defined_vars ());
-								/**/
+
 								if (is_array ($objs = $wpdb->get_results ("SELECT `user_id` AS `ID` FROM `" . $wpdb->usermeta . "` WHERE `meta_key` = '" . $wpdb->prefix . "s2member_subscr_gateway' AND `meta_value` = 'authnet' AND `user_id` NOT IN(SELECT `user_id` FROM `" . $wpdb->usermeta . "` WHERE `meta_key` = '" . $wpdb->prefix . "s2member_last_status_scan' AND `meta_value` > '" . esc_sql ($scan_time) . "')")))
 									{
 										foreach ($objs as $obj) /* Run through all of the Paid Member IDs that originated their Subscription through the Authorize.Net® gateway. */
@@ -77,7 +77,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 												if (($user_id = $obj->ID) && ($counter = (int)$counter + 1)) /* Update counter. Only run through X records; given by $per_process. */
 													{
 														unset ($authnet, $subscr_id, $ipn_sv, $processing, $processed, $ipn, $ipn_q, $log4, $_log4, $log2, $logs_dir); /* Unset these. */
-														/**/
+
 														if (($authnet = array ("x_method" => "status")) && ($authnet["x_subscription_id"] = $subscr_id = get_user_option ("s2member_subscr_id", $user_id)))
 															{
 																if (!get_user_option ("s2member_auto_eot_time", $user_id) && is_array ($ipn_sv = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars (false, $subscr_id)))
@@ -87,88 +87,88 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 																				if (preg_match ("/^expired$/i", $authnet["subscription_status"])) /* Expired? */
 																					{
 																						$authnet["s2member_log"][] = "Authorize.Net® ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
-																						/**/
+
 																						$authnet["s2member_log"][] = "Authorize.Net® transaction identified as ( `SUBSCRIPTION EXPIRATION` ).";
 																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_eot` ).";
 																						$authnet["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-																						/**/
+
 																						$processing = $processed = true;
 																						$ipn = array (); /* Reset. */
-																						/**/
+
 																						$ipn["txn_type"] = "subscr_eot";
 																						$ipn["subscr_id"] = $authnet["arb_ipn_signup_vars"]["subscr_id"];
-																						/**/
+
 																						$ipn["custom"] = $authnet["arb_ipn_signup_vars"]["custom"];
-																						/**/
+
 																						$ipn["period1"] = $authnet["arb_ipn_signup_vars"]["period1"];
 																						$ipn["period3"] = $authnet["arb_ipn_signup_vars"]["period3"];
-																						/**/
+
 																						$ipn["payer_email"] = $authnet["arb_ipn_signup_vars"]["payer_email"];
 																						$ipn["first_name"] = $authnet["arb_ipn_signup_vars"]["first_name"];
 																						$ipn["last_name"] = $authnet["arb_ipn_signup_vars"]["last_name"];
-																						/**/
+
 																						$ipn["option_name1"] = $authnet["arb_ipn_signup_vars"]["option_name1"];
 																						$ipn["option_selection1"] = $authnet["arb_ipn_signup_vars"]["option_selection1"];
-																						/**/
+
 																						$ipn["option_name2"] = $authnet["arb_ipn_signup_vars"]["option_name2"];
 																						$ipn["option_selection2"] = $authnet["arb_ipn_signup_vars"]["option_selection2"];
-																						/**/
+
 																						$ipn["item_number"] = $authnet["arb_ipn_signup_vars"]["item_number"];
 																						$ipn["item_name"] = $authnet["arb_ipn_signup_vars"]["item_name"];
-																						/**/
+
 																						$ipn_q = "&s2member_paypal_proxy=authnet&s2member_paypal_proxy_use=pro-emails";
 																						$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-																						/**/
+
 																						c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 																					}
-																				/**/
+
 																				else if (preg_match ("/^(suspended|canceled|terminated)$/i", $authnet["subscription_status"]))
 																					{
 																						$authnet["s2member_log"][] = "Authorize.Net® ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
-																						/**/
+
 																						$authnet["s2member_log"][] = "Authorize.Net® transaction identified as ( `SUBSCRIPTION " . strtoupper ($authnet["subscription_status"]) . "` ).";
 																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
 																						$authnet["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
-																						/**/
+
 																						$processing = $processed = true;
 																						$ipn = array (); /* Reset. */
-																						/**/
+
 																						$ipn["txn_type"] = "subscr_cancel";
 																						$ipn["subscr_id"] = $authnet["arb_ipn_signup_vars"]["subscr_id"];
-																						/**/
+
 																						$ipn["custom"] = $authnet["arb_ipn_signup_vars"]["custom"];
-																						/**/
+
 																						$ipn["period1"] = $authnet["arb_ipn_signup_vars"]["period1"];
 																						$ipn["period3"] = $authnet["arb_ipn_signup_vars"]["period3"];
-																						/**/
+
 																						$ipn["payer_email"] = $authnet["arb_ipn_signup_vars"]["payer_email"];
 																						$ipn["first_name"] = $authnet["arb_ipn_signup_vars"]["first_name"];
 																						$ipn["last_name"] = $authnet["arb_ipn_signup_vars"]["last_name"];
-																						/**/
+
 																						$ipn["option_name1"] = $authnet["arb_ipn_signup_vars"]["option_name1"];
 																						$ipn["option_selection1"] = $authnet["arb_ipn_signup_vars"]["option_selection1"];
-																						/**/
+
 																						$ipn["option_name2"] = $authnet["arb_ipn_signup_vars"]["option_name2"];
 																						$ipn["option_selection2"] = $authnet["arb_ipn_signup_vars"]["option_selection2"];
-																						/**/
+
 																						$ipn["item_number"] = $authnet["arb_ipn_signup_vars"]["item_number"];
 																						$ipn["item_name"] = $authnet["arb_ipn_signup_vars"]["item_name"];
-																						/**/
+
 																						$ipn_q = "&s2member_paypal_proxy=authnet&s2member_paypal_proxy_use=pro-emails";
 																						$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-																						/**/
+
 																						c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 																					}
-																				/**/
+
 																				else if (!$processed) /* If nothing was processed, here we add a message to the logs indicating the status; which is being ignored by s2Member. */
 																					$authnet["s2member_log"][] = "Ignoring this ARB/Status ( `" . $authnet["subscription_status"] . "` ). It does NOT require any action on the part of s2Member.";
-																				/**/
+
 																				$logv = c_ws_plugin__s2member_utilities::ver_details ();
 																				$logm = c_ws_plugin__s2member_utilities::mem_details ();
 																				$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
 																				$log4 = (is_multisite () && !is_main_site ()) ? ($_log4 = $current_blog->domain . $current_blog->path) . "\n" . $log4 : $log4;
 																				$log2 = (is_multisite () && !is_main_site ()) ? "authnet-arb-ipn-4-" . trim (preg_replace ("/[^a-z0-9]/i", "-", $_log4), "-") . ".log" : "authnet-arb-ipn.log";
-																				/**/
+
 																				if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 																					if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 																						if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
@@ -176,17 +176,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 																			}
 																	}
 															}
-														/**/
+
 														update_user_option ($user_id, "s2member_last_status_scan", time ());
-														/**/
+
 														if ($counter >= $per_process) /* Only this many. */
 															break; /* Break the loop now. */
 													}
 											}
 									}
 							}
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

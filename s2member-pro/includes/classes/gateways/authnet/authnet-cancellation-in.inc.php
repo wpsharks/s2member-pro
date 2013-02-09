@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 	{
 		/**
@@ -59,14 +59,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 							{
 								$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"] = array (); /* This holds the global response details. */
 								$global_response = &$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"]; /* This is a shorter reference. */
-								/**/
+
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_authnet_cancellation"]));
 								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); /* And run a Filter. */
 								$post_vars["attr"] = apply_filters ("ws_plugin__s2member_pro_authnet_cancellation_post_attr", $post_vars["attr"], get_defined_vars ());
-								/**/
+
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim (stripslashes ($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
 								$post_vars["recaptcha_response_field"] = (!$post_vars["recaptcha_response_field"]) ? trim (stripslashes ($_POST["recaptcha_response_field"])) : $post_vars["recaptcha_response_field"];
-								/**/
+
 								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) /* Must NOT have any attr errors. */
 									{
 										if (!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors ("cancellation", $post_vars)))
@@ -85,35 +85,35 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																							$ipn["txn_type"] = "subscr_cancel";
 																							$ipn["subscr_id"] = $ipn_signup_vars["subscr_id"];
 																							$ipn["custom"] = $ipn_signup_vars["custom"];
-																							/**/
+
 																							$ipn["period1"] = $ipn_signup_vars["period1"];
 																							$ipn["period3"] = $ipn_signup_vars["period3"];
-																							/**/
+
 																							$ipn["payer_email"] = $ipn_signup_vars["payer_email"];
 																							$ipn["first_name"] = $ipn_signup_vars["first_name"];
 																							$ipn["last_name"] = $ipn_signup_vars["last_name"];
-																							/**/
+
 																							$ipn["option_name1"] = $ipn_signup_vars["option_name1"];
 																							$ipn["option_selection1"] = $ipn_signup_vars["option_selection1"];
-																							/**/
+
 																							$ipn["option_name2"] = $ipn_signup_vars["option_name2"];
 																							$ipn["option_selection2"] = $ipn_signup_vars["option_selection2"];
-																							/**/
+
 																							$ipn["item_name"] = $ipn_signup_vars["item_name"];
 																							$ipn["item_number"] = $ipn_signup_vars["item_number"];
-																							/**/
+
 																							$ipn_q = "&s2member_paypal_proxy=authnet&s2member_paypal_proxy_use=pro-emails";
 																							$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
-																							/**/
+
 																							c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 																						}
-																				/**/
+
 																				if (($authnet = array ("x_method" => "cancel", "x_subscription_id" => $cur__subscr_id)))
 																					{
 																						c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response ($authnet);
-																						/**/
+
 																						$global_response = array ("response" => _x ('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
-																						/**/
+
 																						if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																							wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																					}
@@ -121,7 +121,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																		else /* Else, account already terminated. */
 																			{
 																				$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
-																				/**/
+
 																				if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																					wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																			}
@@ -129,7 +129,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																else /* Else, there is no Billing Profile. */
 																	{
 																		$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
-																		/**/
+
 																		if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																			wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																	}
@@ -137,7 +137,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 														else /* Else, there is no Billing Profile. */
 															{
 																$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
-																/**/
+
 																if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																	wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 															}

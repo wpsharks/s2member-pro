@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 	{
 		/**
@@ -60,7 +60,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro / ccBill® Options", "ccBill® Options", "create_users", "ws-plugin--s2member-pro-ccbill-ops", "c_ws_plugin__s2member_pro_ccbill_menu_pages::ccbill_ops_page");
 						add_submenu_page ($vars["menu"], "s2Member Pro / ccBill® Buttons", "ccBill® Buttons", "create_users", "ws-plugin--s2member-pro-ccbill-buttons", "c_ws_plugin__s2member_pro_ccbill_menu_pages::ccbill_buttons_page");
-						/**/
+
 						return $add_divider; /* Now add the divider. */
 					}
 				/**
@@ -77,8 +77,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 				public static function ccbill_scripting_page_api_constants ($vars = FALSE)
 					{
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/ccbill-s-api-c.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the options panel for this Payment Gateway.
@@ -91,36 +91,36 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 				public static function ccbill_ops_page ()
 					{
 						c_ws_plugin__s2member_menu_pages::update_all_options ();
-						/**/
+
 						$logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"];
-						/**/
+
 						if (!is_dir ($logs_dir) && is_writable (dirname (c_ws_plugin__s2member_utils_dirs::strip_dir_app_data ($logs_dir))))
 							mkdir ($logs_dir, 0777, true) . clearstatcache ();
-						/**/
+
 						$htaccess = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"] . "/.htaccess";
 						$htaccess_contents = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir_htaccess"])));
-						/**/
+
 						if (is_dir ($logs_dir) && is_writable ($logs_dir) && !file_exists ($htaccess))
 							file_put_contents ($htaccess, $htaccess_contents) . clearstatcache ();
-						/**/
+
 						if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) /* Logging enabled? */
 							{
 								if (!is_dir ($logs_dir)) /* If the security-enabled logs directory does not exist yet. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The security-enabled logs directory ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code> ) does not exist. Please create this directory manually &amp; make it writable ( chmod 777 ).', true);
-								/**/
+
 								else if (!is_writable ($logs_dir)) /* If the logs directory is not writable yet. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Permissions error. The security-enabled logs directory ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code> ) is not writable. Please make this directory writable ( chmod 777 ).', true);
-								/**/
+
 								if (!file_exists ($htaccess)) /* If the .htaccess file has not been created yet. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The .htaccess protection file ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code> ) does not exist. Please create this file manually. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
-								/**/
+
 								else if (!preg_match ("/deny from all/i", file_get_contents ($htaccess))) /* Else if the .htaccess file does not offer the required protection. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Unprotected. The .htaccess protection file ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code> ) does not contain <code>deny from all</code>. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
 							}
-						/**/
+
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/ccbill-ops.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Builds the Buttons panel for this Payment Gateway.
@@ -134,10 +134,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_dl_user"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_dl_pass"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"])
 							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -> ccBill® Options</code> first. Once all of your cBill® Options have been configured, return to this page &amp; generate your ccBill® Button(s).', true);
-						/**/
+
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/ccbill-buttons.inc.php";
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

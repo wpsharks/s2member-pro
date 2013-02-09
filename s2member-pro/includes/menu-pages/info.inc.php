@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_info"))
 	{
 		/**
@@ -46,37 +46,37 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_info"))
 				public function __construct ()
 					{
 						echo '<div class="wrap ws-menu-page">' . "\n";
-						/**/
+
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
 						echo '<h2>s2Member® Pro Module Information</h2>' . "\n";
-						/**/
+
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
 						echo '<tr class="ws-menu-page-table-tr">' . "\n";
 						echo '<td class="ws-menu-page-table-l">' . "\n";
-						/**/
+
 						echo '<img src="' . esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]) . '/images/brand-icon.png" class="ws-menu-page-brand-icon" alt="." />' . "\n";
-						/**/
+
 						echo '<a href="' . esc_attr (add_query_arg ("c_check_ver", urlencode (c_ws_plugin__s2member_pro_readmes::parse_readme_value ("Version")), c_ws_plugin__s2member_pro_readmes::parse_readme_value ("Plugin URI"))) . '" target="_blank"><img src="' . esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]) . '/images/brand-updates.png" class="ws-menu-page-brand-updates" alt="." /></a>' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-readme">' . "\n";
 						echo c_ws_plugin__s2member_pro_readmes::parse_readme () . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</td>' . "\n";
-						/**/
+
 						echo '<td class="ws-menu-page-table-r">' . "\n";
 						c_ws_plugin__s2member_menu_pages_rs::display ();
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_info ();
 ?>

@@ -32,7 +32,7 @@
 */
 if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if(!class_exists("c_ws_plugin__s2member_pro_imports"))
 	{
 		/**
@@ -53,11 +53,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports"))
 				*/
 				public static function import()
 					{
-						if(!empty($_POST["ws_plugin__s2member_pro_import_users"])) /* Call inner routine? */
+						if(!empty($_POST["ws_plugin__s2member_pro_import_users"]))
 							{
 								return c_ws_plugin__s2member_pro_imports_in::import_users();
 							}
-						if(!empty($_POST["ws_plugin__s2member_pro_import_ops"])) /* Call routine? */
+						if(!empty($_POST["ws_plugin__s2member_pro_import_ops"]))
 							{
 								return c_ws_plugin__s2member_pro_imports_in::import_ops();
 							}

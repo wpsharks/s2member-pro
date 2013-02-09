@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 	{
 		/**
@@ -65,7 +65,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 								$dev_path = dirname (dirname (dirname (__FILE__))) . "/readme-dev.txt";
 								$path = (file_exists ($dev_path)) ? $dev_path : $path;
 							}
-						/**/
+
 						return c_ws_plugin__s2member_readmes::parse_readme ($path, $specific_section, $_blank_targets, $process_wp_syntax);
 					}
 				/**
@@ -87,7 +87,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 								$dev_path = dirname (dirname (dirname (__FILE__))) . "/readme-dev.txt";
 								$path = (file_exists ($dev_path)) ? $dev_path : $path;
 							}
-						/**/
+
 						return c_ws_plugin__s2member_readmes::parse_readme_value ($key, $path);
 					}
 			}

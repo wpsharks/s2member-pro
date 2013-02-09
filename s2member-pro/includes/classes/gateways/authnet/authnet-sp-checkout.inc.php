@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit ("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout"))
 	{
 		/**
@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout"))
 				*/
 				public static function authnet_sp_checkout ()
 					{
-						if (!empty ($_POST["s2member_pro_authnet_sp_checkout"])) /* Call inner routine? */
+						if (!empty ($_POST["s2member_pro_authnet_sp_checkout"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_sp_checkout_in::authnet_sp_checkout ();
 							}

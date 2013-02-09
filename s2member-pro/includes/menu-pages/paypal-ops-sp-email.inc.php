@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email"))
 	{
 		/**
@@ -46,59 +46,59 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email"))
 				public function __construct ()
 					{
 						echo '<div class="ws-menu-page-group" title="Specific Post/Page Confirmation Email ( Pro Form )">' . "\n";
-						/**/
+
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-confirmation-email-section">' . "\n";
 						echo '<h3>Specific Post/Page Confirmation Email ( required, but the default works fine )<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they successfully complete a PayPal® "Pro Form" submission on your site, for Specific Post/Page Access. ( see: <code>s2Member -> Restriction Options -> Specific Post/Page Access</code> ). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package ( with multiple Posts/Pages bundled together into one transaction ), this ONE link ( <code>%%sp_access_url%%</code> ) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
-						/**/
+
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-sp-email-recipients">' . "\n";
 						echo 'Specific Post/Page Confirmation Recipients:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_sp_email_recipients" id="ws-plugin--s2member-pro-sp-email-recipients" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_sp_email_recipients"]) . '" /><br />' . "\n";
 						echo 'This is a semicolon ( ; ) delimited list of Recipients. Here is an example:<br />' . "\n";
 						echo '<code>"%%full_name%%" &lt;%%payer_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code>' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-sp-email-subject">' . "\n";
 						echo 'Specific Post/Page Confirmation Email Subject:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_sp_email_subject" id="ws-plugin--s2member-pro-sp-email-subject" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_sp_email_subject"]) . '" /><br />' . "\n";
 						echo 'Subject Line used in the email sent to a Customer after a successful purchase has occurred through a PayPal® Pro Form, for Specific Post/Page Access.' . "\n";
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-sp-email-message">' . "\n";
 						echo 'Specific Post/Page Confirmation Email Message:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '<tr>' . "\n";
-						/**/
+
 						echo '<td>' . "\n";
 						echo '<textarea name="ws_plugin__s2member_pro_sp_email_message" id="ws-plugin--s2member-pro-sp-email-message" rows="10">' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_sp_email_message"]) . '</textarea><br />' . "\n";
 						echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through a PayPal® Pro Form, for Specific Post/Page Access.<br /><br />' . "\n";
@@ -116,7 +116,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email"))
 						echo '<li><code>%%item_number%%</code> = The Item Number. Ex: <code><em>sp:13,24,36:72</em></code> ( translates to: <code><em>sp:comma-delimited IDs:expiration hours</em></code> ).</li>' . "\n";
 						echo '<li><code>%%item_name%%</code> = The Item Name ( as provided by the <code>desc=""</code> attribute in your Shortcode, which briefly describes the Item Number ).</li>' . "\n";
 						echo '</ul>' . "\n";
-						/**/
+
 						echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>' . "\n";
 						echo '<ul>' . "\n";
 						echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>' . "\n";
@@ -125,18 +125,18 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email"))
 						echo '<strong>This example uses cv1 to record a special marketing campaign:</strong><br />' . "\n";
 						echo '<em>( The campaign ( i.e. christmas-promo ) could be referenced using <code>%%cv1%%</code> )</em><br />' . "\n";
 						echo '<code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|christmas-promo"</code>' . "\n";
-						/**/
+
 						echo '</td>' . "\n";
-						/**/
+
 						echo '</tr>' . "\n";
 						echo '</tbody>' . "\n";
 						echo '</table>' . "\n";
 						echo '</div>' . "\n";
-						/**/
+
 						echo '</div>' . "\n";
 					}
 			}
 	}
-/**/
+
 new c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email ();
 ?>

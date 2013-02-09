@@ -32,7 +32,7 @@
 */
 if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 	{
 		/**
@@ -57,19 +57,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 							{
 								global /* Global database object reference. */ $wpdb;
 								global /* Multisite Networking. */ $current_site, $current_blog;
-								/**/
+
 								@set_time_limit /* Make time for processing large import files. */(0);
 								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								/**/
+
 								remove_all_actions("profile_update").remove_all_actions("user_register");
 								remove_all_actions("added_existing_user").remove_all_actions("add_user_to_blog");
-								/**/
+
 								if(!empty($_FILES["ws_plugin__s2member_pro_import_users_file"]) && empty($_FILES["ws_plugin__s2member_pro_import_users_file"]["error"]))
 									$file = fopen($_FILES["ws_plugin__s2member_pro_import_users_file"]["tmp_name"], "r");
-								/**/
+
 								else if(!empty($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))
 									fwrite(($file = tmpfile()), trim(stripslashes($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).fseek($file, 0);
-								/**/
+
 								if /* Only process if we have a resource. */(isset($file) && is_resource($file) && !($imported = 0))
 									{
 										$custom_field_vars = /* Initialize this array. */ array();
@@ -80,14 +80,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												$custom_field_vars[] = $custom_field_var;
 											}
 										sort /* Always sort this array. */($custom_field_vars, SORT_STRING);
-										/**/
+
 										while(($data = ((version_compare(PHP_VERSION, "5.3", ">=")) ? fgetcsv($file, 0, ",", '"', '"') : fgetcsv($file, 0, ",", '"'))) !== false)
 											{
 												$line = /* CSV lines. */ (int)$line + 1;
-												/**/
+
 												$data = c_ws_plugin__s2member_utils_strings::trim_deep($data);
 												$data = stripslashes_deep($data);
-												/**/
+
 												if /* Skip first line if it contains headers. */($line === 1 && strtoupper($data[0]) === "ID")
 													{
 														$line = $line - 1;
@@ -96,29 +96,29 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 													{
 														$ID = $data[0];
-														/**/
+
 														$user_login = preg_replace("/\s+/", "", sanitize_user($data[1], is_multisite()));
 														$user_pass = (string)"";
-														/**/
+
 														$first_name = $data[2];
 														$last_name = $data[3];
 														$display_name = $data[4];
-														/**/
+
 														$user_email = sanitize_email($data[5]);
 														$user_url = $data[6];
-														/**/
+
 														$role = $data[7];
 														$custom_capabilities = $data[8];
-														/**/
+
 														$user_registered = ($data[9]) ? date("Y-m-d H:i:s", strtotime($data[9])) : "";
 														$paid_registration_times = ($data[10]) ? maybe_unserialize($data[10]) : "";
 														$last_payment_time = ($data[11]) ? strtotime($data[11]) : "";
 														$auto_eot_time = ($data[12]) ? strtotime($data[12]) : "";
-														/**/
+
 														$custom = $data[13];
 														$subscr_id = $data[14];
 														$subscr_gateway = strtolower($data[15]);
-														/**/
+
 														$custom_fields = /* Initialize. */ array();
 														if /* Now loop through Custom Fields. */(count($data) > 16)
 															for($i = 16, $j = 0; $i < count($data); $i++, $j++)
@@ -128,29 +128,29 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												else /* Otherwise, we use the standardized format for importation.*/
 													{
 														$ID = $data[0];
-														/**/
+
 														$user_login = preg_replace("/\s+/", "", sanitize_user($data[1], is_multisite()));
 														$user_pass = $data[2];
-														/**/
+
 														$first_name = $data[3];
 														$last_name = $data[4];
 														$display_name = $data[5];
-														/**/
+
 														$user_email = sanitize_email($data[6]);
 														$user_url = $data[7];
-														/**/
+
 														$role = $data[8];
 														$custom_capabilities = $data[9];
-														/**/
+
 														$user_registered = ($data[10]) ? date("Y-m-d H:i:s", strtotime($data[10])) : "";
 														$paid_registration_times = ($data[11]) ? maybe_unserialize($data[11]) : "";
 														$last_payment_time = ($data[12]) ? strtotime($data[12]) : "";
 														$auto_eot_time = ($data[13]) ? strtotime($data[13]) : "";
-														/**/
+
 														$custom = $data[14];
 														$subscr_id = $data[15];
 														$subscr_gateway = strtolower($data[16]);
-														/**/
+
 														$custom_fields = /* Initialize. */ array();
 														if /* Now loop through Custom Fields. */(count($data) > 17)
 															for($i = 17, $j = 0; $i < count($data); $i++, $j++)
@@ -158,15 +158,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																	$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
 													}
 												$role = (is_numeric($role)) ? (($role == 0) ? "subscriber" : "s2member_level".$role) : $role;
-												/**/
+
 												if($paid_registration_times && !is_array($paid_registration_times))
 													$paid_registration_times = array("level" => strtotime($paid_registration_times));
 												$paid_registration_times = (!$paid_registration_times || !is_array($paid_registration_times)) ? array(): $paid_registration_times;
-												/**/
+
 												$user_details = compact("ID", "user_login", "user_pass", "first_name", "last_name", "display_name", "user_email", "user_url", "role", "user_registered");
 												if(empty($user_details["user_pass"])) /* If there was NO Password given. */
 													unset($user_details["user_pass"]); /* Unset the Password array element. */
-												/**/
+
 												if($ID) /* Are we dealing with an existing User ID? */
 													{
 														if(is_object($user = new WP_User($ID)) && $user->ID) /* Is this User in the database? */
@@ -191,7 +191,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																																	{
 																																		if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 																																			unset($user_details["user_login"], $user_details["user_pass"]);
-																																		/**/
+
 																																		if(($user_id = wp_update_user($user_details)))
 																																			{
 																																				update_user_option($user_id, "s2member_custom", $custom);
@@ -201,16 +201,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																																				update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
 																																				update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
 																																				update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-																																				/**/
+
 																																				foreach($user->allcaps as $cap => $cap_enabled)
 																																					if(preg_match("/^access_s2member_ccap_/", $cap))
 																																						$user->remove_cap($ccap = $cap);
-																																				/**/
+
 																																				if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
 																																					foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
 																																						if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
 																																							$user->add_cap("access_s2member_ccap_".$ccap);
-																																				/**/
+
 																																				$imported = $imported + 1;
 																																			}
 																																		else
@@ -246,7 +246,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 														else
 															$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> does NOT belong to an existing User.";
 													}
-												/**/
+
 												else if(is_multisite() && ($user_id = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($user_login, $user_email)) && !is_super_admin($user_id))
 													{
 														if(strtolower($role) !== "administrator") /* Do NOT add existing Users as Administrators. */
@@ -262,16 +262,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																				update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
 																				update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
 																				update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-																				/**/
+
 																				foreach($user->allcaps as $cap => $cap_enabled)
 																					if(preg_match("/^access_s2member_ccap_/", $cap))
 																						$user->remove_cap($ccap = $cap);
-																				/**/
+
 																				if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
 																					foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
 																						if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
 																							$user->add_cap("access_s2member_ccap_".$ccap);
-																				/**/
+
 																				$imported = $imported + 1;
 																			}
 																		else
@@ -283,7 +283,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 														else
 															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";
 													}
-												/**/
+
 												else /* Otherwise, we are adding a brand new User. */
 													{
 														if(strtolower($role) !== "administrator") /* Admin? */
@@ -306,10 +306,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																															{
 																																if($user_pass) /* If we are given an "un-encrypted Password". */
 																																	wp_update_user(array("ID" => $user_id, "user_pass" => $user_pass));
-																																/**/
+
 																																if(is_multisite()) /* New Users on a Multisite Network need this too. */
 																																	update_user_meta($user_id, "s2member_originating_blog", $current_blog->blog_id);
-																																/**/
+
 																																update_user_option($user_id, "s2member_custom", $custom);
 																																update_user_option($user_id, "s2member_subscr_id", $subscr_id);
 																																update_user_option($user_id, "s2member_subscr_gateway", $subscr_gateway);
@@ -317,16 +317,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																																update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
 																																update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
 																																update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-																																/**/
+
 																																foreach($user->allcaps as $cap => $cap_enabled)
 																																	if(preg_match("/^access_s2member_ccap_/", $cap))
 																																		$user->remove_cap($ccap = $cap);
-																																/**/
+
 																																if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
 																																	foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
 																																		if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
 																																			$user->add_cap("access_s2member_ccap_".$ccap);
-																																/**/
+
 																																$imported = $imported + 1;
 																															}
 																														else
@@ -357,19 +357,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";
 													}
 											}
-										/**/
+
 										fclose($file);
 									}
 								else
 									$errors[] = "No data was received. Please try again."; /* The upload failed, or it was empty. */
-								/**/
+
 								c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
-								/**/
+
 								if(!empty($errors)) /* Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
 							}
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 				/**
 				* Handles the importation of options.
@@ -385,23 +385,23 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 							{
 								@set_time_limit(0); /* Make time for processing large import files. */
 								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								/**/
+
 								if(!empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]) && empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]["error"]))
 									$file = file_get_contents($_FILES["ws_plugin__s2member_pro_import_ops_file"]["tmp_name"], "r");
-								/**/
+
 								if(!empty($file)) /* Only process if we have an importation file. */
 									{
 										if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), true)) && !empty($import) && ($import["configured"] = "1"))
 											{
 												unset($import["options_checksum"], $import["options_version"]);
-												/**/
+
 												foreach($import as $key => $value) /* Add prefixes now. */
 													{
 														(is_array($value)) ? array_unshift($value, "update-signal") : null;
 														$import["ws_plugin__s2member_".$key] = $value;
 														unset($import[$key]);
 													}
-												/**/
+
 												c_ws_plugin__s2member_menu_pages::update_all_options($import, true, true, false, false, false);
 											}
 										else
@@ -409,14 +409,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 									}
 								else
 									$errors[] = "No data was received. Please try again."; /* The upload failed, or it was empty. */
-								/**/
+
 								if(!empty($errors)) /* Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation. */
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
 								else
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
 							}
-						/**/
-						return; /* Return for uniformity. */
+
+						return /* Return for uniformity. */;
 					}
 			}
 	}

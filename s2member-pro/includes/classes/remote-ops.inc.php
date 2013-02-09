@@ -32,7 +32,7 @@
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-/**/
+
 if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 	{
 		/**
@@ -58,11 +58,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 						if (!empty ($_GET["s2member_pro_remote_op"]) && !empty ($_POST["s2member_pro_remote_op"]))
 							{
 								c_ws_plugin__s2member_no_cache::no_cache_constants (true);
-								/**/
+
 								status_header(200);
 								header("Content-Type: text/plain; charset=utf-8");
 								eval('while (@ob_end_clean ());');
-								/**/
+
 								if (is_array ($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
 									{
 										if (is_array ($op =  /* Now trim again, in case of serialized array. */c_ws_plugin__s2member_utils_strings::trim_deep ($op)))
@@ -111,13 +111,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				public static function remote_ops_key_gen ()
 					{
 						global /* Multisite Networking. */ $current_site, $current_blog;
-						/**/
+
 						if (is_multisite () && !is_main_site ())
 							$key = md5 (c_ws_plugin__s2member_utils_encryption::xencrypt ($current_blog->domain . $current_blog->path, false, false));
-						/**/
+
 						else /* Else it's a standard API Key; not on a Multisite Network, or not on the Main Site anyway. */
 							$key = md5 (c_ws_plugin__s2member_utils_encryption::xencrypt (preg_replace ("/\:[0-9]+$/", "", $_SERVER["HTTP_HOST"]), false, false));
-						/**/
+
 						return apply_filters("ws_plugin__s2member_pro_remote_ops_key", (!empty ($key)) ? $key : "");
 					}
 			}
