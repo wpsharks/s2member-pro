@@ -58,19 +58,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						/**/
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						/**/
-						if($_response && ($error = $_response["error"])) /* Error reporting. */
+						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-cancellation-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if($_response) /* Otherwise, we treat this as an informational response. */
+						else if /* Otherwise, we treat this as an informational response. */($_response)
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-cancellation-form-response-info">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						/**/
 						return array("response" => $response, "error" => $error);
 					}
 				/**
@@ -88,19 +87,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						/**/
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						/**/
-						if($_response && ($error = $_response["error"])) /* Error reporting. */
+						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-update-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if($_response) /* Otherwise, we treat this as an informational response. */
+						else if /* Otherwise, we treat this as an informational response. */($_response)
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-update-form-response-info">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						/**/
 						return array("response" => $response, "error" => $error);
 					}
 				/**
@@ -118,19 +116,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						/**/
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						/**/
-						if($_response && ($error = $_response["error"])) /* Error reporting. */
+						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-registration-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if($_response) /* Otherwise, we treat this as an informational response. */
+						else if /* Otherwise, we treat this as an informational response. */($_response)
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-registration-form-response-info">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						/**/
 						return array("response" => $response, "error" => $error);
 					}
 				/**
@@ -148,19 +145,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						/**/
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						/**/
-						if($_response && ($error = $_response["error"])) /* Error reporting. */
+						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-sp-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if($_response) /* Otherwise, we treat this as an informational response. */
+						else if /* Otherwise, we treat this as an informational response. */($_response)
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-sp-checkout-form-response-info">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						/**/
 						return array("response" => $response, "error" => $error);
 					}
 				/**
@@ -178,19 +174,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						/**/
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						/**/
-						if($_response && ($error = $_response["error"])) /* Error reporting. */
+						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if($_response) /* Otherwise, we treat this as an informational response. */
+						else if /* Otherwise, we treat this as an informational response. */($_response)
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-checkout-form-response-info">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						/**/
 						return array("response" => $response, "error" => $error);
 					}
 				/**
@@ -235,7 +230,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 					{
 						if(!($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors($attr)) || !empty($attr["register"]))
 							{
-								if($attr["cancel"]) /* Special form for Cancellations. User/Member must be logged in. */
+								if /* Special form for Cancellations. User/Member must be logged in. */($attr["cancel"])
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
@@ -254,18 +249,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
-										/**/
 										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
 											{
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]))
 													{
-														if($paypal && !empty($paypal["__error"]) && $paypal["L_ERRORCODE0"] === "11592") /* Subscription Profile? */
+														if($paypal && !empty($paypal["__error"]) &&  /* Subscription Profile? */$paypal["L_ERRORCODE0"] === "11592")
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
 														/**/
-														else /* Else there was no Recurring Profile on record. */
+														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 													}
-												/**/
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 												/**/
@@ -273,8 +266,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
 									}
-								/**/
-								else if($attr["update"]) /* Special form for Updates. User/Member must be logged in. */
+								else if /* Special form for Updates. User/Member must be logged in. */($attr["update"])
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
@@ -296,21 +288,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
-										/**/
 										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
 											{
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]) || strlen($paypal["ACCT"]) !== 4)
 													{
-														if($paypal && empty($paypal["__error"]) && strlen($paypal["ACCT"]) !== 4) /* It's NOT associated with a credit card; they used PayPal®. */
+														if($paypal && empty($paypal["__error"]) && /* It's NOT associated with a credit card; they used PayPal®. */ strlen($paypal["ACCT"]) !== 4)
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 														/**/
-														else if($paypal && !empty($paypal["__error"]) && $paypal["L_ERRORCODE0"] === "11592") /* Subscription Profile? */
+														else if($paypal && !empty($paypal["__error"]) && /* Subscription Profile? */ $paypal["L_ERRORCODE0"] === "11592")
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 														/**/
-														else /* Else there was no Recurring Profile on record. */
+														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 													}
-												/**/
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 												/**/
@@ -318,8 +308,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
 									}
-								/**/
-								else if($attr["register"]) /* Free Registration does not require attr validation. */
+								else if /* Free Registration does not require attr validation. */($attr["register"])
 									{
 										if(!is_string($attr["level"]) || !is_numeric($attr["level"]))
 											$response = array("response" => sprintf(_x('Invalid form configuration. Missing "level" attribute. Membership Level. Must be numeric [0-%s].', "s2member-admin", "s2member"), esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"])), "error" => true);
@@ -345,8 +334,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["custom"] && (!is_string($attr["custom"]) || !preg_match("/^".preg_quote(preg_replace("/\:([0-9]+)$/", "", $_SERVER["HTTP_HOST"]), "/")."/i", $attr["custom"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "custom" attribute. When provided, must start with your domain name.', "s2member-admin", "s2member-admin"), "error" => true);
 									}
-								/**/
-								else if($attr["sp"]) /* Validation routines for Specific Post/Page checkout forms. */
+								else if /* Validation routines for Specific Post/Page checkout forms. */($attr["sp"])
 									{
 										if(!$attr["ids"] || !is_string($attr["ids"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "ids" attribute. Must contain comma-delimited Post/Page IDs.', "s2member-admin", "s2member"), "error" => true);
@@ -375,7 +363,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!$attr["desc"] || !is_string($attr["desc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "desc" attribute. Please provide a Description for this form.', "s2member-admin", "s2member"), "error" => true);
 										/**/
-										else if(strlen($attr["desc"]) > 100) /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */
+										else if(strlen($attr["desc"]) > 100 /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */)
 											$response = array("response" => _x('Invalid form configuration. Your "desc" ( Description ) attribute must be <= 100 characters long.', "s2member-admin", "s2member"), "error" => true);
 										/**/
 										else if(!$attr["custom"] || !is_string($attr["custom"]))
@@ -420,13 +408,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["ra"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
 									}
-								/**/
-								else /* Validation routines for Member Level checkout forms. This is the default functionality. */
+								else // Validation routines for Member Level checkout forms. This is the default functionality.
 									{
-										if($attr["modify"] && !is_user_logged_in()) /* Must be logged in before a modification can take place. */
+										if /* Must be logged in before a modification can take place. */($attr["modify"] && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">login</a> to update your billing plan.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
 										/**/
-										else if($attr["level"] === "*" && !is_user_logged_in()) /* Must be logged in before purchasing. */
+										else if /* Must be logged in before purchasing. */($attr["level"] === "*" && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">login</a> before making this purchase.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
 										/**/
 										else if((!$attr["level"] || !is_string($attr["level"]) || !is_numeric($attr["level"])) && $attr["level"] !== "*")
@@ -444,7 +431,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!$attr["desc"] || !is_string($attr["desc"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "desc" attribute. Please provide a Description for this form.', "s2member-admin", "s2member"), "error" => true);
 										/**/
-										else if(strlen($attr["desc"]) > 100) /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */
+										else if(strlen($attr["desc"]) > 100 /* Actually, this can be 127 chars; but we need plenty of room for s2Member's coupon info. */)
 											$response = array("response" => _x('Invalid form configuration. Your "desc" ( Description ) attribute must be <= 100 characters long.', "s2member-admin", "s2member"), "error" => true);
 										/**/
 										else if(!$attr["custom"] || !is_string($attr["custom"]))
@@ -586,7 +573,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rra" attributes. When "rr" ( Regular Recurring ) is 0 or 1, "rra" ( Recurring Retry Attempts ) must be >= 0.', "s2member-admin", "s2member"), "error" => true);
 									}
 							}
-						/**/
 						return (empty($response)) ? null : $response;
 					}
 				/**
@@ -605,7 +591,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 					{
 						if($form === "registration" || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors()))
 							{
-								if($form === "cancellation") /* Special form for Cancellations. User/Member must be logged in. */
+								if /* Special form for Cancellations. User/Member must be logged in. */($form === "cancellation")
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
@@ -616,13 +602,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) /* NOT for Administrators. */
 											$response = array("response" => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', "s2member-admin", "s2member"), "error" => true);
 									}
-								/**/
-								else if($form === "update") /* Special form for Updates. User/Member must be logged in. */
+								else if /* Special form for Updates. User/Member must be logged in. */($form === "update")
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
-										else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) /* NOT for Administrators. */
+										else if(is_object($user = wp_get_current_user()) && $user->ID && /* NOT for Administrators. */ $user->has_cap("administrator"))
 											$response = array("response" => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', "s2member-admin", "s2member"), "error" => true);
 										/* ----------------------------------------------------------------------------------------------------------------- */
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
@@ -664,8 +649,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
-								/**/
-								else if($form === "registration") /* Validation routines for free Registration forms. */
+								else if /* Validation routines for free Registration forms. */($form === "registration")
 									{
 										if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_names"] && (!$s["first_name"] || !is_string($s["first_name"])))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
@@ -709,8 +693,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
-								/**/
-								else if($form === "sp-checkout") /* Validation routines for Specific Post/Page checkout forms. */
+								else if /* Validation routines for Specific Post/Page checkout forms. */($form === "sp-checkout")
 									{
 										if(!$s["first_name"] || !is_string($s["first_name"]))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
@@ -763,8 +746,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
-								/**/
-								else if($form === "checkout") /* Validation routines for Member Level checkout forms. This is the default functionality. */
+								else if /* Validation routines for Member Level checkout forms. This is the default functionality. */($form === "checkout")
 									{
 										if($s["attr"]["modify"] && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to modify your billing plan.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
@@ -853,11 +835,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
-								else /* Else we are dealing with an unknown form submission type. */
+								else // Else we are dealing with an unknown form submission type.
 								$response = array("response" => _x('Unknown form submission type. Please contact Support.', "s2member-front", "s2member"), "error" => true);
 							}
-						/**/
-						return (empty($response)) ? null : $response;
+						return apply_filters("ws_plugin__s2member_pro_paypal_form_submission_validation_response", ((empty($response)) ? null : $response), $form, $s);
 					}
 			}
 	}

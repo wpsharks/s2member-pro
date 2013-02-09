@@ -60,7 +60,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 					{
 						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form", get_defined_vars());
-						unset($__refs, $__v); /* Unset defined __refs, __v. */
+						unset /* Unset defined __refs, __v. */($__refs, $__v);
 						/**/
 						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */(true);
 						/**/
@@ -92,7 +92,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						/**/
 						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form_after_shortcode_atts", get_defined_vars());
-						unset($__refs, $__v); /* Unset defined __refs, __v. */
+						unset /* Unset defined __refs, __v. */($__refs, $__v);
 						/**/
 						if /* Cancellations. */($attr["cancel"])
 							{
@@ -164,7 +164,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_cancellation_form", get_defined_vars());
-								unset($__refs, $__v); /* Unset defined __refs, __v. */
+								unset /* Unset defined __refs, __v. */($__refs, $__v);
 							}
 						else if /* Free registrations. */($attr["register"])
 							{
@@ -180,10 +180,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build all of the custom fields.
 								*/
-								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) /* Only display Custom Fields if configured. */
+								if /* Only display Custom Fields if configured. */($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
 									if(($fields_applicable = c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($attr["level"], "registration")))
 										{
-											$tabindex = 99; /* Start tabindex at 99 ( +1 below = 100 ). */
+											$tabindex = /* Start tabindex at 99 ( +1 below = 100 ). */ 99;
 											/**/
 											$custom_fields = '<div id="s2member-pro-paypal-registration-form-custom-fields-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-custom-fields-section s2member-pro-paypal-registration-form-custom-fields-section">'."\n";
 											/**/
@@ -193,12 +193,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 											/**/
 											foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if(in_array($field["id"], $fields_applicable)) /* Field is applicable to Level 0? */
+													if /* Field is applicable to Level 0? */(in_array($field["id"], $fields_applicable))
 														{
 															$field_var = preg_replace("/[^a-z0-9]/i", "_", strtolower($field["id"]));
 															$field_id_class = preg_replace("/_/", "-", $field_var);
 															/**/
-															if(!empty($field["section"]) && $field["section"] === "yes") /* Starts a new section? */
+															if /* Starts a new section? */(!empty($field["section"]) && $field["section"] === "yes")
 																$custom_fields .= '<div id="s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-divider-section" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-custom-reg-field-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').' s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').' s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').'">'.((!empty($field["sectitle"])) ? $field["sectitle"] : '').'</div>';
 															/**/
 															$custom_fields .= '<div id="s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-div s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-div">'."\n";
@@ -210,13 +210,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 															$custom_fields .= '</div>'."\n";
 														}
 												}
-											/**/
 											$custom_fields .= '</div>'."\n";
 										}
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) /* Is a captcha being used on this form? */
+								if /* Is a captcha being used on this form? */($attr["captcha"])
 									{
 										$captcha = '<div id="s2member-pro-paypal-registration-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-registration-form-captcha-section">'."\n";
 										/**/
@@ -305,7 +304,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_registration_form", get_defined_vars());
-								unset($__refs, $__v); /* Unset defined __refs, __v. */
+								unset /* Unset defined __refs, __v. */($__refs, $__v);
 							}
 						else if /* Billing information updates. */($attr["update"])
 							{
@@ -335,19 +334,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 								/**/
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = /* Start with an empty option value. */ '<option value=""></option>';
 								/**/
 								foreach(preg_split("/[\r\n]+/", file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/iso-3166-1.txt")) as $country)
 									{
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 										/**/
-										if($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if /* Here we also check on the default pre-selected country; as determined above; based on currency. */($country_l && $country_v)
 											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_update"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) /* Is a captcha being used on this form? */
+								if /* Is a captcha being used on this form? */($attr["captcha"])
 									{
 										$captcha = '<div id="s2member-pro-paypal-update-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-update-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-update-form-captcha-section">'."\n";
 										/**/
@@ -419,7 +418,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_update_form", get_defined_vars());
-								unset($__refs, $__v); /* Unset defined __refs, __v. */
+								unset /* Unset defined __refs, __v. */($__refs, $__v);
 							}
 						else if /* Specific Post/Page Access. */($attr["sp"])
 							{
@@ -427,7 +426,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Configure internal attributes.
 								*/
-								$attr["sp_ids_exp"] = "sp:".$attr["ids"].":".$attr["exp"]; /* Combined "sp:ids:expiration hours". */
+								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:".$attr["ids"].":".$attr["exp"];
 								$attr["coupon"] = ($_p["s2member_pro_paypal_sp_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_sp_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
@@ -454,7 +453,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 								/**/
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = /* Start with an empty option value. */ '<option value=""></option>';
 								/**/
 								foreach(preg_split("/[\r\n]+/", file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/iso-3166-1.txt")) as $country)
 									{
@@ -466,7 +465,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) /* Is a captcha being used on this form? */
+								if /* Is a captcha being used on this form? */($attr["captcha"])
 									{
 										$captcha = '<div id="s2member-pro-paypal-sp-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-sp-checkout-form-captcha-section">'."\n";
 										/**/
@@ -571,16 +570,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_sp_form", get_defined_vars());
-								unset($__refs, $__v); /* Unset defined __refs, __v. */
+								unset /* Unset defined __refs, __v. */($__refs, $__v);
 							}
-						else /* Signups and Modifications. */
+						else // Signups and Modifications.
 							{
 								$_p = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
 								/*
 								Configure internal attributes.
 								*/
 								$attr["level_ccaps_eotper"] = ($attr["rr"] === "BN" && $attr["rt"] !== "L") ? $attr["level"].":".$attr["ccaps"].":".$attr["rp"]." ".$attr["rt"] : $attr["level"].":".$attr["ccaps"];
-								$attr["level_ccaps_eotper"] = rtrim($attr["level_ccaps_eotper"], ":"); /* Clean any trailing separators from this string. */
+								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
 								$attr["coupon"] = ($_p["s2member_pro_paypal_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
@@ -607,22 +606,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 								/**/
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = /* Start with an empty option value. */ '<option value=""></option>';
 								/**/
 								foreach(preg_split("/[\r\n]+/", file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/iso-3166-1.txt")) as $country)
 									{
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 										/**/
-										if($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if /* Here we also check on the default pre-selected country; as determined above; based on currency. */($country_l && $country_v)
 											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*
 								Build all of the custom fields.
 								*/
-								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) /* Only display Custom Fields if configured. */
+								if /* Only display Custom Fields if configured. */($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
 									if(($fields_applicable = c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level((($attr["level"] === "*") ? "auto-detection" : $attr["level"]), "registration")))
 										{
-											$tabindex = 99; /* Start tabindex at 99 ( +1 below = 100 ). */
+											$tabindex = /* Start tabindex at 99 ( +1 below = 100 ). */ 99;
 											/**/
 											$custom_fields = '<div id="s2member-pro-paypal-checkout-form-custom-fields-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-checkout-form-section s2member-pro-paypal-form-custom-fields-section s2member-pro-paypal-checkout-form-custom-fields-section">'."\n";
 											/**/
@@ -632,12 +631,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 											/**/
 											foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if(in_array($field["id"], $fields_applicable)) /* Field is applicable to this Level? */
+													if /* Field is applicable to this Level? */(in_array($field["id"], $fields_applicable))
 														{
 															$field_var = preg_replace("/[^a-z0-9]/i", "_", strtolower($field["id"]));
 															$field_id_class = preg_replace("/_/", "-", $field_var);
 															/**/
-															if(!empty($field["section"]) && $field["section"] === "yes") /* Starts a new section? */
+															if /* Starts a new section? */(!empty($field["section"]) && $field["section"] === "yes")
 																$custom_fields .= '<div id="s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-divider-section" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-custom-reg-field-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').' s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').' s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-divider-section'.((!empty($field["sectitle"])) ? '-title' : '').'">'.((!empty($field["sectitle"])) ? $field["sectitle"] : '').'</div>';
 															/**/
 															$custom_fields .= '<div id="s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-div s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-div">'."\n";
@@ -649,13 +648,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 															$custom_fields .= '</div>'."\n";
 														}
 												}
-											/**/
 											$custom_fields .= '</div>'."\n";
 										}
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) /* Is a captcha being used on this form? */
+								if /* Is a captcha being used on this form? */($attr["captcha"])
 									{
 										$captcha = '<div id="s2member-pro-paypal-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-checkout-form-captcha-section">'."\n";
 										/**/
@@ -768,9 +766,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/**/
 								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
 								($attr["modify"]) ? do_action("ws_plugin__s2member_pro_during_sc_paypal_modification_form", get_defined_vars()) : do_action("ws_plugin__s2member_pro_during_sc_paypal_form", get_defined_vars());
-								unset($__refs, $__v); /* Unset defined __refs, __v. */
+								unset /* Unset defined __refs, __v. */($__refs, $__v);
 							}
-						/**/
 						return apply_filters("ws_plugin__s2member_pro_sc_paypal_form", $code, get_defined_vars());
 					}
 			}
