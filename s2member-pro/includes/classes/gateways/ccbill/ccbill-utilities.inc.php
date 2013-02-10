@@ -59,13 +59,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 					{
 						$gateway = "https://bill.ccbill.com/jpost/signup.cgi";
 
-						$digest_vars = $vars["formPrice"] . $vars["formPeriod"]; /* These are always required. */
+						$digest_vars = $vars["formPrice"] . $vars["formPeriod"]; // These are always required.
 						$digest_vars .= $vars["formRecurringPrice"] . $vars["formRecurringPeriod"] . $vars["formRebills"];
-						$digest_vars .= $vars["currencyCode"]; /* Add the currency code to this too ( always req ). */
+						$digest_vars .= $vars["currencyCode"]; // Add the currency code to this too ( always req ).
 
 						$vars["formDigest"] = md5 ($digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]);
 
-						return add_query_arg (urlencode_deep ($vars), $gateway); /* ccBill® link. */
+						return add_query_arg (urlencode_deep ($vars), $gateway); // ccBill® link.
 					}
 				/**
 				* Converts currency code to a numeric code for ccBill®.
@@ -78,7 +78,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				*/
 				public static function ccbill_currency_numr ($currency_code = FALSE)
 					{
-						$currency_code = strtoupper ($currency_code); /* Force uppercase. */
+						$currency_code = strtoupper ($currency_code); // Force uppercase.
 
 						$currencies = array ("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
 
@@ -155,10 +155,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 								else if ($postvars["responseDigest"] === md5 ($denial_digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]))
 									return $postvars;
 
-								else /* Nope. */
+								else // Nope.
 									return false;
 							}
-						else /* Nope. */
+						else // Nope.
 							return false;
 					}
 			}

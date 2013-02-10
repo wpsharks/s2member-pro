@@ -565,7 +565,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if($attr["rrt"] && $attr["rr"] !== "1")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rrt" attributes. When "rrt" ( Recurring Times ) is provided, "rr" ( Regular Recurring ) must be 1.', "s2member-admin", "s2member"), "error" => true);
-										/****/
+
 										else if(($attr["rr"] === "0" || $attr["rr"] === "1") && (!is_string($attr["rra"]) || !is_numeric($attr["rra"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr, rra" attributes. When "rr" ( Regular Recurring ) is 0 or 1, "rra" ( Recurring Retry Attempts ) must be numeric.', "s2member-admin", "s2member"), "error" => true);
 
@@ -595,21 +595,21 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
-										else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) /* NOT for Administrators. */
+										// -----------------------------------------------------------------------------------------------------------------
+										else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) // NOT for Administrators.
 											$response = array("response" => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', "s2member-admin", "s2member"), "error" => true);
 									}
 								else if /* Special form for Updates. User/Member must be logged in. */($form === "update")
 									{
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(is_object($user = wp_get_current_user()) && $user->ID && /* NOT for Administrators. */ $user->has_cap("administrator"))
 											$response = array("response" => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', "s2member-admin", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -630,7 +630,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -645,7 +645,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
@@ -689,7 +689,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if($s["password2"] !== $s["password1"] && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
@@ -706,7 +706,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(!is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -727,7 +727,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -742,7 +742,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
@@ -750,13 +750,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 									{
 										if($s["attr"]["modify"] && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to modify your billing plan.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["level"] === "*" && !is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> before making this purchase.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
-										else if(is_user_logged_in() && is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) /* NOT for Administrators. */
+										// -----------------------------------------------------------------------------------------------------------------
+										else if(is_user_logged_in() && is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap("administrator")) // NOT for Administrators.
 											$response = array("response" => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', "s2member-admin", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(!$s["first_name"] || !is_string($s["first_name"]))
 											$response = array("response" => _x('Missing First Name. Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -795,7 +795,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(!is_user_logged_in() && $s["password2"] !== $s["password1"] && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type ( Billing Method ). Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -816,7 +816,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Maestro", "Solo")) && (!$s["card_start_date_issue_number"] || !is_string($s["card_start_date_issue_number"])))
 											$response = array("response" => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["street"] || !is_string($s["street"])))
 											$response = array("response" => _x('Missing Street Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -831,7 +831,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["zip"] || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
-										/* ----------------------------------------------------------------------------------------------------------------- */
+										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (!$s["recaptcha_challenge_field"] || !$s["recaptcha_response_field"] || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}

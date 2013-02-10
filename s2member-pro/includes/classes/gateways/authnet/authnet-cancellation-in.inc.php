@@ -57,29 +57,29 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 					{
 						if (!empty ($_POST["s2member_pro_authnet_cancellation"]["nonce"]) && ($nonce = $_POST["s2member_pro_authnet_cancellation"]["nonce"]) && wp_verify_nonce ($nonce, "s2member-pro-authnet-cancellation"))
 							{
-								$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"] = array (); /* This holds the global response details. */
-								$global_response = &$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"]; /* This is a shorter reference. */
+								$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"] = array (); // This holds the global response details.
+								$global_response = &$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"]; // This is a shorter reference.
 
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_authnet_cancellation"]));
-								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); /* And run a Filter. */
+								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); // And run a Filter.
 								$post_vars["attr"] = apply_filters ("ws_plugin__s2member_pro_authnet_cancellation_post_attr", $post_vars["attr"], get_defined_vars ());
 
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim (stripslashes ($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
 								$post_vars["recaptcha_response_field"] = (!$post_vars["recaptcha_response_field"]) ? trim (stripslashes ($_POST["recaptcha_response_field"])) : $post_vars["recaptcha_response_field"];
 
-								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) /* Must NOT have any attr errors. */
+								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) // Must NOT have any attr errors.
 									{
 										if (!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors ("cancellation", $post_vars)))
 											{
-												if (is_user_logged_in () && is_object ($user = wp_get_current_user ()) && ($user_id = $user->ID)) /* Are they logged in? */
+												if (is_user_logged_in () && is_object ($user = wp_get_current_user ()) && ($user_id = $user->ID)) // Are they logged in?
 													{
 														if (($authnet = array ("x_method" => "status")) && ($authnet["x_subscription_id"] = $cur__subscr_id = get_user_option ("s2member_subscr_id")))
 															{
 																if (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response ($authnet)) && empty ($authnet["__error"]) && $authnet["subscription_status"])
 																	{
-																		if (preg_match ("/^(active|suspended)$/i", $authnet["subscription_status"])) /* Still active/suspended? */
+																		if (preg_match ("/^(active|suspended)$/i", $authnet["subscription_status"])) // Still active/suspended?
 																			{
-																				if (!($ipn = array ())) /* With Authorize.Net®, we need their IPN signup vars. */
+																				if (!($ipn = array ())) // With Authorize.Net®, we need their IPN signup vars.
 																					if (is_array ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars ()))
 																						{
 																							$ipn["txn_type"] = "subscr_cancel";
@@ -118,7 +118,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																							wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																					}
 																			}
-																		else /* Else, account already terminated. */
+																		else // Else, account already terminated.
 																			{
 																				$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
 
@@ -126,7 +126,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																					wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																			}
 																	}
-																else /* Else, there is no Billing Profile. */
+																else // Else, there is no Billing Profile.
 																	{
 																		$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
 
@@ -134,7 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																			wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 																	}
 															}
-														else /* Else, there is no Billing Profile. */
+														else // Else, there is no Billing Profile.
 															{
 																$global_response = array ("response" => _x ('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
 
@@ -142,12 +142,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation_in"))
 																	wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 															}
 													}
-												else /* Else, an error. Not logged in. */
+												else // Else, an error. Not logged in.
 													{
 														$global_response = array ("response" => _x ('You\'re <strong>NOT</strong> logged in.', "s2member-front", "s2member"), "error" => true);
 													}
 											}
-										else /* Else, an error. */
+										else // Else, an error.
 											{
 												$global_response = $error;
 											}

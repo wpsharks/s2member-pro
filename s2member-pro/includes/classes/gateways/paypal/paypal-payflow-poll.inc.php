@@ -62,7 +62,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 				*/
 				public static function payflow_service($vars = FALSE)
 					{
-						global $wpdb; /* Need global DB obj. */
+						global $wpdb; // Need global DB obj.
 						global /* For Multisite support. */ $current_site, $current_blog;
 
 						if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
@@ -92,7 +92,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																				$paypal["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 																				$processing = $processed = true;
-																				$ipn = array(); /* Reset. */
+																				$ipn = array(); // Reset.
 
 																				$ipn["txn_type"] = "subscr_eot";
 																				$ipn["subscr_id"] = $paypal["ipn_signup_vars"]["subscr_id"];
@@ -130,7 +130,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																				$paypal["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 																				$processing = $processed = true;
-																				$ipn = array(); /* Reset. */
+																				$ipn = array(); // Reset.
 
 																				$ipn["txn_type"] = "subscr_cancel";
 																				$ipn["subscr_id"] = $paypal["ipn_signup_vars"]["subscr_id"];
@@ -159,7 +159,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																				c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
 																			}
 
-																		else if(!$processed) /* If nothing was processed, here we add a message to the logs indicating the status; which is being ignored. */
+																		else if(!$processed) // If nothing was processed, here we add a message to the logs indicating the status; which is being ignored.
 																			$paypal["s2member_log"][] = "Ignoring this status ( `".$paypal["STATUS"]."` ). It does NOT require any action on the part of s2Member.";
 
 																		$logv = c_ws_plugin__s2member_utilities::ver_details();
@@ -177,8 +177,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 
 														update_user_option($user_id, "s2member_last_status_scan", time());
 
-														if($counter >= $per_process) /* Only this many. */
-															break; /* Break the loop now. */
+														if($counter >= $per_process) // Only this many.
+															break; // Break the loop now.
 													}
 											}
 									}

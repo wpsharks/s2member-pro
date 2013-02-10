@@ -72,7 +72,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 						$req["headers"]["Content-Type"] = "application/xml; charset=UTF-8";
 						$req["headers"]["Authorization"] = "Basic " . base64_encode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"] . ":" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]);
 
-						return $req; /* Return array with headers.*/
+						return $req; // Return array with headers.
 					}
 				/**
 				* Converts a "Period Term" into a Google® periodicity for XML subscription attribute.
@@ -88,7 +88,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				public static function google_periodicity ($period_term = FALSE)
 					{
 						list ($num, $span) = preg_split ("/ /", strtoupper ($period_term), 2);
-						$num = (int)$num; /* Force this to an integer. */
+						$num = (int)$num; // Force this to an integer.
 
 						if ($num === 1 && $span === "D")
 							return "DAILY";
@@ -156,10 +156,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 
 								if (($response = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/reportsForm/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $postback, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && wp_parse_str ($response, $postvars) !== "nill" && !empty ($postvars["_type"]))
 									return c_ws_plugin__s2member_utils_strings::trim_deep ($postvars);
-								else /* Nope. Return false. */
+								else // Nope. Return false.
 									return false;
 							}
-						else /* Nope. */
+						else // Nope.
 							return false;
 					}
 				/**
@@ -178,7 +178,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 							{
 								list ($num, $span) = preg_split ("/ /", $period1, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if (is_numeric ($num) && !is_numeric ($span))
 									{
@@ -196,7 +196,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 							{
 								list ($num, $span) = preg_split ("/ /", $period3, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if (is_numeric ($num) && !is_numeric ($span))
 									{
@@ -214,8 +214,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 
 						$start_time = ($start_time <= 0) ? strtotime ("now") : $start_time;
 
-						$start_time = $start_time + 43200; /* + 12 hours. */
-						/* This prevents date clashes with Google's API server. */
+						$start_time = $start_time + 43200; // + 12 hours.
+						// This prevents date clashes with Google's API server.
 
 						return $start_time;
 					}

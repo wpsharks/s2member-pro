@@ -56,19 +56,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 				public static function sp_checkout()
 					{
 						if((!empty($_POST["s2member_pro_paypal_sp_checkout"]["nonce"]) && ($nonce = $_POST["s2member_pro_paypal_sp_checkout"]["nonce"]) && wp_verify_nonce($nonce, "s2member-pro-paypal-sp-checkout"))
-						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" /*  PayPal® Express Checkout with $_GET["token"] & $_GET["PayerID"]. */
-						&& !empty($_GET["token"]) && ($_GET["token"] = esc_html($_GET["token"])) && (empty($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html($_GET["PayerID"]))) /* PayerID is not required. */
+						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" //  PayPal® Express Checkout with $_GET["token"] & $_GET["PayerID"].
+						&& !empty($_GET["token"]) && ($_GET["token"] = esc_html($_GET["token"])) && (empty($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html($_GET["PayerID"]))) // PayerID is not required.
 						&& ($xco_post_vars = get_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])))))
 							{
-								$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"] = array(); /* This holds the global response details. */
-								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"]; /* This is a shorter reference. */
+								$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"] = array(); // This holds the global response details.
+								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"]; // This is a shorter reference.
 
 								$post_vars = ($xco_post_vars) ? $xco_post_vars : $_POST["s2member_pro_paypal_sp_checkout"];
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($post_vars));
 								$post_vars["attr"] = (!$xco_post_vars) ? unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])) : $post_vars["attr"];
 								$post_vars["attr"] = (!$xco_post_vars) ? apply_filters("ws_plugin__s2member_pro_paypal_sp_checkout_post_attr", $post_vars["attr"], get_defined_vars()) : $post_vars["attr"];
 
-								if($xco_post_vars) /* No need to re-validate this upon return from Express Checkout. */
+								if($xco_post_vars) // No need to re-validate this upon return from Express Checkout.
 									$post_vars["attr"]["captcha"] = "0";
 
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim(stripslashes($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
@@ -79,7 +79,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 								(!empty($_GET["token"])) ? delete_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])) : null;
 
-								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) /* Attr errors? */
+								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) // Attr errors?
 									{
 										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("sp-checkout", $post_vars)))
 											{
@@ -97,9 +97,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;
 
-														$post_vars["attr"]["invoice"] = uniqid()."~".$_SERVER["REMOTE_ADDR"]; /* Unique invoice w/ IP address too. */
+														$post_vars["attr"]["invoice"] = uniqid()."~".$_SERVER["REMOTE_ADDR"]; // Unique invoice w/ IP address too.
 
-														if(!($paypal_set_xco = array())) /* PayPal® Express Checkout. */
+														if(!($paypal_set_xco = array())) // PayPal® Express Checkout.
 															{
 																$paypal_set_xco["METHOD"] = "SetExpressCheckout";
 
@@ -124,7 +124,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																$paypal_set_xco["PAYMENTREQUEST_0_TAXAMT"] = $cost_calculations["tax"];
 																$paypal_set_xco["PAYMENTREQUEST_0_AMT"] = $cost_calculations["total"];
 
-																$paypal_set_xco["L_PAYMENTREQUEST_0_QTY0"] = "1"; /* Always (1). */
+																$paypal_set_xco["L_PAYMENTREQUEST_0_QTY0"] = "1"; // Always (1).
 																$paypal_set_xco["L_PAYMENTREQUEST_0_NAME0"] = $cost_calculations["desc"];
 																$paypal_set_xco["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["sp_ids_exp"];
 																$paypal_set_xco["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
@@ -147,20 +147,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 																wp_redirect(add_query_arg("token", urlencode($paypal_set_xco["TOKEN"]), "https://".$endpoint."/cgi-bin/webscr?cmd=_express-checkout"));
 
-																exit(); /* Clean exit. */
+																exit(); // Clean exit.
 															}
-														else /* Else, an error. */
+														else // Else, an error.
 															{
 																$global_response = array("response" => $paypal_set_xco["__error"], "error" => true);
 															}
 													}
 
-												else /* Else we're good. Now ready to process this "Buy Now" transaction. */
+												else // Else we're good. Now ready to process this "Buy Now" transaction.
 													{
-														if(empty($post_vars["attr"]["invoice"])) /* Only if it's empty. */
+														if(empty($post_vars["attr"]["invoice"])) // Only if it's empty.
 															$post_vars["attr"]["invoice"] = uniqid()."~".$_SERVER["REMOTE_ADDR"];
 
-														if(!($paypal = array())) /* Build a simple "Buy Now" request. */
+														if(!($paypal = array())) // Build a simple "Buy Now" request.
 															{
 																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" && !empty($_GET["token"]) && ($paypal_xco_details = array("METHOD" => "GetExpressCheckoutDetails", "TOKEN" => $_GET["token"])) && ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_xco_details)) && empty($paypal_xco_details["__error"]))
 																	{
@@ -180,12 +180,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$paypal["PAYMENTREQUEST_0_TAXAMT"] = $cost_calculations["tax"];
 																		$paypal["PAYMENTREQUEST_0_AMT"] = $cost_calculations["total"];
 
-																		$paypal["L_PAYMENTREQUEST_0_QTY0"] = "1"; /* Always (1). */
+																		$paypal["L_PAYMENTREQUEST_0_QTY0"] = "1"; // Always (1).
 																		$paypal["L_PAYMENTREQUEST_0_NAME0"] = $cost_calculations["desc"];
 																		$paypal["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["sp_ids_exp"];
 																		$paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																	}
-																else /* NOT using PayPal® Express Checkout. */
+																else // NOT using PayPal® Express Checkout.
 																	{
 																		$paypal["METHOD"] = "DoDirectPayment";
 																		$paypal["PAYMENTACTION"] = "Sale";
@@ -204,7 +204,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$paypal["TAXAMT"] = $cost_calculations["tax"];
 																		$paypal["AMT"] = $cost_calculations["total"];
 
-																		$paypal["L_QTY0"] = "1"; /* Always (1). */
+																		$paypal["L_QTY0"] = "1"; // Always (1).
 																		$paypal["L_NAME0"] = $cost_calculations["desc"];
 																		$paypal["L_NUMBER0"] = $post_vars["attr"]["sp_ids_exp"];
 																		$paypal["L_AMT0"] = $cost_calculations["sub_total"];
@@ -217,7 +217,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		if(in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																			if(preg_match("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																				$paypal["STARTDATE"] = preg_replace("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
-																			else /* Otherwise, we assume they provided an Issue Number instead. */
+																			else // Otherwise, we assume they provided an Issue Number instead.
 																			$paypal["ISSUENUMBER"] = $post_vars["card_start_date_issue_number"];
 
 																		$paypal["STREET"] = $post_vars["street"];
@@ -233,7 +233,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																$new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
 																$new__txn_id = (!$new__txn_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__txn_id;
 
-																if(!($ipn = array())) /* Simulated PayPal® IPN. */
+																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
 																		$ipn["txn_id"] = $new__txn_id;
@@ -248,13 +248,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$ipn["first_name"] = $post_vars["first_name"];
 																		$ipn["last_name"] = $post_vars["last_name"];
 
-																		if(is_user_logged_in() && /* Reference a User/Member? */
+																		if(is_user_logged_in() && // Reference a User/Member?
 																		($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()))
 																			{
 																				$ipn["option_name1"] = "Referencing Customer ID";
 																				$ipn["option_selection1"] = $referencing;
 																			}
-																		else /* Otherwise, default to the originating domain. */
+																		else // Otherwise, default to the originating domain.
 																			{
 																				$ipn["option_name1"] = "Originating Domain";
 																				$ipn["option_selection1"] = $_SERVER["HTTP_HOST"];
@@ -282,18 +282,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		if($post_vars["attr"]["success"] && substr($ipn["s2member_paypal_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_paypal_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																			wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
 																	}
-																else /* Else, unable to generate Access Link. */
+																else // Else, unable to generate Access Link.
 																	{
 																		$global_response = array("response" => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 																	}
 															}
-														else /* Else, an error. */
+														else // Else, an error.
 															{
 																$global_response = array("response" => $paypal["__error"], "error" => true);
 															}
 													}
 											}
-										else /* Else, an error. */
+										else // Else, an error.
 											{
 												$global_response = $error;
 											}

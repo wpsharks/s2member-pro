@@ -88,7 +88,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
 														$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
 
-														$rtn = array(); /* Reset. */
+														$rtn = array(); // Reset.
 
 														$rtn["txn_type"] = "web_accept";
 
@@ -97,7 +97,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 														$rtn["mc_gross"] = number_format($order["amount"], 2, ".", "");
 														$rtn["mc_currency"] = strtoupper($order["currency"]);
-														$rtn["tax"] = "0.00"; /* No tax. */
+														$rtn["tax"] = "0.00"; // No tax.
 
 														$rtn["payer_email"] = $order["email"];
 														$rtn["first_name"] = ucwords(strtolower($order["firstName"]));
@@ -129,7 +129,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
 														$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
 
-														$rtn = array(); /* Reset. */
+														$rtn = array(); // Reset.
 
 														$rtn["txn_type"] = "subscr_signup";
 														$rtn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -145,7 +145,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 														$rtn["mc_amount3"] = @number_format($order["rebillAmount"], 2, ".", "");
 
 														$rtn["mc_currency"] = strtoupper($order["currency"]);
-														$rtn["tax"] = "0.00"; /* No tax. */
+														$rtn["tax"] = "0.00"; // No tax.
 
 														$rtn["payer_email"] = $order["email"];
 														$rtn["first_name"] = ucwords(strtolower($order["firstName"]));
@@ -171,7 +171,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 														wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
 													}
-												else /* Else, we were unable to determine the txnType that is being handled here. */
+												else // Else, we were unable to determine the txnType that is being handled here.
 													{
 														$clickbank["s2member_log"][] = "Unexpected txnType. The ClickBank® txnType did not match a required action.";
 
@@ -183,10 +183,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 														echo '</script>'."\n";
 													}
 											}
-										else /* Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank® API to receive data for new orders. This is here in case that happens. */
+										else // Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank® API to receive data for new orders. This is here in case that happens.
 											{
 												$clickbank["s2member_log"][] = "Unable to obtain API vars. The ClickBank® API may NOT have data for this order yet. Or, your ClickBank® API Keys are NOT configured properly under `s2Member -> ClickBank® Options`.";
-												$clickbank["s2member_log"][] = var_export($_REQUEST, true); /* Recording ``$_POST`` + ``$_GET`` vars for analysis and debugging. */
+												$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording ``$_POST`` + ``$_GET`` vars for analysis and debugging.
 
 												$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor with `proxy_use` ( `ty-email` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
@@ -203,12 +203,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 												wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
 											}
 									}
-								else /* Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail. */
+								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
 										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -> ClickBank® Options.";
 										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank® over an HTTPS connection.";
 										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
-										$clickbank["s2member_log"][] = var_export($_REQUEST, true); /* Recording _POST + _GET vars for analysis and debugging. */
+										$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 
 										$clickbank["s2member_log"][] = "Redirecting Customer to the Home Page, due to an error that occurred.";
 
@@ -229,7 +229,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 										if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
 											file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".var_export($clickbank, true)."\n\n", FILE_APPEND);
 
-								exit(); /* Exit now. */
+								exit(); // Exit now.
 							}
 					}
 			}

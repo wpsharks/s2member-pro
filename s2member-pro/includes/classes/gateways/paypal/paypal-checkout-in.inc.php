@@ -56,8 +56,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 				public static function paypal_checkout()
 					{
 						if((!empty($_POST["s2member_pro_paypal_checkout"]["nonce"]) && ($nonce = $_POST["s2member_pro_paypal_checkout"]["nonce"]) && wp_verify_nonce($nonce, "s2member-pro-paypal-checkout"))
-						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" /*  PayPal® Express Checkout with $_GET["token"] & $_GET["PayerID"]? */
-						&& !empty($_GET["token"]) && ($_GET["token"] = esc_html($_GET["token"])) && (empty($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html($_GET["PayerID"]))) /* PayerID is not required. */
+						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" //  PayPal® Express Checkout with $_GET["token"] & $_GET["PayerID"]?
+						&& !empty($_GET["token"]) && ($_GET["token"] = esc_html($_GET["token"])) && (empty($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html($_GET["PayerID"]))) // PayerID is not required.
 						&& ($xco_post_vars = get_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])))))
 							{
 								$GLOBALS["ws_plugin__s2member_pro_paypal_checkout_response"] =  /* This holds the global response details. */array();
@@ -270,7 +270,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$ipn["item_number"] = $post_vars["attr"]["level_ccaps_eotper"];
 
 																				$ipn_q = "&s2member_paypal_proxy=paypal&s2member_paypal_proxy_use=pro-emails";
-																				$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; /* Use as first payment? */
+																				$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; // Use as first payment?
 																				$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
 																				$ipn_q .= "&s2member_paypal_proxy_return_url=".rawurlencode($post_vars["attr"]["success"]);
 
@@ -528,7 +528,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$paypal["TAXAMT"] = $cost_calculations["tax"];
 																				$paypal["AMT"] = $cost_calculations["total"];
 
-																				$paypal["L_QTY0"] = "1"; /* Always (1). */
+																				$paypal["L_QTY0"] = "1"; // Always (1).
 																				$paypal["L_NAME0"] = $cost_calculations["desc"];
 																				$paypal["L_NUMBER0"] = $post_vars["attr"]["level_ccaps_eotper"];
 																				$paypal["L_AMT0"] = $cost_calculations["sub_total"];
@@ -541,7 +541,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				if(in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																					if(preg_match("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																						$paypal["STARTDATE"] = preg_replace("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
-																					else /* Otherwise, we assume they provided an Issue Number instead. */
+																					else // Otherwise, we assume they provided an Issue Number instead.
 																					$paypal["ISSUENUMBER"] = $post_vars["card_start_date_issue_number"];
 
 																				$paypal["STREET"] = $post_vars["street"];
@@ -633,7 +633,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$paypal["PAYMENTREQUEST_0_TAXAMT"] = $cost_calculations["tax"];
 																		$paypal["PAYMENTREQUEST_0_AMT"] = $cost_calculations["total"];
 
-																		$paypal["L_PAYMENTREQUEST_0_QTY0"] = "1"; /* Always (1). */
+																		$paypal["L_PAYMENTREQUEST_0_QTY0"] = "1"; // Always (1).
 																		$paypal["L_PAYMENTREQUEST_0_NAME0"] = $cost_calculations["desc"];
 																		$paypal["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["level_ccaps_eotper"];
 																		$paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];

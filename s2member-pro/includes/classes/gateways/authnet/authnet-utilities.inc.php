@@ -60,26 +60,26 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 						$url = "https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? "test.authorize.net" : "secure.authorize.net")."/gateway/transact.dll";
 
-						$post_vars = (is_array($post_vars)) ? $post_vars : array(); /* Must be in array format. */
+						$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
 
-						$post_vars["x_version"] = "3.1"; /* Configure the Authorize.Net® transaction version. */
+						$post_vars["x_version"] = "3.1"; // Configure the Authorize.Net® transaction version.
 						$post_vars["x_login"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"];
 						$post_vars["x_tran_key"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"];
 
-						$post_vars["x_delim_data"] = "true"; /* Yes, return a delimited string. */
-						$post_vars["x_delim_char"] = ","; /* Fields delimitation character. */
-						$post_vars["x_encap_char"] = '"'; /* Field encapsulation character. */
-						$post_vars["x_relay_response"] = "false"; /* Always off for AIM. */
+						$post_vars["x_delim_data"] = "true"; // Yes, return a delimited string.
+						$post_vars["x_delim_char"] = ","; // Fields delimitation character.
+						$post_vars["x_encap_char"] = '"'; // Field encapsulation character.
+						$post_vars["x_relay_response"] = "false"; // Always off for AIM.
 
 						$post_vars["x_invoice_num"] = (!empty($post_vars["x_invoice_num"])) ? substr($post_vars["x_invoice_num"], 0, 20) : "";
 						$post_vars["x_description"] = (!empty($post_vars["x_description"])) ? substr($post_vars["x_description"], 0, 255) : "";
 						$post_vars["x_description"] = c_ws_plugin__s2member_utils_strings::strip_2_kb_chars($post_vars["x_description"]);
 
-						$input_time = date("D M j, Y g:i:s a T"); /* Record input time for logging. */
+						$input_time = date("D M j, Y g:i:s a T"); // Record input time for logging.
 
 						$csv = trim(c_ws_plugin__s2member_utils_urls::remote($url, $post_vars, array("timeout" => 20)));
 
-						$output_time = date("D M j, Y g:i:s a T"); /* Now record after output time. */
+						$output_time = date("D M j, Y g:i:s a T"); // Now record after output time.
 
 						$response = ($csv) ? c_ws_plugin__s2member_utils_strings::trim_dq_deep(preg_split("/\",\"/", $csv)) : array();
 						$response = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($response));
@@ -87,13 +87,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						foreach(array("response_code", "response_subcode", "response_reason_code", "response_reason_text", "authorization_code", "avs_response", "transaction_id", "invoice_number", "description", "amount", "method", "transaction_type", "customer_id", "first_name", "last_name", "company", "address", "city", "state", "zipcode", "country", "phone", "fax", "email", "ship_to_first_name", "ship_to_last_name", "ship_to_company", "ship_to_address", "ship_to_city", "ship_to_state", "ship_to_zipcode", "ship_to_country", "tax", "duty", "freight", "tax_exempt", "po_number", "md5_hash", "card_code_response", "cavv_response", "card_number", "card_type", "split_tender_id", "requested_amount", "balance_on_card") as $order => $field_name)
 							$response[$field_name] = (isset($response[$order])) ? $response[$order] : null;
 
-						if(empty($response["response_code"]) || $response["response_code"] !== "1") /* A value of 1 indicates success. */
+						if(empty($response["response_code"]) || $response["response_code"] !== "1") // A value of 1 indicates success.
 							{
 								if(strlen($response["response_reason_code"]) || $response["response_reason_text"])
-									/* translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_aim_response`. */
+									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_aim_response`.
 									$response["__error"] = sprintf(_x('Error #%1$s. %2$s.', "s2member-front", "s2member"), $response["response_reason_code"], rtrim($response["response_reason_text"], "."));
 
-								else /* Else, generate an error messsage - so something is reported back to the Customer. */
+								else // Else, generate an error messsage - so something is reported back to the Customer.
 									$response["__error"] = _x("Error. Please contact Support for assistance.", "s2member-front", "s2member");
 							}
 						/*
@@ -106,9 +106,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
 						$log2 = (is_multisite() && !is_main_site()) ? "authnet-api-4-".trim(preg_replace("/[^a-z0-9]/i", "-", $_log4), "-").".log" : "authnet-api.log";
 
-						if(strlen($post_vars["x_card_num"]) > 4) /* Only log last 4 digits for security. */
+						if(strlen($post_vars["x_card_num"]) > 4) // Only log last 4 digits for security.
 							$post_vars["x_card_num"] = str_repeat("*", strlen($post_vars["x_card_num"]) - 4)
-							.substr($post_vars["x_card_num"], -4); /* Then display last 4 digits. */
+							.substr($post_vars["x_card_num"], -4); // Then display last 4 digits.
 
 						if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 							if(is_dir($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
@@ -132,7 +132,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				*/
 				public static function _authnet_aim_response_filters($response = FALSE)
 					{
-						return $response; /* Nothing here yet. */
+						return $response; // Nothing here yet.
 					}
 				/**
 				* Calls upon Authorize.Net® ARB, and returns the response.
@@ -151,7 +151,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 						$url = "https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? "apitest.authorize.net" : "api.authorize.net")."/xml/v1/request.api";
 
-						$post_vars = (is_array($post_vars)) ? $post_vars : array(); /* Must be in array format. */
+						$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
 
 						$post_vars["x_login"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"];
 						$post_vars["x_tran_key"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"];
@@ -160,7 +160,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						$post_vars["x_description"] = (!empty($post_vars["x_description"])) ? substr($post_vars["x_description"], 0, 255) : "";
 						$post_vars["x_description"] = c_ws_plugin__s2member_utils_strings::strip_2_kb_chars($post_vars["x_description"]);
 
-						$trial = (!empty($post_vars["x_trial_occurrences"])) ? true : false; /* Indicates existence of trial. */
+						$trial = (!empty($post_vars["x_trial_occurrences"])) ? true : false; // Indicates existence of trial.
 
 						if((int)$post_vars["x_length"] === 30 && $post_vars["x_unit"] === "days")
 							{
@@ -307,21 +307,21 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						$req["headers"]["Accept"] = "application/xml; charset=UTF-8";
 						$req["headers"]["Content-Type"] = "application/xml; charset=UTF-8";
 
-						$input_time = date("D M j, Y g:i:s a T"); /* Record input time for logging. */
+						$input_time = date("D M j, Y g:i:s a T"); // Record input time for logging.
 
 						$xml = trim(c_ws_plugin__s2member_utils_urls::remote($url, $xml, array_merge($req, array("timeout" => 20))));
 
-						$output_time = date("D M j, Y g:i:s a T"); /* Now record after output time. */
+						$output_time = date("D M j, Y g:i:s a T"); // Now record after output time.
 
 						$response = c_ws_plugin__s2member_pro_authnet_utilities::_authnet_parse_arb_response($xml);
 
-						if(empty($response["response_code"]) || $response["response_code"] !== "I00001") /* A value of I00001 indicates success. */
+						if(empty($response["response_code"]) || $response["response_code"] !== "I00001") // A value of I00001 indicates success.
 							{
 								if(strlen($response["response_reason_code"]) || $response["response_reason_text"])
-									/* translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_arb_response`. */
+									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_arb_response`.
 									$response["__error"] = sprintf(_x('Error #%1$s. %2$s.', "s2member-front", "s2member"), $response["response_reason_code"], rtrim($response["response_reason_text"], "."));
 
-								else /* Else, generate an error messsage - so something is reported back to the Customer. */
+								else // Else, generate an error messsage - so something is reported back to the Customer.
 									$response["__error"] = _x("Error. Please contact Support for assistance.", "s2member-front", "s2member");
 							}
 						/*
@@ -334,9 +334,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
 						$log2 = (is_multisite() && !is_main_site()) ? "authnet-api-4-".trim(preg_replace("/[^a-z0-9]/i", "-", $_log4), "-").".log" : "authnet-api.log";
 
-						if(strlen($post_vars["x_card_num"]) > 4) /* Only log last 4 digits for security. */
+						if(strlen($post_vars["x_card_num"]) > 4) // Only log last 4 digits for security.
 							$post_vars["x_card_num"] = str_repeat("*", strlen($post_vars["x_card_num"]) - 4)
-							.substr($post_vars["x_card_num"], -4); /* Then display last 4 digits. */
+							.substr($post_vars["x_card_num"], -4); // Then display last 4 digits.
 
 						if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 							if(is_dir($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
@@ -396,7 +396,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				*/
 				public static function _authnet_arb_response_filters($response = FALSE)
 					{
-						return $response; /* Nothing here yet. */
+						return $response; // Nothing here yet.
 					}
 				/**
 				* Get ``$_POST`` or ``$_REQUEST`` vars from Authorize.Net®.
@@ -431,10 +431,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 								else if(strtolower($postvars["x_MD5_Hash"]) === md5($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"].$arb_digest_vars))
 									return $postvars;
 
-								else /* Nope. */
+								else // Nope.
 									return false;
 							}
-						else /* Nope. */
+						else // Nope.
 							return false;
 					}
 				/**
@@ -453,7 +453,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							{
 								list($num, $span) = preg_split("/ /", $period1, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if(is_numeric($num) && !is_numeric($span))
 									{
@@ -471,7 +471,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							{
 								list($num, $span) = preg_split("/ /", $period3, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if(is_numeric($num) && !is_numeric($span))
 									{
@@ -489,7 +489,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 						$start_time = ($start_time <= 0) ? strtotime("now") : $start_time;
 
-						$start_time = $start_time + 43200; /* + 12 hours. */
+						$start_time = $start_time + 43200; // + 12 hours.
 
 						return $start_time;
 					}
@@ -561,7 +561,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								return c_ws_plugin__s2member_utils_strings::trim_deep($array);
 							}
-						else /* False. */
+						else // False.
 							return false;
 					}
 				/**
@@ -600,8 +600,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							/* A wp_verify_nonce() won't always work here, because s2member-pro-min.js must be cacheable. The output from wp_create_nonce() would go stale.
 									So instead, s2member-pro-min.js should use ``c_ws_plugin__s2member_utils_encryption::encrypt()`` as an alternate form of nonce. */
 							{
-								status_header(200); /* Send a 200 OK status header. */
-								header("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								status_header(200); // Send a 200 OK status header.
+								header("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								if(!empty($_POST["ws_plugin__s2member_pro_authnet_ajax_tax_vars"]) && is_array($_p_tax_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["ws_plugin__s2member_pro_authnet_ajax_tax_vars"]))))
@@ -610,14 +610,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 											{
 												$attr = (!empty($attr["coupon"])) ? c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon($attr, $attr["coupon"]) : $attr;
 
-												$trial = ($attr["rr"] !== "BN" && $attr["tp"]) ? true : false; /* Is there a trial? */
-												$sub_total_today = ($trial) ? $attr["ta"] : $attr["ra"]; /* What is the sub-total today? */
+												$trial = ($attr["rr"] !== "BN" && $attr["tp"]) ? true : false; // Is there a trial?
+												$sub_total_today = ($trial) ? $attr["ta"] : $attr["ra"]; // What is the sub-total today?
 
 												$state = strip_tags($_p_tax_vars["state"]);
 												$country = strip_tags($_p_tax_vars["country"]);
 												$zip = strip_tags($_p_tax_vars["zip"]);
-												$currency = $attr["cc"]; /* Currency. */
-												$desc = $attr["desc"]; /* Description. */
+												$currency = $attr["cc"]; // Currency.
+												$desc = $attr["desc"]; // Description.
 
 												/* Trial is `null` in this function call. We only need to return what it costs today.
 												However, we do tag on a "trial" element in the array so the ajax routine will know about this. */
@@ -626,7 +626,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 											}
 									}
 
-								exit(); /* Clean exit. */
+								exit(); // Clean exit.
 							}
 					}
 				/**
@@ -661,16 +661,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							{
 								unset($_default, $this_tax, $this_tax_per, $this_total, $configured_rates, $configured_rate, $location, $rate, $m);
 
-								if(is_numeric($this_sub_total) && $this_sub_total > 0) /* Must have a valid Sub-Total. */
+								if(is_numeric($this_sub_total) && $this_sub_total > 0) // Must have a valid Sub-Total.
 									{
-										if(preg_match("/%$/", $default)) /* Percentage-based. */
+										if(preg_match("/%$/", $default)) // Percentage-based.
 											{
 												if(($_default = (float)$default) > 0)
 													{
 														$this_tax = round(($this_sub_total / 100) * $_default, 2);
 														$this_tax_per = $_default.$ps;
 													}
-												else /* Else the Tax is 0.00. */
+												else // Else the Tax is 0.00.
 													{
 														$this_tax = 0.00;
 														$this_tax_per = $_default.$ps;
@@ -679,19 +679,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 										else if(($_default = (float)$default) > 0)
 											{
 												$this_tax = round($_default, 2);
-												$this_tax_per = ""; /* Flat. */
+												$this_tax_per = ""; // Flat.
 											}
-										else /* Else the Tax is 0.00. */
+										else // Else the Tax is 0.00.
 											{
-												$this_tax = 0.00; /* No Tax. */
-												$this_tax_per = ""; /* Flat rate. */
+												$this_tax = 0.00; // No Tax.
+												$this_tax_per = ""; // Flat rate.
 											}
 
-										if(strlen($country) === 2) /* Must have a valid country. */
+										if(strlen($country) === 2) // Must have a valid country.
 											{
 												foreach(preg_split("/[\r\n\t]+/", $rates) as $rate)
 													{
-														if($rate = trim($rate)) /* Do NOT process empty lines. */
+														if($rate = trim($rate)) // Do NOT process empty lines.
 															{
 																list($location, $rate) = preg_split("/\=/", $rate, 2);
 																$location = trim($location);
@@ -719,40 +719,40 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 														krsort($configured_rates);
 														$configured_rate = array_shift($configured_rates);
 
-														if(preg_match("/%$/", $configured_rate)) /* Percentage. */
+														if(preg_match("/%$/", $configured_rate)) // Percentage.
 															{
 																if(($configured_rate = (float)$configured_rate) > 0)
 																	{
 																		$this_tax = round(($this_sub_total / 100) * $configured_rate, 2);
 																		$this_tax_per = $configured_rate.$ps;
 																	}
-																else /* Else the Tax is 0.00. */
+																else // Else the Tax is 0.00.
 																	{
-																		$this_tax = 0.00; /* No Tax. */
+																		$this_tax = 0.00; // No Tax.
 																		$this_tax_per = $configured_rate.$ps;
 																	}
 															}
 														else if(($configured_rate = (float)$configured_rate) > 0)
 															{
 																$this_tax = round($configured_rate, 2);
-																$this_tax_per = ""; /* Flat rate. */
+																$this_tax_per = ""; // Flat rate.
 															}
-														else /* Else the Tax is 0.00. */
+														else // Else the Tax is 0.00.
 															{
-																$this_tax = 0.00; /* No Tax. */
-																$this_tax_per = ""; /* Flat rate. */
+																$this_tax = 0.00; // No Tax.
+																$this_tax_per = ""; // Flat rate.
 															}
 													}
 											}
 
 										$this_total = $this_sub_total + $this_tax;
 									}
-								else /* Else the Tax is 0.00. */
+								else // Else the Tax is 0.00.
 									{
-										$this_tax = 0.00; /* No Tax. */
-										$this_tax_per = ""; /* Flat rate. */
-										$this_sub_total = 0.00; /* 0.00. */
-										$this_total = 0.00; /* 0.00. */
+										$this_tax = 0.00; // No Tax.
+										$this_tax_per = ""; // Flat rate.
+										$this_sub_total = 0.00; // 0.00.
+										$this_total = 0.00; // 0.00.
 									}
 
 								if($this_key === "trial_sub_total")
@@ -830,7 +830,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																{
 																	$coupon_accepted = /* Yes, this Coupon Code has been accepted. */ true;
 
-																	if($coupon["flat-rate"]) /* If it's a flat-rate Coupon. */
+																	if($coupon["flat-rate"]) // If it's a flat-rate Coupon.
 																		{
 																			if(($coupon["directive"] === "ra-only" || $coupon["directive"] === "all") && $attr["sp"])
 																				{
@@ -911,11 +911,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
-																			else /* Otherwise, we need a default response to display. */
+																			else // Otherwise, we need a default response to display.
 																				$response = _x('<div>Sorry, your Coupon is not applicable.</div>', "s2member-front", "s2member");
 																		}
 
-																	else if($coupon["percentage"]) /* Else if it's a percentage. */
+																	else if($coupon["percentage"]) // Else if it's a percentage.
 																		{
 																			if(($coupon["directive"] === "ra-only" || $coupon["directive"] === "all") && $attr["sp"])
 																				{
@@ -1008,15 +1008,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
-																			else /* Otherwise, we need a default response to display. */
+																			else // Otherwise, we need a default response to display.
 																				$response = _x('<div>Sorry, your Coupon is not applicable.</div>', "s2member-front", "s2member");
 																		}
 
-																	else /* Else there was no discount applied at all. */
+																	else // Else there was no discount applied at all.
 																		$response = sprintf(_x('<div>Coupon: <strong>%s0.00 off</strong>.</div>', "s2member-front", "s2member"), $cs);
 																}
 
-															else /* Otherwise, we need a response that indicates not applicable for this purchase. */
+															else // Otherwise, we need a response that indicates not applicable for this purchase.
 																$response = _x('<div>Sorry, your Coupon cannot be applied to this particular purchase.</div>', "s2member-front", "s2member");
 														}
 
@@ -1026,7 +1026,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 										}
 
 									if(isset($coupon_applies, $desc) && $coupon_applies /* Need to modify the description dynamically? */)
-										/* translators: `%1$s` is new price/description, after coupon applied. `%2$s` is original description. */
+										// translators: `%1$s` is new price/description, after coupon applied. `%2$s` is original description.
 										$attr["desc"] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', "s2member-front", "s2member"), $desc, $attr["desc"]);
 
 									$attr["ta"] = (isset($coupon_applies, $ta) && $coupon_applies) ? /* Do we have a new Trial Amount? */ $ta : $attr["ta"];
@@ -1055,11 +1055,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																		}
 									unset /* Just a little housekeeping here. Unset these variables. */($_urls, $_url, $_r);
 
-									if(empty($response)) /* Is ``$response`` NOT set by now? If it's not, we need a default ``$response``. */
+									if(empty($response)) // Is ``$response`` NOT set by now? If it's not, we need a default ``$response``.
 										$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
 								}
 
-							else /* Otherwise, we need a default response to display. */
+							else // Otherwise, we need a default response to display.
 								$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
 
 						return ( /* Returning ``$response``? */$return === "response") ? $response : $attr;

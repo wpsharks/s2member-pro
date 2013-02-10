@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 
 						if (isset ($_GET["s2member_pro_ccbill_notify"]) && strlen ($_GET["s2member_pro_ccbill_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
 							{
-								@ignore_user_abort (true); /* Continue processing even if/when connection is broken by the sender. */
+								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
 								if (is_array ($ccbill = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_postvars ()) && ($_ccbill = $ccbill))
 									{
@@ -73,7 +73,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
 
@@ -111,11 +111,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $ccbill["subscription_id"];
-												$ipn["recurring"] = "1"; /* Yes, recurring. */
+												$ipn["recurring"] = "1"; // Yes, recurring.
 
 												$ipn["txn_id"] = $ccbill["subscription_id"];
 
@@ -146,21 +146,21 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ipn["item_name"] = $ccbill["s2_desc"];
 
 												$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; /* Use as first payment? */
+												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; // Use as first payment?
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
 
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
 
-										else if (!$processed) /* If nothing was processed, here we add a message to the logs indicating the IPN was ignored. */
+										else if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
 											$ccbill["s2member_log"][] = "Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.";
 									}
-								else /* Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail. */
+								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
 										$ccbill["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ccBill® configuration. Please check: s2Member -> ccBill® Options.";
 										$ccbill["s2member_log"][] = "If you're absolutely SURE that your ccBill® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ccBill® over an HTTPS connection.";
 										$ccbill["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
-										$ccbill["s2member_log"][] = var_export ($_REQUEST, true); /* Recording _POST + _GET vars for analysis and debugging. */
+										$ccbill["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*
 								If debugging/logging is enabled; we need to append $ccbill to the log file.
@@ -177,11 +177,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($ccbill, true) . "\n\n", FILE_APPEND);
 
-								status_header (200); /* Send a 200 OK status header. */
-								header ("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								status_header (200); // Send a 200 OK status header.
+								header ("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
-								exit (); /* Exit now. */
+								exit (); // Exit now.
 							}
 					}
 			}

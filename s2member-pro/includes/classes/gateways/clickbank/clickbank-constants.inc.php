@@ -68,7 +68,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_constants"))
 						if (!defined ("S2MEMBER_PRO_CLICKBANK_GATEWAY"))
 							define ("S2MEMBER_PRO_CLICKBANK_GATEWAY", ($c[] = true));
 
-						return $c; /* Return $c calculation values. */
+						return $c; // Return $c calculation values.
 					}
 			}
 	}

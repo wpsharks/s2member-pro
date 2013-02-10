@@ -57,31 +57,31 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 					{
 						if(!empty($_POST["s2member_pro_paypal_update"]["nonce"]) && ($nonce = $_POST["s2member_pro_paypal_update"]["nonce"]) && wp_verify_nonce($nonce, "s2member-pro-paypal-update"))
 							{
-								$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"] = array(); /* This holds the global response details. */
-								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"]; /* This is a shorter reference. */
+								$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"] = array(); // This holds the global response details.
+								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"]; // This is a shorter reference.
 
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["s2member_pro_paypal_update"]));
-								$post_vars["attr"] = unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])); /* And run a Filter. */
+								$post_vars["attr"] = unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])); // And run a Filter.
 								$post_vars["attr"] = apply_filters("ws_plugin__s2member_pro_paypal_update_post_attr", $post_vars["attr"], get_defined_vars());
 
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim(stripslashes($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
 								$post_vars["recaptcha_response_field"] = (!$post_vars["recaptcha_response_field"]) ? trim(stripslashes($_POST["recaptcha_response_field"])) : $post_vars["recaptcha_response_field"];
 
-								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) /* Must NOT have any attr errors. */
+								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) // Must NOT have any attr errors.
 									{
 										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("update", $post_vars)))
 											{
-												if($post_vars["card_type"] === "PayPal") /* A Customer must log into their PayPal® account to update billing info. */
+												if($post_vars["card_type"] === "PayPal") // A Customer must log into their PayPal® account to update billing info.
 													{
 														$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 													}
-												else if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID)) /* Logged in? */
+												else if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID)) // Logged in?
 													{
 														if(($cur__subscr_id = get_user_option("s2member_subscr_id")))
 															{
 																if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P" && preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 																	{
-																		$paypal = array(); /* Reset the PayPal® array. */
+																		$paypal = array(); // Reset the PayPal® array.
 
 																		$paypal["TRXTYPE"] = "R";
 																		$paypal["ACTION"] = "M";
@@ -118,7 +118,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 																				if($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																					wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
 																			}
-																		else /* Else, an error. */
+																		else // Else, an error.
 																			{
 																				$global_response = array("response" => $paypal["__error"], "error" => true);
 																			}
@@ -131,23 +131,23 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 																	{
 																		$global_response = array("response" => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 																	}
-																else if($paypal && $paypal["TENDER"] === "P") /* They used a PayPal® account? */
+																else if($paypal && $paypal["TENDER"] === "P") // They used a PayPal® account?
 																	{
 																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 																	}
 																else $global_response = array("response" => _x('<strong>Unknown error.</strong> Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 															}
-														else /* Else, an error. */
+														else // Else, an error.
 															{
 																$global_response = array("response" => _x('<strong>No Subscr. ID.</strong> Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 															}
 													}
-												else /* Else, an error. */
+												else // Else, an error.
 													{
 														$global_response = array("response" => _x('You\'re <strong>NOT</strong> logged in.', "s2member-front", "s2member"), "error" => true);
 													}
 											}
-										else /* Else, an error. */
+										else // Else, an error.
 											{
 												$global_response = $error;
 											}

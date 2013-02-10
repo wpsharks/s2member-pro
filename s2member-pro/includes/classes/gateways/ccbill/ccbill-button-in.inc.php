@@ -138,7 +138,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 
 								unset /* Just a little housekeeping */($href, $url, $m);
 							}
-						else /* Otherwise, we'll process this Button normally, using Membership routines. */
+						else // Otherwise, we'll process this Button normally, using Membership routines.
 							{
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images/ccbill-button.png";
 
@@ -154,7 +154,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								if /* This is NOT a Recurring Subscription ( i.e. an Initial/Trial Period is NOT possible ). */(!$attr["rr"])
 									$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ra"], "formPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["rp"], $attr["rt"]), "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_p1" => "0 D", "s2_p3" => $attr["rp"]." ".$attr["rt"], "s2_desc" => $attr["desc"], "s2_invoice" => $attr["level_ccaps_eotper"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
 
-								else /* Otherwise, we need to include both an Initial and Regular/Recurring period. This will ALWAYS recur. */
+								else // Otherwise, we need to include both an Initial and Regular/Recurring period. This will ALWAYS recur.
 								$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ta"], "formPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["tp"], $attr["tt"]), "formRecurringPrice" => $attr["ra"], "formRecurringPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["rp"], $attr["rt"]), "formRebills" => "99", "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_p1" => $attr["tp"]." ".$attr["tt"], "s2_p3" => $attr["rp"]." ".$attr["rt"], "s2_desc" => $attr["desc"], "s2_invoice" => $attr["level_ccaps_eotper"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
 
 								if /* Are we referencing an account already in the database? */($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id())
@@ -169,7 +169,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 
 								unset /* Just a little housekeeping */($href, $url, $m);
 							}
-
 						return /* Button. */ $code;
 					}
 			}

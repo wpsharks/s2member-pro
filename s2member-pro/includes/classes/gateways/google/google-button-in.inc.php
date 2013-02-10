@@ -132,7 +132,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 
 								unset /* Just a little housekeeping */ ($href, $url, $m);
 							}
-						else /* Otherwise, we'll process this Button normally, using Membership routines. */
+						else // Otherwise, we'll process this Button normally, using Membership routines.
 							{
 								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode (_x ("en_US", "s2member-front google-button-lang-code", "s2member"));
 

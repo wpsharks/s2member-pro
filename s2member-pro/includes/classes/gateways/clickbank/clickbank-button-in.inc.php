@@ -70,8 +70,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 						$attr["rr"] = /* Lifetime Subscriptions do NOT recur. Only after running shortcode_atts(). */ ($attr["rt"] === "L") ? "0" : $attr["rr"];
 						$attr["rr"] = /* Independent Ccaps do NOT recur. Only after running shortcode_atts(). */ ($attr["level"] === "*") ? "0" : $attr["rr"];
 
-						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); /* Workaround for a known bug @ ClickBank®. */
-						/* ClickBank® will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank® checkout forms. */
+						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank®.
+						// ClickBank® will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank® checkout forms.
 
 						if /* Modifications/Cancellations. */($attr["modify"] || $attr["cancel"])
 							{
@@ -154,7 +154,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								unset /* Just a little housekeeping */($href, $url, $m);
 							}
-						else /* Otherwise, we'll process this Button normally, using Membership routines. */
+						else // Otherwise, we'll process this Button normally, using Membership routines.
 							{
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images/clickbank-button.png";
 

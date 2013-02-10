@@ -59,7 +59,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 							{
 								list($num, $span) = preg_split("/ /", $period1, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if(is_numeric($num) && !is_numeric($span))
 									{
@@ -77,7 +77,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 							{
 								list($num, $span) = preg_split("/ /", $period3, 2);
 
-								$days = 0; /* Days start at 0. */
+								$days = 0; // Days start at 0.
 
 								if(is_numeric($num) && !is_numeric($span))
 									{
@@ -95,7 +95,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 						$start_time = ($start_time <= 0) ? strtotime("now") : $start_time;
 
-						$start_time = $start_time + 43200; /* + 12 hours. */
+						$start_time = $start_time + 43200; // + 12 hours.
 
 						return $start_time;
 					}
@@ -193,7 +193,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 									if(($attr["ra"] <= 0 && is_numeric($c_ra = "0")) || is_numeric($c_ra = c_ws_plugin__s2member_utils_cur::convert($attr["ra"], $attr["cc"], "GBP")))
 										$attr = array_merge($attr, array("cc" => "GBP", "ta" => $c_ta, "ra" => $c_ra));
 
-						return $attr; /* Return array of Attributes. */
+						return $attr; // Return array of Attributes.
 					}
 				/**
 				* Handles the return of Tax for Pro Forms, via AJAX; through a JSON object.
@@ -213,8 +213,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 							/* A wp_verify_nonce() won't always work here, because s2member-pro-min.js must be cacheable. The output from wp_create_nonce() would go stale.
 									So instead, s2member-pro-min.js should use c_ws_plugin__s2member_utils_encryption::encrypt() as an alternate form of nonce. */
 							{
-								status_header(200); /* Send a 200 OK status header. */
-								header("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								status_header(200); // Send a 200 OK status header.
+								header("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								if(!empty($_POST["ws_plugin__s2member_pro_paypal_ajax_tax_vars"]) && is_array($_p_tax_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["ws_plugin__s2member_pro_paypal_ajax_tax_vars"]))))
@@ -223,14 +223,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 											{
 												$attr = (!empty($attr["coupon"])) ? c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($attr, $attr["coupon"]) : $attr;
 
-												$trial = ($attr["rr"] !== "BN" && $attr["tp"]) ? true : false; /* Is there a trial? */
-												$sub_total_today = ($trial) ? $attr["ta"] : $attr["ra"]; /* What is the sub-total today? */
+												$trial = ($attr["rr"] !== "BN" && $attr["tp"]) ? true : false; // Is there a trial?
+												$sub_total_today = ($trial) ? $attr["ta"] : $attr["ra"]; // What is the sub-total today?
 
 												$state = strip_tags($_p_tax_vars["state"]);
 												$country = strip_tags($_p_tax_vars["country"]);
 												$zip = strip_tags($_p_tax_vars["zip"]);
-												$currency = $attr["cc"]; /* Currency. */
-												$desc = $attr["desc"]; /* Description. */
+												$currency = $attr["cc"]; // Currency.
+												$desc = $attr["desc"]; // Description.
 
 												/* Trial is `null` in this function call. We only need to return what it costs today.
 												However, we do tag on a "trial" element in the array so the ajax routine will know about this. */
@@ -239,7 +239,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 											}
 									}
 
-								exit(); /* Clean exit. */
+								exit(); // Clean exit.
 							}
 					}
 				/**
@@ -274,16 +274,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 							{
 								unset($_default, $this_tax, $this_tax_per, $this_total, $configured_rates, $configured_rate, $location, $rate, $m);
 
-								if(is_numeric($this_sub_total) && $this_sub_total > 0) /* Must have a valid Sub-Total. */
+								if(is_numeric($this_sub_total) && $this_sub_total > 0) // Must have a valid Sub-Total.
 									{
-										if(preg_match("/%$/", $default)) /* Percentage-based. */
+										if(preg_match("/%$/", $default)) // Percentage-based.
 											{
 												if(($_default = (float)$default) > 0)
 													{
 														$this_tax = round(($this_sub_total / 100) * $_default, 2);
 														$this_tax_per = $_default.$ps;
 													}
-												else /* Else the Tax is 0.00. */
+												else // Else the Tax is 0.00.
 													{
 														$this_tax = 0.00;
 														$this_tax_per = $_default.$ps;
@@ -292,19 +292,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 										else if(($_default = (float)$default) > 0)
 											{
 												$this_tax = round($_default, 2);
-												$this_tax_per = ""; /* Flat. */
+												$this_tax_per = ""; // Flat.
 											}
-										else /* Else the Tax is 0.00. */
+										else // Else the Tax is 0.00.
 											{
-												$this_tax = 0.00; /* No Tax. */
-												$this_tax_per = ""; /* Flat rate. */
+												$this_tax = 0.00; // No Tax.
+												$this_tax_per = ""; // Flat rate.
 											}
 
-										if(strlen($country) === 2) /* Must have a valid country. */
+										if(strlen($country) === 2) // Must have a valid country.
 											{
 												foreach(preg_split("/[\r\n\t]+/", $rates) as $rate)
 													{
-														if($rate = trim($rate)) /* Do NOT process empty lines. */
+														if($rate = trim($rate)) // Do NOT process empty lines.
 															{
 																list($location, $rate) = preg_split("/\=/", $rate, 2);
 																$location = trim($location);
@@ -332,40 +332,40 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 														krsort($configured_rates);
 														$configured_rate = array_shift($configured_rates);
 
-														if(preg_match("/%$/", $configured_rate)) /* Percentage. */
+														if(preg_match("/%$/", $configured_rate)) // Percentage.
 															{
 																if(($configured_rate = (float)$configured_rate) > 0)
 																	{
 																		$this_tax = round(($this_sub_total / 100) * $configured_rate, 2);
 																		$this_tax_per = $configured_rate.$ps;
 																	}
-																else /* Else the Tax is 0.00. */
+																else // Else the Tax is 0.00.
 																	{
-																		$this_tax = 0.00; /* No Tax. */
+																		$this_tax = 0.00; // No Tax.
 																		$this_tax_per = $configured_rate.$ps;
 																	}
 															}
 														else if(($configured_rate = (float)$configured_rate) > 0)
 															{
 																$this_tax = round($configured_rate, 2);
-																$this_tax_per = ""; /* Flat rate. */
+																$this_tax_per = ""; // Flat rate.
 															}
-														else /* Else the Tax is 0.00. */
+														else // Else the Tax is 0.00.
 															{
-																$this_tax = 0.00; /* No Tax. */
-																$this_tax_per = ""; /* Flat rate. */
+																$this_tax = 0.00; // No Tax.
+																$this_tax_per = ""; // Flat rate.
 															}
 													}
 											}
 
 										$this_total = $this_sub_total + $this_tax;
 									}
-								else /* Else the Tax is 0.00. */
+								else // Else the Tax is 0.00.
 									{
-										$this_tax = 0.00; /* No Tax. */
-										$this_tax_per = ""; /* Flat rate. */
-										$this_sub_total = 0.00; /* 0.00. */
-										$this_total = 0.00; /* 0.00. */
+										$this_tax = 0.00; // No Tax.
+										$this_tax_per = ""; // Flat rate.
+										$this_sub_total = 0.00; // 0.00.
+										$this_total = 0.00; // 0.00.
 									}
 
 								if($this_key === "trial_sub_total")
@@ -443,7 +443,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																{
 																	$coupon_accepted = /* Yes, this Coupon Code has been accepted. */ true;
 
-																	if($coupon["flat-rate"]) /* If it's a flat-rate Coupon. */
+																	if($coupon["flat-rate"]) // If it's a flat-rate Coupon.
 																		{
 																			if(($coupon["directive"] === "ra-only" || $coupon["directive"] === "all") && $attr["sp"])
 																				{
@@ -524,11 +524,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
-																			else /* Otherwise, we need a default response to display. */
+																			else // Otherwise, we need a default response to display.
 																				$response = _x('<div>Sorry, your Coupon is not applicable.</div>', "s2member-front", "s2member");
 																		}
 
-																	else if($coupon["percentage"]) /* Else if it's a percentage. */
+																	else if($coupon["percentage"]) // Else if it's a percentage.
 																		{
 																			if(($coupon["directive"] === "ra-only" || $coupon["directive"] === "all") && $attr["sp"])
 																				{
@@ -621,15 +621,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
-																			else /* Otherwise, we need a default response to display. */
+																			else // Otherwise, we need a default response to display.
 																				$response = _x('<div>Sorry, your Coupon is not applicable.</div>', "s2member-front", "s2member");
 																		}
 
-																	else /* Else there was no discount applied at all. */
+																	else // Else there was no discount applied at all.
 																		$response = sprintf(_x('<div>Coupon: <strong>%s0.00 off</strong>.</div>', "s2member-front", "s2member"), $cs);
 																}
 
-															else /* Otherwise, we need a response that indicates not applicable for this purchase. */
+															else // Otherwise, we need a response that indicates not applicable for this purchase.
 																$response = _x('<div>Sorry, your Coupon cannot be applied to this particular purchase.</div>', "s2member-front", "s2member");
 														}
 
@@ -639,7 +639,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 										}
 
 									if(isset($coupon_applies, $desc) && $coupon_applies /* Need to modify the description dynamically? */)
-										/* translators: `%1$s` is new price/description, after coupon applied. `%2$s` is original description. */
+										// translators: `%1$s` is new price/description, after coupon applied. `%2$s` is original description.
 										$attr["desc"] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', "s2member-front", "s2member"), $desc, $attr["desc"]);
 
 									$attr["ta"] = (isset($coupon_applies, $ta) && $coupon_applies) ? /* Do we have a new Trial Amount? */ $ta : $attr["ta"];
@@ -668,11 +668,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																		}
 									unset /* Just a little housekeeping here. Unset these variables. */($_urls, $_url, $_r);
 
-									if(empty($response)) /* Is ``$response`` NOT set by now? If it's not, we need a default ``$response``. */
+									if(empty($response)) // Is ``$response`` NOT set by now? If it's not, we need a default ``$response``.
 										$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
 								}
 
-							else /* Otherwise, we need a default response to display. */
+							else // Otherwise, we need a default response to display.
 								$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
 
 						return ( /* Returning ``$response``? */$return === "response") ? $response : $attr;

@@ -108,7 +108,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) /* Is a captcha being used on this form? */
+								if($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-paypal-cancellation-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-cancellation-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-cancellation-form-captcha-section">'."\n";
 
@@ -459,7 +459,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 									{
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 
-										if($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
 											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*

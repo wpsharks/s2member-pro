@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 
 						if (!empty ($_GET["s2member_pro_clickbank_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])
 							{
-								@ignore_user_abort (true); /* Continue processing even if/when connection is broken by the sender. */
+								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
 								if (is_array ($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars ()) && ($_clickbank = $clickbank))
 									{
@@ -83,7 +83,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
 
@@ -121,7 +121,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -156,7 +156,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
 												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; /* Use as first payment? */
+												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; // Use as first payment?
 												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
 
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
@@ -169,7 +169,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_payment";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -201,14 +201,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
 
-										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) /* Product Type irrelevant here; checked below. */
+										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) // Product Type irrelevant here; checked below.
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RFND|CGBK|INSF` ).";
 												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `payment_status` ( `refunded|reversed` ).";
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["payment_status"] = (preg_match ("/^(?:TEST_)?RFND$/", $clickbank["ctransaction"])) ? "refunded" : "reversed";
 
@@ -240,7 +240,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
 
-										if ( /* Here we handle Recurring cancellations, and/or EOT ( End Of Term ) through $clickbank["crebillstatus"]. */
+										if ( // Here we handle Recurring cancellations, and/or EOT ( End Of Term ) through $clickbank["crebillstatus"].
 										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0))
 										|| (preg_match ("/^(?:TEST_)?CANCEL-REBILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"])))
 											{
@@ -249,7 +249,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); /* Reset. */
+												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_cancel";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -278,15 +278,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
 											}
 
-										if (!$processed) /* If nothing was processed, here we add a message to the logs indicating the IPN was ignored. */
+										if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
 											$clickbank["s2member_log"][] = "Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.";
 									}
-								else /* Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail. */
+								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
 										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -> ClickBank® Options.";
 										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank® over an HTTPS connection.";
 										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
-										$clickbank["s2member_log"][] = var_export ($_REQUEST, true); /* Recording _POST + _GET vars for analysis and debugging. */
+										$clickbank["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*
 								If debugging/logging is enabled; we need to append $clickbank to the log file.
@@ -303,11 +303,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($clickbank, true) . "\n\n", FILE_APPEND);
 
-								status_header (200); /* Send a 200 OK status header. */
-								header ("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								status_header (200); // Send a 200 OK status header.
+								header ("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
-								exit (); /* Exit now. */
+								exit (); // Exit now.
 							}
 					}
 			}

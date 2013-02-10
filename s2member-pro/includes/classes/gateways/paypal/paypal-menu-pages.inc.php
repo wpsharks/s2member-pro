@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 					{
 						add_submenu_page ($vars["menu"], "s2Member Pro / PayPal® Pro Forms", "PayPal® Pro-Forms", "create_users", "ws-plugin--s2member-pro-paypal-forms", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_forms_page");
 
-						return $add_paypal_buttons_page; /* Now add the PayPal® Buttons. */
+						return $add_paypal_buttons_page; // Now add the PayPal® Buttons.
 					}
 				/**
 				* Builds PayPal® Pro option details into s2Member.
@@ -224,7 +224,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				*/
 				public static function paypal_forms_page ()
 					{
-						if (c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors ()) /* Report error if PayPal® Options are not yet configured. */
+						if (c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors ()) // Report error if PayPal® Options are not yet configured.
 							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -> PayPal® Options</code> first. Once all of your PayPal® Options are configured; including your Email Address, API Username, Password, and Signature; return to this page &amp; generate your PayPal® Pro Form(s).<br /><br />*NOTE: If you\'re ONLY planning to use Free Registration Forms (e.g. you\'re NOT going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-forms.inc.php";

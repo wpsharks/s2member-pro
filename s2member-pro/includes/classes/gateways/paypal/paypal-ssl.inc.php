@@ -57,13 +57,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_ssl"))
 				*/
 				public static function sc_paypal_form_auto_force_ssl ($force = FALSE, $vars = FALSE)
 					{
-						global $post; /* Need this global object reference. */
+						global $post; // Need this global object reference.
 
 						if (!$force && defined ("S2MEMBER_PRO_AUTO_FORCE_SSL") && S2MEMBER_PRO_AUTO_FORCE_SSL)
 							if (is_object ($post) && strpos ($post->post_content, "[s2Member-Pro-PayPal-Form") !== false)
 								return ($force = true);
 
-						return $force; /* Keep current value. */
+						return $force; // Keep current value.
 					}
 			}
 	}

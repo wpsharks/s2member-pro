@@ -104,7 +104,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) /* Is a captcha being used on this form? */
+								if ($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-authnet-cancellation-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-cancellation-form-captcha-section">' . "\n";
 
@@ -176,10 +176,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build all of the custom fields.
 								*/
-								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) /* Only display Custom Fields if configured. */
+								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) // Only display Custom Fields if configured.
 									if (($fields_applicable = c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level ($attr["level"], "registration")))
 										{
-											$tabindex = 99; /* Start tabindex at 99 ( +1 below = 100 ). */
+											$tabindex = 99; // Start tabindex at 99 ( +1 below = 100 ).
 
 											$custom_fields = '<div id="s2member-pro-authnet-registration-form-custom-fields-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-custom-fields-section s2member-pro-authnet-registration-form-custom-fields-section">' . "\n";
 
@@ -189,12 +189,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 											foreach (json_decode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if (in_array ($field["id"], $fields_applicable)) /* Field is applicable to Level 0? */
+													if (in_array ($field["id"], $fields_applicable)) // Field is applicable to Level 0?
 														{
 															$field_var = preg_replace ("/[^a-z0-9]/i", "_", strtolower ($field["id"]));
 															$field_id_class = preg_replace ("/_/", "-", $field_var);
 
-															if (!empty ($field["section"]) && $field["section"] === "yes") /* Starts a new section? */
+															if (!empty ($field["section"]) && $field["section"] === "yes") // Starts a new section?
 																$custom_fields .= '<div id="s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . '">' . ((!empty ($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
 
 															$custom_fields .= '<div id="s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-div s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-div">' . "\n";
@@ -212,7 +212,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) /* Is a captcha being used on this form? */
+								if ($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-authnet-registration-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-registration-form-captcha-section">' . "\n";
 
@@ -333,19 +333,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach (preg_split ("/[\r\n]+/", file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/iso-3166-1.txt")) as $country)
 									{
 										list ($country_l, $country_v) = preg_split ("/;/", $country, 2);
 
-										if ($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if ($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
 											$country_options .= '<option value="' . esc_attr (strtoupper ($country_v)) . '"' . (($_p["s2member_pro_authnet_update"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '') . '>' . esc_html (ucwords (strtolower ($country_l))) . '</option>';
 									}
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) /* Is a captcha being used on this form? */
+								if ($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-authnet-update-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-update-form-captcha-section">' . "\n";
 
@@ -425,7 +425,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Configure internal attributes.
 								*/
-								$attr["sp_ids_exp"] = "sp:" . $attr["ids"] . ":" . $attr["exp"]; /* Combined `sp:ids:expiration hours`. */
+								$attr["sp_ids_exp"] = "sp:" . $attr["ids"] . ":" . $attr["exp"]; // Combined `sp:ids:expiration hours`.
 								$attr["coupon"] = ($_p["s2member_pro_authnet_sp_checkout"]["coupon"]) ? $_p["s2member_pro_authnet_sp_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
@@ -454,19 +454,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach (preg_split ("/[\r\n]+/", file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/iso-3166-1.txt")) as $country)
 									{
 										list ($country_l, $country_v) = preg_split ("/;/", $country, 2);
 
-										if ($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if ($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
 											$country_options .= '<option value="' . esc_attr (strtoupper ($country_v)) . '"' . (($_p["s2member_pro_authnet_sp_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '') . '>' . esc_html (ucwords (strtolower ($country_l))) . '</option>';
 									}
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) /* Is a captcha being used on this form? */
+								if ($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-authnet-sp-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-sp-checkout-form-captcha-section">' . "\n";
 
@@ -571,14 +571,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								do_action ("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
-						else /* Signups and Modifications. */
+						else // Signups and Modifications.
 							{
 								$_p = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST));
 								/*
 								Configure internal attributes.
 								*/
 								$attr["level_ccaps_eotper"] = ($attr["rr"] === "BN" && $attr["rt"] !== "L") ? $attr["level"] . ":" . $attr["ccaps"] . ":" . $attr["rp"] . " " . $attr["rt"] : $attr["level"] . ":" . $attr["ccaps"];
-								$attr["level_ccaps_eotper"] = rtrim ($attr["level_ccaps_eotper"], ":"); /* Clean any trailing separators from this string. */
+								$attr["level_ccaps_eotper"] = rtrim ($attr["level_ccaps_eotper"], ":"); // Clean any trailing separators from this string.
 								$attr["coupon"] = ($_p["s2member_pro_authnet_checkout"]["coupon"]) ? $_p["s2member_pro_authnet_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
@@ -607,22 +607,22 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
-								$country_options = '<option value=""></option>'; /* Start with an empty option value. */
+								$country_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach (preg_split ("/[\r\n]+/", file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/iso-3166-1.txt")) as $country)
 									{
 										list ($country_l, $country_v) = preg_split ("/;/", $country, 2);
 
-										if ($country_l && $country_v) /* Here we also check on the default pre-selected country; as determined above; based on currency. */
+										if ($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
 											$country_options .= '<option value="' . esc_attr (strtoupper ($country_v)) . '"' . (($_p["s2member_pro_authnet_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '') . '>' . esc_html (ucwords (strtolower ($country_l))) . '</option>';
 									}
 								/*
 								Build all of the custom fields.
 								*/
-								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) /* Only display Custom Fields if configured. */
+								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"]) // Only display Custom Fields if configured.
 									if (($fields_applicable = c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level ((($attr["level"] === "*") ? "auto-detection" : $attr["level"]), "registration")))
 										{
-											$tabindex = 99; /* Start tabindex at 99 ( +1 below = 100 ). */
+											$tabindex = 99; // Start tabindex at 99 ( +1 below = 100 ).
 
 											$custom_fields = '<div id="s2member-pro-authnet-checkout-form-custom-fields-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-custom-fields-section s2member-pro-authnet-checkout-form-custom-fields-section">' . "\n";
 
@@ -632,12 +632,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 											foreach (json_decode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if (in_array ($field["id"], $fields_applicable)) /* Field is applicable to this Level? */
+													if (in_array ($field["id"], $fields_applicable)) // Field is applicable to this Level?
 														{
 															$field_var = preg_replace ("/[^a-z0-9]/i", "_", strtolower ($field["id"]));
 															$field_id_class = preg_replace ("/_/", "-", $field_var);
 
-															if (!empty ($field["section"]) && $field["section"] === "yes") /* Starts a new section? */
+															if (!empty ($field["section"]) && $field["section"] === "yes") // Starts a new section?
 																$custom_fields .= '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . '">' . ((!empty ($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
 
 															$custom_fields .= '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-div s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-div">' . "\n";
@@ -655,7 +655,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) /* Is a captcha being used on this form? */
+								if ($attr["captcha"]) // Is a captcha being used on this form?
 									{
 										$captcha = '<div id="s2member-pro-authnet-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-checkout-form-captcha-section">' . "\n";
 
@@ -768,7 +768,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								($attr["modify"]) ? do_action ("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action ("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
-
 						return apply_filters ("ws_plugin__s2member_pro_sc_authnet_form", $code, get_defined_vars ());
 					}
 			}

@@ -100,7 +100,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 												$ccbill["s2member_log"][] = /* Record the full DataLink URL as well. */ $datalink;
 												$ccbill["s2member_log"][] = /* Log this; just in case. */ $unprocessed_ipn_lines;
 											}
-										else /* Otherwise, we need to record any errors that were found in the DataLink response. */
+										else // Otherwise, we need to record any errors that were found in the DataLink response.
 											{
 												$ccbill["s2member_log"][] = "Storing last DataLink time: ".date("D M j, Y g:i:s a T", $last);
 
@@ -289,11 +289,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
 																	}
 
-																else if(!$processed) /* Here we add a message to the logs indicating the IPN was ignored; no action taken. */
+																else if(!$processed) // Here we add a message to the logs indicating the IPN was ignored; no action taken.
 																	$ccbill["s2member_log"][] = "Ignoring this DataLink IPN. It does NOT require any action on the part of s2Member.";
 															}
 
-														else if(!$processed) /* Here we add a message to the logs indicating that no IPN vars are available. */
+														else if(!$processed) // Here we add a message to the logs indicating that no IPN vars are available.
 															$ccbill["s2member_log"][] = "Ignoring this DataLink IPN. No IPN signup vars for Subscr. ID: ".$ccbill["dl_ipn"][3].".";
 
 														$logv = c_ws_plugin__s2member_utilities::ver_details();
@@ -308,15 +308,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																	file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".var_export($ccbill, true)."\n\n", FILE_APPEND);
 													}
 
-												unset($unprocessed_lines[$line]); /* Remove this line and update the list of unprocessed IPN lines. */
+												unset($unprocessed_lines[$line]); // Remove this line and update the list of unprocessed IPN lines.
 												set_transient("s2m_".md5("s2member_pro_ccbill_datalink_ipns"), implode("\n", $unprocessed_lines), 31556926);
 
 												if($counter >= /* Only this many. */ $per_process)
-													break; /* Break the loop now. */
+													break; // Break the loop now.
 											}
 									}
 							}
-
 						return /* Return for uniformity. */;
 					}
 			}

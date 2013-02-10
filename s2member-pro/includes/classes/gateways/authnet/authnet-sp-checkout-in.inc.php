@@ -57,11 +57,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 					{
 						if (!empty ($_POST["s2member_pro_authnet_sp_checkout"]["nonce"]) && ($nonce = $_POST["s2member_pro_authnet_sp_checkout"]["nonce"]) && wp_verify_nonce ($nonce, "s2member-pro-authnet-sp-checkout"))
 							{
-								$GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"] = array (); /* This holds the global response details. */
-								$global_response = &$GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"]; /* This is a shorter reference. */
+								$GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"] = array (); // This holds the global response details.
+								$global_response = &$GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"]; // This is a shorter reference.
 
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_authnet_sp_checkout"]));
-								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); /* And Filter. */
+								$post_vars["attr"] = unserialize (c_ws_plugin__s2member_utils_encryption::decrypt ($post_vars["attr"])); // And Filter.
 								$post_vars["attr"] = apply_filters ("ws_plugin__s2member_pro_authnet_sp_checkout_post_attr", $post_vars["attr"], get_defined_vars ());
 
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim (stripslashes ($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
@@ -70,14 +70,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 								$post_vars["name"] = trim ($post_vars["first_name"] . " " . $post_vars["last_name"]);
 								$post_vars["email"] = apply_filters ("user_registration_email", sanitize_email ($post_vars["email"]), get_defined_vars ());
 
-								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) /* Attr errors? */
+								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) // Attr errors?
 									{
 										if (!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors ("sp-checkout", $post_vars)))
 											{
 												$cp_attr = c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($post_vars["attr"], $post_vars["coupon"], "attr", array ("affiliates-silent-post"));
 												$cost_calculations = c_ws_plugin__s2member_pro_authnet_utilities::authnet_cost (null, $cp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_attr["cc"], $cp_attr["desc"]);
 
-												if (!($authnet = array ())) /* Direct payments. */
+												if (!($authnet = array ())) // Direct payments.
 													{
 														$authnet["x_type"] = "AUTH_CAPTURE";
 														$authnet["x_method"] = "CC";
@@ -103,7 +103,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 														#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
 														#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 														#		$authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
-														#	else /* Otherwise, we assume they provided an issue number instead. */
+														#	else // Otherwise, we assume they provided an issue number instead.
 														#		$authnet["x_card_issue_number"] = $post_vars["card_start_date_issue_number"];
 
 														$authnet["x_address"] = $post_vars["street"];
@@ -117,7 +117,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 													{
 														$new__txn_id = $authnet["transaction_id"];
 
-														if (!($ipn = array ())) /* Simulated PayPal® IPN. */
+														if (!($ipn = array ())) // Simulated PayPal® IPN.
 															{
 																$ipn["txn_type"] = "web_accept";
 																$ipn["txn_id"] = $new__txn_id;
@@ -131,13 +131,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 																$ipn["first_name"] = $post_vars["first_name"];
 																$ipn["last_name"] = $post_vars["last_name"];
 
-																if (is_user_logged_in () && /* Reference a User/Member? */
+																if (is_user_logged_in () && // Reference a User/Member?
 																($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()))
 																	{
 																		$ipn["option_name1"] = "Referencing Customer ID";
 																		$ipn["option_selection1"] = $referencing;
 																	}
-																else /* Otherwise, default to the originating domain. */
+																else // Otherwise, default to the originating domain.
 																	{
 																		$ipn["option_name1"] = "Originating Domain";
 																		$ipn["option_selection1"] = $_SERVER["HTTP_HOST"];
@@ -165,17 +165,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 																if ($post_vars["attr"]["success"] && substr ($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr ($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace (array ("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array (urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																	wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 															}
-														else /* Else, unable to generate Access Link. */
+														else // Else, unable to generate Access Link.
 															{
 																$global_response = array ("response" => _x ('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 															}
 													}
-												else /* Else, an error. */
+												else // Else, an error.
 													{
 														$global_response = array ("response" => $authnet["__error"], "error" => true);
 													}
 											}
-										else /* Else, an error. */
+										else // Else, an error.
 											{
 												$global_response = $error;
 											}

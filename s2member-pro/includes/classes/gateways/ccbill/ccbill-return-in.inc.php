@@ -85,7 +85,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($ccbill, true) . "\n\n", FILE_APPEND);
 
-								exit (); /* Exit now. */
+								exit (); // Exit now.
 							}
 					}
 			}
