@@ -36,8 +36,8 @@ $config = /* One line for each domain (follow the examples here please). */ arra
 @ignore_user_abort(true);
 
 header("HTTP/1.0 200 OK");
-header("Content-Type: text/plain; charset=utf-8");
-eval /* Clean buffers. */('while (@ob_end_clean ());');
+header("Content-Type: text/plain; charset=UTF-8");
+while (@ob_end_clean ()); // Clean any existing output buffers.
 
 if ( /* No ``$_POST`` vars? */empty($_POST) || !is_array($_POST))
 	exit /* Exit now. There is nothing to process. */();

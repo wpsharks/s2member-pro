@@ -16,12 +16,12 @@ $config["proxy_ipn_handler_url"] = /* You'll get this from Dashboard: `s2Member 
 ---- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------*/
 @ignore_user_abort(true);
 header("HTTP/1.0 200 OK");
-header("Content-Type: text/plain; charset=utf-8");
-eval /* Clean buffers. */('while (@ob_end_clean ());');
+header("Content-Type: text/plain; charset=UTF-8");
+while (@ob_end_clean ()); // Clean any existing output buffers.
 
 if( /* No ``$_POST`` vars? */empty($_POST) || !is_array($_POST))
 	exit /* Exit now. There is nothing to process. */();
-	
+
 $_p = (get_magic_quotes_gpc()) ? stripslashes_deep($_POST) : $_POST;
 $_p = trim_deep /* Now trim this array deeply. */($_p);
 

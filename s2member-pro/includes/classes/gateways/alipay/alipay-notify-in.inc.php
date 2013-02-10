@@ -179,8 +179,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
 
 								status_header (200); /* 200 OK status header. */
-								header ("Content-Type: text/plain; charset=utf-8"); /* Content-Type text/plain with UTF-8. */
-								eval ('while (@ob_end_clean ());'); /* End/clean all output buffers that may or may not exist. */
+								header ("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								exit ("success"); /* Exit now with "success". */
 							}

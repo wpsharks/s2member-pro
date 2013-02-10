@@ -60,8 +60,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 								c_ws_plugin__s2member_no_cache::no_cache_constants (true);
 
 								status_header(200);
-								header("Content-Type: text/plain; charset=utf-8");
-								eval('while (@ob_end_clean ());');
+								header("Content-Type: text/plain; charset=UTF-8");
+								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								if (is_array ($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
 									{

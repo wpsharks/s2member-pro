@@ -214,8 +214,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 									So instead, s2member-pro-min.js should use c_ws_plugin__s2member_utils_encryption::encrypt() as an alternate form of nonce. */
 							{
 								status_header(200); /* Send a 200 OK status header. */
-								header("Content-Type: text/plain; charset=utf-8"); /* Content-Type text/plain with UTF-8. */
-								eval('while (@ob_end_clean ());'); /* End/clean all output buffers that may or may not exist. */
+								header("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								if(!empty($_POST["ws_plugin__s2member_pro_paypal_ajax_tax_vars"]) && is_array($_p_tax_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["ws_plugin__s2member_pro_paypal_ajax_tax_vars"]))))
 									{

@@ -59,7 +59,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								global /* Multisite Networking. */ $current_site, $current_blog;
 
 								@set_time_limit(0).@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								@ini_set("zlib.output_compression", 0).eval('while (@ob_end_clean ());');
+								@ini_set("zlib.output_compression", 0); while (@ob_end_clean ());
 
 								$format = !empty($_POST["ws_plugin__s2member_pro_export_users_format"]) ? $_POST["ws_plugin__s2member_pro_export_users_format"] : "";
 								$start = !empty($_POST["ws_plugin__s2member_pro_export_users_start"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_start"] : 1;
@@ -240,7 +240,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								header("Content-Encoding:");
 								header("Accept-Ranges: none");
-								header("Content-Type: text/csv; charset=utf-8");
+								header("Content-Type: text/csv; charset=UTF-8");
 								header("Content-Length: ".strlen($export));
 								header("Expires: ".gmdate("D, d M Y H:i:s", strtotime("-1 week"))." GMT");
 								header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
@@ -268,13 +268,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								$export = serialize(c_ws_plugin__s2member_pro_utils_ops::op_replace($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]));
 
 								@set_time_limit(0).@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								@ini_set("zlib.output_compression", 0).eval('while (@ob_end_clean ());');
+								@ini_set("zlib.output_compression", 0); while (@ob_end_clean ());
 
 								status_header(200); /* 200 OK status header. */
 
 								header("Content-Encoding:");
 								header("Accept-Ranges: none");
-								header("Content-Type: text/plain; charset=utf-8");
+								header("Content-Type: text/plain; charset=UTF-8");
 								header("Content-Length: ".strlen($export));
 								header("Expires: ".gmdate("D, d M Y H:i:s", strtotime("-1 week"))." GMT");
 								header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
