@@ -58,8 +58,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								global /* Global database object reference. */ $wpdb;
 								global /* Multisite Networking. */ $current_site, $current_blog;
 
-								@set_time_limit(0).@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								@ini_set("zlib.output_compression", 0); while (@ob_end_clean ());
+								@set_time_limit(0);
+								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
+								@ini_set("zlib.output_compression", 0);
+								while (@ob_end_clean ());
 
 								$format = !empty($_POST["ws_plugin__s2member_pro_export_users_format"]) ? $_POST["ws_plugin__s2member_pro_export_users_format"] : "";
 								$start = !empty($_POST["ws_plugin__s2member_pro_export_users_start"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_start"] : 1;
@@ -128,7 +130,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 														if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 															{
-																if($format === "readable") /* Human readable format; easier for some. */
+																if($format === "readable") // Human readable format; easier for some.
 																	{
 																		$line = '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->ID, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->user_login, 1, '"').'",';
@@ -152,7 +154,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 																				$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq(implode("|", (array)$custom_fields[$custom_field_var]), 1, '"').'",';
 																			else $line .= '"",';
 																	}
-																else /* Otherwise, we can just use the default re-importation format. */
+																else // Otherwise, we can just use the default re-importation format.
 																	{
 																		$line = '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->ID, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->user_login, 1, '"').'",';
@@ -177,13 +179,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 																			else $line .= '"",';
 																	}
 															}
-														else /* Otherwise, we use the standardized formats for exportation.*/
+														else // Otherwise, we use the standardized formats for exportation.
 															{
-																if($format === "readable") /* Human readable format; easier for some. */
+																if($format === "readable") // Human readable format; easier for some.
 																	{
 																		$line = '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->ID, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->user_login, 1, '"').'",';
-																		$line .= '"",'; /* The Password field is left blank on export. */
+																		$line .= '"",'; // The Password field is left blank on export.
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->first_name, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->last_name, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->display_name, 1, '"').'",';
@@ -204,11 +206,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 																				$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq(implode("|", (array)$custom_fields[$custom_field_var]), 1, '"').'",';
 																			else $line .= '"",';
 																	}
-																else /* Otherwise, we can just use the default re-importation format. */
+																else // Otherwise, we can just use the default re-importation format.
 																	{
 																		$line = '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->ID, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->user_login, 1, '"').'",';
-																		$line .= '"",'; /* The Password field is left blank on export. */
+																		$line .= '"",'; // The Password field is left blank on export.
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->first_name, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->last_name, 1, '"').'",';
 																		$line .= '"'.c_ws_plugin__s2member_utils_strings::esc_dq($user->display_name, 1, '"').'",';
@@ -250,7 +252,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								header('Content-Disposition: attachment; filename="export-'.$start.'-'.($start + 999).'.csv"');
 
-								exit($export); /* Exportation file. */
+								exit($export); // Exportation file.
 							}
 					}
 				/**
@@ -267,10 +269,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 							{
 								$export = serialize(c_ws_plugin__s2member_pro_utils_ops::op_replace($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]));
 
-								@set_time_limit(0).@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-								@ini_set("zlib.output_compression", 0); while (@ob_end_clean ());
+								@set_time_limit(0);
+								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
+								@ini_set("zlib.output_compression", 0);
+								while (@ob_end_clean ());
 
-								status_header(200); /* 200 OK status header. */
+								status_header(200); // 200 OK status header.
 
 								header("Content-Encoding:");
 								header("Accept-Ranges: none");
@@ -284,7 +288,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								header('Content-Disposition: attachment; filename="export.s2e"');
 
-								exit($export); /* Exportation file. */
+								exit($export); // Exportation file.
 							}
 					}
 			}

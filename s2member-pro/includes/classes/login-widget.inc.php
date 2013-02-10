@@ -43,8 +43,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 		*
 		* @todo Optimize these methods with ``empty()`` and ``isset()``.
 		*/
-		class c_ws_plugin__s2member_pro_login_widget /* << Register widget class. */
-			extends WP_Widget /* See: /wp-includes/widgets.php for further details. */
+		class c_ws_plugin__s2member_pro_login_widget // << Register widget class.
+			extends WP_Widget // See: /wp-includes/widgets.php for further details.
 			{
 				/**
 				* Constructor.
@@ -54,7 +54,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 				*
 				* @return null
 				*/
-				public function c_ws_plugin__s2member_pro_login_widget() /* Builds the classname, id_base, description, etc. */
+				public function c_ws_plugin__s2member_pro_login_widget() // Builds the classname, id_base, description, etc.
 					{
 						$widget_ops = array("classname" => "colors", "description" => "Displays a Login Form if NOT logged in. Or a Profile Summary when a User/Member is logged in.");
 						$control_ops = array("width" => 400, "id_base" => "ws_plugin__s2member_pro_login_widget");
@@ -87,7 +87,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						do_action("ws_plugin__s2member_pro_login_widget_before_display", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
-						echo $args["before_widget"]; /* OK, here we go into this widget. */
+						echo $args["before_widget"]; // OK, here we go into this widget.
 
 						if((is_user_logged_in() && strlen($options["profile_title"])) || (!is_user_logged_in() && strlen($options["title"])))
 							echo $args["before_title"].apply_filters("widget_title", $options[((is_user_logged_in()) ? "profile_title" : "title")]).$args["after_title"];
@@ -96,7 +96,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						do_action("ws_plugin__s2member_pro_login_widget_during_display_before", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
-						if(!is_user_logged_in()) /* The User/Member is NOT logged in. */
+						if(!is_user_logged_in()) // The User/Member is NOT logged in.
 							{
 								$links = c_ws_plugin__s2member_cache::cached_page_links();
 
@@ -147,9 +147,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 								echo '<div class="ws-plugin--s2member-pro-login-widget-code">'."\n";
 
 								if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
-									echo do_shortcode(trim($options["logged_out_code"])); /* No PHP code. */
+									echo do_shortcode(trim($options["logged_out_code"])); // No PHP code.
 
-								else /* Otherwise, it's OK to execute PHP code. */
+								else // Otherwise, it's OK to execute PHP code.
 									echo do_shortcode(c_ws_plugin__s2member_utilities::evl(trim($options["logged_out_code"])));
 
 								echo '</div>'."\n";
@@ -183,9 +183,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 								echo '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-code">'."\n";
 
 								if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
-									echo do_shortcode(trim($options["logged_in_code"])); /* No PHP code. */
+									echo do_shortcode(trim($options["logged_in_code"])); // No PHP code.
 
-								else /* Otherwise, it's OK to execute PHP code. */
+								else // Otherwise, it's OK to execute PHP code.
 									echo do_shortcode(c_ws_plugin__s2member_utilities::evl(trim($options["logged_in_code"])));
 
 								echo '</div>'."\n";
@@ -313,7 +313,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 					{
 						$default_options = apply_filters("ws_plugin__s2member_pro_login_widget_default_options", array("title" => _x("Membership Login", "s2member-front", "s2member"), "profile_title" => _x("My Profile Summary", "s2member-front", "s2member"), "signup_url" => "%%automatic%%", "my_account_url" => "%%automatic%%", "my_profile_url" => "%%automatic%%", "login_redirect" => "", "logout_redirect" => "%%home%%", "logged_in_code" => "", "logged_out_code" => "", "display_gravatar" => "1", "link_gravatar" => "1", "display_name" => "1"));
 
-						$options = array_merge($default_options, (array)$options); /* Merge options with defaults. */
+						$options = array_merge($default_options, (array)$options); // Merge options with defaults.
 
 						foreach($options as $key => /* By reference. */ &$value)
 							{
@@ -335,7 +335,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 								else if(preg_match("/^(display|link)_(name|gravatar)$/", $key) && (!is_string($value) || !is_numeric($value)))
 									$value = $default_options[$key];
 							}
-
 						return apply_filters("ws_plugin__s2member_pro_login_widget_options", $options);
 					}
 			}

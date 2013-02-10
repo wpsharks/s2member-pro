@@ -111,7 +111,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 
 								unset /* Just a little housekeeping */ ($href, $url, $m);
 							}
-						else /* Otherwise, we'll process this Button normally, using Membership routines. */
+						else // Otherwise, we'll process this Button normally, using Membership routines.
 							{
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images/alipay-button.gif";
 
@@ -135,7 +135,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 
 								unset /* Just a little housekeeping */ ($href, $url, $m);
 							}
-
 						return /* Button. */ $code;
 					}
 			}

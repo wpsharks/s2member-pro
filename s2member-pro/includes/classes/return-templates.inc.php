@@ -63,7 +63,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_return_templates"))
 								$code = (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code;
 								return ($custom_header = $code);
 							}
-
 						return $default_header;
 					}
 			}

@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 
 						if (!empty ($_POST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_POST["notify_type"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"])
 							{
-								@ignore_user_abort (true); /* Continue processing even if/when connection is broken by the sender. */
+								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
 								if (is_array ($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
 									{
@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
 
-														$ipn = array (); /* Reset. */
+														$ipn = array (); // Reset.
 
 														$ipn["txn_type"] = "web_accept";
 
@@ -89,7 +89,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														$ipn["custom"] = $alipay["extra_common_param"];
 
 														$ipn["mc_gross"] = number_format ($alipay["total_fee"], 2, ".", "");
-														$ipn["mc_currency"] = strtoupper ("CNY"); /* Yuan. */
+														$ipn["mc_currency"] = strtoupper ("CNY"); // Yuan.
 														$ipn["tax"] = number_format ("0.00", 2, ".", "");
 
 														$ipn["payer_email"] = $alipay["buyer_email"];
@@ -119,7 +119,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
 
-														$ipn = array (); /* Reset. */
+														$ipn = array (); // Reset.
 
 														$ipn["payment_status"] = "refunded";
 
@@ -129,7 +129,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 
 														$ipn["mc_fee"] = "-" . number_format ("0.00", 2, ".", "");
 														$ipn["mc_gross"] = "-" . number_format (abs ($alipay["total_fee"]), 2, ".", "");
-														$ipn["mc_currency"] = strtoupper ("CNY"); /* Yuan. */
+														$ipn["mc_currency"] = strtoupper ("CNY"); // Yuan.
 														$ipn["tax"] = "-" . number_format ("0.00", 2, ".", "");
 
 														$ipn["payer_email"] = $alipay["buyer_email"];
@@ -156,12 +156,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 										else
 											$alipay["s2member_log"][] = "Ignoring duplicate IPN. s2Member has already processed AliPay® Notification ID: " . $alipay["notify_id"] . ".";
 									}
-								else /* Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail. */
+								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
 										$alipay["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid AliPay® configuration. Please check: s2Member -> AliPay® Options.";
 										$alipay["s2member_log"][] = "If you're absolutely SURE that your AliPay® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to AliPay® over an HTTPS connection.";
 										$alipay["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
-										$alipay["s2member_log"][] = var_export ($_REQUEST, true); /* Recording _POST + _GET vars for analysis and debugging. */
+										$alipay["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*
 								If debugging/logging is enabled; we need to append $alipay to the log file.
@@ -178,11 +178,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
 
-								status_header (200); /* 200 OK status header. */
-								header ("Content-Type: text/plain; charset=UTF-8"); /* Content-Type text/plain with UTF-8. */
+								status_header (200); // 200 OK status header.
+								header ("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
-								exit ("success"); /* Exit now with "success". */
+								exit ("success"); // Exit now with "success".
 							}
 					}
 			}

@@ -98,7 +98,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 
 								$wizard .= /* Form to collect credentials. */ $credentials_form."\n";
 							}
-						else /* Otherwise, we just need to collect their s2Member.com Username/Password combination. */
+						else // Otherwise, we just need to collect their s2Member.com Username/Password combination.
 							{
 								$wizard = '<div class="error fade">'."\n";
 								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank">s2Member Pro Module</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
@@ -171,44 +171,44 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 
 																								wp_redirect(self_admin_url("/plugins.php")).exit();
 																							}
-																						else /* Bummer. OK, now we'll deal with cleanup & error reporting. */
+																						else // Bummer. OK, now we'll deal with cleanup & error reporting.
 																							{
 																								$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
 																								c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0009. Please upgrade via FTP.";
 																							}
 																					}
-																				else /* Bummer. OK, now we'll deal with cleanup & error reporting. */
+																				else // Bummer. OK, now we'll deal with cleanup & error reporting.
 																					{
 																						$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
 																						c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0008. Please upgrade via FTP.";
 																					}
 																			}
-																		else /* Bummer. OK, now we'll deal with cleanup & error reporting. */
+																		else // Bummer. OK, now we'll deal with cleanup & error reporting.
 																			{
 																				$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
 																				c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0007. Please upgrade via FTP.";
 																			}
 																	}
-																else /* Bummer. OK, now we'll deal with cleanup & error reporting. */
+																else // Bummer. OK, now we'll deal with cleanup & error reporting.
 																	{
 																		$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
 																		c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0006. Please upgrade via FTP.";
 																	}
 															}
-														else /* Bummer. OK, now we'll deal with cleanup & error reporting. */
+														else // Bummer. OK, now we'll deal with cleanup & error reporting.
 															{
 																$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
 																c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0005. Please upgrade via FTP.";
 															}
 													}
-												else /* Bummer. OK, error reporting ( no cleanup ). Wizard handles `#0004`. Use `#0004` in ``::$error``. */
+												else // Bummer. OK, error reporting ( no cleanup ). Wizard handles `#0004`. Use `#0004` in ``::$error``.
 													{
-														c_ws_plugin__s2member_pro_upgrader::$error = /* Wizard handles. Use `#0004` in ``::$error``. */
+														c_ws_plugin__s2member_pro_upgrader::$error = // Wizard handles. Use `#0004` in ``::$error``.
 														"Upgrade failed. Error #0004. Please upgrade via FTP, or supply valid Filesystem Credentials.";
 													}
 												c_ws_plugin__s2member_pro_upgrader::maintenance /* Remove the `.maintenance` file now. */(false);
@@ -221,12 +221,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 											{
 												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Service currently unavailable ( please try again ).";
 											}
-										else /* Else, display a default error message ( server unavailable ). Possible connectivity issues. */
+										else // Else, display a default error message ( server unavailable ). Possible connectivity issues.
 											{
 												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Connection failed ( please try again ).";
 											}
 									}
-								else /* Insufficient memory. This requires some special attention. Unzipping large files requires memory. */
+								else // Insufficient memory. This requires some special attention. Unzipping large files requires memory.
 									{
 										c_ws_plugin__s2member_pro_upgrader::$error = "Not enough memory.".
 											" Unzipping s2Member Pro via WordPress® requires ".WP_MAX_MEMORY_LIMIT." of RAM.".

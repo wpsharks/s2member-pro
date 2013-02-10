@@ -115,7 +115,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 						if (is_multisite () && !is_main_site ())
 							$key = md5 (c_ws_plugin__s2member_utils_encryption::xencrypt ($current_blog->domain . $current_blog->path, false, false));
 
-						else /* Else it's a standard API Key; not on a Multisite Network, or not on the Main Site anyway. */
+						else // Else it's a standard API Key; not on a Multisite Network, or not on the Main Site anyway.
 							$key = md5 (c_ws_plugin__s2member_utils_encryption::xencrypt (preg_replace ("/\:[0-9]+$/", "", $_SERVER["HTTP_HOST"]), false, false));
 
 						return apply_filters("ws_plugin__s2member_pro_remote_ops_key", (!empty ($key)) ? $key : "");

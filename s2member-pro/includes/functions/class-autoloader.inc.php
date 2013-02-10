@@ -50,25 +50,25 @@ if (!function_exists ("ws_plugin__s2member_pro_classes"))
 		* @param str $class The class that needs to be loaded. Passed in by PHP itself.
 		* @return null
 		*/
-		function ws_plugin__s2member_pro_classes ($class = FALSE) /* Build dynamic __autoload function. */
+		function ws_plugin__s2member_pro_classes ($class = FALSE)
 			{
-				static $c; /* Holds the classes directory location ( location is optimized with a static var ). */
-				static $c_class_dirs; /* All possible dir & sub-directory locations ( with a static var ). */
+				static $c; //  Holds the classes directory location ( location is optimized with a static var ).
+				static $c_class_dirs; //  All possible dir & sub-directory locations ( with a static var ).
 
-				if (strpos ($class, "c_ws_plugin__s2member_pro_") === 0) /* Make sure this is an s2Member Pro class. */
+				if (strpos ($class, "c_ws_plugin__s2member_pro_") === 0) //  Make sure this is an s2Member Pro class.
 					{
-						$c = (!isset ($c)) ? dirname (dirname (__FILE__)) . "/classes" : $c; /* Configures location of classes. */
+						$c = (!isset ($c)) ? dirname (dirname (__FILE__)) . "/classes" : $c; //  Configures location of classes.
 						$c_class_dirs = (!isset ($c_class_dirs)) ? array_merge (array ($c), _ws_plugin__s2member_pro_classes_scan_dirs_r ($c)) : $c_class_dirs;
 
 						$class = str_replace ("_", "-", str_replace ("c_ws_plugin__s2member_pro_", "", $class));
 
-						foreach ($c_class_dirs as $class_dir) /* Start looking for the class. */
+						foreach ($c_class_dirs as $class_dir) //  Start looking for the class.
 							if ($class_dir === $c || strpos ($class, basename ($class_dir)) === 0)
 								if (file_exists ($class_dir . "/" . $class . ".inc.php"))
 									{
 										include_once $class_dir . "/" . $class . ".inc.php";
 
-										break; /* Now stop looking. */
+										break; //  Now stop looking.
 									}
 					}
 
@@ -87,17 +87,17 @@ if (!function_exists ("ws_plugin__s2member_pro_classes"))
 		*/
 		function _ws_plugin__s2member_pro_classes_scan_dirs_r ($starting_dir = FALSE)
 			{
-				$dirs = array (); /* Initialize dirs array. */
+				$dirs = array (); //  Initialize dirs array.
 
 				foreach (func_get_args () as $starting_dir)
-					if (is_dir ($starting_dir)) /* Does this directory exist? */
-						foreach (scandir ($starting_dir) as $dir) /* Scan this directory. */
+					if (is_dir ($starting_dir)) //  Does this directory exist?
+						foreach (scandir ($starting_dir) as $dir) //  Scan this directory.
 							if ($dir !== "." && $dir !== ".." && is_dir ($dir = $starting_dir . "/" . $dir))
 								$dirs = array_merge ($dirs, array ($dir), _ws_plugin__s2member_pro_classes_scan_dirs_r ($dir));
 
-				return $dirs; /* Return array of all directories. */
+				return $dirs; //  Return array of all directories.
 			}
 
-		spl_autoload_register("ws_plugin__s2member_pro_classes"); /* Register __autoload. */
+		spl_autoload_register("ws_plugin__s2member_pro_classes"); //  Register __autoload.
 	}
 ?>

@@ -63,7 +63,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 								$plugin_meta[0] .= ' + <strong>s2Member Pro v' . esc_html (WS_PLUGIN__S2MEMBER_PRO_VERSION) . '</strong>';
 							}
 
-						return $plugin_meta; /* Now return all plugin meta; imploded by WordPress®. */
+						return $plugin_meta; // Now return all plugin meta; imploded by WordPress®.
 					}
 				/**
 				* Add the Coupon Codes page.
@@ -81,7 +81,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						add_submenu_page ($vars["menu"], "s2Member Pro / Coupon Codes", "Pro Coupon Codes", "create_users", "ws-plugin--s2member-pro-coupon-codes", "c_ws_plugin__s2member_pro_menu_pages::coupon_codes_page");
 
-						return $add_divider; /* Now add the divider. */
+						return $add_divider; // Now add the divider.
 					}
 				/**
 				* Add the Pro Module Import/Export page here.
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro ( User Import/Export )", "Import / Export", "create_users", "ws-plugin--s2member-pro-import-export", "c_ws_plugin__s2member_pro_menu_pages::import_export_page");
 
-						return $add_divider; /* Now add the divider. */
+						return $add_divider; // Now add the divider.
 					}
 				/**
 				* Add the page for configuration of other Payment Gateways.
@@ -119,7 +119,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro / Other Payment Gateways", "Other Gateways", "create_users", "ws-plugin--s2member-pro-other-gateways", "c_ws_plugin__s2member_pro_menu_pages::other_gateways_page");
 
-						return $add_divider; /* Now add the divider. */
+						return $add_divider; // Now add the divider.
 					}
 				/**
 				* Add the Pro Module info page here.
@@ -207,7 +207,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/scripting-api-remote-ops.inc.php";
 
-						return $display_api_hooks; /* Now display API Hooks. */
+						return $display_api_hooks; // Now display API Hooks.
 					}
 				/**
 				* Builds the documentation for the Pro Login Widget.
@@ -224,7 +224,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					{
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/scripting-api-login-widget.inc.php";
 
-						return $display_api_hooks; /* Now display API Hooks. */
+						return $display_api_hooks; // Now display API Hooks.
 					}
 				/**
 				* Builds the documentation for Scripting / API Constants.
@@ -303,7 +303,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				*/
 				public static function import_export_page ()
 					{
-						c_ws_plugin__s2member_pro_imports::import (); /* Handles imports. */
+						c_ws_plugin__s2member_pro_imports::import (); // Handles imports.
 
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/import-export.inc.php";
 
@@ -319,7 +319,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				*/
 				public static function coupon_codes_page ()
 					{
-						c_ws_plugin__s2member_menu_pages::update_all_options (); /* Updates options. */
+						c_ws_plugin__s2member_menu_pages::update_all_options (); // Updates options.
 
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/coupon-codes.inc.php";
 

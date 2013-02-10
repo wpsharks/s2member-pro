@@ -56,7 +56,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_admin_css_js"))
 				*/
 				public static function authnet_menu_pages_js ($vars = FALSE)
 					{
-						echo "\n"; /* Add a line break before inclusion of this file. */
+						echo "\n"; // Add a line break before inclusion of this file.
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/authnet-menu-pages-s-min.js";
 
 						return /* Return for uniformity. */;

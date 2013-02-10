@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 				*/
 				public static function parse_readme ($specific_path = FALSE, $specific_section = FALSE, $_blank_targets = TRUE, $process_wp_syntax = FALSE)
 					{
-						if (!($path = $specific_path)) /* Was a specific path passed in? */
+						if (!($path = $specific_path)) // Was a specific path passed in?
 							{
 								$path = dirname (dirname (dirname (__FILE__))) . "/readme.txt";
 								$dev_path = dirname (dirname (dirname (__FILE__))) . "/readme-dev.txt";
@@ -81,7 +81,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 				*/
 				public static function parse_readme_value ($key = FALSE, $specific_path = FALSE)
 					{
-						if (!($path = $specific_path)) /* Was a specific path passed in? */
+						if (!($path = $specific_path)) // Was a specific path passed in?
 							{
 								$path = dirname (dirname (dirname (__FILE__))) . "/readme.txt";
 								$dev_path = dirname (dirname (dirname (__FILE__))) . "/readme-dev.txt";

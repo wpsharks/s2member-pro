@@ -41,9 +41,9 @@ div.ws-plugin--s2member-pro-login-widget > form input[type = "submit"],
 div.ws-plugin--s2member-pro-login-widget > form textarea,
 div.ws-plugin--s2member-pro-login-widget > form select
 	{
-		width: 100%; /* 100% does not work across all browsers. */
-		width: 96.5% !ie<8; /* 100% does not work in IE browsers < 8. */
-		box-sizing: border-box; /* Make all fields behave the same. */
+		width: /* 100% does not work across all browsers. */ 100%;
+		width: /* 100% does not work in IE browsers < 8. */ 96.5% !ie<8;
+		box-sizing: /* Make all fields behave the same. */ border-box;
 		-ms-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -56,11 +56,11 @@ div.ws-plugin--s2member-pro-login-widget > form input[type = "radio"]
 	}
 div.ws-plugin--s2member-pro-login-widget > form input[type = "submit"]
 	{
-		width: 100% !ie<8; /* This width required in IE < 8. */
+		width: /* This width required in IE < 8. */ 100% !ie<8;
 	}
 div.ws-plugin--s2member-pro-login-widget > form select
 	{
-		width: 99.5% !ie<8; /* IE < 8. */
+		width: /* IE < 8. */ 99.5% !ie<8;
 	}
 div.ws-plugin--s2member-pro-login-widget-lost-password > a
 	{

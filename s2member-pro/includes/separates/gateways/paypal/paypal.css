@@ -54,8 +54,7 @@ div.s2member-pro-paypal-form-section:first-child
 	}
 div.s2member-pro-paypal-form-coupon-section
 	{
-		/* Auto-displayed dynamically. */
-		display: none; /* Off initially. */
+		display: /* Off initially. */ none;
 	}
 div.s2member-pro-paypal-form-response-section
 	{
@@ -141,7 +140,7 @@ label.s2member-pro-paypal-form-card-type-label.disabled
 	}
 label.s2member-pro-paypal-update-form-card-type-label
 	{
-		width: 16.5%; /* Only six here. */
+		width: /* Only six here. */ 16.5%;
 	}
 label.s2member-pro-paypal-form-card-type-label input[type="radio"]
 	{
@@ -190,10 +189,10 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[ty
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div textarea,
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select
 	{
-		margin: 0; /* Remove any existing margins. */
-		width: 100%; /* 100% does not work across all browsers. */
-		width: 98% !ie<8; /* 100% does not work in IE browsers < 8. */
-		box-sizing: border-box; /* Make all fields behave the same. */
+		margin: /* Remove any existing margins. */ 0;
+		width: /* 100% does not work across all browsers. */ 100%;
+		width: /* 100% does not work in IE browsers < 8. */ 98% !ie<8;
+		box-sizing: /* Make all fields behave the same. */ border-box;
 		-ms-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -206,11 +205,11 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[ty
 	}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select
 	{
-		width: 99.5% !ie<8; /* This width required in IE < 8. */
+		width: /* This width required in IE < 8. */ 99.5% !ie<8;
 	}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div label
 	{
-		cursor: pointer; /* Make labels appear clickable. */
+		cursor: /* Make labels appear clickable. */ pointer;
 	}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 	{
@@ -267,7 +266,7 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-ajax-tax-div
 	}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input.s2member-pro-paypal-password2
 	{
-		margin-top: 5px; /* Space this out just a bit. */
+		margin-top: /* Space this out just a bit. */ 5px;
 	}
 div.s2member-pro-paypal-form-submission-section > div.s2member-pro-paypal-form-custom-reg-field-opt-in-div
 	{

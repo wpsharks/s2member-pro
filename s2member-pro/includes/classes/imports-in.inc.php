@@ -125,7 +125,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																if /* A field in this position? */ (isset($custom_field_vars[$j]))
 																	$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
 													}
-												else /* Otherwise, we use the standardized format for importation.*/
+												else // Otherwise, we use the standardized format for importation.
 													{
 														$ID = $data[0];
 
@@ -164,24 +164,24 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												$paid_registration_times = (!$paid_registration_times || !is_array($paid_registration_times)) ? array(): $paid_registration_times;
 
 												$user_details = compact("ID", "user_login", "user_pass", "first_name", "last_name", "display_name", "user_email", "user_url", "role", "user_registered");
-												if(empty($user_details["user_pass"])) /* If there was NO Password given. */
-													unset($user_details["user_pass"]); /* Unset the Password array element. */
+												if(empty($user_details["user_pass"])) // If there was NO Password given.
+													unset($user_details["user_pass"]); // Unset the Password array element.
 
-												if($ID) /* Are we dealing with an existing User ID? */
+												if($ID) // Are we dealing with an existing User ID?
 													{
-														if(is_object($user = new WP_User($ID)) && $user->ID) /* Is this User in the database? */
+														if(is_object($user = new WP_User($ID)) && $user->ID) // Is this User in the database?
 															{
-																if(!is_multisite() || is_user_member_of_blog($ID)) /* Must be a Member of this Blog. */
+																if(!is_multisite() || is_user_member_of_blog($ID)) // Must be a Member of this Blog.
 																	{
 																		if((!is_multisite() || !is_super_admin($ID)) && !$user->has_cap("administrator"))
 																			{
-																				if(strtolower($role) !== "administrator") /* Do NOT update to Administrator. */
+																				if(strtolower($role) !== "administrator") // Do NOT update to Administrator.
 																					{
-																						if($user_email && is_email($user_email)) /* Is the email address valid? */
+																						if($user_email && is_email($user_email)) // Is the email address valid?
 																							{
-																								if($user_login) /* Has a Username ( aka: user_login ) been supplied? */
+																								if($user_login) // Has a Username ( aka: user_login ) been supplied?
 																									{
-																										if(validate_username($user_login)) /* Is the Username valid? */
+																										if(validate_username($user_login)) // Is the Username valid?
 																											{
 																												if(($_same_email = (strtolower($user_email) === strtolower($user->user_email))) || !email_exists($user_email))
 																													{
@@ -229,7 +229,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																											$errors[] = "Line #".$line.". Invalid Username ( <code>".esc_html($user_login)."</code> ). Lowercase alphanumerics are required.";
 																									}
 																								else
-																									$errors[] = "Line #".$line.". Missing Username; please try again."; /* We have two separate errors for Usernames. This provides clarity. */
+																									$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
 																							}
 																						else
 																							$errors[] = "Line #".$line.". Missing or invalid Email address ( <code>".esc_html($user_email)."</code> ); please try again.";
@@ -249,7 +249,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 
 												else if(is_multisite() && ($user_id = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($user_login, $user_email)) && !is_super_admin($user_id))
 													{
-														if(strtolower($role) !== "administrator") /* Do NOT add existing Users as Administrators. */
+														if(strtolower($role) !== "administrator") // Do NOT add existing Users as Administrators.
 															{
 																if(add_existing_user_to_blog(array("user_id" => $user_id, "role" => $role)))
 																	{
@@ -284,15 +284,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";
 													}
 
-												else /* Otherwise, we are adding a brand new User. */
+												else // Otherwise, we are adding a brand new User.
 													{
-														if(strtolower($role) !== "administrator") /* Admin? */
+														if(strtolower($role) !== "administrator") // Admin?
 															{
 																if($user_email && is_email($user_email) /* Valid? */)
 																	{
-																		if($user_login) /* Was a Username even supplied? */
+																		if($user_login) // Was a Username even supplied?
 																			{
-																				if(validate_username($user_login)) /* Is it valid? */
+																				if(validate_username($user_login)) // Is it valid?
 																					{
 																						if(!email_exists($user_email) /* Exists already? */)
 																							{
@@ -304,10 +304,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																													{
 																														if(is_object($user = new WP_User($user_id)) && $user->ID)
 																															{
-																																if($user_pass) /* If we are given an "un-encrypted Password". */
+																																if($user_pass) // If we are given an "un-encrypted Password".
 																																	wp_update_user(array("ID" => $user_id, "user_pass" => $user_pass));
 
-																																if(is_multisite()) /* New Users on a Multisite Network need this too. */
+																																if(is_multisite()) // New Users on a Multisite Network need this too.
 																																	update_user_meta($user_id, "s2member_originating_blog", $current_blog->blog_id);
 
 																																update_user_option($user_id, "s2member_custom", $custom);
@@ -348,7 +348,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																					$errors[] = "Line #".$line.". Invalid Username ( <code>".esc_html($user_login)."</code> ). Lowercase alphanumerics are required.";
 																			}
 																		else
-																			$errors[] = "Line #".$line.". Missing Username; please try again."; /* We have two separate errors for Usernames. This provides clarity. */
+																			$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
 																	}
 																else
 																	$errors[] = "Line #".$line.". Missing or invalid Email address ( <code>".esc_html($user_email)."</code> ); please try again.";
@@ -361,11 +361,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 										fclose($file);
 									}
 								else
-									$errors[] = "No data was received. Please try again."; /* The upload failed, or it was empty. */
+									$errors[] = "No data was received. Please try again."; // The upload failed, or it was empty.
 
 								c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
 
-								if(!empty($errors)) /* Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation. */
+								if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
 							}
 
@@ -383,19 +383,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 					{
 						if(!empty($_POST["ws_plugin__s2member_pro_import_ops"]) && ($nonce = $_POST["ws_plugin__s2member_pro_import_ops"]) && wp_verify_nonce($nonce, "ws-plugin--s2member-pro-import-ops") && current_user_can("create_users"))
 							{
-								@set_time_limit(0); /* Make time for processing large import files. */
+								@set_time_limit(0); // Make time for processing large import files.
 								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
 
 								if(!empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]) && empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]["error"]))
 									$file = file_get_contents($_FILES["ws_plugin__s2member_pro_import_ops_file"]["tmp_name"], "r");
 
-								if(!empty($file)) /* Only process if we have an importation file. */
+								if(!empty($file)) // Only process if we have an importation file.
 									{
 										if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), true)) && !empty($import) && ($import["configured"] = "1"))
 											{
 												unset($import["options_checksum"], $import["options_version"]);
 
-												foreach($import as $key => $value) /* Add prefixes now. */
+												foreach($import as $key => $value) // Add prefixes now.
 													{
 														(is_array($value)) ? array_unshift($value, "update-signal") : null;
 														$import["ws_plugin__s2member_".$key] = $value;
@@ -405,17 +405,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												c_ws_plugin__s2member_menu_pages::update_all_options($import, true, true, false, false, false);
 											}
 										else
-											$errors[] = "Invalid data received. Please try again."; /* Unserialization failed? */
+											$errors[] = "Invalid data received. Please try again."; // Unserialization failed?
 									}
 								else
-									$errors[] = "No data was received. Please try again."; /* The upload failed, or it was empty. */
+									$errors[] = "No data was received. Please try again."; // The upload failed, or it was empty.
 
-								if(!empty($errors)) /* Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation. */
+								if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
 								else
 									c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
 							}
-
 						return /* Return for uniformity. */;
 					}
 			}

@@ -73,17 +73,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				*/
 				public static function full_state ($state = FALSE, $country = FALSE)
 					{
-						static $lines; /* Optimizes this routine for repeated usage. */
+						static $lines; // Optimizes this routine for repeated usage.
 
 						if (strlen ($state = strtoupper ($state)) === 2 && preg_match ("/^US|CA$/", ($country = strtoupper ($country))))
 							{
-								if (!isset ($lines[$country])) /* If $lines are NOT already established. */
+								if (!isset ($lines[$country])) // If $lines are NOT already established.
 									{
-										if ($country === "US") /* Handle lookups for the United States. */
+										if ($country === "US") // Handle lookups for the United States.
 											{
 												$txt = file_get_contents (dirname (dirname (__FILE__)) . "/usps-states.txt");
 											}
-										else if ($country === "CA") /* Lookups for Canada. */
+										else if ($country === "CA") // Lookups for Canada.
 											{
 												$txt = file_get_contents (dirname (dirname (__FILE__)) . "/ca-provinces.txt");
 											}
@@ -91,17 +91,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 										$lines[$country] = preg_split ("/[\r\n\t]+/", trim (strtoupper ($txt)));
 									}
 
-								foreach ($lines[$country] as $line) /* Find full version. */
+								foreach ($lines[$country] as $line) // Find full version.
 
-									if ($line = trim ($line)) /* Do NOT process empty lines. */
+									if ($line = trim ($line)) // Do NOT process empty lines.
 										{
 											list ($full, $abbr) = preg_split ("/;/", trim ($line));
 											if ($abbr === $state && $full)
 												return ucwords ($full);
 										}
 							}
-
-						return $state; /* Full state name. */
+						return $state; // Full state name.
 					}
 			}
 	}

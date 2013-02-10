@@ -80,8 +80,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 												$rtn["custom"] = $alipay["extra_common_param"];
 
 												$rtn["mc_gross"] = number_format ($alipay["total_fee"], 2, ".", "");
-												$rtn["mc_currency"] = "CNY"; /* Yuan. */
-												$rtn["tax"] = "0"; /* No tax. */
+												$rtn["mc_currency"] = "CNY"; // Yuan.
+												$rtn["tax"] = "0"; // No tax.
 
 												$rtn["payer_email"] = $alipay["buyer_email"];
 												$rtn["first_name"] = $alipay["first_name"];
@@ -107,7 +107,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 
 												wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
 											}
-										else /* Else we need to fail here. The AliPay® status was completely unexpected. */
+										else // Else we need to fail here. The AliPay® status was completely unexpected.
 											{
 												$alipay["s2member_log"][] = "Unexpected status. The AliPay® status did not match a required action.";
 
@@ -119,12 +119,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 												echo '</script>' . "\n";
 											}
 									}
-								else /* Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail. */
+								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
 										$alipay["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid AliPay® configuration. Please check: s2Member -> AliPay® Options.";
 										$alipay["s2member_log"][] = "If you're absolutely SURE that your AliPay® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to AliPay® over an HTTPS connection.";
 										$alipay["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
-										$alipay["s2member_log"][] = var_export ($_REQUEST, true); /* Recording _POST + _GET vars for analysis and debugging. */
+										$alipay["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 
 										$alipay["s2member_log"][] = "Redirecting Customer to the Home Page, due to an error that occurred.";
 
@@ -145,7 +145,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
 											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
 
-								exit (); /* Exit now. */
+								exit (); // Exit now.
 							}
 					}
 			}

@@ -61,18 +61,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_login_redirects"))
 							{
 								foreach (preg_split ("/[\r\n\t]+/", $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_login_welcome_page_otos"]) as $oto)
 									{
-										if (($oto = trim ($oto)) && preg_match ("/^(?:([0-9]+)\:)(?:([0-9]+)\:)?(.+)$/", $oto, $m)) /* Proper? */
+										if (($oto = trim ($oto)) && preg_match ("/^(?:([0-9]+)\:)(?:([0-9]+)\:)?(.+)$/", $oto, $m)) // Proper?
 											{
-												list (, $number_of_logins, $level, $url) = $m; /* Assign variables. */
-												if ((int)$number_of_logins === (int)$logins) /* One-Time-Offer applies? */
+												list (, $number_of_logins, $level, $url) = $m; // Assign variables.
+												if ((int)$number_of_logins === (int)$logins) // One-Time-Offer applies?
 													if (!is_numeric ($level) || c_ws_plugin__s2member_user_access::user_access_level ($user) === (int)$level)
 														if (($url = c_ws_plugin__s2member_login_redirects::fill_login_redirect_rc_vars ($url, $user)))
 															return ($redirect = $url);
 											}
 									}
 							}
-
-						return $redirect; /* Return ``$redirect`` value. */
+						return $redirect; // Return ``$redirect`` value.
 					}
 			}
 	}

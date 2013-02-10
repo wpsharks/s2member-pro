@@ -57,14 +57,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_ops"))
 					{
 						global /* Multisite. */ $current_site, $current_blog;
 
-						if (is_array ($ops) && !empty ($ops)) /* Only if array. */
+						if (is_array ($ops) && !empty ($ops)) // Only if array.
 							{
-								foreach ($ops as &$op) /* Begin looping sequence. */
+								foreach ($ops as &$op) // Begin looping sequence.
 									{
-										if (is_array ($op) && !empty ($op)) /* Array? */
+										if (is_array ($op) && !empty ($op)) // Array?
 											$op = c_ws_plugin__s2member_pro_utils_ops::op_replace ($op, $fill);
 
-										else if (is_string ($op) && !$fill) /* Handle Replacement Codes. */
+										else if (is_string ($op) && !$fill) // Handle Replacement Codes.
 											{
 												$op = (is_multisite ()) ? preg_replace ("/" . preg_quote (rtrim ($current_site->domain . $current_site->path, "/") . "/", "/") . "/", "%%_op__current_site_domain_path/%%", $op) : $op;
 												$op = (is_multisite ()) ? preg_replace ("/" . preg_quote (rtrim ($current_site->domain . $current_site->path, "/"), "/") . "/", "%%_op__current_site_domain_path%%", $op) : $op;
@@ -77,7 +77,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_ops"))
 
 												$op = preg_replace ("/" . preg_quote ($_SERVER["HTTP_HOST"], "/") . "/i", "%%_op__domain%%", preg_replace ("/" . preg_quote (get_bloginfo ("name"), "/") . "/", "%%_op__blog_name%%", $op));
 											}
-										else if (is_string ($op) && $fill) /* Handle Replacement Codes. */
+										else if (is_string ($op) && $fill) // Handle Replacement Codes.
 											{
 												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_site->domain . $current_site->path, "/") . "/"), $op) : preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/") . "/"), $op);
 												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_site->domain . $current_site->path, "/")), $op) : preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/")), $op);
@@ -92,8 +92,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_ops"))
 											}
 									}
 							}
-
-						return $ops; /* Now return the $ops. */
+						return $ops; // Now return the $ops.
 					}
 			}
 	}

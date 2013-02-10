@@ -59,11 +59,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images";
 
-						echo "\n"; /* Add a line break before inclusion. */
+						echo "\n"; // Add a line break before inclusion.
 
 						include_once dirname (dirname (__FILE__)) . "/s2member-pro.css";
 
-						return; /* Return unformity. */
+						return; // Return unformity.
 					}
 				/**
 				* Adds Pro Module JavaScript.
@@ -80,16 +80,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 					{
 						$g = "var S2MEMBER_PRO_VERSION = '" . c_ws_plugin__s2member_utils_strings::esc_js_sq (S2MEMBER_PRO_VERSION) . "',";
 
-						$g = trim ($g, " ,") . ";"; /* Trim & add semicolon. */
+						$g = trim ($g, " ,") . ";"; // Trim & add semicolon.
 
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images";
 
-						echo "\n" . $g . "\n"; /* Add a line break before inclusion. */
+						echo "\n" . $g . "\n"; // Add a line break before inclusion.
 
 						include_once dirname (dirname (__FILE__)) . "/s2member-pro-min.js";
 
-						return; /* Return unformity. */
+						return; // Return unformity.
 					}
 			}
 	}

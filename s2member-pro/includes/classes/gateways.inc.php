@@ -51,7 +51,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				*
 				* @return array Array of available Payment Gateways.
 				*/
-				public static function available_gateways () /* Payment Gateways available. */
+				public static function available_gateways () // Payment Gateways available.
 					{
 						$gateways = array ("alipay" => "<strong>AliPay®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net®</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google® Checkout</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal® Website Payments Pro</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
 
@@ -88,7 +88,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				*
 				* @return null
 				*/
-				public static function load_gateways () /* Load Hooks/Functions/Codes for other Gateways. */
+				public static function load_gateways () // Load Hooks/Functions/Codes for other Gateways.
 					{
 						foreach (array_keys (c_ws_plugin__s2member_pro_gateways::available_gateways ()) as $gateway)
 							if (in_array ($gateway, $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_gateways_enabled"]))
@@ -97,7 +97,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 									include_once dirname (dirname (__FILE__)) . "/separates/gateways/" . $gateway . "/" . $gateway . "-funcs.inc.php";
 									include_once dirname (dirname (__FILE__)) . "/separates/gateways/" . $gateway . "/" . $gateway . "-codes.inc.php";
 								}
-
 						return /* Return for uniformity. */;
 					}
 			}

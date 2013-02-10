@@ -71,7 +71,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_constants"))
 						if (!defined ("S2MEMBER_PRO_VERSION"))
 							define ("S2MEMBER_PRO_VERSION", ($c[] = WS_PLUGIN__S2MEMBER_PRO_VERSION));
 
-						return $c; /* Return $c calculation values. */
+						return $c; // Return $c calculation values.
 					}
 			}
 	}

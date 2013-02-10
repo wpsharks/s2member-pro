@@ -56,7 +56,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_admin_css_js"))
 				*/
 				public static function menu_pages_js ($vars = FALSE)
 					{
-						echo "\n"; /* Add a line break before inclusion of this file. */
+						echo "\n"; // Add a line break before inclusion of this file.
 
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/menu-pages-s-min.js";
 

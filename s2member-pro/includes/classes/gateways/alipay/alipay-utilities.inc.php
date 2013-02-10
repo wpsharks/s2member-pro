@@ -57,8 +57,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 						$vars["_input_charset"] = "utf-8";
 						ksort($vars) . reset ($vars);
 
-						$query = ""; /* Initialize query string. */
-						$_q = ""; /* Initialize the unencoded query. */
+						$query = ""; // Initialize query string.
+						$_q = ""; // Initialize the unencoded query.
 
 						$gateway = "https://www.alipay.com/cooperate/gateway.do";
 
@@ -66,7 +66,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 							if ($var && strlen ($value) && !preg_match ("/^(sign|sign_type)$/", $var))
 								{
 									$query .= (($query) ? "&" : "") . $var . "=" . ((preg_match ("/^http(s)?\:\/\//i", $value)) ? rawurlencode ($value) : urlencode ($value));
-									$_q .= (($_q) ? "&" : "") . $var . "=" . $value; /* This version is used to generate the digital signature. */
+									$_q .= (($_q) ? "&" : "") . $var . "=" . $value; // This version is used to generate the digital signature.
 								}
 
 						return $gateway . "?" . $query . "&sign=" . urlencode (md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])) . "&sign_type=MD5";
@@ -91,7 +91,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 
 								ksort($postvars) . reset ($postvars);
 
-								$_q = ""; /* Initialize unencoded query. */
+								$_q = ""; // Initialize unencoded query.
 
 								$gateway = "https://www.alipay.com/cooperate/gateway.do";
 
@@ -103,10 +103,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 								&& preg_match ("/true$/i", trim (c_ws_plugin__s2member_utils_urls::remote ($gateway . "?service=notify_verify&partner=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"]) . "&notify_id=" . urlencode ($postvars["notify_id"]), "", array ("timeout" => 20)))))
 									return $postvars;
 
-								else /* Nope. */
+								else // Nope.
 									return false;
 							}
-						else /* Nope. */
+						else // Nope.
 							return false;
 					}
 			}
