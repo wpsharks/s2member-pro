@@ -59,7 +59,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						$widget_ops = array("classname" => "colors", "description" => "Displays a Login Form if NOT logged in. Or a Profile Summary when a User/Member is logged in.");
 						$control_ops = array("width" => 400, "id_base" => "ws_plugin__s2member_pro_login_widget");
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_construction", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -83,7 +83,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 					{
 						$options = c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults((array)$instance);
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_display", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -92,7 +92,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						if((is_user_logged_in() && strlen($options["profile_title"])) || (!is_user_logged_in() && strlen($options["title"])))
 							echo $args["before_title"].apply_filters("widget_title", $options[((is_user_logged_in()) ? "profile_title" : "title")]).$args["after_title"];
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_during_display_before", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -201,7 +201,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 								echo '</div>'."\n";
 							}
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_during_display_after", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -224,7 +224,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 					{
 						$options = c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults((array)$instance);
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_form", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 						/*
@@ -292,7 +292,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 				*/
 				public function update($instance = FALSE, $old = FALSE)
 					{
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_update", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 

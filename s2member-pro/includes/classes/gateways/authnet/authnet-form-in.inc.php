@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 				*/
 				public static function sc_authnet_form ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -86,7 +86,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 						$attr["singular"] = /* Collect the Singular ID for this Post/Page. */ get_the_ID ();
 
-						eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
@@ -158,7 +158,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
-								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action ("ws_plugin__s2member_pro_during_sc_authnet_cancellation_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
@@ -299,7 +299,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
-								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action ("ws_plugin__s2member_pro_during_sc_authnet_registration_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
@@ -415,7 +415,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
-								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action ("ws_plugin__s2member_pro_during_sc_authnet_update_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
@@ -567,7 +567,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
-								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action ("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
@@ -764,7 +764,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
-								eval('foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;');
+								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								($attr["modify"]) ? do_action ("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action ("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
 								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 							}
