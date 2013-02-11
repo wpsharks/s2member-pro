@@ -167,6 +167,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 								If debugging/logging is enabled; we need to append $alipay to the log file.
 									Logging now supports Multisite Networking as well.
 								*/
+								$logt = c_ws_plugin__s2member_utilities::time_details ();
 								$logv = c_ws_plugin__s2member_utilities::ver_details ();
 								$logm = c_ws_plugin__s2member_utilities::mem_details ();
 								$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
@@ -176,7 +177,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 									if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
-											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
+											file_put_contents ($logs_dir . "/" . $log2, $logt . "\n" . $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
 
 								status_header (200); // 200 OK status header.
 								header ("Content-Type: text/plain; charset=UTF-8"); // Content-Type text/plain with UTF-8.

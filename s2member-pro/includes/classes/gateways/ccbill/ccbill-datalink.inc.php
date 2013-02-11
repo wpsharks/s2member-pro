@@ -112,6 +112,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 												$ccbill["s2member_log"][] = /* Log error msg. */ $unprocessed_ipn_lines;
 											}
 
+										$logt = c_ws_plugin__s2member_utilities::time_details ();
 										$logv = c_ws_plugin__s2member_utilities::ver_details();
 										$logm = c_ws_plugin__s2member_utilities::mem_details();
 										$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".$_SERVER["HTTP_USER_AGENT"];
@@ -121,7 +122,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 										if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 											if(is_dir($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 												if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-													file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".var_export($ccbill, true)."\n\n", FILE_APPEND);
+													file_put_contents($logs_dir."/".$log2, $logt . "\n" . $logv."\n".$logm."\n".$log4."\n".var_export($ccbill, true)."\n\n", FILE_APPEND);
 									}
 
 								else if /* Anything? */(($unprocessed_ipn_lines = trim(get_transient("s2m_".md5("s2member_pro_ccbill_datalink_ipns")))))
@@ -296,6 +297,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 														else if(!$processed) // Here we add a message to the logs indicating that no IPN vars are available.
 															$ccbill["s2member_log"][] = "Ignoring this DataLink IPN. No IPN signup vars for Subscr. ID: ".$ccbill["dl_ipn"][3].".";
 
+														$logt = c_ws_plugin__s2member_utilities::time_details ();
 														$logv = c_ws_plugin__s2member_utilities::ver_details();
 														$logm = c_ws_plugin__s2member_utilities::mem_details();
 														$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".$_SERVER["HTTP_USER_AGENT"];
@@ -305,7 +307,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 														if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 															if(is_dir($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 																if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-																	file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".var_export($ccbill, true)."\n\n", FILE_APPEND);
+																	file_put_contents($logs_dir."/".$log2, $logt . "\n" . $logv."\n".$logm."\n".$log4."\n".var_export($ccbill, true)."\n\n", FILE_APPEND);
 													}
 
 												unset($unprocessed_lines[$line]); // Remove this line and update the list of unprocessed IPN lines.

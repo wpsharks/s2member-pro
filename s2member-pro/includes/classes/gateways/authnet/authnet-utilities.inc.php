@@ -100,6 +100,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						If debugging is enabled; we need to maintain a comprehensive log file.
 							Logging now supports Multisite Networking as well.
 						*/
+						$logt = c_ws_plugin__s2member_utilities::time_details ();
 						$logv = c_ws_plugin__s2member_utilities::ver_details();
 						$logm = c_ws_plugin__s2member_utilities::mem_details();
 						$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".$_SERVER["HTTP_USER_AGENT"];
@@ -115,7 +116,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 								if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
 									if(($log = "-------- Input vars: ( ".$input_time." ) --------\n".var_export($post_vars, true)."\n"))
 										if(($log .= "-------- Output string/vars: ( ".$output_time." ) --------\n".$csv."\n".var_export($response, true)))
-											file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".$log."\n\n", FILE_APPEND);
+											file_put_contents($logs_dir."/".$log2, $logt . "\n" . $logv."\n".$logm."\n".$log4."\n".$log."\n\n", FILE_APPEND);
 
 						return apply_filters("ws_plugin__s2member_pro_authnet_aim_response", c_ws_plugin__s2member_pro_authnet_utilities::_authnet_aim_response_filters($response), get_defined_vars());
 					}
@@ -328,6 +329,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						If debugging is enabled; we need to maintain a comprehensive log file.
 							Logging now supports Multisite Networking as well.
 						*/
+						$logt = c_ws_plugin__s2member_utilities::time_details ();
 						$logv = c_ws_plugin__s2member_utilities::ver_details();
 						$logm = c_ws_plugin__s2member_utilities::mem_details();
 						$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".$_SERVER["HTTP_USER_AGENT"];
@@ -343,7 +345,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 								if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
 									if(($log = "-------- Input vars: ( ".$input_time." ) --------\n".var_export($post_vars, true)."\n"))
 										if(($log .= "-------- Output string/vars: ( ".$output_time." ) --------\n".$xml."\n".var_export($response, true)))
-											file_put_contents($logs_dir."/".$log2, $logv."\n".$logm."\n".$log4."\n".$log."\n\n", FILE_APPEND);
+											file_put_contents($logs_dir."/".$log2, $logt . "\n" . $logv."\n".$logm."\n".$log4."\n".$log."\n\n", FILE_APPEND);
 
 						return apply_filters("ws_plugin__s2member_pro_authnet_arb_response", c_ws_plugin__s2member_pro_authnet_utilities::_authnet_arb_response_filters($response), get_defined_vars());
 					}

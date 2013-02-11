@@ -134,6 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 										echo '</script>' . "\n";
 									}
 
+								$logt = c_ws_plugin__s2member_utilities::time_details ();
 								$logv = c_ws_plugin__s2member_utilities::ver_details ();
 								$logm = c_ws_plugin__s2member_utilities::mem_details ();
 								$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
@@ -143,7 +144,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 									if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
-											file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
+											file_put_contents ($logs_dir . "/" . $log2, $logt . "\n" . $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($alipay, true) . "\n\n", FILE_APPEND);
 
 								exit (); // Exit now.
 							}

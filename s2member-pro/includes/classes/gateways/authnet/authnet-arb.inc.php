@@ -163,6 +163,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 																				else if (!$processed) // If nothing was processed, here we add a message to the logs indicating the status; which is being ignored by s2Member.
 																					$authnet["s2member_log"][] = "Ignoring this ARB/Status ( `" . $authnet["subscription_status"] . "` ). It does NOT require any action on the part of s2Member.";
 
+																				$logt = c_ws_plugin__s2member_utilities::time_details ();
 																				$logv = c_ws_plugin__s2member_utilities::ver_details ();
 																				$logm = c_ws_plugin__s2member_utilities::mem_details ();
 																				$log4 = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "\nUser-Agent: " . $_SERVER["HTTP_USER_AGENT"];
@@ -172,7 +173,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 																				if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 																					if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 																						if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
-																							file_put_contents ($logs_dir . "/" . $log2, $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($authnet, true) . "\n\n", FILE_APPEND);
+																							file_put_contents ($logs_dir . "/" . $log2, $logt . "\n" . $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($authnet, true) . "\n\n", FILE_APPEND);
 																			}
 																	}
 															}
