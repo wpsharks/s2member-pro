@@ -60,7 +60,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								@set_time_limit(0);
 								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
+
 								@ini_set("zlib.output_compression", 0);
+								if(function_exists("apache_setenv"))
+									@apache_setenv("no-gzip", "1");
+
 								while (@ob_end_clean ());
 
 								$format = !empty($_POST["ws_plugin__s2member_pro_export_users_format"]) ? $_POST["ws_plugin__s2member_pro_export_users_format"] : "";
@@ -240,7 +244,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								status_header /* 200 OK status header. */(200);
 
-								header("Content-Encoding:");
+								header("Content-Encoding: none");
 								header("Accept-Ranges: none");
 								header("Content-Type: text/csv; charset=UTF-8");
 								header("Content-Length: ".strlen($export));
@@ -271,12 +275,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								@set_time_limit(0);
 								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
+
 								@ini_set("zlib.output_compression", 0);
+								if(function_exists("apache_setenv"))
+									@apache_setenv("no-gzip", "1");
+
 								while (@ob_end_clean ());
 
 								status_header(200); // 200 OK status header.
 
-								header("Content-Encoding:");
+								header("Content-Encoding: none");
 								header("Accept-Ranges: none");
 								header("Content-Type: text/plain; charset=UTF-8");
 								header("Content-Length: ".strlen($export));
