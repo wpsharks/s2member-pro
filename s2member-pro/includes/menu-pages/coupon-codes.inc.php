@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 
 						echo 'Here are a few basic Coupon Code examples you can follow:<br />' . "\n";
 
-						echo '<ul>' . "\n"; /* Explaining Coupon Codes by example. */
+						echo '<ul>' . "\n"; // Explaining Coupon Codes by example.
 						echo '<li><code>SAVE-10|10%</code> <em>( saves the Customer 10% )</em></li>' . "\n";
 						echo '<li><code>SAVE-20|20%</code> <em>( saves the Customer 20% )</em></li>' . "\n";
 						echo '<li><code>2$OFF|2.00</code> <em>( $2.00 off the normal price )</em></li>' . "\n";
@@ -99,7 +99,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo '<em>By default, s2Member will apply the discount to ALL amounts, including any Regular/Recurring fees.<br />' . "\n";
 						echo '* However, you may configure Coupon Codes that will ONLY apply to (ta) Trial Amounts, or (ra) Regular Amounts.</em>' . "\n";
 
-						echo '<ul>' . "\n"; /* Explaining this by example. */
+						echo '<ul>' . "\n"; // Explaining this by example.
 						echo '<li><code>SAVE-10|10%||ta-only</code> <em>(10% off an Initial/Trial Amount; the ta="" attribute in your Shortcode)</em></li>' . "\n";
 						echo '<li><code>SAVE-15|15%||ra-only</code> <em>(15% off the Regular Amount(s); the ra="" attribute in your Shortcode)</em></li>' . "\n";
 						echo '<li><code>XMAS|5.00|12/31/2021|ra-only</code> <em>( $5 off Regular Amount(s); the ra="" attribute in your Shortcode )</em></li>' . "\n";
@@ -114,7 +114,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo '<em>By default, s2Member accepts Coupon Codes on any Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code>.<br />' . "\n";
 						echo '* However, you may configure Coupon Codes that ONLY work on specific Post or Page IDs, as seen below.</em>' . "\n";
 
-						echo '<ul>' . "\n"; /* Explaining this by example. */
+						echo '<ul>' . "\n"; // Explaining this by example.
 						echo '<li><code>SAVE-10|10%|||123</code> <em>(10% off; works only on Post or Page ID #<code>123</code>)</em></li>' . "\n";
 						echo '<li><code>SAVE-15|15%||ra-only|123</code> <em>(15% off Regular Amount(s); works only on Post or Page ID #<code>123</code>)</em></li>' . "\n";
 						echo '<li><code>XMAS|5.00|12/31/2021|ra-only|123,456</code> <em>( $5 off Regular Amount(s); works only on Post or Page IDs <code>123</code>,<code>456</code> )</em></li>' . "\n";

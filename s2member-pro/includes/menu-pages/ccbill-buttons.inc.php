@@ -126,7 +126,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 						$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/buttons/ccbill-cancellation-button.php")));
 						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/&amp;/", "&", $ws_plugin__s2member_pro_temp_s); /* Match this with the JavaScript generator. */
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/&amp;/", "&", $ws_plugin__s2member_pro_temp_s); // Match this with the JavaScript generator.
 						echo preg_replace ("/\<a/", '<a target="_blank"', $ws_plugin__s2member_pro_temp_s);
 						echo '</div>' . "\n";
 						echo '</label>' . "\n";

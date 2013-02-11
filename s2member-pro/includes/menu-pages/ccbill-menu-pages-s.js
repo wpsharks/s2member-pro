@@ -45,7 +45,7 @@ jQuery(document).ready (function($)
 
 						if /* Display Cron instructions. */ (val == 2)
 							$viaCron.show ()
-						else /* Hide instructions. */
+						else // Hide instructions.
 							$viaCron.hide ();
 					});
 			}

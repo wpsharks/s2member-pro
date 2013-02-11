@@ -1,39 +1,37 @@
 <?php
-/*
----- Configuration. -------------------------------------------------------------------------------------------------------*/
+// ---- Configuration. -------------------------------------------------------------------------------------------------------
 
-/* s2Member installation domain. */
+// s2Member installation domain.
 $config["custom"] = "www.mydomain.com";
 
-/* s2Member Membership Level# */
+// s2Member Membership Level#.
 $config["item_number"] = "1";
 
-/* s2Member Proxy IPN URL handler. */
-$config["proxy_ipn_handler_url"] = /* You'll get this from Dashboard: `s2Member -› PayPal Options -› IPN Integration -› Proxy IPN URL`. */
+// s2Member Proxy IPN URL handler.
+$config["proxy_ipn_handler_url"] = // You'll get this from Dashboard: `s2Member -› PayPal Options -› IPN Integration -› Proxy IPN URL`.
 "http://www.mydomain.com/?s2member_paypal_notify=1&s2member_paypal_proxy=proxy&s2member_paypal_proxy_verification=c28831a2ddfdeexXX2f8b722efa0";
 
-/*
----- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------*/
+// ---- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------
 @ignore_user_abort(true);
 header("HTTP/1.0 200 OK");
 header("Content-Type: text/plain; charset=UTF-8");
 while (@ob_end_clean ()); // Clean any existing output buffers.
 
-if( /* No ``$_POST`` vars? */empty($_POST) || !is_array($_POST))
+if(/* No ``$_POST`` vars? */empty($_POST) || !is_array($_POST))
 	exit /* Exit now. There is nothing to process. */();
 
 $_p = (get_magic_quotes_gpc()) ? stripslashes_deep($_POST) : $_POST;
 $_p = trim_deep /* Now trim this array deeply. */($_p);
 
 $_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal® IPN server here. */ "216.113.188.202";
-/* See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>. */
+// See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>.
 
 $_p["custom"] = $config["custom"]; $_p["item_number"] = $config["item_number"];
 echo (trim(curlpsr($config["proxy_ipn_handler_url"], http_build_query($_p, null, "&"), 20, 20, array("REMOTE_ADDR: ".$_ip, "HTTP_X_FORWARDED_FOR: ".$_ip))));
 
 unset($_paypal_ipn_server_ip, $_ip);
-/*
----- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------*/
+
+// ---- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------
 function trim_deep($value = FALSE)
 	{
 		return is_array($value) ? array_map("trim_deep", $value) : trim((string)$value);

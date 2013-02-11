@@ -270,7 +270,7 @@ jQuery(document).ready (function($)
 							{
 								$(couponSection).hide /* Not accepting Coupons on this particular form. */ ();
 							}
-						else /* This is turned off by default for smoother loading. (via: display:none). */
+						else // This is turned off by default for smoother loading. (via: display:none).
 							$(couponSection).show /* OK. So we need to display this now. */ ();
 					}) ();
 
@@ -304,7 +304,7 @@ jQuery(document).ready (function($)
 													{
 														clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = null;
 
-														try /* Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response. */
+														try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
 															{
 																/* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
 																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
@@ -326,7 +326,7 @@ jQuery(document).ready (function($)
 						setTimeout( /* Trigger event handler with a brief delay. */function()
 							{
 								calculateTax(eventTrigger);
-							}, 10); /* Brief delay. */
+							}, 10); // Brief delay.
 					}
 
 				$(billingAddressSection + ' input#s2member-pro-authnet-sp-checkout-state').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);
@@ -478,7 +478,7 @@ jQuery(document).ready (function($)
 							{
 								$(couponSection).hide /* Not accepting Coupons on this particular form. */ ();
 							}
-						else /* This is turned off by default for smoother loading. (via: display:none). */
+						else // This is turned off by default for smoother loading. (via: display:none).
 							$(couponSection).show /* OK. So we need to display this now. */ ();
 					}) ();
 
@@ -512,7 +512,7 @@ jQuery(document).ready (function($)
 													{
 														clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = null;
 
-														try /* Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response. */
+														try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
 															{
 																/* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
 																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
@@ -534,7 +534,7 @@ jQuery(document).ready (function($)
 						setTimeout( /* Trigger event handler with a brief delay. */function()
 							{
 								calculateTax(eventTrigger);
-							}, 10); /* Brief delay. */
+							}, 10); // Brief delay.
 					}
 
 				$(billingAddressSection + ' input#s2member-pro-authnet-checkout-state').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);

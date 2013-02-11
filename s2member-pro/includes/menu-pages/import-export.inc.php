@@ -114,7 +114,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 								echo '</div>' . "\n";
 							}
-						else /* Otherwise, we use the standardized format for Importation.*/
+						else // Otherwise, we use the standardized format for Importation.
 							{
 								echo '<div class="ws-menu-page-group" title="User/Member CSV Importation"' . ((isset ($_POST["ws_plugin__s2member_pro_import_users"])) ? ' default-state="open"' : '') . '>' . "\n";
 

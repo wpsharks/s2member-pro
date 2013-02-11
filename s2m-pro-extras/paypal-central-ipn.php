@@ -51,7 +51,7 @@ $_p = trim_deep /* Now trim this array deeply. */($_p);
 if ((preg_match("/^(.+?)(?:\||$)/i", (string)@$_p["custom"], $_m) || preg_match("/~(.+?)~/i", (string)@$_p["rp_invoice_id"], $_m)) && !empty($config[$_m[1]]))
 	{
 		$_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal® IPN server here. */ "216.113.188.202";
-		/* See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>. */
+		// See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>.
 
 		echo (trim(curlpsr(($_url = $config[$_m[1]]), http_build_query($_p, null, "&"), 20, 20, array
 			(

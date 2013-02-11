@@ -45,13 +45,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_scripting_api_constants"
 			{
 				public function __construct ()
 					{
-						if (is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) /* Two versions here. */
+						if (is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) // Two versions here.
 							{
 								echo '<p><strong>S2MEMBER_PRO_VERSION</strong><br />This will always be a (string) with the current s2Member Pro version. Available since s2Member Pro v1.0. Dated versions began with s2Member Pro v110604.</p>' . "\n";
 
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
 							}
-						else /* Otherwise, we can display the standardized version of this information. */
+						else // Otherwise, we can display the standardized version of this information.
 							{
 								echo '<p><strong>S2MEMBER_PRO_VERSION</strong><br />This will always be a (string) with the current s2Member Pro version. Available since s2Member Pro v1.0. Dated versions began with s2Member Pro v110604.</p>' . "\n";
 								echo '<p>' . c_ws_plugin__s2member_utils_strings::highlight_php (file_get_contents (dirname (__FILE__) . "/code-samples/pro-version.x-php")) . '</p>' . "\n";

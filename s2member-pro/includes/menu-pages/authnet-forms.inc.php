@@ -192,7 +192,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr("1")), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level1_label"])), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/\/]$/", 'modify="1" /]', $ws_plugin__s2member_pro_temp_s); /* Adds modify="1" to the end of the Shortcode. */
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/\/]$/", 'modify="1" /]', $ws_plugin__s2member_pro_temp_s); // Adds modify="1" to the end of the Shortcode.
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />'."\n";
 						echo '</form>'."\n";
 						echo '</td>'."\n";

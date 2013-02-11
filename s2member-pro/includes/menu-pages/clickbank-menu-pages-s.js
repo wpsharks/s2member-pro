@@ -45,7 +45,7 @@ jQuery(document).ready (function($)
 
 						if /* Display Cron instructions. */ (val == 2)
 							$viaCron.show ()
-						else /* Hide instructions. */
+						else // Hide instructions.
 							$viaCron.hide ();
 					});
 			}
@@ -100,10 +100,10 @@ jQuery(document).ready (function($)
 
 						if /* In this case, we used the Fixed-Term configuration. */ (prodType === 'standard')
 							{
-								var trialPeriod = '0', trialTerm = 'D'; /* Just use the defaults in this case. */
+								var trialPeriod = '0', trialTerm = 'D'; // Just use the defaults in this case.
 								var regPeriod = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[0].replace (/[^0-9]/g, '');
 								var regTerm = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[1].replace (/[^A-Z]/g, '');
-								var regRecur = '0'; /* No, it is NOT recurring. */
+								var regRecur = '0'; // No, it is NOT recurring.
 							}
 						else if /* Here we use the ClickBank® Trial Period and Re-Bill configuration. */ (prodType === 'recurring')
 							{
@@ -111,7 +111,7 @@ jQuery(document).ready (function($)
 								var trialTerm = $('select#ws-plugin--s2member-pro-' + button + '-p1').val ().split ('-')[1].replace (/[^A-Z]/g, '');
 								var regPeriod = $('select#ws-plugin--s2member-pro-' + button + '-p3').val ().split ('-')[0].replace (/[^0-9]/g, '');
 								var regTerm = $('select#ws-plugin--s2member-pro-' + button + '-p3').val ().split ('-')[1].replace (/[^A-Z]/g, '');
-								var regRecur = '1'; /* Yes, it IS recurring. */
+								var regRecur = '1'; // Yes, it IS recurring.
 							}
 
 						var cCaps = $.trim ($.trim ($('input#ws-plugin--s2member-pro-' + button + '-ccaps').val ()).replace (/^(-all|-al|-a|-)[;,]*/gi, '').replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());

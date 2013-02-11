@@ -46,7 +46,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_s_api_c"))
 				public function __construct ()
 					{
 						if (is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) {}
-						else /* Otherwise, we can display the standardized version of this information. */
+						else // Otherwise, we can display the standardized version of this information.
 						{}
 					}
 			}
