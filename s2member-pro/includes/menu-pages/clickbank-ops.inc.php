@@ -126,7 +126,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 								echo '<th>' . "\n";
 								echo '<label for="ws-plugin--s2member-gateway-debug-logs">' . "\n";
 								echo 'Enable Logging Routines?<br />' . "\n";
-								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>' . "\n";
+								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>' . "\n";
 								echo '</label>' . "\n";
 								echo '</th>' . "\n";
 
@@ -151,7 +151,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">' . "\n";
 						echo '<h3>ClickBank® IPN v2.1 / Instant Payment Notifications (required)</h3>' . "\n";
-						echo '<p>Log into your ClickBank® account and navigate to this section:<br /><code>Account Settings -> My Site -> Advanced Tools</code></p>' . "\n";
+						echo '<p>Log into your ClickBank® account and navigate to this section:<br /><code>Account Settings -› My Site -› Advanced Tools</code></p>' . "\n";
 						echo '<p>Edit your IPN settings &amp; generate a Secret Key.</strong></p>' . "\n";
 						echo '<p>You\'ll need your IPN v2.1 URL, which is:<br /><code>' . esc_html (site_url ("/?s2member_pro_clickbank_notify=1")) . '</code></p>' . "\n";
 						echo '<p>Then provide s2Member with your Secret Key in the field below.</strong></p>' . "\n";
@@ -187,7 +187,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">' . "\n";
 						echo '<h3>ClickBank® Thank-You Page Integration (required)</h3>' . "\n";
-						echo '<p>Whenever you create <strong>Products</strong> at ClickBank®, you\'ll be asked to supply a Thank-You Page. This is where a Customer lands after they complete checkout. s2Member handles this dynamically, so you can use the same Thank-You Page for all of your ClickBank® Products. As long as you follow the instructions provided under: <em>s2Member -> ClickBank® Buttons</em>, s2Member will be able to handle Thank-You Page and IPN (Instant Payment Notifications) for you automatically. The integration from ClickBank® -> s2Member is seamless.</p>' . "\n";
+						echo '<p>Whenever you create <strong>Products</strong> at ClickBank®, you\'ll be asked to supply a Thank-You Page. This is where a Customer lands after they complete checkout. s2Member handles this dynamically, so you can use the same Thank-You Page for all of your ClickBank® Products. As long as you follow the instructions provided under: <em>s2Member -› ClickBank® Buttons</em>, s2Member will be able to handle Thank-You Page and IPN (Instant Payment Notifications) for you automatically. The integration from ClickBank® -› s2Member is seamless.</p>' . "\n";
 						echo '<p>You\'ll need the URL for your <a href="' . esc_attr (site_url ("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")) . '" target="_blank" rel="external">Thank-You Page</a>, which is:<br /><code>' . esc_html (site_url ("/?s2member_pro_clickbank_return=1")) . '</code></p>' . "\n";
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
@@ -237,7 +237,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they return from a successful signup at ClickBank®. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to register a Username for their Membership. You may also customize this further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -333,9 +333,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-sp-confirmation-email-section">' . "\n";
 						echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)</h3>' . "\n";
-						echo '<p>This email is sent to new Customers after they return from a successful purchase at ClickBank®, for Specific Post/Page Access. (see: <code>s2Member -> Restriction Options -> Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
+						echo '<p>This email is sent to new Customers after they return from a successful purchase at ClickBank®, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -430,7 +430,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 						echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"] == 2 && (!function_exists ("wp_cron") || !wp_get_schedule ("ws_plugin__s2member_auto_eot_system__schedule"))) ? '' : ' style="display:none;"') . '>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>' . esc_html (site_url ("/?s2member_auto_eot_system_via_cron=1")) . '</code></p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -494,7 +494,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 						echo '<option value="reversals"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "reversals") ? ' selected="selected"' : '') . '>Reversals (chargebacks ALWAYS trigger an immediate EOT action)</option>' . "\n";
 						echo '<option value="refunds,reversals"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '') . '>Refunds/Reversals (ALWAYS trigger an immediate EOT action)</option>' . "\n";
 						echo '</select><br />' . "\n";
-						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -> API Notifications -> Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.' . "\n";
+						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -› API Notifications -› Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";

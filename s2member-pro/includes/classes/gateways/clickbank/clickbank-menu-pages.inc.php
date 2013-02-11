@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_menu_pages"))
 				public static function clickbank_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_clerk_key"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_developer_key"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_secret_key"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -> ClickBank® Options</code> first. Once all of your ClickBank® Options have been configured, return to this page &amp; generate your ClickBank® Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› ClickBank® Options</code> first. Once all of your ClickBank® Options have been configured, return to this page &amp; generate your ClickBank® Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/clickbank-buttons.inc.php";
 

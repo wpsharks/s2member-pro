@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_id" id="ws-plugin--s2member-pro-google-merchant-id" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google® Checkout account, under: <code>Settings -> Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google® Checkout account, under: <code>Settings -› Integration</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -97,7 +97,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_key" id="ws-plugin--s2member-pro-google-merchant-key" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google® Checkout account, under: <code>Settings -> Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google® Checkout account, under: <code>Settings -› Integration</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 								echo '<th>' . "\n";
 								echo '<label for="ws-plugin--s2member-gateway-debug-logs">' . "\n";
 								echo 'Enable Logging Routines?<br />' . "\n";
-								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>' . "\n";
+								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>' . "\n";
 								echo '</label>' . "\n";
 								echo '</th>' . "\n";
 
@@ -158,7 +158,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-api-section">' . "\n";
 						echo '<h3>Google® API Callback v2.5 Integration (required)<br />aka: Google® IPN (Instant Payment Notifications)</h3>' . "\n";
-						echo '<p>Log into your Google® Checkout account and navigate to this section:<br /><code>Settings -> Integration</code></p>' . "\n";
+						echo '<p>Log into your Google® Checkout account and navigate to this section:<br /><code>Settings -› Integration</code></p>' . "\n";
 						echo '<p>Your Google® API v2.5 (Callback URL) is:<br /><code>' . esc_html (site_url ("/?s2member_pro_google_notify=1")) . '</code></p>' . "\n";
 						echo '<p>Set your API (Callback Content) to:<br /><code>Notification Serial Number</code>.</strong></p>' . "\n";
 						echo '<p>Only Post Digitally Signed Carts: <code>On</code></p>' . "\n";
@@ -166,7 +166,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
-						echo '<p>Now navigate to this section:<br /><code>Settings -> Preferences</code></p>' . "\n";
+						echo '<p>Now navigate to this section:<br /><code>Settings -› Preferences</code></p>' . "\n";
 						echo '<p>Set Order Processing to: <code>Authorize And Charge</code></p>' . "\n";
 						echo '</div>' . "\n";
 
@@ -178,7 +178,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they return from a successful signup at Google®. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to register a Username for their Membership. You may also customize this further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -274,9 +274,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-sp-confirmation-email-section">' . "\n";
 						echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)</h3>' . "\n";
-						echo '<p>This email is sent to new Customers after they return from a successful purchase at Google®, for Specific Post/Page Access. (see: <code>s2Member -> Restriction Options -> Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
+						echo '<p>This email is sent to new Customers after they return from a successful purchase at Google®, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -333,7 +333,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '<ul>' . "\n";
 						echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>' . "\n";
 						echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>' . "\n";
-						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase ( always generated by Google® ). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google® Checkout.\'); return false;">?</a> ]</li>' . "\n";
+						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase (always generated by Google®). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google® Checkout.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%amount%%</code> = The full Amount that you charged for Specific Post/Page Access. This value will <code>always be > 0</code>.</li>' . "\n";
 						echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased Specific Post/Page Access.</li>' . "\n";
 						echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who purchased Specific Post/Page Access.</li>' . "\n";
@@ -371,7 +371,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"] == 2 && (!function_exists ("wp_cron") || !wp_get_schedule ("ws_plugin__s2member_auto_eot_system__schedule"))) ? '' : ' style="display:none;"') . '>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>' . esc_html (site_url ("/?s2member_auto_eot_system_via_cron=1")) . '</code></p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -435,7 +435,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '<option value="reversals"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "reversals") ? ' selected="selected"' : '') . '>Reversals (chargebacks ALWAYS trigger an immediate EOT action)</option>' . "\n";
 						echo '<option value="refunds,reversals"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '') . '>Refunds/Reversals (ALWAYS trigger an immediate EOT action)</option>' . "\n";
 						echo '</select><br />' . "\n";
-						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -> API Notifications -> Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.' . "\n";
+						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -› API Notifications -› Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";

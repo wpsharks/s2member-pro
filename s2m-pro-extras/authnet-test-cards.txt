@@ -21,4 +21,4 @@
 http://www.s2member.com/authorize.net-test-accounts
 
 * s2Member must be configured for Authorize.Net® Test/Sandbox Mode.
-In your Dashboard, see: `s2Member -> Authorize.Net® Options`.
+In your Dashboard, see: `s2Member -› Authorize.Net® Options`.

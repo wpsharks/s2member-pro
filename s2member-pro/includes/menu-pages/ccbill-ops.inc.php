@@ -64,7 +64,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 						echo '<h3>ccBill® Account Details (required)</h3>'."\n";
 						echo '<p><a href="http://www.s2member.com/ccbill" target="_blank" rel="external">ccBill®</a> is a great choice when you need to process transactions discreetly on an adult-oriented site. Drawing on its years of experience and proven payment processing platform, ccBill® has a solution that will not only meet the requirements of your consumers, it will also help address the specific needs of your business.</p>'."\n";
 						echo '<p>s2Member has been integrated with ccBill® for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a ccBill® Client Account. Once you have an account, all of the details below can be generated from inside of your ccBill® Client account, or by contacting ccBill® via live chat. If you need further assistance, please check their <a href="http://www.s2member.com/ccbill-help" target="_blank" rel="external">help section</a>.</p>'."\n";
-						echo '<p><em><strong>*Important*</strong> User Management needs to be turned <code>off</code> in your ccBill® account. s2Member\'s integration with ccBill® does NOT require ccBill® to manage Usernames/Passwords. Instead, s2Member needs to be given exclusive permission to handle this for you. In your ccBill® account, see: <code>Account Admin -> User Management</code>. Turn this <code>off</code>, and choose: <code>Do NOT collect Usernames/Passwords</code>. You will also want to remove Username/Password references in the <code>APPROVAL</code> Email Receipt configured in your ccBill® account. In your ccBill® account, see: <code>Account Admin -> Custom Emails</code>.</em></p>'."\n";
+						echo '<p><em><strong>*Important*</strong> User Management needs to be turned <code>off</code> in your ccBill® account. s2Member\'s integration with ccBill® does NOT require ccBill® to manage Usernames/Passwords. Instead, s2Member needs to be given exclusive permission to handle this for you. In your ccBill® account, see: <code>Account Admin -› User Management</code>. Turn this <code>off</code>, and choose: <code>Do NOT collect Usernames/Passwords</code>. You will also want to remove Username/Password references in the <code>APPROVAL</code> Email Receipt configured in your ccBill® account. In your ccBill® account, see: <code>Account Admin -› Custom Emails</code>.</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -115,7 +115,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<td>'."\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_ccbill_form_name" id="ws-plugin--s2member-pro-ccbill-form-name" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]).'" /><br />'."\n";
-						echo 'Ex: <code>921cc</code>. Inside your ccBill® Client account, go to <code>Account Admin -> Form Admin -> Create New Form</code>. Whenever you create the new Form, you will need to configure ccBill® Pricing for this Form as "Dynamic" (very important). This one Dynamic Pricing Form will be used by s2Member for all Membership purchases. If ccBill® asks you to supply a textual description, we suggest something very general like: <code>'.esc_html($_SERVER["HTTP_HOST"]).'</code>.'."\n";
+						echo 'Ex: <code>921cc</code>. Inside your ccBill® Client account, go to <code>Account Admin -› Form Admin -› Create New Form</code>. Whenever you create the new Form, you will need to configure ccBill® Pricing for this Form as "Dynamic" (very important). This one Dynamic Pricing Form will be used by s2Member for all Membership purchases. If ccBill® asks you to supply a textual description, we suggest something very general like: <code>'.esc_html($_SERVER["HTTP_HOST"]).'</code>.'."\n";
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";
@@ -144,7 +144,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 								echo '<th>'."\n";
 								echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
 								echo 'Enable Logging Routines?<br />'."\n";
-								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+								echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
 								echo '</label>'."\n";
 								echo '</th>'."\n";
 
@@ -169,7 +169,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccbill-datalink-section">'."\n";
 						echo '<h3>ccBill® DataLink Integration (required)</h3>'."\n";
-						echo '<p>Inside your ccBill® Client account, go to <code>Account Info Tab -> DataLink Service Suite -> Add User</code>. If ccBill® asks you for an IP Address/Range, use: <code>'.esc_html($_SERVER["SERVER_ADDR"]).'</code> (this is your server\'s IP address). <em>*Note* If you\'re on shared hosting, or you\'re hosted on a cloud computing model, such as MediaTemple® (gs), or the Rackspace® Cloud; your server\'s IP address (<code>'.esc_html($_SERVER["SERVER_ADDR"]).'</code>) may change dynamically. So in these cases, you will need a true IP address "range". This information (i.e. a range of IP addresses) should be obtained by contacting your hosting facility.</em></p>'."\n";
+						echo '<p>Inside your ccBill® Client account, go to <code>Account Info Tab -› DataLink Service Suite -› Add User</code>. If ccBill® asks you for an IP Address/Range, use: <code>'.esc_html($_SERVER["SERVER_ADDR"]).'</code> (this is your server\'s IP address). <em>*Note* If you\'re on shared hosting, or you\'re hosted on a cloud computing model, such as MediaTemple® (gs), or the Rackspace® Cloud; your server\'s IP address (<code>'.esc_html($_SERVER["SERVER_ADDR"]).'</code>) may change dynamically. So in these cases, you will need a true IP address "range". This information (i.e. a range of IP addresses) should be obtained by contacting your hosting facility.</em></p>'."\n";
 						echo '<p><em><strong>*Note*</strong> By default, s2Member is allowed to pull details related to any Subscription rebill attempts, Subscription expirations, refunds, and/or chargebacks. However, s2Member is NOT allowed to pull details related to customer-initiated Subscription cancellations. If you want s2Member to handle customer-initiated cancellations (i.e. to terminate access automatically, and at the appropriate time), you will need approval from ccBill®. Please contact ccBill® to enable DataLink "cancellations". If you\'re approved, you will also need to enable this feature in the options below.</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
@@ -187,7 +187,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<td>'."\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_ccbill_dl_user" id="ws-plugin--s2member-pro-ccbill-dl-user" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_dl_user"]).'" /><br />'."\n";
-						echo 'Ex: <code>s2member</code>. Inside your ccBill® Client account, go to <code>Account Info Tab -> DataLink Service Suite -> Add User</code>.</em>'."\n";
+						echo 'Ex: <code>s2member</code>. Inside your ccBill® Client account, go to <code>Account Info Tab -› DataLink Service Suite -› Add User</code>.</em>'."\n";
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";
@@ -237,7 +237,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccbill-auto-return-section">'."\n";
 						echo '<h3>ccBill® Approval/Denial URLs (required)<br />aka: ccBill® Auto-Return Page Integration</h3>'."\n";
-						echo '<p>Log into your ccBill® Client account and navigate to this section:<br /><code>Account Admin -> Basic</code></p>'."\n";
+						echo '<p>Log into your ccBill® Client account and navigate to this section:<br /><code>Account Admin -› Basic</code></p>'."\n";
 						echo '<p>Your <a href="'.esc_attr(site_url("/?s2member_pro_ccbill_return&s2member_paypal_return=1&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">ccBill® Approval URL</a> is:<br /><code>'.esc_html(site_url("/?s2member_pro_ccbill_return=1")).'</code></p>'."\n";
 						echo '<p>Your ccBill® Denial URL is:<br /><code>'.esc_html(site_url("/?s2member_pro_ccbill_return=0")).'</code></p>'."\n";
 
@@ -286,7 +286,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccbill-bg-post-section">'."\n";
 						echo '<h3>ccBill® Background Post Integration (required)<br />aka: ccBill® IPN (Instant Payment Notifications)</h3>'."\n";
-						echo '<p>Log into your ccBill® Client account and navigate to this section:<br /><code>Account Admin -> Advanced</code></p>'."\n";
+						echo '<p>Log into your ccBill® Client account and navigate to this section:<br /><code>Account Admin -› Advanced</code></p>'."\n";
 						echo '<p>Your ccBill® Approval Post URL is:<br /><code>'.esc_html(site_url("/?s2member_pro_ccbill_notify=1")).'</code></p>'."\n";
 						echo '<p>Your ccBill® Denial Post URL is:<br /><code>'.esc_html(site_url("/?s2member_pro_ccbill_notify=0")).'</code></p>'."\n";
 						echo '</div>'."\n";
@@ -298,9 +298,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-signup-confirmation-email-section">'."\n";
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)</h3>'."\n";
 						echo '<p>This email is sent to new Customers after they return from a successful signup at ccBill®. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to register a Username for their Membership. You may also customize this further, by providing details that are specifically geared to your site.</p>'."\n";
-						echo '<p><em><strong>*ccBill® Email Receipts (important change required)*</strong> In addition to this email, ccBill® also sends your Customer an <code>APPROVAL</code> Receipt. Inside this default Email Receipt that ccBill® sends to each of your Customers, there is a small section that includes a Username/Password; which is normally assigned by ccBill®. However, s2Member\'s integration requires that ccBill® User Management be turned <code>off</code> (i.e. s2Member deals with this instead) ... so you WILL need to remove the Username/Password section from the <code>APPROVAL</code> email inside your ccBill® account. In your ccBill® account, see: <code>Account Admin -> Custom Emails</code>.</em></p>'."\n";
+						echo '<p><em><strong>*ccBill® Email Receipts (important change required)*</strong> In addition to this email, ccBill® also sends your Customer an <code>APPROVAL</code> Receipt. Inside this default Email Receipt that ccBill® sends to each of your Customers, there is a small section that includes a Username/Password; which is normally assigned by ccBill®. However, s2Member\'s integration requires that ccBill® User Management be turned <code>off</code> (i.e. s2Member deals with this instead) ... so you WILL need to remove the Username/Password section from the <code>APPROVAL</code> email inside your ccBill® account. In your ccBill® account, see: <code>Account Admin -› Custom Emails</code>.</em></p>'."\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+						echo '<p><em class="ws-menu-page-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -396,10 +396,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-sp-confirmation-email-section">'."\n";
 						echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)</h3>'."\n";
-						echo '<p>This email is sent to new Customers after they return from a successful purchase at ccBill®, for Specific Post/Page Access. (see: <code>s2Member -> Restriction Options -> Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
-						echo '<p><em><strong>*ccBill® Email Receipts (important change required)*</strong> In addition to this email, ccBill® also sends your Customer an <code>APPROVAL</code> Receipt. Inside this default Email Receipt that ccBill® sends to each of your Customers, there is a small section that includes a Username/Password; which is normally assigned by ccBill®. However, s2Member\'s integration requires that ccBill® User Management be turned <code>off</code> (i.e. s2Member deals with Specific Post/Page authentication differently) ... so you WILL need to remove the Username/Password section from the <code>APPROVAL</code> email inside your ccBill® account. In your ccBill® account, see: <code>Account Admin -> Custom Emails</code>.</em></p>'."\n";
+						echo '<p>This email is sent to new Customers after they return from a successful purchase at ccBill®, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+						echo '<p><em><strong>*ccBill® Email Receipts (important change required)*</strong> In addition to this email, ccBill® also sends your Customer an <code>APPROVAL</code> Receipt. Inside this default Email Receipt that ccBill® sends to each of your Customers, there is a small section that includes a Username/Password; which is normally assigned by ccBill®. However, s2Member\'s integration requires that ccBill® User Management be turned <code>off</code> (i.e. s2Member deals with Specific Post/Page authentication differently) ... so you WILL need to remove the Username/Password section from the <code>APPROVAL</code> email inside your ccBill® account. In your ccBill® account, see: <code>Account Admin -› Custom Emails</code>.</em></p>'."\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -494,7 +494,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 
 						echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"] == 2 && (!function_exists("wp_cron") || !wp_get_schedule("ws_plugin__s2member_auto_eot_system__schedule"))) ? '' : ' style="display:none;"').'>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>'.esc_html(site_url("/?s2member_auto_eot_system_via_cron=1")).'</code></p>'."\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -> PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -› PayPal® Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -558,7 +558,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 						echo '<option value="reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "reversals") ? ' selected="selected"' : '').'>Reversals (chargebacks ALWAYS trigger an immediate EOT action)</option>'."\n";
 						echo '<option value="refunds,reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '').'>Refunds/Reversals (ALWAYS trigger an immediate EOT action)</option>'."\n";
 						echo '</select><br />'."\n";
-						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -> API Notifications -> Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.'."\n";
+						echo 'This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -› API Notifications -› Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.'."\n";
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";

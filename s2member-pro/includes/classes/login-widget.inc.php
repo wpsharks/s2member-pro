@@ -272,7 +272,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						echo '<textarea id="'.esc_attr($this->get_field_id("logged_in_code")).'" name="'.esc_attr($this->get_field_name("logged_in_code")).'" rows="1" cols="1" class="widefat" style="height:50px;">'.format_to_edit($options["logged_in_code"]).'</textarea>'."\n";
 
 						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<div style="margin:15px 0 15px 0; height:1px; line-height:1px; background:#CCCCCC;"></div>'."\n" : '';
-						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<em>Or include this widget dynamically via PHP:<br />'.c_ws_plugin__s2member_utils_strings::highlight_php('<?php echo s2member_pro_login_widget(); ?>').'<br /><small>See: <code>s2Member -> API Scripting -> Pro Login Widget</code></small></em>'."\n" : '';
+						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<em>Or include this widget dynamically via PHP:<br />'.c_ws_plugin__s2member_utils_strings::highlight_php('<?php echo s2member_pro_login_widget(); ?>').'<br /><small>See: <code>s2Member -› API Scripting -› Pro Login Widget</code></small></em>'."\n" : '';
 
 						do_action("ws_plugin__s2member_pro_login_widget_after_form", get_defined_vars(), $this);
 

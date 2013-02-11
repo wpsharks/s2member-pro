@@ -185,7 +185,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 											}
 										else // Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank® API to receive data for new orders. This is here in case that happens.
 											{
-												$clickbank["s2member_log"][] = "Unable to obtain API vars. The ClickBank® API may NOT have data for this order yet. Or, your ClickBank® API Keys are NOT configured properly under `s2Member -> ClickBank® Options`.";
+												$clickbank["s2member_log"][] = "Unable to obtain API vars. The ClickBank® API may NOT have data for this order yet. Or, your ClickBank® API Keys are NOT configured properly under `s2Member -› ClickBank® Options`.";
 												$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording ``$_POST`` + ``$_GET`` vars for analysis and debugging.
 
 												$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor with `proxy_use` ( `ty-email` ).";
@@ -205,7 +205,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 									}
 								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
-										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -> ClickBank® Options.";
+										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -› ClickBank® Options.";
 										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank® over an HTTPS connection.";
 										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
 										$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
@@ -213,7 +213,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 										$clickbank["s2member_log"][] = "Redirecting Customer to the Home Page, due to an error that occurred.";
 
 										echo '<script type="text/javascript">'."\n";
-										echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unable to verify POST vars. Please contact Support for assistance.\n\nThis is most likely related to an invalid ClickBank® configuration. If you are the site owner, please check: s2Member -> ClickBank® Options.", "s2member-front", "s2member"))."');"."\n";
+										echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unable to verify POST vars. Please contact Support for assistance.\n\nThis is most likely related to an invalid ClickBank® configuration. If you are the site owner, please check: s2Member -› ClickBank® Options.", "s2member-front", "s2member"))."');"."\n";
 										echo "window.location = '".c_ws_plugin__s2member_utils_strings::esc_js_sq(home_url("/"))."';";
 										echo '</script>'."\n";
 									}
