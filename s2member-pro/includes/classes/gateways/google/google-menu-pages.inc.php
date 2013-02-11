@@ -4,16 +4,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -106,16 +106,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_menu_pages"))
 						if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) // Logging enabled?
 							{
 								if (!is_dir ($logs_dir)) // If the security-enabled logs directory does not exist yet.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The security-enabled logs directory ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code> ) does not exist. Please create this directory manually &amp; make it writable ( chmod 777 ).', true);
+									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The security-enabled logs directory (<code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code>) does not exist. Please create this directory manually &amp; make it writable (chmod 777).', true);
 
 								else if (!is_writable ($logs_dir)) // If the logs directory is not writable yet.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Permissions error. The security-enabled logs directory ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code> ) is not writable. Please make this directory writable ( chmod 777 ).', true);
+									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Permissions error. The security-enabled logs directory (<code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($logs_dir)) . '</code>) is not writable. Please make this directory writable (chmod 777).', true);
 
 								if (!file_exists ($htaccess)) // If the .htaccess file has not been created yet.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The .htaccess protection file ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code> ) does not exist. Please create this file manually. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
+									c_ws_plugin__s2member_admin_notices::display_admin_notice ('The .htaccess protection file (<code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code>) does not exist. Please create this file manually. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
 
 								else if (!preg_match ("/deny from all/i", file_get_contents ($htaccess))) // Else if the .htaccess file does not offer the required protection.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Unprotected. The .htaccess protection file ( <code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code> ) does not contain <code>deny from all</code>. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
+									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Unprotected. The .htaccess protection file (<code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code>) does not contain <code>deny from all</code>. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
 							}
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/google-ops.inc.php";

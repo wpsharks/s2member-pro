@@ -4,27 +4,27 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <form id="s2member-pro-authnet-cancellation-form" class="s2member-pro-authnet-form s2member-pro-authnet-cancellation-form" method="post" action="%%action%%">
-	
-	<!-- Response Section ( this is auto-filled after form submission ). -->
+
+	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-authnet-cancellation-form-response-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-response-section s2member-pro-authnet-cancellation-form-response-section">
 		<div id="s2member-pro-authnet-cancellation-form-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-cancellation-form-div s2member-pro-authnet-form-response-div s2member-pro-authnet-cancellation-form-response-div">
 			%%response%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Cancellation Description ( this will display details about what they're cancelling ). -->
+
+	<!-- Cancellation Description (this will display details about what they're cancelling). -->
 	<div id="s2member-pro-authnet-cancellation-form-description-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-description-section s2member-pro-authnet-cancellation-form-description-section">
 		<div id="s2member-pro-authnet-cancellation-form-description-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-cancellation-form-div s2member-pro-authnet-form-description-div s2member-pro-authnet-cancellation-form-description-div">
 			%%description%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
+
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
-	
-	<!-- Confirm Cancellation ( this holds the submit button, and also some dynamic hidden input variables ). -->
+
+	<!-- Confirm Cancellation (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-cancellation-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-cancellation-form-submission-section">
 		<div id="s2member-pro-authnet-cancellation-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-cancellation-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-cancellation-form-submission-section-title">
 			<?php echo _x ("Confirm Cancellation", "s2member-front", "s2member"); ?>

@@ -4,42 +4,42 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <form id="s2member-pro-authnet-sp-checkout-form" class="s2member-pro-authnet-form s2member-pro-authnet-sp-checkout-form" method="post" action="%%action%%">
-	
-	<!-- Response Section ( this is auto-filled after form submission ). -->
+
+	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-response-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-response-section s2member-pro-authnet-sp-checkout-form-response-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-response-div s2member-pro-authnet-sp-checkout-form-response-div">
 			%%response%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Checkout Description ( this is the desc="" attribute from your Shortcode ). -->
+
+	<!-- Checkout Description (this is the desc="" attribute from your Shortcode). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-description-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-description-section s2member-pro-authnet-sp-checkout-form-description-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-description-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-description-div s2member-pro-authnet-sp-checkout-form-description-div">
 			%%description%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
+
 	<!-- Coupon Code ( this will ONLY be displayed if your Shortcode has this attribute: accept_coupons="1" ). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-coupon-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-coupon-section s2member-pro-authnet-sp-checkout-form-coupon-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-coupon-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-sp-checkout-form-section-title s2member-pro-authnet-form-coupon-section-title s2member-pro-authnet-sp-checkout-form-coupon-section-title">
 			<?php echo _x ("Coupon Code", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-sp-checkout-form-coupon-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-coupon-response-div s2member-pro-authnet-sp-checkout-form-coupon-response-div">
-			%%coupon_response%% <!-- A Coupon response ( w/Discounts ) will be displayed here; based on the Coupon Code that was entered. -->
+			%%coupon_response%% <!-- A Coupon response (w/Discounts) will be displayed here; based on the Coupon Code that was entered. -->
 		</div>
 		<div id="s2member-pro-authnet-sp-checkout-form-coupon-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-coupon-div s2member-pro-authnet-sp-checkout-form-coupon-div">
 			<label for="s2member-pro-authnet-sp-checkout-coupon" id="s2member-pro-authnet-sp-checkout-form-coupon-label" class="s2member-pro-authnet-form-coupon-label s2member-pro-authnet-sp-checkout-form-coupon-label">
-				<span><?php echo _x ("Have a Coupon Code? ( please enter it here )", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x ("Have a Coupon Code? (please enter it here)", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_authnet_sp_checkout[coupon]" id="s2member-pro-authnet-sp-checkout-coupon" class="s2member-pro-authnet-coupon s2member-pro-authnet-sp-checkout-coupon" value="%%coupon_value%%" tabindex="1" />
 			</label>
 			<input type="button" id="s2member-pro-authnet-sp-checkout-coupon-apply" class="s2member-pro-authnet-coupon-apply s2member-pro-authnet-sp-checkout-coupon-apply" value="<?php echo esc_attr (_x ("Apply Coupon", "s2member-front", "s2member")); ?>" tabindex="-1" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Contact Info/Details ( Name, Email ). -->
+
+	<!-- Contact Info/Details (Name, Email). -->
 	<!-- Some of this information will be prefilled automatically when/if a User/Member is already logged-in. -->
 	<!-- Name fields will NOT be hidden automatically here; even if your Registration/Profile Field options dictate this behavior. -->
 	<div id="s2member-pro-authnet-sp-checkout-form-registration-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-registration-section s2member-pro-authnet-sp-checkout-form-registration-section">
@@ -66,8 +66,8 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Billing Method ( Customers can use a Credit/Debit card only ). -->
+
+	<!-- Billing Method (Customers can use a Credit/Debit card only). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-billing-method-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-billing-method-section s2member-pro-authnet-sp-checkout-form-billing-method-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-billing-method-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-sp-checkout-form-section-title s2member-pro-authnet-form-billing-method-section-title s2member-pro-authnet-sp-checkout-form-billing-method-section-title">
 			<?php echo _x ("Billing Method", "s2member-front", "s2member"); ?>
@@ -77,33 +77,33 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-sp-checkout-form-card-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-card-number-div s2member-pro-authnet-sp-checkout-form-card-number-div">
 			<label for="s2member-pro-authnet-sp-checkout-card-number" id="s2member-pro-authnet-sp-checkout-form-card-number-label" class="s2member-pro-authnet-form-card-number-label s2member-pro-authnet-sp-checkout-form-card-number-label">
-				<span><?php echo _x ("Card Number ( no dashes or spaces )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Number (no dashes or spaces)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_sp_checkout[card_number]" id="s2member-pro-authnet-sp-checkout-card-number" class="s2member-pro-authnet-card-number s2member-pro-authnet-sp-checkout-card-number" value="%%card_number_value%%" tabindex="110" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-sp-checkout-form-card-expiration-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-card-expiration-div s2member-pro-authnet-sp-checkout-form-card-expiration-div">
 			<label for="s2member-pro-authnet-sp-checkout-card-expiration" id="s2member-pro-authnet-sp-checkout-form-card-expiration-label" class="s2member-pro-authnet-form-card-expiration-label s2member-pro-authnet-sp-checkout-form-card-expiration-label">
-				<span><?php echo _x ("Card Expiration Date ( mm/yyyy )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_sp_checkout[card_expiration]" id="s2member-pro-authnet-sp-checkout-card-expiration" class="s2member-pro-authnet-card-expiration s2member-pro-authnet-sp-checkout-card-expiration" value="%%card_expiration_value%%" tabindex="120" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-sp-checkout-form-card-verification-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-card-verification-div s2member-pro-authnet-sp-checkout-form-card-verification-div">
 			<label for="s2member-pro-authnet-sp-checkout-card-verification" id="s2member-pro-authnet-sp-checkout-form-card-verification-label" class="s2member-pro-authnet-form-card-verification-label s2member-pro-authnet-sp-checkout-form-card-verification-label">
-				<span><?php echo _x ("Card Verification Code ( 3-4 digits )", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
+				<span><?php echo _x ("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_sp_checkout[card_verification]" id="s2member-pro-authnet-sp-checkout-card-verification" class="s2member-pro-authnet-card-verification s2member-pro-authnet-sp-checkout-card-verification" value="%%card_verification_value%%" tabindex="130" />
 			</label>
 		</div>
 		<!-- This is displayed only when Maestro®/Solo® cards are selected as the Payment Method. -->
 		<div id="s2member-pro-authnet-sp-checkout-form-card-start-date-issue-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-card-start-date-issue-number-div s2member-pro-authnet-sp-checkout-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-authnet-sp-checkout-card-start-date-issue-number" id="s2member-pro-authnet-sp-checkout-form-card-start-date-issue-number-label" class="s2member-pro-authnet-form-card-start-date-issue-number-label s2member-pro-authnet-sp-checkout-form-card-start-date-issue-number-label">
-				<span><?php echo _x ("Card Start Date ( mm/yyyy ), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_sp_checkout[card_start_date_issue_number]" id="s2member-pro-authnet-sp-checkout-card-start-date-issue-number" class="s2member-pro-authnet-card-start-date-issue-number s2member-pro-authnet-sp-checkout-card-start-date-issue-number" value="%%card_start_date_issue_number_value%%" tabindex="140" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Billing Address ( hidden dynamically when/if no Payment Method is selected yet ). -->
+
+	<!-- Billing Address (hidden dynamically when/if no Payment Method is selected yet). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-billing-address-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-billing-address-section s2member-pro-authnet-sp-checkout-form-billing-address-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-billing-address-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-sp-checkout-form-section-title s2member-pro-authnet-form-billing-address-section-title s2member-pro-authnet-sp-checkout-form-billing-address-section-title">
 			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
@@ -145,11 +145,11 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
+
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
-	
-	<!-- Checkout Now ( this holds the submit button, and also some dynamic hidden input variables ). -->
+
+	<!-- Checkout Now (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-sp-checkout-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-sp-checkout-form-submission-section">
 		<div id="s2member-pro-authnet-sp-checkout-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-sp-checkout-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-sp-checkout-form-submission-section-title">
 			<?php echo _x ("Checkout Now", "s2member-front", "s2member"); ?>

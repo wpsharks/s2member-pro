@@ -2,11 +2,11 @@
 	Visa: 4444444444446666
 	MasterCard: 5555555555557777
 
---------- Denial ( risk ) test card numbers ---------
+--------- Denial (risk) test card numbers ---------
 	Visa: 4444444444444422
 	MasterCard: 5555555555559922
 
---------- Denial ( banking ) test card numbers ---------
+--------- Denial (banking) test card numbers ---------
 	Visa: 4444444444444455
 	MasterCard: 5555555555559955
 

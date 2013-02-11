@@ -1,19 +1,19 @@
 <?php
 /**
-* Menu page for s2Member Pro ( Scripting, Pro Login Widget ).
+* Menu page for s2Member Pro (Scripting, Pro Login Widget).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_scripting_api_login_widget"))
 	{
 		/**
-		* Menu page for s2Member Pro ( Scripting, Pro Login Widget ).
+		* Menu page for s2Member Pro (Scripting, Pro Login Widget).
 		*
 		* @package s2Member\Menu_Pages
 		* @since 110531
@@ -50,8 +50,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_scripting_api_login_widg
 								echo '<div class="ws-menu-page-group" title="Pro Login Widget via PHP">' . "\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-api-login-widget-section">' . "\n";
-								echo '<h3>Pro Login Widget via PHP Tag ( some scripting required )</h3>' . "\n";
-								echo '<p>With s2Member Pro installed, you have access to the s2Member Pro Login Widget. This is made available in your Dashboard under: <code>Appearance -> Widgets</code>. Very simple to use; just drag &amp; drop ( that\'s it ). For developers though, sometimes it is necessary to include the Pro Login Widget in non-widgetized sections of a WordPress® theme; or even into another plugin that you run in concert with s2Member. You can use this PHP tag to build the Pro Login Widget dynamically: <code>' . c_ws_plugin__s2member_utils_strings::highlight_php ('<?php echo s2member_pro_login_widget(); ?>') . '</code></p>' . "\n";
+								echo '<h3>Pro Login Widget via PHP Tag (some scripting required)</h3>' . "\n";
+								echo '<p>With s2Member Pro installed, you have access to the s2Member Pro Login Widget. This is made available in your Dashboard under: <code>Appearance -> Widgets</code>. Very simple to use; just drag &amp; drop (that\'s it). For developers though, sometimes it is necessary to include the Pro Login Widget in non-widgetized sections of a WordPress® theme; or even into another plugin that you run in concert with s2Member. You can use this PHP tag to build the Pro Login Widget dynamically: <code>' . c_ws_plugin__s2member_utils_strings::highlight_php ('<?php echo s2member_pro_login_widget(); ?>') . '</code></p>' . "\n";
 								echo '<p>The Pro Login Widget can also be configured with an <em>optional</em> array of <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_pro_login_widget()" target="_blank" rel="external">configuration parameters</a>.</p>' . "\n";
 
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";

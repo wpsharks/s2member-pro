@@ -7,16 +7,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -27,7 +27,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member
@@ -91,11 +91,11 @@ if(!function_exists("ws_plugin__s2member_pro_default_options"))
 				$pro_default_options = array( // Defaults for the Pro Module.
 
 				"pro_signup_email_recipients" => '"%%full_name%%" <%%payer_email%%>',
-				"pro_signup_email_subject" => _x("Congratulations! ( your membership has been approved )", "s2member-front", "s2member"),
+				"pro_signup_email_subject" => _x("Congratulations! (your membership has been approved)", "s2member-front", "s2member"),
 				"pro_signup_email_message" => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: $%%%%initial%%%%\nRecurring charges: $%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),
 
 				"pro_sp_email_recipients" => '"%%full_name%%" <%%payer_email%%>',
-				"pro_sp_email_subject" => _x("Thank You! ( instructions for access )", "s2member-front", "s2member"),
+				"pro_sp_email_subject" => _x("Thank You! (instructions for access)", "s2member-front", "s2member"),
 				"pro_sp_email_message" => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: $%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", "s2member-front", "s2member"), get_bloginfo("name")),
 
 				"pro_coupon_codes" => "", /* There are NO Coupon Codes by default. */ "pro_default_tax" => "0.0%", "pro_tax_rates" => "",

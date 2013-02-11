@@ -4,16 +4,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Gateways
@@ -53,7 +53,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				*/
 				public static function available_gateways () // Payment Gateways available.
 					{
-						$gateways = array ("alipay" => "<strong>AliPay®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net®</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank®</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google® Checkout</strong> <em>( w/ Buttons )</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal® Website Payments Pro</strong> <em>( w/ Pro Forms )</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
+						$gateways = array ("alipay" => "<strong>AliPay®</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net®</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill®</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank®</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google® Checkout</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal® Website Payments Pro</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
 
 						return apply_filters ("ws_plugin__s2member_pro_available_gateways", $gateways, get_defined_vars ());
 					}
@@ -72,7 +72,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 					{
 						$available_gateways = array_keys (c_ws_plugin__s2member_pro_gateways::available_gateways ());
 
-						foreach (($others = array ("alipay" => "AliPay® ( code: alipay )", "authnet" => "Authorize.Net® ( code: authnet )", "ccbill" => "ccBill® ( code: ccbill )", "clickbank" => "ClickBank® ( code: clickbank )", "google" => "Google® Checkout ( code: google )")) as $other => $gateway)
+						foreach (($others = array ("alipay" => "AliPay® (code: alipay)", "authnet" => "Authorize.Net® (code: authnet)", "ccbill" => "ccBill® (code: ccbill)", "clickbank" => "ClickBank® (code: clickbank)", "google" => "Google® Checkout (code: google)")) as $other => $gateway)
 							if (!in_array ($other, $available_gateways))
 								unset($others[$other]);
 

@@ -4,24 +4,24 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <form id="s2member-pro-authnet-update-form" class="s2member-pro-authnet-form s2member-pro-authnet-update-form" method="post" action="%%action%%">
-	
-	<!-- Response Section ( this is auto-filled after form submission ). -->
+
+	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-authnet-update-form-response-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-response-section s2member-pro-authnet-update-form-response-section">
 		<div id="s2member-pro-authnet-update-form-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-response-div s2member-pro-authnet-update-form-response-div">
 			%%response%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Checkout Description ( this is the desc="" attribute from your Shortcode ). -->
+
+	<!-- Checkout Description (this is the desc="" attribute from your Shortcode). -->
 	<div id="s2member-pro-authnet-update-form-description-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-description-section s2member-pro-authnet-update-form-description-section">
 		<div id="s2member-pro-authnet-update-form-description-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-description-div s2member-pro-authnet-update-form-description-div">
 			%%description%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Billing Method ( Customers can use a Credit/Debit card only ). -->
+
+	<!-- Billing Method (Customers can use a Credit/Debit card only). -->
 	<div id="s2member-pro-authnet-update-form-billing-method-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-billing-method-section s2member-pro-authnet-update-form-billing-method-section">
 		<div id="s2member-pro-authnet-update-form-billing-method-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-billing-method-section-title s2member-pro-authnet-update-form-billing-method-section-title">
 			<?php echo _x ("New Billing Method", "s2member-front", "s2member"); ?>
@@ -31,33 +31,33 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-update-form-card-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-number-div s2member-pro-authnet-update-form-card-number-div">
 			<label for="s2member-pro-authnet-update-card-number" id="s2member-pro-authnet-update-form-card-number-label" class="s2member-pro-authnet-form-card-number-label s2member-pro-authnet-update-form-card-number-label">
-				<span><?php echo _x ("Card Number ( no dashes or spaces )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Number (no dashes or spaces)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_number]" id="s2member-pro-authnet-update-card-number" class="s2member-pro-authnet-card-number s2member-pro-authnet-update-card-number" value="%%card_number_value%%" tabindex="20" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-card-expiration-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-expiration-div s2member-pro-authnet-update-form-card-expiration-div">
 			<label for="s2member-pro-authnet-update-card-expiration" id="s2member-pro-authnet-update-form-card-expiration-label" class="s2member-pro-authnet-form-card-expiration-label s2member-pro-authnet-update-form-card-expiration-label">
-				<span><?php echo _x ("Card Expiration Date ( mm/yyyy )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_expiration]" id="s2member-pro-authnet-update-card-expiration" class="s2member-pro-authnet-card-expiration s2member-pro-authnet-update-card-expiration" value="%%card_expiration_value%%" tabindex="30" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-card-verification-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-verification-div s2member-pro-authnet-update-form-card-verification-div">
 			<label for="s2member-pro-authnet-update-card-verification" id="s2member-pro-authnet-update-form-card-verification-label" class="s2member-pro-authnet-form-card-verification-label s2member-pro-authnet-update-form-card-verification-label">
-				<span><?php echo _x ("Card Verification Code ( 3-4 digits )", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
+				<span><?php echo _x ("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_verification]" id="s2member-pro-authnet-update-card-verification" class="s2member-pro-authnet-card-verification s2member-pro-authnet-update-card-verification" value="%%card_verification_value%%" tabindex="40" />
 			</label>
 		</div>
 		<!-- This is displayed only when Maestro®/Solo® cards are selected as the Payment Method. -->
 		<div id="s2member-pro-authnet-update-form-card-start-date-issue-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-start-date-issue-number-div s2member-pro-authnet-update-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-authnet-update-card-start-date-issue-number" id="s2member-pro-authnet-update-form-card-start-date-issue-number-label" class="s2member-pro-authnet-form-card-start-date-issue-number-label s2member-pro-authnet-update-form-card-start-date-issue-number-label">
-				<span><?php echo _x ("Card Start Date ( mm/yyyy ), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_start_date_issue_number]" id="s2member-pro-authnet-update-card-start-date-issue-number" class="s2member-pro-authnet-card-start-date-issue-number s2member-pro-authnet-update-card-start-date-issue-number" value="%%card_start_date_issue_number_value%%" tabindex="50" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Billing Address ( hidden dynamically when/if no Payment Method is selected yet ). -->
+
+	<!-- Billing Address (hidden dynamically when/if no Payment Method is selected yet). -->
 	<div id="s2member-pro-authnet-update-form-billing-address-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-billing-address-section s2member-pro-authnet-update-form-billing-address-section">
 		<div id="s2member-pro-authnet-update-form-billing-address-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-billing-address-section-title s2member-pro-authnet-update-form-billing-address-section-title">
 			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
@@ -96,11 +96,11 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
+
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
-	
-	<!-- Checkout Now ( this holds the submit button, and also some dynamic hidden input variables ). -->
+
+	<!-- Checkout Now (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-update-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-update-form-submission-section">
 		<div id="s2member-pro-authnet-update-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-update-form-submission-section-title">
 			<?php echo _x ("Update Billing Information", "s2member-front", "s2member"); ?>

@@ -4,24 +4,24 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <form id="s2member-pro-authnet-registration-form" class="s2member-pro-authnet-form s2member-pro-authnet-registration-form" method="post" action="%%action%%">
-	
-	<!-- Response Section ( this is auto-filled after form submission ). -->
+
+	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-authnet-registration-form-response-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-response-section s2member-pro-authnet-registration-form-response-section">
 		<div id="s2member-pro-authnet-registration-form-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-response-div s2member-pro-authnet-registration-form-response-div">
 			%%response%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Registration Description ( this is the desc="" attribute from your Shortcode ). -->
+
+	<!-- Registration Description (this is the desc="" attribute from your Shortcode). -->
 	<div id="s2member-pro-authnet-registration-form-description-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-description-section s2member-pro-authnet-registration-form-description-section">
 		<div id="s2member-pro-authnet-registration-form-description-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-description-div s2member-pro-authnet-registration-form-description-div">
 			%%description%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Registration Details ( Name, Email, Username, Password ). -->
+
+	<!-- Registration Details (Name, Email, Username, Password). -->
 	<!-- Name fields will be hidden automatically when/if your Registration/Profile Field options dictate this behavior. -->
 	<div id="s2member-pro-authnet-registration-form-registration-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-registration-section s2member-pro-authnet-registration-form-registration-section">
 		<div id="s2member-pro-authnet-registration-form-registration-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-registration-section-title s2member-pro-authnet-registration-form-registration-section-title">
@@ -47,13 +47,13 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-registration-form-username-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-username-div s2member-pro-authnet-registration-form-username-div">
 			<label for="s2member-pro-authnet-registration-username" id="s2member-pro-authnet-registration-form-username-label" class="s2member-pro-authnet-form-username-label s2member-pro-authnet-registration-form-username-label">
-				<span><?php echo _x ("Username ( lowercase letters and/or numbers )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Username (lowercase letters and/or numbers)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_authnet_registration[username]" id="s2member-pro-authnet-registration-username" class="s2member-pro-authnet-username s2member-pro-authnet-registration-username" value="%%username_value%%" tabindex="40" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-registration-form-password-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-password-div s2member-pro-authnet-registration-form-password-div">
 			<label for="s2member-pro-authnet-registration-password1" id="s2member-pro-authnet-registration-form-password-label" class="s2member-pro-authnet-form-password-label s2member-pro-authnet-registration-form-password-label">
-				<span><?php echo _x ("Password ( type this twice please )", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Password (type this twice please)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="password" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_registration[password1]" id="s2member-pro-authnet-registration-password1" class="s2member-pro-authnet-password1 s2member-pro-authnet-registration-password1" value="%%password1_value%%" tabindex="50" />
 			</label>
 			<input type="password" maxlength="100" autocomplete="off" name="s2member_pro_authnet_registration[password2]" id="s2member-pro-authnet-registration-password2" class="s2member-pro-authnet-password2 s2member-pro-authnet-registration-password2" value="%%password2_value%%" tabindex="60" />
@@ -61,14 +61,14 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div style="clear:both;"></div>
 	</div>
-	
-	<!-- Custom Fields ( Custom Registration/Profile Fields will appear here, when/if they've been configured ). -->
+
+	<!-- Custom Fields (Custom Registration/Profile Fields will appear here, when/if they've been configured). -->
 	%%custom_fields%%
-	
+
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
-	
-	<!-- Complete Registration ( this holds the submit button, and also some dynamic hidden input variables ). -->
+
+	<!-- Complete Registration (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-registration-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-registration-form-submission-section">
 		<div id="s2member-pro-authnet-registration-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-registration-form-submission-section-title">
 			<?php echo _x ("Complete Registration", "s2member-front", "s2member"); ?>

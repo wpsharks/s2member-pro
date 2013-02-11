@@ -4,16 +4,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Widgets
@@ -63,7 +63,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						do_action("ws_plugin__s2member_pro_login_widget_before_construction", get_defined_vars(), $this);
 						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
-						$this->WP_Widget($control_ops["id_base"], "s2Member Pro ( Login Widget )", $widget_ops, $control_ops);
+						$this->WP_Widget($control_ops["id_base"], "s2Member Pro (Login Widget)", $widget_ops, $control_ops);
 
 						do_action("ws_plugin__s2member_pro_login_widget_after_construction", get_defined_vars(), $this);
 
@@ -230,22 +230,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						/*
 						Ok, here is where we need to handle the widget control form. This allows a user to further customize the widget.
 						*/
-						echo '<label for="'.esc_attr($this->get_field_id("title")).'"><strong>Public Title</strong> ( when NOT logged in )</label><br />'."\n";
+						echo '<label for="'.esc_attr($this->get_field_id("title")).'"><strong>Public Title</strong> (when NOT logged in)</label><br />'."\n";
 						echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id("title")).'" name="'.esc_attr($this->get_field_name("title")).'" value="'.format_to_edit($options["title"]).'" class="widefat" /><br /><br />'."\n";
 
 						echo '<label for="'.esc_attr($this->get_field_id("login_redirect")).'">Redirection After Login</label><br />'."\n";
 						echo '<select id="'.esc_attr($this->get_field_id("login_redirect")).'" name="'.esc_attr($this->get_field_name("login_redirect")).'" class="widefat"><option value=""'.((!$options["login_redirect"]) ? ' selected="selected"' : '').'>Login Welcome Page</option><option value="%%previous%%"'.(($options["login_redirect"] === "%%previous%%") ? ' selected="selected"' : '').'>Previous page</option><option value="%%home%%"'.(($options["login_redirect"] === "%%home%%") ? ' selected="selected"' : '').'>Home Page</option></select><br /><br />'."\n";
 
-						echo '<label for="'.esc_attr($this->get_field_id("signup_url")).'">Signup Now ( enter URL, or just use <code>%%automatic%%</code> )</label><br />'."\n";
+						echo '<label for="'.esc_attr($this->get_field_id("signup_url")).'">Signup Now (enter URL, or just use <code>%%automatic%%</code>)</label><br />'."\n";
 						echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id("signup_url")).'" name="'.esc_attr($this->get_field_name("signup_url")).'" value="'.format_to_edit($options["signup_url"]).'" class="widefat" /><br />'."\n";
-						echo '<small>( leave blank to exclude this link )</small><br /><br />'."\n";
+						echo '<small>(leave blank to exclude this link)</small><br /><br />'."\n";
 
 						echo '<label for="'.esc_attr($this->get_field_id("code")).'">Additional XHTML'.((!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '/PHP' : '').' Code?</label><br />'."\n";
 						echo '<textarea id="'.esc_attr($this->get_field_id("logged_out_code")).'" name="'.esc_attr($this->get_field_name("logged_out_code")).'" rows="1" cols="1" class="widefat" style="height:50px;">'.format_to_edit($options["logged_out_code"]).'</textarea>'."\n";
 
 						echo '<div style="margin:15px 0 15px 0; height:1px; line-height:1px; background:#CCCCCC;"></div>'."\n";
 
-						echo '<label for="'.esc_attr($this->get_field_id("profile_title")).'"><strong>Profile Title</strong> ( when logged-in )</label><br />'."\n";
+						echo '<label for="'.esc_attr($this->get_field_id("profile_title")).'"><strong>Profile Title</strong> (when logged-in)</label><br />'."\n";
 						echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id("profile_title")).'" name="'.esc_attr($this->get_field_name("profile_title")).'" value="'.format_to_edit($options["profile_title"]).'" class="widefat" /><br /><br />'."\n";
 
 						echo '<label for="'.esc_attr($this->get_field_id("display_gravatar")).'">Display Gravatar Image?</label><br />'."\n";
@@ -257,13 +257,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 						echo '<label for="'.esc_attr($this->get_field_id("display_name")).'">Display User\'s Name?</label><br />'."\n";
 						echo '<select id="'.esc_attr($this->get_field_id("display_name")).'" name="'.esc_attr($this->get_field_name("display_name")).'" class="widefat"><option value="1"'.(($options["display_name"]) ? ' selected="selected"' : '').'>Yes, display User\'s name</option><option value="0"'.((!$options["display_name"]) ? ' selected="selected"' : '').'>No, do NOT display</option></select><br /><br />'."\n";
 
-						echo '<label for="'.esc_attr($this->get_field_id("my_account_url")).'">My Account ( enter URL, or just use <code>%%automatic%%</code> )</label><br />'."\n";
+						echo '<label for="'.esc_attr($this->get_field_id("my_account_url")).'">My Account (enter URL, or just use <code>%%automatic%%</code>)</label><br />'."\n";
 						echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id("my_account_url")).'" name="'.esc_attr($this->get_field_name("my_account_url")).'" value="'.format_to_edit($options["my_account_url"]).'" class="widefat" /><br />'."\n";
-						echo '<small>( leave blank to exclude this link )</small><br /><br />'."\n";
+						echo '<small>(leave blank to exclude this link)</small><br /><br />'."\n";
 
-						echo '<label for="'.esc_attr($this->get_field_id("my_profile_url")).'">Edit Profile ( enter URL, or use <code>%%automatic%%</code> )</label><br />'."\n";
+						echo '<label for="'.esc_attr($this->get_field_id("my_profile_url")).'">Edit Profile (enter URL, or use <code>%%automatic%%</code>)</label><br />'."\n";
 						echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id("my_profile_url")).'" name="'.esc_attr($this->get_field_name("my_profile_url")).'" value="'.format_to_edit($options["my_profile_url"]).'" class="widefat" /><br />'."\n";
-						echo '<small>( leave blank to exclude this link )</small><br /><br />'."\n";
+						echo '<small>(leave blank to exclude this link)</small><br /><br />'."\n";
 
 						echo '<label for="'.esc_attr($this->get_field_id("logout_redirect")).'">Redirection After Logout</label><br />'."\n";
 						echo '<select id="'.esc_attr($this->get_field_id("logout_redirect")).'" name="'.esc_attr($this->get_field_name("logout_redirect")).'" class="widefat"><option value="%%home%%"'.(($options["logout_redirect"] === "%%home%%") ? ' selected="selected"' : '').'>Home Page</option><option value="%%previous%%"'.(($options["logout_redirect"] === "%%previous%%") ? ' selected="selected"' : '').'>Previous page</option><option value=""'.((!$options["logout_redirect"]) ? ' selected="selected"' : '').'>Login screen</option></select><br /><br />'."\n";

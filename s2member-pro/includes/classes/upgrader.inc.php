@@ -4,16 +4,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Upgrader
@@ -102,7 +102,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 							{
 								$wizard = '<div class="error fade">'."\n";
 								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank">s2Member Pro Module</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
-								$wizard .= '<form method="post" action="'.esc_attr($_SERVER["REQUEST_URI"]).'" style="margin: 5px 0 5px 0;" onsubmit="jQuery (\'input#ws-plugin--s2member-pro-upgrade-submit\', this).attr (\'disabled\', \'disabled\').val (\'Upgrading... ( please wait )\');">'."\n";
+								$wizard .= '<form method="post" action="'.esc_attr($_SERVER["REQUEST_URI"]).'" style="margin: 5px 0 5px 0;" onsubmit="jQuery (\'input#ws-plugin--s2member-pro-upgrade-submit\', this).attr (\'disabled\', \'disabled\').val (\'Upgrading... (please wait)\');">'."\n";
 								$wizard .= '<input type="hidden" name="ws_plugin__s2member_pro_upgrade" id="ws-plugin--s2member-pro-upgrade" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-upgrade")).'" />'."\n";
 
 								$wizard .= apply_filters("ws_plugin__s2member_pro_upgrade_wizard_instructions", '<p><strong>Or upgrade automatically. Provide your login details for s2Member.com</strong>.</p>'."\n", get_defined_vars());
@@ -206,7 +206,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 																c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0005. Please upgrade via FTP.";
 															}
 													}
-												else // Bummer. OK, error reporting ( no cleanup ). Wizard handles `#0004`. Use `#0004` in ``::$error``.
+												else // Bummer. OK, error reporting (no cleanup). Wizard handles `#0004`. Use `#0004` in ``::$error``.
 													{
 														c_ws_plugin__s2member_pro_upgrader::$error = // Wizard handles. Use `#0004` in ``::$error``.
 														"Upgrade failed. Error #0004. Please upgrade via FTP, or supply valid Filesystem Credentials.";
@@ -215,15 +215,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 											}
 										else if(!empty($s2_pro_upgrade) && $s2_pro_upgrade === /* Forbidden? */ "403 Forbidden")
 											{
-												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Invalid Username/Password ( please try again ).";
+												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Invalid Username/Password (please try again).";
 											}
 										else if(!empty($s2_pro_upgrade) && $s2_pro_upgrade === "503 Service Unavailable")
 											{
-												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Service currently unavailable ( please try again ).";
+												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Service currently unavailable (please try again).";
 											}
-										else // Else, display a default error message ( server unavailable ). Possible connectivity issues.
+										else // Else, display a default error message (server unavailable). Possible connectivity issues.
 											{
-												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Connection failed ( please try again ).";
+												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Connection failed (please try again).";
 											}
 									}
 								else // Insufficient memory. This requires some special attention. Unzipping large files requires memory.

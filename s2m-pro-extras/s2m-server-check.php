@@ -7,7 +7,7 @@ if(version_compare(PHP_VERSION, "5.2.3", ">="))
 	{
 		echo '<p><strong>Congratulations, you have PHP v'.PHP_VERSION.' installed<em>!</em></p>';
 		echo '<p>Your server IS fully compatible with <a href="http://www.s2member.com/prices/">s2Member® Pro</a>.</p>';
-		echo '&mdash; Good to go! ( visit <a href="http://www.s2member.com/prices/">s2Member.com</a> )</p>';
+		echo '&mdash; Good to go! (visit <a href="http://www.s2member.com/prices/">s2Member.com</a>)</p>';
 	}
 else /* PHP version is very outdated. A PHP uggrade will be required. */
 	{

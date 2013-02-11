@@ -1,19 +1,19 @@
 <?php
 /**
-* Core API Functions *( for site owners )*.
+* Core API Functions *(for site owners)*.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\API_Functions
@@ -38,7 +38,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 * This function will return the HTML output from the widget function call.
 * 	Example usage: ``<!php echo s2member_pro_login_widget(); !>``
 *
-* The ``$options`` parameter (array) is completely optional *( i.e. NOT required )*.
+* The ``$options`` parameter (array) is completely optional *(i.e. NOT required)*.
 * It can be passed in as an array of options; overriding some or all of these defaults:
 *
 * 	o ``"title" => "Membership Login"``
@@ -77,7 +77,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 * 	o ``"my_profile_url" => "%%automatic%%"``
 * 	Full URL of your own, or use `%%automatic%%` for a JavaScript popup. Leave empty to not show this at all.
 *
-* The ``$args`` parameter (array) is also completely optional *( i.e. NOT required )*.
+* The ``$args`` parameter (array) is also completely optional *(i.e. NOT required)*.
 * It can be passed in as an array of options: overriding some or all of these defaults:
 *
 * 	o ``"before_widget" => ""``

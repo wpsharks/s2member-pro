@@ -4,16 +4,16 @@
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\AuthNet
@@ -536,7 +536,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				* Parses an Authorize.Net® Silent Post.
 				*
 				* Parses `s2_reference`, `s2_domain`, `s2_invoice`, `s2_start_time`, `s2_p1`, `s2_p3`, `s2_custom`
-				* from an Authorize.Net® Silent Post *( aka: IPN )* response.
+				* from an Authorize.Net® Silent Post *(aka: IPN)* response.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
@@ -842,8 +842,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
 																				}
 																			else if($coupon["directive"] === "ta-only" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -855,8 +855,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "ra-only" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -868,8 +868,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "all" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -881,8 +881,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "ra-only" && !$attr["tp"] && !$attr["sp"])
 																				{
@@ -894,8 +894,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 																			else if($coupon["directive"] === "all" && !$attr["tp"] && !$attr["sp"])
 																				{
@@ -907,8 +907,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
 																			else // Otherwise, we need a default response to display.
@@ -929,8 +929,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
 																				}
 																			else if($coupon["directive"] === "ta-only" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -944,8 +944,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"], 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "ra-only" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -959,8 +959,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "all" && $attr["tp"] && !$attr["sp"])
 																				{
@@ -974,8 +974,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s, then %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s, then %s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																				}
 																			else if($coupon["directive"] === "ra-only" && !$attr["tp"] && !$attr["sp"])
 																				{
@@ -989,8 +989,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 																			else if($coupon["directive"] === "all" && !$attr["tp"] && !$attr["sp"])
 																				{
@@ -1004,8 +1004,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
 																					$ra = ($ra >= 0.01) ? $ra : "0.01";
 
-																					$desc = sprintf(_x("COUPON %s off. ( Now: %s )", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
-																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. ( Now: <strong>%s</strong> )</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
+																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																				}
 
 																			else // Otherwise, we need a default response to display.

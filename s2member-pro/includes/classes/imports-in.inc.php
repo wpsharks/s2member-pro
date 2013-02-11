@@ -1,19 +1,19 @@
 <?php
 /**
-* Handles various importations ( inner processing routines ).
+* Handles various importations (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Imports
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 	{
 		/**
-		* Handles various importations ( inner processing routines ).
+		* Handles various importations (inner processing routines).
 		*
 		* @package s2Member\Imports
 		* @since 1.5
@@ -179,7 +179,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																					{
 																						if($user_email && is_email($user_email)) // Is the email address valid?
 																							{
-																								if($user_login) // Has a Username ( aka: user_login ) been supplied?
+																								if($user_login) // Has a Username (aka: user_login) been supplied?
 																									{
 																										if(validate_username($user_login)) // Is the Username valid?
 																											{
@@ -217,22 +217,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																																			$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> could NOT be updated. Unknown error, please try again.";
 																																	}
 																																else
-																																	$errors[] = "Line #".$line.". Network. The Username and/or Email ( <code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code> ) are in conflict w/ Network rules.";
+																																	$errors[] = "Line #".$line.". Network. The Username and/or Email (<code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code>) are in conflict w/ Network rules.";
 																															}
 																														else
-																															$errors[] = "Line #".$line.". Conflicting. The Username ( <code>".esc_html($user_login)."</code> ), already exists.";
+																															$errors[] = "Line #".$line.". Conflicting. The Username (<code>".esc_html($user_login)."</code>), already exists.";
 																													}
 																												else
-																													$errors[] = "Line #".$line.". Conflicting. The Email address ( <code>".esc_html($user_email)."</code> ), already exists.";
+																													$errors[] = "Line #".$line.". Conflicting. The Email address (<code>".esc_html($user_email)."</code>), already exists.";
 																											}
 																										else
-																											$errors[] = "Line #".$line.". Invalid Username ( <code>".esc_html($user_login)."</code> ). Lowercase alphanumerics are required.";
+																											$errors[] = "Line #".$line.". Invalid Username (<code>".esc_html($user_login)."</code>). Lowercase alphanumerics are required.";
 																									}
 																								else
 																									$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
 																							}
 																						else
-																							$errors[] = "Line #".$line.". Missing or invalid Email address ( <code>".esc_html($user_email)."</code> ); please try again.";
+																							$errors[] = "Line #".$line.". Missing or invalid Email address (<code>".esc_html($user_email)."</code>); please try again.";
 																					}
 																				else
 																					$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> cannot be updated to an Administrator. Bypassing this line for security.";
@@ -336,22 +336,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 																													$errors[] = "Line #".$line.". Unknown insertion error, please try again.";
 																											}
 																										else
-																											$errors[] = "Line #".$line.". Network. The Username and/or Email ( <code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code> ) are in conflict w/ Network rules.";
+																											$errors[] = "Line #".$line.". Network. The Username and/or Email (<code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code>) are in conflict w/ Network rules.";
 																									}
 																								else
-																									$errors[] = "Line #".$line.". Conflicting. The Username ( <code>".esc_html($user_login)."</code> ), already exists.";
+																									$errors[] = "Line #".$line.". Conflicting. The Username (<code>".esc_html($user_login)."</code>), already exists.";
 																							}
 																						else
-																							$errors[] = "Line #".$line.". Conflicting. The Email address ( <code>".esc_html($user_email)."</code> ), already exists.";
+																							$errors[] = "Line #".$line.". Conflicting. The Email address (<code>".esc_html($user_email)."</code>), already exists.";
 																					}
 																				else
-																					$errors[] = "Line #".$line.". Invalid Username ( <code>".esc_html($user_login)."</code> ). Lowercase alphanumerics are required.";
+																					$errors[] = "Line #".$line.". Invalid Username (<code>".esc_html($user_login)."</code>). Lowercase alphanumerics are required.";
 																			}
 																		else
 																			$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
 																	}
 																else
-																	$errors[] = "Line #".$line.". Missing or invalid Email address ( <code>".esc_html($user_email)."</code> ); please try again.";
+																	$errors[] = "Line #".$line.". Missing or invalid Email address (<code>".esc_html($user_email)."</code>); please try again.";
 															}
 														else
 															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";

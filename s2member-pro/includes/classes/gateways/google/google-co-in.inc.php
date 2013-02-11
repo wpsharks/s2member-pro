@@ -1,19 +1,19 @@
 <?php
 /**
-* Google® Checkout ( inner processing routines ).
+* Google® Checkout (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* ( coded in the USA )
+* (coded in the USA)
 *
-* This WordPress® plugin ( s2Member Pro ) is comprised of two parts:
+* This WordPress® plugin (s2Member Pro) is comprised of two parts:
 *
 * o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
 *
-* o (2) All other parts of ( s2Member Pro ); including, but not limited to:
+* o (2) All other parts of (s2Member Pro); including, but not limited to:
 * 	the CSS code, some JavaScript code, images, and design;
 * 	are licensed according to the license purchased.
 * 	See: {@link http://www.s2member.com/prices/}
@@ -24,7 +24,7 @@
 * prohibited with part (2) of the s2Member Pro Module.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* ( i.e. new features, bug fixes, updates, improvements ); along with full access
+* (i.e. new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Google
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 	{
 		/**
-		* Google® Checkout ( inner processing routines ).
+		* Google® Checkout (inner processing routines).
 		*
 		* @package s2Member\Google
 		* @since 1.5
@@ -69,7 +69,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 								$attr["rr"] = ($attr["level"] === "*") ? "BN" : $attr["rr"]; // Independent Ccaps do NOT recur. Only after running shortcode_atts().
 								$attr["rr"] = (!$attr["tp"] && !$attr["rr"]) ? "BN" : $attr["rr"]; // No Trial / non-recurring. Only after running shortcode_atts().
 
-								if ($attr["modify"] || $attr["cancel"]) // This is a special routine for Google® Modifications/Cancellations ( one in the same ).
+								if ($attr["modify"] || $attr["cancel"]) // This is a special routine for Google® Modifications/Cancellations (one in the same).
 									{
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
@@ -162,7 +162,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 
 										$xml .= '<digital-content>';
 										$xml .= '<display-disposition>PESSIMISTIC</display-disposition>';
-										$xml .= '<description>' . esc_html (sprintf (_x ('You now have access to:<br />%s<br />( <a href="%s">please log back in now</a> )', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
+										$xml .= '<description>' . esc_html (sprintf (_x ('You now have access to:<br />%s<br />(<a href="%s">please log back in now</a>)', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
 										$xml .= '<url>' . esc_html (wp_login_url ()) . '</url>';
 										$xml .= '</digital-content>';
 
@@ -225,12 +225,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 
 										if ($attr["referencing"]) // If we're updating an existing account that is already in the system.
 											{
-												$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />( <a href="%s">please log back in now</a> )', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
+												$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />(<a href="%s">please log back in now</a>)', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
 												$xml .= '<url>' . esc_html (wp_login_url ()) . '</url>';
 											}
 										else // Otherwise, this checkout experience will establish a brand new Membership.
 											{
-												$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />( the next step is to Register a Username )', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
+												$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />(the next step is to Register a Username)', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
 												$xml .= '<url>' . esc_html ($attr["register_access_link"]) . '</url>';
 											}
 
@@ -331,12 +331,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 
 												if ($attr["referencing"]) // If we're updating an existing account; already in the system.
 													{
-														$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />( <a href="%s">please log back in now</a> )', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
+														$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />(<a href="%s">please log back in now</a>)', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
 														$xml .= '<url>' . esc_html (wp_login_url ()) . '</url>';
 													}
 												else // Otherwise, this checkout experience will establish a brand new Membership.
 													{
-														$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />( the next step is to Register a Username )', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
+														$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />(the next step is to Register a Username)', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
 														$xml .= '<url>' . esc_html ($attr["register_access_link"]) . '</url>';
 													}
 
@@ -452,12 +452,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 
 												if ($attr["referencing"]) // If we're updating an existing account that is already in the system.
 													{
-														$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />( <a href="%s">please log back in now</a> )', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
+														$xml .= '<description>' . esc_html (sprintf (_x ('You\'ve been updated to:<br />%s<br />(<a href="%s">please log back in now</a>)', "s2member-front", "s2member"), $attr["desc"], esc_attr (wp_login_url ()))) . '</description>';
 														$xml .= '<url>' . esc_html (wp_login_url ()) . '</url>';
 													}
 												else // Otherwise, this checkout experience will establish a brand new Membership.
 													{
-														$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />( the next step is to Register a Username )', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
+														$xml .= '<description>' . esc_html (sprintf (_x ('%s<br />(the next step is to Register a Username)', "s2member-front", "s2member"), $attr["desc"])) . '</description>';
 														$xml .= '<url>' . esc_html ($attr["register_access_link"]) . '</url>';
 													}
 
