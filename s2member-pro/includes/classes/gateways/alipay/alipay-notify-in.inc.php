@@ -105,10 +105,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														$ipn["item_number"] = $alipay["item_number"];
 														$ipn["item_name"] = $alipay["body"];
 
-														$ipn_q = "&s2member_paypal_proxy=alipay&s2member_paypal_proxy_use=standard-emails";
-														$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+														$ipn["s2member_paypal_proxy"] = "alipay";
+														$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 													}
 												else if (preg_match ("/^(TRADE_CLOSED|TRADE_SUCCESS)$/i", $alipay["trade_status"]) && $alipay["refund_status"])
 													{
@@ -145,10 +146,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														$ipn["item_number"] = $alipay["item_number"];
 														$ipn["item_name"] = $alipay["body"];
 
-														$ipn_q = "&s2member_paypal_proxy=alipay&s2member_paypal_proxy_use=standard-emails";
-														$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+														$ipn["s2member_paypal_proxy"] = "alipay";
+														$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 													}
 												else
 													$alipay["s2member_log"][] = "Ignoring this IPN request. The status does NOT require any action on the part of s2Member.";

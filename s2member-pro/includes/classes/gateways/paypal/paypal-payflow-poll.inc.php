@@ -76,7 +76,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 											{
 												if(($user_id = $obj->ID) && ($counter = (int)$counter + 1) /* Update counter. Only run through X records; given by $per_process. */)
 													{
-														unset /* Unset these. */($paypal, $subscr_id, $ipn_sv, $processing, $processed, $ipn, $ipn_q, $log4, $_log4, $log2, $logs_dir);
+														unset /* Unset these. */($paypal, $subscr_id, $ipn_sv, $processing, $processed, $ipn, $log4, $_log4, $log2, $logs_dir);
 
 														if(($subscr_id = get_user_option("s2member_subscr_id", $user_id)) && !get_user_option("s2member_auto_eot_time", $user_id))
 															{
@@ -115,10 +115,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																				$ipn["item_number"] = $paypal["ipn_signup_vars"]["item_number"];
 																				$ipn["item_name"] = $paypal["ipn_signup_vars"]["item_name"];
 
-																				$ipn_q = "&s2member_paypal_proxy=paypal&s2member_paypal_proxy_use=pro-emails";
-																				$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																				$ipn["s2member_paypal_proxy"] = "paypal";
+																				$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																				c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																			}
 
 																		else if(preg_match("/(suspended|canceled|terminated|deactivated)/i", $paypal["STATUS"]))
@@ -153,10 +154,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																				$ipn["item_number"] = $paypal["ipn_signup_vars"]["item_number"];
 																				$ipn["item_name"] = $paypal["ipn_signup_vars"]["item_name"];
 
-																				$ipn_q = "&s2member_paypal_proxy=paypal&s2member_paypal_proxy_use=pro-emails";
-																				$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																				$ipn["s2member_paypal_proxy"] = "paypal";
+																				$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																				c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																			}
 
 																		else if(!$processed) // If nothing was processed, here we add a message to the logs indicating the status; which is being ignored.

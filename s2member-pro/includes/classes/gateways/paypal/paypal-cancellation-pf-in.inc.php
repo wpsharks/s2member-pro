@@ -101,10 +101,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 																						$ipn["item_name"] = ($paypal["DESC"]) ? $paypal["DESC"] : $paypal["PROFILENAME"];
 																						$ipn["item_number"] = c_ws_plugin__s2member_paypal_utilities::paypal_pro_item_number($paypal);
 
-																						$ipn_q = "&s2member_paypal_proxy=paypal&s2member_paypal_proxy_use=pro-emails";
-																						$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																						$ipn["s2member_paypal_proxy"] = "paypal";
+																						$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+																						$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																						c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																						c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																					}
 
 																				c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($paypal["PROFILEID"]);

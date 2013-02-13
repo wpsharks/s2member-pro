@@ -131,7 +131,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 
 										foreach /* Begin processing. */(($unprocessed_lines = preg_split("/[\r\n]+/", $unprocessed_ipn_lines)) as $line => $unprocessed_line)
 											{
-												unset /* Unset/reset these variables each pass. */($ccbill, $processing, $processed, $ipn, $ipn_q, $log4, $_log4, $log2, $logs_dir);
+												unset /* Unset/reset these variables each pass. */($ccbill, $processing, $processed, $ipn, $log4, $_log4, $log2, $logs_dir);
 
 												if(($unprocessed_line = trim($unprocessed_line)) && /* Keep a count of each IPN data line. */ ($counter = (int)$counter + 1))
 													{
@@ -174,10 +174,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																		$ipn["item_number"] = $ccbill["dl_ipn_signup_vars"]["item_number"];
 																		$ipn["item_name"] = $ccbill["dl_ipn_signup_vars"]["item_name"];
 
-																		$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
-																		$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																		$ipn["s2member_paypal_proxy"] = "ccbill";
+																		$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																	}
 
 																else if /* Cancellations. */(preg_match("/^CANCELLATION$/i", $ccbill["dl_ipn"][0]))
@@ -210,10 +211,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																		$ipn["item_number"] = $ccbill["dl_ipn_signup_vars"]["item_number"];
 																		$ipn["item_name"] = $ccbill["dl_ipn_signup_vars"]["item_name"];
 
-																		$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
-																		$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																		$ipn["s2member_paypal_proxy"] = "ccbill";
+																		$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																	}
 
 																else if /* Expired Subscriptions. */(preg_match("/^EXPIRE$/i", $ccbill["dl_ipn"][0]))
@@ -246,10 +248,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																		$ipn["item_number"] = $ccbill["dl_ipn_signup_vars"]["item_number"];
 																		$ipn["item_name"] = $ccbill["dl_ipn_signup_vars"]["item_name"];
 
-																		$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
-																		$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																		$ipn["s2member_paypal_proxy"] = "ccbill";
+																		$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																	}
 
 																else if /* Refunds/Reversals. */(preg_match("/^(REFUND|CHARGEBACK)$/i", $ccbill["dl_ipn"][0]))
@@ -284,10 +287,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 																		$ipn["item_number"] = $ccbill["dl_ipn_signup_vars"]["item_number"];
 																		$ipn["item_name"] = $ccbill["dl_ipn_signup_vars"]["item_name"];
 
-																		$ipn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails";
-																		$ipn_q .= "&s2member_paypal_proxy_verification=".urlencode(c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen());
+																		$ipn["s2member_paypal_proxy"] = "ccbill";
+																		$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1".$ipn_q), $ipn, array("timeout" => 20));
+																		c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																	}
 
 																else if(!$processed) // Here we add a message to the logs indicating the IPN was ignored; no action taken.

@@ -108,10 +108,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
-												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+												$ipn["s2member_paypal_proxy"] = "clickbank";
+												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
@@ -155,11 +156,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
-												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : ""; // Use as first payment?
-												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+												$ipn["s2member_paypal_proxy"] = "clickbank";
+												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+												$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
+												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?BILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
@@ -195,10 +197,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
-												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+												$ipn["s2member_paypal_proxy"] = "clickbank";
+												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) // Product Type irrelevant here; checked below.
@@ -234,10 +237,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
-												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+												$ipn["s2member_paypal_proxy"] = "clickbank";
+												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
 										if ( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank["crebillstatus"].
@@ -272,10 +276,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["item_number"] = $s2vars["s2_invoice"];
 												$ipn["item_name"] = $s2vars["s2_desc"];
 
-												$ipn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails";
-												$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+												$ipn["s2member_paypal_proxy"] = "clickbank";
+												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
+												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
 										if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.

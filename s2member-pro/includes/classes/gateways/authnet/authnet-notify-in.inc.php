@@ -100,10 +100,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify_in"))
 														$ipn["item_number"] = $authnet["s2_invoice"];
 														$ipn["item_name"] = $authnet["x_description"];
 
-														$ipn_q = "&s2member_paypal_proxy=authnet&s2member_paypal_proxy_use=pro-emails";
-														$ipn_q .= "&s2member_paypal_proxy_verification=" . urlencode (c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen ());
+														$ipn["s2member_paypal_proxy"] = "authnet";
+														$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1" . $ipn_q), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 													}
 												else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 													{
