@@ -53,7 +53,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 				*
 				* @return null Or exits script execution after a custom URL redirection.
 				*
-				* @todo Add support for `rrt=""` Attribute.
 				* @todo Build in routine to void first payment if Recurring Profile creation fails for some reason? Seems logical, even though highly unlikely.
 				*/
 				public static function authnet_checkout()
