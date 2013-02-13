@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 130207
-Stable tag: 130207
+Version: 130213
+Stable tag: 130213
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -81,10 +81,46 @@ Please see [this FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
 
 == Upgrade Notice ==
 
-= v130207 =
+= v130213 =
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v130213 =
+* **(Maintenance Release) Upgrade immediately.**
+* (s2Member Pro) **Compatibility (Issue #13)** PayPal® Payments Pro, PayPal® Payments Pro (Payflow Edition), and Authorize.Net. s2Member® Pro now supports a recurring interval of Semi-Yearly (e.g. charges occur every six months). This has always been possible by manipulating Shortcode Attribues, but it's now officially supported by Pro Form Generators in your Dashboard — which come with s2Member® Pro.
+* (s2Member Pro) **Compatibility (Issue #13)** ClickBank® Recurring Products. ClickBank® has started allowing a Weekly recurring interval and stopped allowing Yearly. s2Member® has been updated in this release to support a Weekly recurring interval with ClickBank®; and to remove the Yearly option in the ClickBank® Button Generator.
+* (s2Member Pro) **Compatibility (Issue #13)** PayPal® Payments Pro (Payflow Edition). PayPal® Payments Pro (Payflow Edition) has started allowing a Daily recurring interval. s2Member® has been updated in this release to support a Daily recurring interval with PayPal® Payments Pro (Payflow Edition). Daily recurring intervals remain possible with PayPal® Pro accounts that do not include the additional Payflow API. This change simply adds official support for Daily recurring billing with PayPal® Payments Pro (Payflow Edition).
+* (s2Member) **Debugging Assistance** Updating s2Member's PayPal® PDT/Auto-Return handler to better handle scenarios where a site owner is missing a PayPal® PDT Identity Token in their s2Member® configuration, or has incorrectly set the `custom=""` Shortcode Attribute in Payment Buttons generated with s2Member®. Administrative notices are now displayed in the Dashboard when/if this occurs and s2Member® can catch the issue during post-processing of a transaction.
+* (s2Member/s2Member Pro) **General Code Cleanup** Removing all `/**/` markers in the s2Member® codebase. These were used in conjunction with PolyStyle® code formatting tools to preserve line breaks in the code. The WebSharks™ development team no longer uses PolyStyle®, making these obsolete now. Removed in this release to improve readability for developers.
+* (s2Member/s2Member Pro) **General Code Cleanup** Removing all unnecessary uses of PHP's `eval()` function in s2Member's codebase. These were used to keep repetitive code all in a single line; part of a standard the WebSharks™ development team is now moving away from. Removed in this release to improve readability for developers; and to prevent unnecessary confusion.
+* (s2Member/s2Member Pro) **Auto-EOT System** Updated s2Member's Auto-EOT System. s2Member® now leaves an additional note behind after a demotion, which references the Paid Subscr. Gateway and Paid Subscr. ID values before the demotion occurred. This way there is a better reference left behind after an automatic demotion occurs.
+* (s2Member/s2Member Pro) **Searching Users** Updating search function in list of Users (i.e. `Dashboard -› Users -› [Search Box]`) to include the Administrative Notes field when searching for Users. This allows references to old Paid Subscr. IDs in the Administrative Notes field to be considered when searching Users/Members.
+* (s2Member/s2Member Pro) **Last Login Time** Adding new User Option value (tracked by s2Member®). This option value tracks the last time each User/Member logged into your site. Ex: `get_user_option("s2member_last_login_time")`.
+* (s2Member/s2Member Pro) **Last Login Time** Adding new User data column to list of Users in the Dashboard: `Last Login Time`.
+* (s2Member/s2Member Pro) **Last Login Time** Adding new API Function: [`s2member_last_login_time()`](http://www.s2member.com/codex/stable/s2member/api_functions/package-summary/).
+* (s2Member/s2Member Pro) **ezPHP** Updated all internal documentation references that pointed to Exec-PHP or the PHP Execution plugin as recommendations for developers that wish to integrate PHP tags into Posts/Pages/Widgets. These old references now point to the [ezPHP](http://www.s2member.com/kb/ezphp-plugin/) plugin by s2Member® Lead Developer: Jason Caldwell. s2Member® remains compatible with other PHP plugins, but we recommend [ezPHP](http://www.s2member.com/kb/ezphp-plugin/) for the best compatibility with both s2Member® and WordPress® itself.
+* (s2Member/s2Member Pro) **Simple Shortcode Conditionals** Adding a [Simple Shortcode Conditionals](http://www.s2member.com/kb/simple-shortcode-conditionals/) section to `s2Member® -› Restriction Options` in the Dashboard. This way more site owners will be aware of this feature from the start.
+* (s2Member/s2Member Pro) **Login/Registration Design** Login/Registration Design with s2Member® is now optional (e.g. this feature can be disabled now — if you prefer). See: `Dashboard -› s2Member® -› General Options -› Login/Registration Design`. This feature is enabled by default on all s2Member® installations.
+* (s2Member/s2Member Pro) **Inline Documentation** Adding more links to KB articles throughout the Dashboard area.
+* (s2Member/s2Member Pro) **Inline Documentation** Updating all spaced parenthesis like `( something... )` to remove the grammatical errors — by removing the extra spaces inside these brackets.
+* (s2Member/s2Member Pro) **Inline Documentation** Removing all references to PriMoThemes and/or primothemes.com within the application itself. PriMoThemes is now s2Member® (as of Jan 2012 — it's been awhile; so time to remove these obviously).
+* (s2Member/s2Member Pro) **Inline Documentation** Adding link to "more updates..." in the Dashboard, pointing to the s2Member® KB. Increasing number of recent KB udpates from 3 up to 5. These are visible from any s2Member® page in the Dashboard (top of the right-hand column).
+* (s2Member/s2Member Pro) **Inline Documentation** Adding [s2Member® Pro](http://www.s2member.com/pro/) (a recommended upgrade) to the Quick-Start Guide for s2Member® — in the Dashboard.
+* (s2Member/s2Member Pro) **Inline Documentation** Adding Troubleshooting section to the Quick-Start Guide for s2Member® — in the Dashboard.
+* (s2Member/s2Member Pro) **Inline Documentation** Adding Perfect Theme section to the Quick-Start Guide for s2Member® — in the Dashboard.
+* (s2Member/s2Member Pro) **Inline Documentation** Adding video tutorial to the `Dashboard -› s2Member® -› API / Scripting -› Custom Capabilities` section.
+* (s2Member/s2Member Pro) **Logging Functionality** Adding an s2Member® Log Viewer to the Dashboard for all site owners; and also for s2Member® Support Reps to use when running diagnostics. See: `Dashboard -› s2Member® -› Log Files (Debug)` for further details.
+* (s2Member/s2Member Pro) **Logging Functionality** Logging routines are now enabled by default on all new installations of s2Member®. Existing installations of s2Member® are advised to enable logging, by visiting this section of your Dashboard. See: `s2Member® -› PayPal® Options (or Authorize.Net, ClickBank, etc) -› Account Details -› Logging`.
+* (s2Member/s2Member Pro) **Logging Functionality** Additional logging routines that will track all s2Member® HTTP communication within WordPress® is now enabled by default. This new log file will be located inside `/wp-content/plugins/s2member-logs`. It is named: `s2-http-api-debug.log`. See: `Dashboard -› s2Member® -› Log Files (Debug)` for further details.
+* (s2Member/s2Member Pro) **Logging Functionality** Additional logging routines that will track *all* HTTP communication within WordPress® are now possible (these are quite extensive). See: `Dashboard -› s2Member® -› Log Files (Debug) -› Logging Configuration` for further details. This more extensive logging is disabled by default; it must be enabled by a site owner. For debugging only — this should NEVER be enabled on a live site.
+* (s2Member/s2Member Pro) **Logging Functionality** Adding date/time to all log entries maintained by s2Member®.
+* (s2Member/s2Member Pro) **GZIP Conflicts** Adding additional lines of defense against GZIP conflicts during file downloads, with calls to `@apache_setenv("no-gzip", "1")` in other areas — not just during public file downloads (e.g. also during User/Member exporations, log file downloads, etc).
+* (s2Member/s2Member Pro) **GZIP Conflicts** Adding an additional line of defense against GZIP conflicts during file downloads, with this line now appearing in the `.htaccess` file snippet added by the s2Member® software application: `RewriteCond %{QUERY_STRING} (^|\?|&)no-gzip\=1`.
+* (s2Member/s2Member Pro) **GZIP Conflicts** Adding an additional line of defense against GZIP conflicts during User/Member exporations, log file downloads, and other downloads that come straight from the Dashboard area to site owners via web browsers. s2Member® now sends `Content-Encoding: none` to prevent Apache's `mod_deflate` from interfering with s2Member® under these special scenarios. A `Content-Encoding: none` header value is technically invalid, but it's known to prevent issues with `mod_deflate`. Since a `Content-Encoding: none` header value is technically invalid, s2Member® does NOT implement this during public file downloads; where we need to provide wider support for a long list of devices that may choke on this incorrect value. This is only implemented for site owners in the administrative areas of WordPress; and only for file downloads related to CSV export files and logs.
+* (s2Member/s2Member Pro) **Bug Fix** Fixed incorrect `preg_split` limit against `$paypal['item_number']` in IPN handler for `subscr_payment` and `subscr_cancel` transaction types. Doesn't appear to have affected anything negatively, but it was wrong none the less. Fixed in this release.
+* (s2Member/s2Member Pro) **Bug Fix** Fixed incorrect handling of a single opt-in checkbox on BuddyPress registration forms, which was not being wrapped with s2Member's BuddyPress container divs at all times. A symptom of this bug was to see a checkbox on your BuddyPress registration that was out of alignment or out of position. Fixed in this release.
+* (s2Member/s2Member Pro) **Compatibility** Updated all of s2Member's IPN handlers to accept `$_REQUEST` data for Proxy-related variables like `s2member_paypal_proxy_return_url`. This allows s2Member® itself to use `$_POST` variables for Proxy-related variables; and it further reduces the likelihood of 403 Forbidden errors caused by [paranoid Mod Security configurations](http://www.s2member.com/kb/mod-security-random-503-403-errors/). One issue this should help to correct, is a mysterious case where a `success=""` Shortcode Attribute is not working as you might expect. This can be caused by [paranoid Mod Security configurations](http://www.s2member.com/kb/mod-security-random-503-403-errors/) at places like HostGator®, because a URL is passing through a query string. This release will help to prevent this from becoming a problem, because `success=""` URLs will be passed through `$_POST` variables now in all Pro Form integrations.
 
 = v130207 =
 * **(Maintenance Release) Upgrade immediately.**
