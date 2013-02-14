@@ -77,7 +77,7 @@ You can learn more about s2Member® Pro at [s2Member.com](http://www.s2member.co
 * Codex: http://www.s2member.com/codex/
 
 = Translating s2Member® =
-Please see [this FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
+Please see [this popular FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
 
 == Upgrade Notice ==
 
