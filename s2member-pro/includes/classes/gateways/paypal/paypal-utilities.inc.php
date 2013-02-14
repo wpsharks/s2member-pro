@@ -654,7 +654,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 														if(($_url = preg_replace("/%%full_coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($full_coupon_code)), $_url)))
 															if(($_url = preg_replace("/%%coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($coupon_code)), $_url)))
-																if(($_url = preg_replace("/%%affiliate_id%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($affiliate_id)), $_url)))
+																if(($_url = preg_replace("/%%(?:coupon_affiliate_id|affiliate_id)%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($affiliate_id)), $_url)))
 																	if(($_url = preg_replace("/%%user_ip%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $_url)))
 																		{
 																			if(($_url = trim(preg_replace("/%%(.+?)%%/i", "", $_url))) /* Cleanup any remaining Replacement Codes. */)
@@ -671,9 +671,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 									if(empty($response)) // Is ``$response`` NOT set by now? If it's not, we need a default ``$response``.
 										$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
 								}
-
 							else // Otherwise, we need a default response to display.
 								$response = _x('<div>Sorry, your Coupon is N/A, invalid or expired.</div>', "s2member-front", "s2member");
+
+						$attr["_coupon_applies"] = (isset($coupon_applies) && $coupon_applies) ? /* Coupon applies? */ "1" : "0";
+						$attr["_coupon_code"] = (isset($coupon_applies) && $coupon_applies) ? /* Coupon applies? */ $coupon_code : "";
+						$attr["_full_coupon_code"] = (isset($coupon_applies) && $coupon_applies && !empty($full_coupon_code)) ? $full_coupon_code : ((isset($coupon_applies) && $coupon_applies) ? $coupon_code : "");
+						$attr["_coupon_affiliate_id"] = (isset($coupon_applies) && $coupon_applies && !empty($affiliate_id) && empty($_COOKIE["idev"])) ? $affiliate_id : "";
 
 						return ( /* Returning ``$response``? */$return === "response") ? $response : $attr;
 					}

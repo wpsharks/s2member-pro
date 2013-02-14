@@ -229,6 +229,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$ipn["s2member_paypal_proxy"] = "authnet";
 																				$ipn["s2member_paypal_proxy_use"] = "pro-emails";
 																				$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
+																				$ipn["s2member_paypal_proxy_coupon"] = array("coupon_code" => $cp_attr["_coupon_code"], "full_coupon_code" => $cp_attr["_full_coupon_code"], "affiliate_id" => $cp_attr["_coupon_affiliate_id"]);
 																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																				$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 
@@ -405,6 +406,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$ipn["s2member_paypal_proxy"] = "authnet";
 																				$ipn["s2member_paypal_proxy_use"] = "pro-emails";
 																				$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
+																				$ipn["s2member_paypal_proxy_coupon"] = array("coupon_code" => $cp_attr["_coupon_code"], "full_coupon_code" => $cp_attr["_full_coupon_code"], "affiliate_id" => $cp_attr["_coupon_affiliate_id"]);
 																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																				$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																			}
@@ -566,6 +568,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																		$ipn["s2member_paypal_proxy"] = "authnet";
 																		$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+																		$ipn["s2member_paypal_proxy_coupon"] = array("coupon_code" => $cp_attr["_coupon_code"], "full_coupon_code" => $cp_attr["_full_coupon_code"], "affiliate_id" => $cp_attr["_coupon_affiliate_id"]);
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 
@@ -658,6 +661,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																		$ipn["s2member_paypal_proxy"] = "authnet";
 																		$ipn["s2member_paypal_proxy_use"] = "pro-emails";
+																		$ipn["s2member_paypal_proxy_coupon"] = array("coupon_code" => $cp_attr["_coupon_code"], "full_coupon_code" => $cp_attr["_full_coupon_code"], "affiliate_id" => $cp_attr["_coupon_affiliate_id"]);
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																	}
