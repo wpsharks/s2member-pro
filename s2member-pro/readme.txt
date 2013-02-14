@@ -21,7 +21,7 @@ Requires at least: 3.2
 Requires: s2Member® Framework
 
 Copyright: © 2009 WebSharks, Inc.
-License: GNU General Public License
+License: GNU General Public License v2 or later.
 Contributors: WebSharks
 
 Author: s2Member® / WebSharks, Inc.
