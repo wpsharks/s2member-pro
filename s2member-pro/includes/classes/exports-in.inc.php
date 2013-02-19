@@ -244,6 +244,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								status_header /* 200 OK status header. */(200);
 
+								# Undergoing further tests before we add a BOM like this.
+								# $export = "\xEF\xBB\xBF". // UTF-8 BOM (Byte Order Marker).
+								#           $export; // The actual CSV file contents.
+
 								header("Content-Encoding: none");
 								header("Accept-Ranges: none");
 								header("Content-Type: text/csv; charset=UTF-8");
