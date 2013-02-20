@@ -600,11 +600,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_ops"))
 						echo '<td>'."\n";
 						echo '<select name="ws_plugin__s2member_triggers_immediate_eot" id="ws-plugin--s2member-triggers-immediate-eot">'."\n";
 						echo '<option value="none"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "none") ? ' selected="selected"' : '').'>Neither (I\'ll review these two events manually)</option>'."\n";
-						echo '<option value="refunds"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds") ? ' selected="selected"' : '').'>Refunds (refunds ALWAYS trigger an immediate EOT action)</option>'."\n";
-						echo '<option value="reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "reversals") ? ' selected="selected"' : '').'>Reversals (chargebacks ALWAYS trigger an immediate EOT action)</option>'."\n";
-						echo '<option value="refunds,reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '').'>Refunds/Reversals (ALWAYS trigger an immediate EOT action)</option>'."\n";
+						echo '<option value="refunds"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds") ? ' selected="selected"' : '').'>Refunds (refunds ALWAYS trigger an Immediate EOT action)</option>'."\n";
+						echo '<option value="reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "reversals") ? ' selected="selected"' : '').'>Reversals (chargebacks ALWAYS trigger an Immediate EOT action)</option>'."\n";
+						echo '<option value="refunds,reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '').'>Refunds/Reversals (ALWAYS trigger an Immediate EOT action)</option>'."\n";
 						echo '</select><br />'."\n";
-						echo '<em>This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -› API Notifications -› Refunds/Reversals`.\'); return false;">NOT affect</a> s2Member\'s internal API Notifications for Refund/Reversal events.</em>'."\n";
+						echo '<em>This setting will <a href="#" onclick="alert(\'A Refund/Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member. This way you\\\'ll have the full ability to listen for these two events on your own; if you prefer (optional). For more information, check your Dashboard under: `s2Member -› API Notifications -› Refunds/Reversals`.\'); return false;">NOT impact</a> s2Member\'s internal API Notifications for Refund/Reversal events.</em>'."\n";
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";
