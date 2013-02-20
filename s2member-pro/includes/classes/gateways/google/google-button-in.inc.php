@@ -62,7 +62,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep ((array)$attr);
 
-						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
+						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "lang" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
@@ -90,7 +90,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 							}
 						else if /* Specific Post/Page Buttons. */ ($attr["sp"])
 							{
-								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode (_x ("en_US", "s2member-front google-button-lang-code", "s2member"));
+								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode ((($attr["lang"]) ? $attr["lang"] : _x ("en_US", "s2member-front google-button-lang-code", "s2member")));
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/google-sp-checkout-button.php")));
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
@@ -112,7 +112,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 							}
 						else if /* Independent Custom Capabilities. */ ($attr["level"] === "*")
 							{
-								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode (_x ("en_US", "s2member-front google-button-lang-code", "s2member"));
+								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode ((($attr["lang"]) ? $attr["lang"] : _x ("en_US", "s2member-front google-button-lang-code", "s2member")));
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/google-ccaps-checkout-button.php")));
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
@@ -134,7 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 							}
 						else // Otherwise, we'll process this Button normally, using Membership routines.
 							{
-								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode (_x ("en_US", "s2member-front google-button-lang-code", "s2member"));
+								$default_image = "https://checkout.google.com/buttons/checkout.gif?merchant_id=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . "&amp;w=180&amp;h=46&amp;style=trans&amp;variant=text&amp;loc=" . urlencode ((($attr["lang"]) ? $attr["lang"] : _x ("en_US", "s2member-front google-button-lang-code", "s2member")));
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/google-checkout-button.php")));
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);

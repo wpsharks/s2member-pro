@@ -191,6 +191,26 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 						echo '<tr>' . "\n";
 
 						echo '<th>' . "\n";
+						echo '<label for="ws-plugin--s2member-pro-export-users-utf8-bom">' . "\n";
+						echo 'Add UTF-8 BOM (Byte Order Marker)?' . "\n";
+						echo '</label>' . "\n";
+						echo '</th>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<td>' . "\n";
+						echo '<select name="ws_plugin__s2member_pro_export_users_utf8_bom" id="ws-plugin--s2member-pro-export-users-utf8-bom">' . "\n";
+						echo '<option value="0" selected="selected">Default (no, I will choose UTF-8 encoding when I open the file)</option>' . "\n";
+						echo '<option value="1">Yes (add a UTF-8 Byte Order Marker so that UTF-8 encoding is always in use for this file)</option>' . "\n";
+						echo '</select><br />' . "\n";
+						echo '<em>If <code>Yes</code> — please open CSV files with <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
+						echo '</td>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-export-users-start">' . "\n";
 						echo 'CSV File Exportation:' . "\n";
 						echo '</label>' . "\n";

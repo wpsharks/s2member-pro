@@ -68,6 +68,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								while (@ob_end_clean ());
 
 								$format = !empty($_POST["ws_plugin__s2member_pro_export_users_format"]) ? $_POST["ws_plugin__s2member_pro_export_users_format"] : "";
+								$utf8_bom = isset($_POST["ws_plugin__s2member_pro_export_users_utf8_bom"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_utf8_bom"] : 0;
 								$start = !empty($_POST["ws_plugin__s2member_pro_export_users_start"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_start"] : 1;
 
 								$start = /* Must be 1 or higher. */ ($start >= 1) ? $start : 1;
@@ -244,9 +245,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 
 								status_header /* 200 OK status header. */(200);
 
-								# Undergoing further tests before we add a BOM like this.
-								# $export = "\xEF\xBB\xBF". // UTF-8 BOM (Byte Order Marker).
-								#           $export; // The actual CSV file contents.
+								if($utf8_bom) // Add UTF-8 BOM (Byte Order Marker)?
+									$export = "\xEF\xBB\xBF".$export;
 
 								header("Content-Encoding: none");
 								header("Accept-Ranges: none");

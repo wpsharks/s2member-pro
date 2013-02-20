@@ -66,7 +66,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
 
-						$attr = shortcode_atts(array("ids" => "0", "exp" => "72", "level" => (($attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "ps" => "paypal", "lc" => "", "cc" => "USD", "dg" => "0", "ns" => "1", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "rra" => "2", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "paypal,visa,mastercard,amex,discover,maestro,solo", "accept_via_paypal" => "paypal", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "", "captcha" => "", "template" => "", "success" => ""), $attr);
+						$attr = shortcode_atts(array("ids" => "0", "exp" => "72", "level" => (($attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "ps" => "paypal", "lc" => "", "lang" => "", "cc" => "USD", "dg" => "0", "ns" => "1", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "rra" => "2", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "paypal,visa,mastercard,amex,discover,maestro,solo", "accept_via_paypal" => "paypal", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "", "captcha" => "", "template" => "", "success" => ""), $attr);
 
 						$attr["lc"] = /* Locale code absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["lc"]);
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["tt"]);
@@ -131,6 +131,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								*/
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_cancellation[nonce]" id="s2member-pro-paypal-cancellation-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-cancellation")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_cancellation[attr]" id="s2member-pro-paypal-cancellation-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
+								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
 								Get the form template.
 								*/
@@ -254,6 +255,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_names"]) ? '<input type="hidden" id="s2member-pro-paypal-registration-names-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-paypal-registration-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_registration[attr]" id="s2member-pro-paypal-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
+								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
 								Get the form template.
 								*/
@@ -369,6 +371,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								*/
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_update[nonce]" id="s2member-pro-paypal-update-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-update")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_update[attr]" id="s2member-pro-paypal-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
+								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
 								Get the form template.
 								*/
@@ -504,6 +507,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$attr["accept_coupons"]) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_paypal_utilities::paypal_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_sp_checkout[attr]" id="s2member-pro-paypal-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
+								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
 								Get the form template.
 								*/
@@ -693,6 +697,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-paypal-checkout-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_paypal_utilities::paypal_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-paypal-checkout-tax-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_checkout[attr]" id="s2member-pro-paypal-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
+								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
 								Get the form template.
 								*/
