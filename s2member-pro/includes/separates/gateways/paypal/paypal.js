@@ -49,7 +49,7 @@ jQuery(document).ready (function($)
 
 						$(':input', context).each ( /* Go through them all together. */function()
 							{
-								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/-[0-9]+$/g, '');
+								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
 								if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 									{
@@ -143,7 +143,7 @@ jQuery(document).ready (function($)
 
 						$(':input', context).each ( /* Go through them all together. */function()
 							{
-								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/-[0-9]+$/g, '');
+								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
 								if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 									{
@@ -215,7 +215,7 @@ jQuery(document).ready (function($)
 
 						$(':input', context).each ( /* Go through them all together. */function()
 							{
-								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/-[0-9]+$/g, '');
+								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
 								if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 									{
@@ -472,7 +472,7 @@ jQuery(document).ready (function($)
 
 								$(':input', context).each ( /* Go through them all together. */function()
 									{
-										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/-[0-9]+$/g, '');
+										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
 										if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 											{
@@ -736,7 +736,7 @@ jQuery(document).ready (function($)
 
 								$(':input', context).each ( /* Go through them all together. */function()
 									{
-										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/-[0-9]+$/g, '');
+										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
 										if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 											{
