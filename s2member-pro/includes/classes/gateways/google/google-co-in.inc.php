@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 
 						if (!empty ($_GET["s2member_pro_google_co"]) && c_ws_plugin__s2member_utils_urls::s2member_sig_ok ($_SERVER["REQUEST_URI"]) && !empty ($_GET["co"]) && is_array ($attr = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_GET["co"]))) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"])
 							{
-								$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
+								$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
 
 								$attr["tt"] = strtoupper ($attr["tt"]); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 								$attr["rt"] = strtoupper ($attr["rt"]); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
@@ -345,7 +345,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 												$xml .= '<subscription type="google" period="' . esc_attr ($attr["periodicity"]) . '" start-date="' . esc_attr (date ("Y-m-d", $attr["start_time"]) . "T00:00:00Z") . '">';
 
 												$xml .= '<payments>';
-												$xml .= '<subscription-payment' . ((!$attr["rr"]) ? ' times="1"' : '') . '>';
+												$xml .= '<subscription-payment' . ((!$attr["rr"]) ? ' times="1"' : (($attr["rrt"]) ? ' times="'.esc_attr($attr["rrt"]).'"' : "")) . '>';
 												$xml .= '<maximum-charge currency="' . esc_attr ($attr["cc"]) . '">' . esc_html ($attr["ra"]) . '</maximum-charge>';
 												$xml .= '</subscription-payment>';
 												$xml .= '</payments>';
@@ -466,7 +466,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 												$xml .= '<subscription type="google" period="' . esc_attr ($attr["periodicity"]) . '" start-date="' . esc_attr (date ("Y-m-d", $attr["start_time"]) . "T00:00:00Z") . '">';
 
 												$xml .= '<payments>';
-												$xml .= '<subscription-payment>';
+												$xml .= '<subscription-payment'.(($attr["rrt"]) ? ' times="'.esc_attr($attr["rrt"]).'"' : "").'>';
 												$xml .= '<maximum-charge currency="' . esc_attr ($attr["cc"]) . '">' . esc_html ($attr["ra"]) . '</maximum-charge>';
 												$xml .= '</subscription-payment>';
 												$xml .= '</payments>';
