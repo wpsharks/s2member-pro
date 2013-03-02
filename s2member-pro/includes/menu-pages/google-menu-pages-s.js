@@ -98,6 +98,7 @@ jQuery(document).ready (function($)
 						var regPeriod = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[0].replace (/[^0-9]/g, '');
 						var regTerm = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[1].replace (/[^A-Z]/g, '');
 						var regRecur = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[2].replace (/[^0-1BN]/g, '');
+						var /* These options are NOT yet configurable. */ regRecurTimes = '', regRecurRetries = '2';
 
 						var currencyCode = $('select#ws-plugin--s2member-pro-' + button + '-currency').val ().replace (/[^A-Z]/g, '');
 
@@ -157,7 +158,7 @@ jQuery(document).ready (function($)
 							}
 
 						shortCodeTemplateAttrs += 'level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" cc="' + esc_attr(currencyCode) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
-						shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
+						shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '" rrt="' + esc_attr(regRecurTimes) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
 						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your Membership Options Page.');
