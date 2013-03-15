@@ -158,9 +158,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nWhen provided, Trial Amount must be >= 0.00');
 								return false;
 							}
-						else if (trialAmount !== '0' && trialAmount > /* $10,000.00 maximum. */ 10000.00)
+						else if (trialAmount !== '0' && trialAmount > /* $99,999.00 maximum. */ 99999.00)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 10000.00');
+								alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 99999.00');
 								return false;
 							}
 						else if (trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 7. */ trialPeriod > 7)
@@ -188,9 +188,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
 								return false;
 							}
-						else if (regAmount > /* $10,000.00 maximum. */ 10000.00)
+						else if (regAmount > /* $99,999.00 maximum. */ 99999.00)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 10000.00');
+								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
 								return false;
 							}
 						else if /* Each Form should have a Description. */ (!desc)
@@ -245,9 +245,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
 								return false;
 							}
-						else if (regAmount > /* $10,000.00 maximum. */ 10000.00)
+						else if (regAmount > /* $99,999.00 maximum. */ 99999.00)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 10000.00');
+								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
 								return false;
 							}
 						else if /* Each Form should have a Description. */ (!desc)
@@ -293,9 +293,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
 								return false;
 							}
-						else if (regAmount > /* $10,000.00 maximum. */ 10000.00)
+						else if (regAmount > /* $99,999.00 maximum. */ 99999.00)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 10000.00');
+								alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
 								return false;
 							}
 						else if /* Each Form should have a Description. */ (!desc)

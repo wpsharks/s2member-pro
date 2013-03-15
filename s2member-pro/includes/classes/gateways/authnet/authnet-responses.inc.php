@@ -340,8 +340,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if($attr["ra"] < 0.01)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["ra"] > 10000.00)
-											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["ra"] > 99999.00)
+											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 99999.00.', "s2member-admin", "s2member"), "error" => true);
 									}
 								else // Validation routines for Member Level checkout forms. This is the default functionality.
 									{
@@ -411,8 +411,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if($attr["tp"] && $attr["ta"] && $attr["ta"] < 0.00)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["tp"] && $attr["ta"] && $attr["ta"] > 10000.00)
-											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["tp"] && $attr["ta"] && $attr["ta"] > 99999.00)
+											$response = array("response" => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 99999.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if(!$attr["rp"] || !is_string($attr["rp"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "rp" attribute. The Regular Period. Must be >= 1.', "s2member-admin", "s2member"), "error" => true);
@@ -468,8 +468,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if($attr["ra"] < 0.01)
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["ra"] > 10000.00)
-											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["ra"] > 99999.00)
+											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 99999.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["rr"] && (!is_string($attr["rr"]) || !preg_match("/^([0-1]|BN)$/", $attr["rr"])))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rr" attribute. Regular Recurring. When provided, must be 0, 1, or BN.', "s2member-admin", "s2member"), "error" => true);
