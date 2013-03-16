@@ -328,7 +328,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 								if ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
 									if (is_dir ($logs_dir = $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"]))
 										if (is_writable ($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files ())
-											file_put_contents ($logs_dir . "/" . $log2, "LOG ENTRY: ".$logt . "\n" . $logv . "\n" . $logm . "\n" . $log4 . "\n" . var_export ($google, true) . "\n\n", FILE_APPEND);
+											file_put_contents ($logs_dir . "/" . $log2,
+											                   "LOG ENTRY: ".$logt . "\n" . $logv . "\n" . $logm . "\n" . $log4 . "\n" .
+											                                            c_ws_plugin__s2member_utils_logs::conceal_private_info(var_export ($google, true)) . "\n\n",
+											                   FILE_APPEND);
 
 								$confirmation = '<?xml version="1.0" encoding="UTF-8"?>';
 								$confirmation .= '<notification-acknowledgment xmlns="http://checkout.google.com/schema/2"';
