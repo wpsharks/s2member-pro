@@ -175,7 +175,7 @@ if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 	{
 		function s2member_pro_paypal_rbp_times_for_user ($user_id = FALSE)
 			{
-				if(!is_array($paypal = s2member_pro_paypal_rbp_for_user($user_id)))
+				if(!($paypal = s2member_pro_paypal_rbp_for_user($user_id)))
 					return array();
 					
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
@@ -249,7 +249,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_times_for_user"))
 	{
 		function s2member_pro_payflow_rbp_times_for_user ($user_id = FALSE)
 			{
-				if(!is_array($payflow = s2member_pro_payflow_rbp_for_user($user_id)))
+				if(!($payflow = s2member_pro_payflow_rbp_for_user($user_id)))
 					return array();
 					
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
