@@ -128,6 +128,8 @@ if (!function_exists ("s2member_pro_login_widget"))
 * @return array An array of data (from the PayPal® Pro API); else an empty array if no Recurring Billing Profile exists.
 * 	Array elements returned by this function correlate with the PayPal® Pro API call method: `GetRecurringPaymentsProfileDetails`.
 * 	Please see {@link https://www.x.com/developers/paypal/documentation-tools/api/getrecurringpaymentsprofiledetails-api-operation-nvp}.
+*
+* @note If your PayPal® Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_for_user()} instead.
 */
 if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 	{
@@ -166,6 +168,8 @@ if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 *
 * If one or more times (e.g. `last_billing_time`, `next_billing_time`) are irrelevant (i.e. there was no payment received yet; or there are no future payments to receive);
 * 	that time will default to a value of `0` indicating it's irrelevant and/or not applicable.
+*
+* @note If your PayPal® Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_times_for_user()} instead.
 */
 if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 	{
@@ -176,11 +180,11 @@ if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 					
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
 				
-				if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $paypal["LASTPAYMENTDATE"]))
+				if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/", $paypal["LASTPAYMENTDATE"]))
 					$array["last_billing_time"] = strtotime($paypal["LASTPAYMENTDATE"]);
 				
 				if(($paypal["TOTALBILLINGCYCLES"] === "0" || $paypal["NUMCYCLESREMAINING"] > 0) && preg_match ("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
-					if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $paypal["NEXTBILLINGDATE"]))
+					if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/", $paypal["NEXTBILLINGDATE"]))
 						$array["next_billing_time"] = strtotime($paypal["NEXTBILLINGDATE"]);
 
 				return $array;
@@ -254,7 +258,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_times_for_user"))
 					$array["last_billing_time"] = $last_billing_time; // Must use this because the PayFlow® API does not offer it up.
 				
 				if(($payflow["TERM"] === "0" || $payflow["PAYMENTSLEFT"] > 0) && preg_match ("/^(Active|ActiveProfile)$/i", $payflow["STATUS"]))
-					if(preg_match("/^[0-9]{8}$/", $payflow["NEXTPAYMENT"]))
+					if(preg_match("/^[0-9]{8}/", $payflow["NEXTPAYMENT"]))
 						$array["next_billing_time"] = strtotime($payflow["NEXTPAYMENT"]);
 
 				return $array;
