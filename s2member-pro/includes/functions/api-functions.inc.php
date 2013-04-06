@@ -217,7 +217,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_for_user"))
 				if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 					return array();
 				
-				if (is_array($payflow = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($user_subscr_id)))
+				if (is_array($payflow = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile ($user_subscr_id)))
 					return $payflow;
 				
 				return array();
