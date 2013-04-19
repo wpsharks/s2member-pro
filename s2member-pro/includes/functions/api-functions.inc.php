@@ -124,8 +124,9 @@ if (!function_exists ("s2member_pro_login_widget"))
 * @package s2Member\API_Functions
 * @since 130405
 *
-* @param str|int Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
+* @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
 * @return array An array of data (from the PayPal® Pro API); else an empty array if no Recurring Billing Profile exists.
+*
 * 	Array elements returned by this function correlate with the PayPal® Pro API call method: `GetRecurringPaymentsProfileDetails`.
 * 	Please see {@link https://www.x.com/developers/paypal/documentation-tools/api/getrecurringpaymentsprofiledetails-api-operation-nvp}.
 *
@@ -162,7 +163,7 @@ if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 * @package s2Member\API_Functions
 * @since 130405
 *
-* @param str|int Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
+* @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
 * @return array Array elements: `last_billing_time`, `next_billing_time` (both as UTC Unix timestamps);
 * 	else an empty array if no Recurring Billing Profile exists.
 *
@@ -202,8 +203,9 @@ if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 * @package s2Member\API_Functions
 * @since 130405
 *
-* @param str|int Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
+* @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
 * @return array An array of data from the PayPal® Pro (Payflow™ Edition) API; else an empty array if no Recurring Billing Profile exists.
+*
 * 	Array elements returned by this function correlate with the PayPal® Pro (Payflow™ Edition) API call method: `ACTION=I`.
 * 	Please see {@link https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/wpppe_rp_guide.pdf#page=54}.
 */
@@ -238,7 +240,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_for_user"))
 * @package s2Member\API_Functions
 * @since 130405
 *
-* @param str|int Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
+* @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
 * @return array Array elements: `last_billing_time`, `next_billing_time` (both as UTC Unix timestamps);
 * 	else an empty array if no Recurring Billing Profile exists.
 *
