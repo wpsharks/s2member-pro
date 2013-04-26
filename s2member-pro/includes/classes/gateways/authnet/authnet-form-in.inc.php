@@ -75,7 +75,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						$attr["rr"] = /* Lifetime Subscriptions require Buy Now. Only after running shortcode_atts(). */ ($attr["rt"] === "L") ? "BN" : $attr["rr"];
 						$attr["rr"] = /* Independent Ccaps require Buy Now. Only after running shortcode_atts(). */ ($attr["level"] === "*") ? "BN" : $attr["rr"];
 						$attr["rr"] = /* No Trial / non-recurring. Only after running shortcode_atts(). */ (!$attr["tp"] && !$attr["rr"]) ? "BN" : $attr["rr"];
-						$attr["cc"] = /* Authorize.Net® always processes in USD. International transactions are converted automatically to USD. */ "USD";
 						$attr["default_country_code"] = /* This MUST be in uppercase format. */ strtoupper ($attr["default_country_code"]);
 						$attr["success"] = /* Normalize ampersands. */ c_ws_plugin__s2member_utils_urls::n_amps ($attr["success"]);
 

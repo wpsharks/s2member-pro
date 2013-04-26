@@ -559,7 +559,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 					{
 						if(is_array($array) && !empty($array["x_description"]) && preg_match("/\(\((.+?)\)\)/i", $array["x_description"], $m))
 							{
-								list($array["s2_reference"], $array["s2_domain"], $array["s2_invoice"]) = preg_split("/~/", $m[1], 3);
+								list($array["s2_reference"], $array["s2_domain"], $array["s2_invoice"], $array["s2_currency"]) = preg_split("/~/", $m[1], 4);
 								list($array["s2_start_time"], $array["s2_p1"], $array["s2_p3"]) = preg_split("/\:/", $array["s2_reference"], 3);
 
 								$array["x_description"] = preg_replace("/\(\((.+?)\)\)/i", "", $array["x_description"]);

@@ -84,7 +84,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify_in"))
 														$ipn["custom"] = $authnet["s2_custom"];
 
 														$ipn["mc_gross"] = number_format ($authnet["x_amount"], 2, ".", "");
-														$ipn["mc_currency"] = strtoupper ("USD"); // Auth.Net® uses USD.
+														$ipn["mc_currency"] = strtoupper ((!empty($authnet["s2_currency"]) ? $authnet["s2_currency"] : "USD"));
 														$ipn["tax"] = number_format ($authnet["x_tax"], 2, ".", "");
 
 														$ipn["payer_email"] = $authnet["x_email"];

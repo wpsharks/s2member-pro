@@ -92,7 +92,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 														c_ws_plugin__s2member_pro_authnet_utilities::authnet_start_time($period1) : // After Trial is over.
 														c_ws_plugin__s2member_pro_authnet_utilities::authnet_start_time($period3); // Or next billing cycle.
 
-														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"];
+														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"]."~".$cost_calculations["cur"];
 
 														update_user_meta($user_id, "first_name", $post_vars["first_name"]).update_user_meta($user_id, "last_name", $post_vars["last_name"]);
 
@@ -119,11 +119,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	{
 																		$_authnet["x_tax"] = $cost_calculations["trial_tax"];
 																		$_authnet["x_amount"] = $cost_calculations["trial_total"];
+																		$_authnet["x_currency_code"] = $cost_calculations["cur"];
 																	}
 																else // Otherwise, charge for the first Regular payment.
 																	{
 																		$_authnet["x_tax"] = $cost_calculations["tax"];
 																		$_authnet["x_amount"] = $cost_calculations["total"];
+																		$_authnet["x_currency_code"] = $cost_calculations["cur"];
 																	}
 
 																$_authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
@@ -157,6 +159,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_description"] .= " ((".$reference."))";
 
 																$authnet["x_amount"] = $cost_calculations["total"];
+																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_start_date"] = date("Y-m-d", $start_time);
 
@@ -273,7 +276,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 														c_ws_plugin__s2member_pro_authnet_utilities::authnet_start_time($period1) : // After Trial is over.
 														c_ws_plugin__s2member_pro_authnet_utilities::authnet_start_time($period3); // Or next billing cycle.
 
-														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"];
+														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"]."~".$cost_calculations["cur"];
 
 														if(!($_authnet = array()) // A first Initial/Trial payment?
 														&& (!$post_vars["attr"]["tp"] || ($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)))
@@ -298,11 +301,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	{
 																		$_authnet["x_tax"] = $cost_calculations["trial_tax"];
 																		$_authnet["x_amount"] = $cost_calculations["trial_total"];
+																		$_authnet["x_currency_code"] = $cost_calculations["cur"];
 																	}
 																else // Otherwise, charge for the first Regular payment.
 																	{
 																		$_authnet["x_tax"] = $cost_calculations["tax"];
 																		$_authnet["x_amount"] = $cost_calculations["total"];
+																		$_authnet["x_currency_code"] = $cost_calculations["cur"];
 																	}
 
 																$_authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
@@ -336,6 +341,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_description"] .= " ((".$reference."))";
 
 																$authnet["x_amount"] = $cost_calculations["total"];
+																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_start_date"] = date("Y-m-d", $start_time);
 
@@ -519,6 +525,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																$authnet["x_tax"] = $cost_calculations["tax"];
 																$authnet["x_amount"] = $cost_calculations["total"];
+																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
@@ -614,6 +621,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																$authnet["x_tax"] = $cost_calculations["tax"];
 																$authnet["x_amount"] = $cost_calculations["total"];
+																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);

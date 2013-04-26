@@ -95,6 +95,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 
 														$authnet["x_tax"] = $cost_calculations["tax"];
 														$authnet["x_amount"] = $cost_calculations["total"];
+														$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 														$authnet["x_card_num"] = preg_replace ("/[^0-9]/", "", $post_vars["card_number"]);
 														$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date ($post_vars["card_expiration"]);

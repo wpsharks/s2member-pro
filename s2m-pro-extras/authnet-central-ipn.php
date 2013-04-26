@@ -48,7 +48,7 @@ unset($_key, $_value);
 $_p = (get_magic_quotes_gpc()) ? stripslashes_deep($_POST) : $_POST;
 $_p = trim_deep /* Now trim this array deeply. */($_p);
 
-if ((preg_match("/^(.+?)(?:\||$)/i", (string)@$_p["s2_custom"], $_m) || preg_match("/\(\(.+?~(.+?)~.+?\)\)/i", (string)@$_p["x_description"], $_m)) && !empty($config[$_m[1]]))
+if ((preg_match("/^(.+?)(?:\||$)/i", (string)@$_p["s2_custom"], $_m) || preg_match("/\(\(.+?~(.+?)~.+?~.+?\)\)/i", (string)@$_p["x_description"], $_m)) && !empty($config[$_m[1]]))
 	echo (trim(curlpsr(($_url = $config[$_m[1]]), http_build_query($_p, null, "&"))));
 unset($_url, $_m);
 /*
