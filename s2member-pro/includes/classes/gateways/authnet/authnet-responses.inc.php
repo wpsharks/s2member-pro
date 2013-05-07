@@ -589,7 +589,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(!$s["username"] || !is_string($s["username"]))
 											$response = array("response" => _x('Missing or invalid Username. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!validate_username($s["username"]))
+										else if(!validate_username($s["username"]) || !validate_username($s["_o_username"]))
 											$response = array("response" => _x('Invalid Username. Please try again. Use ONLY lowercase alphanumerics.', "s2member-front", "s2member"), "error" => true);
 
 										else if(username_exists($s["username"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))
@@ -695,7 +695,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(!is_user_logged_in() && (!$s["username"] || !is_string($s["username"])))
 											$response = array("response" => _x('Missing or invalid Username. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!is_user_logged_in() && !validate_username($s["username"]))
+										else if(!is_user_logged_in() && (!validate_username($s["username"]) || !validate_username($s["_o_username"])))
 											$response = array("response" => _x('Invalid Username. Please try again. Use ONLY lowercase alphanumerics.', "s2member-front", "s2member"), "error" => true);
 
 										else if(!is_user_logged_in() && username_exists($s["username"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"])))

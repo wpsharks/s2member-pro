@@ -96,8 +96,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 													{
 														$ID = $data[0];
-
-														$user_login = preg_replace("/\s+/", "", sanitize_user($data[1], is_multisite()));
+														
+														$user_login = (is_multisite()) ? strtolower($data[1]) : $data[1];
+														$user_login = preg_replace("/\s+/", "", sanitize_user($user_login, is_multisite()));
 														$user_pass = (string)"";
 
 														$first_name = $data[2];
@@ -129,7 +130,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 													{
 														$ID = $data[0];
 
-														$user_login = preg_replace("/\s+/", "", sanitize_user($data[1], is_multisite()));
+														$user_login = (is_multisite()) ? strtolower($data[1]) : $data[1];
+														$user_login = preg_replace("/\s+/", "", sanitize_user($user_login, is_multisite()));
 														$user_pass = $data[2];
 
 														$first_name = $data[3];
