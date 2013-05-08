@@ -139,8 +139,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 						$s2vars = c_ws_plugin__s2member_utils_strings::trim_deep($s2vars);
 
 						foreach($s2vars as $var => $value /* Pulls out `s2_|_s2member_sig` vars. */)
-							if(!preg_match("/^(?:s2_|_s2member_sig)/", $var))
-								unset($s2vars[$var]);
+							if(!in_array($var, array("cbskin", "cbfid", "cbur", "cbf"), TRUE)) // These may be included in a signature too.
+								if(!preg_match("/^(?:s2_|_s2member_sig)/", $var)) // These will always be included in a signature.
+									unset($s2vars[$var]);
 
 						$is_sale = preg_match("/^(?:TEST_)?SALE$/i", (string)$type);
 						if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, null, "&")))
