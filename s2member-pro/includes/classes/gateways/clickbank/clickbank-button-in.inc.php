@@ -62,7 +62,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
 
-						$attr = shortcode_atts(array("cbp" => "0", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
+						$attr = shortcode_atts(array("cbp" => "0", "cbskin" => "", "cbfid" => "", "cbur" => "", "cbf" => "auto", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["rt"]);
@@ -72,6 +72,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank®.
 						// ClickBank® will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank® checkout forms.
+
+						if($attr["cbur"] && $attr["cbf"] === "auto" && !empty($_REQUEST["cbf"]))
+							$attr["cbf"] = esc_html((string)$_REQUEST["cbf"]);
+						else if(!$attr["cbur"] || $attr["cbf"] === "auto") $attr["cbf"] = "";
 
 						if /* Modifications/Cancellations. */($attr["modify"] || $attr["cancel"])
 							{
@@ -105,6 +109,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["desc"])), $code);
 								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
 
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+
 								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
 								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_ds("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
@@ -136,6 +145,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["level_ccaps_eotper"])), $code);
 								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["desc"])), $code);
 								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
+
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 
@@ -172,6 +186,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%p1%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tp"]." ".$attr["tt"])) : ""), $code);
 								$code = preg_replace("/%%p3%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["rp"]." ".$attr["rt"])) : ""), $code);
 								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
+
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 

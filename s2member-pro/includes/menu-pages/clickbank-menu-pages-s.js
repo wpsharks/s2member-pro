@@ -131,7 +131,7 @@ jQuery(document).ready (function($)
 								return false;
 							}
 
-						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
+						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" cbskin="" cbfid="" cbur="" cbf="auto" level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCodeTemplateAttrs += ' tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
@@ -189,7 +189,7 @@ jQuery(document).ready (function($)
 								return false;
 							}
 
-						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" level="*" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
+						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" cbskin="" cbfid="" cbur="" cbf="auto" level="*" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCodeTemplateAttrs += ' rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
@@ -240,7 +240,7 @@ jQuery(document).ready (function($)
 
 						var spIdsHours = /* Combined sp:ids:expiration hours. */ 'sp:' + ids + ':' + hours;
 
-						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" sp="1" ids="' + esc_attr(ids) + '" exp="' + esc_attr(hours) + '" desc="' + esc_attr(desc) + '"';
+						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" cbskin="" cbfid="" cbur="" cbf="auto" sp="1" ids="' + esc_attr(ids) + '" exp="' + esc_attr(hours) + '" desc="' + esc_attr(desc) + '"';
 						shortCodeTemplateAttrs += ' custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
