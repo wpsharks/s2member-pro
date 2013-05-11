@@ -77,9 +77,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 													}
 												else if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID)) // Logged in?
 													{
-														if(($cur__subscr_id = get_user_option("s2member_subscr_id")))
+														if(($cur__subscr_id = get_user_option("s2member_subscr_id"))) // Does the customer have a Billing Profile?
 															{
-																if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P" && preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+																if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P" && preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
 																	{
 																		$paypal = array(); // Reset the PayPal® array.
 
@@ -123,11 +123,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 																				$global_response = array("response" => $paypal["__error"], "error" => true);
 																			}
 																	}
-																else if($paypal && $paypal["TENDER"] !== "P" && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
-																	{
-																		$global_response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-																	}
-																else if($paypal && $paypal["TENDER"] !== "P" && !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+																else if($paypal && $paypal["TENDER"] !== "P" && !preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
 																	{
 																		$global_response = array("response" => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 																	}

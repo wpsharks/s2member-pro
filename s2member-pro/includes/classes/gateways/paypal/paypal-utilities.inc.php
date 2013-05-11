@@ -149,9 +149,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @since 110531
 				*
 				* @param string $subscr_id A paid subscription ID (aka: Recurring Profile ID).
+				* @param string $baid A Billing Agreement ID (aka: BAID).
 				* @return boolean True if the profile was cancelled, else false.
 				*/
-				public static function payflow_cancel_profile($subscr_id = FALSE)
+				public static function payflow_cancel_profile($subscr_id = FALSE, $baid = FALSE)
 					{
 						$payflow["TRXTYPE"] = "R";
 						$payflow["ACTION"] = "C";
@@ -159,9 +160,32 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 						$payflow["ORIGPROFILEID"] = $subscr_id;
 
 						if(($cancellation = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($payflow)) && empty($cancellation["__error"]))
-							return true;
+							if(!$baid || c_ws_plugin__s2member_paypal_utilities::payflow_cancel_billing_agreement($baid))
+								return true;
 
 						$payflow["TENDER"] = "P";
+						if(($cancellation = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($payflow)) && empty($cancellation["__error"]))
+							if(!$baid || c_ws_plugin__s2member_paypal_utilities::payflow_cancel_billing_agreement($baid))
+								return true;
+
+						return false;
+					}
+				/**
+				* Cancels a Payflow® Billing Agreement.
+				*
+				* @package s2Member\PayPal
+				* @since 130510
+				*
+				* @param string $baid A Billing Agreement ID (aka: BAID).
+				* @return boolean True if the agreement was cancelled, else false.
+				*/
+				public static function payflow_cancel_billing_agreement($baid = FALSE)
+					{
+						$payflow["ACTION"] = "U";
+						$payflow["TENDER"] = "P";
+						$payflow["BAID"] = $baid;
+						$payflow["BA_STATUS"] = "cancel";
+
 						if(($cancellation = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($payflow)) && empty($cancellation["__error"]))
 							return true;
 

@@ -509,8 +509,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["rt"] === "M" && $attr["rp"] > 12 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "M", "rp" (Regular Period) > 12, and "rr" is not "BN" (Buy Now).', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["rr"] !== "BN" && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"] && !in_array($attr["rp"]."-".$attr["rt"], array("1-D", "1-W", "2-W", "1-M", "3-M", "6-M", "1-Y"), TRUE))
-											$response = array("response" => _x('Invalid Payflow® form configuration. Invalid "rt, rp, rr" attributes. Payflow® supports a specific set of recurring intervals. Pro Forms can be configured to charge: daily, weekly, bi-weekly, monthly, quarterly, semi-yearly or yearly. Any other combination results in this error. This is a Payflow® limitation.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["rr"] !== "BN" && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"] && !in_array($attr["rp"]."-".$attr["rt"], array("1-D", "1-W", "2-W", "1-M", "3-M", "6-M", "1-Y"), TRUE)) // We allow daily here in case Payflow begins to support this in the future.
+											$response = array("response" => _x('Invalid Payflow® form configuration. Invalid "rt, rp, rr" attributes. Payflow® supports a specific set of recurring intervals. Pro Forms can be configured to charge: weekly, bi-weekly, monthly, quarterly, semi-yearly or yearly. Any other combination results in this error. This is a Payflow® limitation.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["rt"] === "Y" && $attr["rp"] > 5 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "Y", "rp" (Regular Period) > 5, and "rr" is not "BN" (Buy Now).', "s2member-admin", "s2member"), "error" => true);

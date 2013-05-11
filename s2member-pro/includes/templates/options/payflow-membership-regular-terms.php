@@ -4,7 +4,6 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <optgroup label="<?php echo esc_attr (_x ("PayPal® Pro (Subscriptions)", "s2member-admin", "s2member")); ?>">
-<option value="1-D-1"><?php echo esc_html (_x ("Daily (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="1-W-1"><?php echo esc_html (_x ("Weekly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="2-W-1"><?php echo esc_html (_x ("Bi-Weekly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="1-M-1" selected="selected"><?php echo esc_html (_x ("Monthly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>

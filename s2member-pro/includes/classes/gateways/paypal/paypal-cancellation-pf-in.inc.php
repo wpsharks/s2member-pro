@@ -73,11 +73,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 											{
 												if(is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) // Are they logged in?
 													{
-														if(($cur__subscr_id = get_user_option("s2member_subscr_id")))
+														if(($cur__subscr_id = get_user_option("s2member_subscr_id"))) // Does the customer have a Billing Profile?
 															{
 																if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P")
 																	{
-																		if(preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"])) // Possible?
+																		if(preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"])) // Possible?
 																			{
 																				if(!($ipn = array())) // Build a simulated PayPal® IPN response.
 																					{
@@ -108,18 +108,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 																						c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 																					}
 
-																				c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($paypal["PROFILEID"]);
+																				c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($paypal["PROFILEID"], $paypal["BAID"]);
 
 																				$global_response = array("response" => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
 
 																				if($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																					wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
 																			}
-																		else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"])) // Can't cancel while still pending.
-																			{
-																				$global_response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-																			}
-																		else // Else, account already terminated.
+																		else // Account already terminated in one way or another. Perhaps inactive.
 																			{
 																				$global_response = array("response" => _x('<strong>Billing terminated.</strong> Your account has been cancelled.', "s2member-front", "s2member"));
 
