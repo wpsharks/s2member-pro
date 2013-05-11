@@ -273,7 +273,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["PAYERID"] = $paypal_xco_details["PAYERID"];
 																		$paypal["BAID"] = $paypal_xco_bagree["BAID"];
 																	}
-																else // Otherwise, they're using a major credit card.
+																else if($_GET["s2member_paypal_xco"] !== "s2member_pro_paypal_checkout_return")
 																	{
 																		$paypal["TENDER"] = "C";
 																		$paypal["ACCT"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
@@ -420,7 +420,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["PAYERID"] = $paypal_xco_details["PAYERID"];
 																		$paypal["BAID"] = $paypal_xco_bagree["BAID"];
 																	}
-																else // Otherwise, they're using a major credit card.
+																else if($_GET["s2member_paypal_xco"] !== "s2member_pro_paypal_checkout_return")
 																	{
 																		$paypal["TENDER"] = "C";
 																		$paypal["ACCT"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
