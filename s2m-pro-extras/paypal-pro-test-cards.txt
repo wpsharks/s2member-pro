@@ -1,6 +1,7 @@
 --------- Test card numbers ---------
 	Visa:
 		4957535575048640
+		4111111111111111 (Payflow Edition w/ Recurring Billing)
 	Exp Date:
 		12/2029
 
