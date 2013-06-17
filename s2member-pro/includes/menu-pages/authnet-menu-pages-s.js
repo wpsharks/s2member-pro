@@ -163,9 +163,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 99999.00');
 								return false;
 							}
-						else if (trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 7. */ trialPeriod > 7)
+						else if (trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 365. */ trialPeriod > 365)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Trial Days is: 7.\nIf you want to offer more than 7 days, please choose Weeks or Months from the drop-down.');
+								alert('— Oops, a slight problem: —\n\nMaximum Trial Days is: 365.\nIf you want to offer more than 365 days, please choose Weeks or Months from the drop-down.');
 								return false;
 							}
 						else if (trialTerm === 'W' && /* Some validation on the Trial Period. 52 max. */ trialPeriod > 52)
