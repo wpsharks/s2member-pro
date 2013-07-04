@@ -290,7 +290,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				public static function paypal_cost($trial_sub_total = FALSE, $sub_total = FALSE, $state = FALSE, $country = FALSE, $zip = FALSE, $currency = FALSE, $desc = FALSE)
 					{
 						$state = strtoupper(c_ws_plugin__s2member_pro_utilities::full_state($state, ($country = strtoupper($country))));
-						$rates = strtoupper($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_tax_rates"]);
+						$rates = apply_filters("ws_plugin__s2member_pro_tax_rates_before_cost_calculation", strtoupper($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_tax_rates"]), get_defined_vars());
 						$default = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_default_tax"];
 						$ps = _x("%", "s2member-front percentage-symbol", "s2member");
 
