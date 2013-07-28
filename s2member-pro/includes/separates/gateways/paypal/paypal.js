@@ -34,7 +34,7 @@ jQuery(document).ready (function($)
 		var $clForm, $upForm, $rgForm, $spForm, $coForm, jumpToResponses, preloadAjaxLoader, ariaTrue = {'aria-required': 'true'}, ariaFalse = {'aria-required': 'false'}, disabled = {'disabled': 'disabled'}, ariaFalseDis = {'aria-required': 'false', 'disabled': 'disabled'};
 
 		preloadAjaxLoader = new Image (), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
-		
+
 		if($('form.s2member-pro-paypal-registration-form').length > 1 || $('form.s2member-pro-paypal-checkout-form').length > 1 || $('form.s2member-pro-paypal-sp-checkout-form').length > 1)
 			return alert('Detected more than one s2Member® Pro Form.\n\nPlease use only ONE s2Member® Pro Form Shortcode on each Post/Page. Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
 
@@ -263,13 +263,32 @@ jQuery(document).ready (function($)
 
 		else if (($spForm = $('form#s2member-pro-paypal-sp-checkout-form')).length === 1)
 			{
-				var handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, couponSection = 'div#s2member-pro-paypal-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-paypal-sp-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit';
 
 				var paypalLangCode = $.trim($('input#s2member-pro-paypal-lang-attr').val());
 				var submitButton = '<input type="submit" id="s2member-pro-paypal-sp-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-sp-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="500" />';
 				var submitExpressCheckoutButton = '<input type="image" src="https://www.paypal.com/'+((paypalLangCode) ? paypalLangCode : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("en_US", "s2member-front paypal-button-lang-code", "s2member"))); ?>')+'/i/btn/btn_xpressCheckout.gif" id="s2member-pro-paypal-sp-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-sp-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="500" />';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
+
+				(handleOptions = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
+					{
+						if (!$(optionsSection + ' select#s2member-pro-paypal-sp-checkout-options option').length)
+							{
+								$(optionsSection).hide /* No options on this particular form. */ ();
+								$(descSection).show /* Show description on this particular form. */ ();
+							}
+						else // This is turned off by default for smoother loading. (via: display:none).
+							{
+								$(optionsSection).show /* OK. So we need to display this now. */ ();
+								$(descSection).hide /* OK. So we need to hide this now. */ ();
+								$(optionsSection + ' select#s2member-pro-paypal-sp-checkout-options').change
+									(function() // Handle option changes.
+									 {
+										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+									 });
+							}
+					}) ();
 
 				(handleCouponIssues = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
@@ -462,7 +481,7 @@ jQuery(document).ready (function($)
 
 				$spForm.submit ( /* Form validation. */function()
 					{
-						if ($(submissionNonceVerification).val () !== 'apply-coupon')
+						if ($.inArray($(submissionNonceVerification).val (), ['option', 'apply-coupon']) === -1)
 							{
 								var context = this, label = '', error = '', errors = '';
 
@@ -507,13 +526,32 @@ jQuery(document).ready (function($)
 
 		else if (($coForm = $('form#s2member-pro-paypal-checkout-form')).length === 1)
 			{
-				var handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, couponSection = 'div#s2member-pro-paypal-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-paypal-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-paypal-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-paypal-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-paypal-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-paypal-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-checkout-submit';
 
 				var paypalLangCode = $.trim($('input#s2member-pro-paypal-lang-attr').val());
 				var submitButton = '<input type="submit" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="600" />';
 				var submitExpressCheckoutButton = '<input type="image" src="https://www.paypal.com/'+((paypalLangCode) ? paypalLangCode : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("en_US", "s2member-front paypal-button-lang-code", "s2member"))); ?>')+'/i/btn/btn_xpressCheckout.gif" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="600" />';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
+
+				(handleOptions = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
+					{
+						if (!$(optionsSection + ' select#s2member-pro-paypal-checkout-options option').length)
+							{
+								$(optionsSection).hide /* No options on this particular form. */ ();
+								$(descSection).show /* Show description on this particular form. */ ();
+							}
+						else // This is turned off by default for smoother loading. (via: display:none).
+							{
+								$(optionsSection).show /* OK. So we need to display this now. */ ();
+								$(descSection).hide /* OK. So we need to hide this now. */ ();
+								$(optionsSection + ' select#s2member-pro-paypal-checkout-options').change
+									(function() // Handle option changes.
+									 {
+										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+									 });
+							}
+					}) ();
 
 				(handleCouponIssues = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
@@ -723,7 +761,7 @@ jQuery(document).ready (function($)
 
 				$coForm.submit ( /* Form validation. */function()
 					{
-						if ($(submissionNonceVerification).val () !== 'apply-coupon')
+						if ($.inArray($(submissionNonceVerification).val (), ['option', 'apply-coupon']) === -1)
 							{
 								var context = this, label = '', error = '', errors = '';
 

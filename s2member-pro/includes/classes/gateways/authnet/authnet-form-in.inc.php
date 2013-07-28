@@ -44,6 +44,23 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 		class c_ws_plugin__s2member_pro_authnet_form_in
 			{
 				/**
+				* Shortcode `[s2Member-Pro-AuthNet-Form-Option /]`.
+				*
+				* @package s2Member\AuthNet
+				* @since 130728
+				*
+				* @attaches-to ``add_shortcode("s2Member-Pro-AuthNet-Form-Option");``
+				*
+				* @param array $attr An array of Attributes.
+				* @param str $content Content inside the Shortcode.
+				* @param str $shortcode The actual Shortcode name itself.
+				* @return str The resulting Form Code, HTML markup.
+				*/
+				public static function sc_authnet_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
+					{
+						return serialize(c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr)).'|::|';
+					}
+				/**
 				* Shortcode `[s2Member-Pro-AuthNet-Form /]`.
 				*
 				* @package s2Member\AuthNet
@@ -65,7 +82,36 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */ (true);
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep ((array)$attr);
+						$options = array(); // Initialize options to an empty array.
+						$option_selections = ''; // Initialize w/ no options.
 
+						if($content) // This allows for nested Pro Form Shortcodes as options.
+							$content = str_replace('s2Member-Pro-AuthNet-Form ', 's2Member-Pro-AuthNet-Form-Option ', $content);
+
+						if($content && ($content_options = do_shortcode($content)))
+							{
+								foreach(preg_split('/\s*\|\:\:\|\s*/', $content_options, NULL, PREG_SPLIT_NO_EMPTY) as $_content_option_key => $_content_option)
+									{
+										$_content_option_id = $_content_option_key + 1;
+										$options[$_content_option_id] = maybe_unserialize(trim($_content_option));
+										if(!is_array($options[$_content_option_id])){ unset($options[$_content_option_id]); continue; }
+										if(!empty($_REQUEST['s2p-option']) && (integer)$_REQUEST['s2p-option'] === $_content_option_id)
+											$options[$_content_option_id]['selected'] = TRUE;
+									}
+								unset($_content_option_key, $_content_option, $_content_option_id); // Housekeeping.
+
+								foreach($options as $_option_id => $_option) if(!empty($_option['selected']))
+									{ $attr = array_merge($attr, $_option); $_selected_option_id = $_option_id; }
+								unset($_option_id, $_option); // Housekeeping.
+
+								if(empty($_selected_option_id)) foreach($options as $_option_id => $_option)
+									{ $attr = array_merge($attr, $_option); break; } // Force a selected option (default).
+								unset($_option_id, $_option, $_selected_option_id); // Housekeeping.
+
+								foreach($options as $_option_id => $_option) // Build option selections.
+									$option_selections .= '<option value="'.esc_attr($_option_id).'"'.((!empty($_option['selected'])) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
+								unset($_option_id, $_option); // Housekeeping.
+							}
 						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => (($attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => ""), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
@@ -523,6 +569,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%response%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($response["response"]), $code);
 								/*
+								Fill in the option selections.
+								*/
+								$code = preg_replace("/%%options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($option_selections), $code);
+								/*
 								Fill in the description.
 								*/
 								$code = preg_replace ("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($attr["desc"]), $code);
@@ -712,6 +762,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								Fill in the response.
 								*/
 								$code = preg_replace ("/%%response%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($response["response"]), $code);
+								/*
+								Fill in the option selections.
+								*/
+								$code = preg_replace("/%%options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($option_selections), $code);
 								/*
 								Fill in the description.
 								*/

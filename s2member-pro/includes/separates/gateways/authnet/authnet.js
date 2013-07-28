@@ -263,9 +263,28 @@ jQuery(document).ready (function($)
 
 		else if (($spForm = $('form#s2member-pro-authnet-sp-checkout-form')).length === 1)
 			{
-				var handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, couponSection = 'div#s2member-pro-authnet-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-authnet-sp-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
+
+				(handleOptions = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
+					{
+						if (!$(optionsSection + ' select#s2member-pro-authnet-sp-checkout-options option').length)
+							{
+								$(optionsSection).hide /* No options on this particular form. */ ();
+								$(descSection).show /* Show description on this particular form. */ ();
+							}
+						else // This is turned off by default for smoother loading. (via: display:none).
+							{
+								$(optionsSection).show /* OK. So we need to display this now. */ ();
+								$(descSection).hide /* OK. So we need to hide this now. */ ();
+								$(optionsSection + ' select#s2member-pro-authnet-sp-checkout-options').change
+									(function() // Handle option changes.
+									 {
+										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+									 });
+							}
+					}) ();
 
 				(handleCouponIssues = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
@@ -424,7 +443,7 @@ jQuery(document).ready (function($)
 
 				$spForm.submit ( /* Form validation. */function()
 					{
-						if ($(submissionNonceVerification).val () !== 'apply-coupon')
+						if ($.inArray($(submissionNonceVerification).val (), ['option', 'apply-coupon']) === -1)
 							{
 								var context = this, label = '', error = '', errors = '';
 
@@ -471,9 +490,28 @@ jQuery(document).ready (function($)
 
 		else if (($coForm = $('form#s2member-pro-authnet-checkout-form')).length === 1)
 			{
-				var handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, couponSection = 'div#s2member-pro-authnet-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-authnet-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-authnet-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-authnet-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-authnet-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-authnet-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-checkout-submit';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
+
+				(handleOptions = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
+					{
+						if (!$(optionsSection + ' select#s2member-pro-authnet-checkout-options option').length)
+							{
+								$(optionsSection).hide /* No options on this particular form. */ ();
+								$(descSection).show /* Show description on this particular form. */ ();
+							}
+						else // This is turned off by default for smoother loading. (via: display:none).
+							{
+								$(optionsSection).show /* OK. So we need to display this now. */ ();
+								$(descSection).hide /* OK. So we need to hide this now. */ ();
+								$(optionsSection + ' select#s2member-pro-authnet-checkout-options').change
+									(function() // Handle option changes.
+									 {
+										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+									 });
+							}
+					}) ();
 
 				(handleCouponIssues = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
@@ -649,7 +687,7 @@ jQuery(document).ready (function($)
 
 				$coForm.submit ( /* Form validation. */function()
 					{
-						if ($(submissionNonceVerification).val () !== 'apply-coupon')
+						if ($.inArray($(submissionNonceVerification).val (), ['option', 'apply-coupon']) === -1)
 							{
 								var context = this, label = '', error = '', errors = '';
 

@@ -52,6 +52,9 @@ div.s2member-pro-authnet-form-section:first-child
 	{
 		margin-top: 0;
 	}
+div.s2member-pro-authnet-form-options-section,
+div.s2member-pro-authnet-checkout-form-description-section,
+div.s2member-pro-authnet-sp-checkout-form-description-section,
 div.s2member-pro-authnet-form-coupon-section
 	{
 		display: /* Off initially. */ none;

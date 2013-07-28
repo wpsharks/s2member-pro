@@ -36,4 +36,5 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 Add WordPress® Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-AuthNet-Form", "c_ws_plugin__s2member_pro_authnet_form::sc_authnet_form");
+add_shortcode ("s2Member-Pro-AuthNet-Form-Option", "c_ws_plugin__s2member_pro_authnet_form::sc_authnet_form_option");
 ?>

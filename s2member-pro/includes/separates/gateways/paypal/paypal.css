@@ -52,6 +52,9 @@ div.s2member-pro-paypal-form-section:first-child
 	{
 		margin-top: 0;
 	}
+div.s2member-pro-paypal-form-options-section,
+div.s2member-pro-paypal-checkout-form-description-section,
+div.s2member-pro-paypal-sp-checkout-form-description-section,
 div.s2member-pro-paypal-form-coupon-section
 	{
 		display: /* Off initially. */ none;
