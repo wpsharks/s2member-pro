@@ -113,10 +113,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 														$authnet["x_country"] = $post_vars["country"];
 														$authnet["x_zip"] = $post_vars["zip"];
 													}
-
-												if (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response ($authnet)) && empty ($authnet["__error"]))
+												if ($cost_calculations["total"] <= 0 || (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response ($authnet)) && empty ($authnet["__error"])))
 													{
-														$new__txn_id = $authnet["transaction_id"];
+														if($cost_calculations["total"] <= 0)
+															$new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+														else $new__txn_id = $authnet["transaction_id"];
 
 														if (!($ipn = array ())) // Simulated PayPal® IPN.
 															{
@@ -158,7 +159,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 
 																$ipn["s2member_authnet_proxy_return_url"] = trim (c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20)));
 															}
-
 														if (($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen ($post_vars["attr"]["ids"], $post_vars["attr"]["exp"])))
 															{
 																setcookie ("s2member_sp_tracking", ($s2member_sp_tracking = c_ws_plugin__s2member_utils_encryption::encrypt ($new__txn_id)), time () + 31556926, COOKIEPATH, COOKIE_DOMAIN) . setcookie ("s2member_sp_tracking", $s2member_sp_tracking, time () + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN) . ($_COOKIE["s2member_sp_tracking"] = $s2member_sp_tracking);

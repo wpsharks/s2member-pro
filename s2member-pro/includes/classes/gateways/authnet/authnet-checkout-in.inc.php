@@ -81,9 +81,26 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 												$cp_attr = c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon($post_vars["attr"], $post_vars["coupon"], "attr", array("affiliates-silent-post"));
 												$cost_calculations = c_ws_plugin__s2member_pro_authnet_utilities::authnet_cost($cp_attr["ta"], $cp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_attr["cc"], $cp_attr["desc"]);
 
+												if($cost_calculations["total"] <= 0 && $post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
+													{
+														$post_vars["attr"]["tp"] = "0"; // Ditch the trial period completely.
+														$cost_calculations["total"] = $cost_calculations["trial_total"]; // Use as regular total (ditch trial).
+														$cost_calculations["trial_sub_total"] = "0.00"; // Ditch the initial total (using as grand total).
+														$cost_calculations["trial_tax"] = "0.00"; // Ditch this calculation now also.
+														$cost_calculations["trial_tax_per"] = ""; // Ditch this calculation now also.
+														$cost_calculations["trial_total"] = "0.00"; // Ditch this calculation now also.
+													}
 												$use_recurring_profile = ($post_vars["attr"]["rr"] === "BN" || (!$post_vars["attr"]["tp"] && !$post_vars["attr"]["rr"])) ? false : true;
 												$is_independent_ccaps_sale = ($post_vars["attr"]["level"] === "*") ? true : false; // Selling Independent Custom Capabilities?
 
+												if($use_recurring_profile && $cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+													{
+														if(!$post_vars["attr"]["rr"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
+
+														else if($post_vars["attr"]["rr"] && $post_vars["attr"]["rrt"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+													}
 												if($use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
 														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
@@ -145,7 +162,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$_authnet["x_country"] = $post_vars["country"];
 																$_authnet["x_zip"] = $post_vars["zip"];
 															}
-
 														if(!($authnet = array())) // Recurring Profile.
 															{
 																$authnet["x_method"] = "create";
@@ -184,15 +200,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_country"] = $post_vars["country"];
 																$authnet["x_zip"] = $post_vars["zip"];
 															}
-
-														if(!$_authnet || (($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($_authnet)) && empty($_authnet["__error"])))
+														if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || !$_authnet || (($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($_authnet)) && empty($_authnet["__error"])))
 															{
-																if(($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet)) && (empty($authnet["__error"]) || ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018")))
+																if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet)) && (empty($authnet["__error"]) || ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018"))))
 																	{
 																		// $authnet["response_reason_code"] === "E00018" ... Card expires before start time.
 
-																		$new__txn_id = ($_authnet && !empty($_authnet["transaction_id"])) ? $_authnet["transaction_id"] : false;
-																		$new__subscr_id = ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018") ? $new__txn_id : $authnet["subscription_id"];
+																		if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																			$new__txn_id = $new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+
+																		else // Handle this normally. The transaction/subscription IDs come from Authorize.Net as they always do.
+																			{
+																				$new__txn_id = ($_authnet && !empty($_authnet["transaction_id"])) ? $_authnet["transaction_id"] : false;
+																				$new__subscr_id = ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018") ? $new__txn_id : $authnet["subscription_id"];
+																			}
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
 
@@ -239,17 +260,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																				$ipn["s2member_authnet_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
-
 																		if($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018")
 																			{
 																				update_user_option($user_id, "s2member_auto_eot_time", $start_time);
 																			}
-
 																		if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id))
 																			{
 																				c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet);
 																			}
-
 																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 
 																		$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
@@ -267,7 +285,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$global_response = array("response" => $_authnet["__error"], "error" => true);
 															}
 													}
-
 												else if($use_recurring_profile && !is_user_logged_in()) // Create a new account.
 													{
 														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
@@ -327,7 +344,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$_authnet["x_country"] = $post_vars["country"];
 																$_authnet["x_zip"] = $post_vars["zip"];
 															}
-
 														if(!($authnet = array())) // Recurring Profile.
 															{
 																$authnet["x_method"] = "create";
@@ -366,16 +382,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_country"] = $post_vars["country"];
 																$authnet["x_zip"] = $post_vars["zip"];
 															}
-
-														if(!$_authnet || (($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($_authnet)) && empty($_authnet["__error"])))
+														if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || !$_authnet || (($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($_authnet)) && empty($_authnet["__error"])))
 															{
-																if(($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet)) && (empty($authnet["__error"]) || ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018")))
+																if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet)) && (empty($authnet["__error"]) || ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018"))))
 																	{
 																		// $authnet["response_reason_code"] === "E00018" ... Card expires before start time.
 
-																		$new__txn_id = ($_authnet && !empty($_authnet["transaction_id"])) ? $_authnet["transaction_id"] : false;
-																		$new__subscr_id = ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018") ? $new__txn_id : $authnet["subscription_id"];
+																		if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																			$new__txn_id = $new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
+																		else // Handle this normally. The transaction/subscription IDs come from Authorize.Net as they always do.
+																			{
+																				$new__txn_id = ($_authnet && !empty($_authnet["transaction_id"])) ? $_authnet["transaction_id"] : false;
+																				$new__subscr_id = ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018") ? $new__txn_id : $authnet["subscription_id"];
+																			}
 																		if(!($ipn = array())) // Simulated PayPal® IPN.
 																			{
 																				$ipn["txn_type"] = "subscr_signup";
@@ -417,7 +437,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																				$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																			}
-
 																		if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																			{
 																				$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
@@ -444,7 +463,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																				$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																			}
-
 																		if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																			{
 																				if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
@@ -503,7 +521,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$global_response = array("response" => $_authnet["__error"], "error" => true);
 															}
 													}
-
 												else if(!$use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
 														update_user_meta($user_id, "first_name", $post_vars["first_name"]).update_user_meta($user_id, "last_name", $post_vars["last_name"]);
@@ -544,12 +561,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_country"] = $post_vars["country"];
 																$authnet["x_zip"] = $post_vars["zip"];
 															}
-
-														if(($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($authnet)) && empty($authnet["__error"]))
+														if($cost_calculations["total"] <= 0 || (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($authnet)) && empty($authnet["__error"])))
 															{
 																$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 																$old__subscr_id = get_user_option("s2member_subscr_id");
-																$new__subscr_id = $new__txn_id = $authnet["transaction_id"];
+
+																if($cost_calculations["total"] <= 0)
+																	$new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+																else $new__subscr_id = $new__txn_id = $authnet["transaction_id"];
 
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
@@ -582,13 +601,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																		$ipn["s2member_authnet_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-
 																if(!$is_independent_ccaps_sale) // Independent?
 																	if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id))
 																		{
 																			c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet);
 																		}
-
 																setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 
 																$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
@@ -601,7 +618,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$global_response = array("response" => $authnet["__error"], "error" => true);
 															}
 													}
-
 												else if(!$use_recurring_profile && !is_user_logged_in()) // Create a new account.
 													{
 														if(!($authnet = array())) // Direct payments.
@@ -640,10 +656,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_country"] = $post_vars["country"];
 																$authnet["x_zip"] = $post_vars["zip"];
 															}
-
-														if(($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($authnet)) && empty($authnet["__error"]))
+														if($cost_calculations["total"] <= 0 || (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_aim_response($authnet)) && empty($authnet["__error"])))
 															{
-																$new__subscr_id = $authnet["transaction_id"];
+																if($cost_calculations["total"] <= 0)
+																	$new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+																else $new__subscr_id = $new__txn_id = $authnet["transaction_id"];
 
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
@@ -674,7 +691,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																	}
-
 																if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																	{
 																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
@@ -701,7 +717,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																		$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																		$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																	}
-
 																if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))

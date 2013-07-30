@@ -152,6 +152,7 @@ jQuery(document).ready (function($)
 
 						trialPeriod = /* Lifetime (1-L-BN) and Buy Now ( BN ) access is NOT compatible w/ Trial Periods. */ (regRecur === 'BN') ? '0' : trialPeriod;
 						trialAmount = /* Validate Trial Amount. */ (!trialAmount || isNaN(trialAmount) || trialAmount < 0.01 || trialPeriod <= 0) ? '0' : trialAmount;
+						regAmount = /* Validate Regular Amount. */ (!regAmount || isNaN(regAmount) || regAmount < 0.01 || regAmount <= 0) ? '0' : regAmount;
 
 						var levelCcapsPer = (regRecur === 'BN' && regTerm !== 'L') ? level + ':' + cCaps + ':' + regPeriod + ' ' + regTerm : level + ':' + cCaps;
 						levelCcapsPer = /* Clean any trailing separators from this string. */ levelCcapsPer.replace (/\:+$/g, '');
@@ -166,9 +167,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 10000.00');
 								return false;
 							}
-						else if (!regAmount || isNaN(regAmount) || regAmount < 0.01)
+						else if (regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
 							{
-								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
+								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 								return false;
 							}
 						else if (regAmount > /* $10,000.00 maximum. */ 10000.00 && currencyCode.toUpperCase() === 'USD')
@@ -217,6 +218,8 @@ jQuery(document).ready (function($)
 						var cCaps = $.trim ($.trim ($('input#ws-plugin--s2member-pro-ccap-ccaps').val ()).replace (/^(-all|-al|-a|-)[;,]*/gi, '').replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 						cCaps = ($.trim ($('input#ws-plugin--s2member-pro-ccap-ccaps').val ()).match (/^(-all|-al|-a|-)[;,]*/i)) ? ((cCaps) ? '-all,' : '-all') + cCaps.toLowerCase () : cCaps.toLowerCase ();
 
+						regAmount = /* Validate Regular Amount. */ (!regAmount || isNaN(regAmount) || regAmount < 0.01 || regAmount <= 0) ? '0' : regAmount;
+
 						var levelCcapsPer = (regRecur === 'BN' && regTerm !== 'L') ? '*:' + cCaps + ':' + regPeriod + ' ' + regTerm : '*:' + cCaps;
 						levelCcapsPer = /* Clean any trailing separators from this string. */ levelCcapsPer.replace (/\:+$/g, '');
 
@@ -225,9 +228,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nPlease provide at least one Custom Capability.');
 								return false;
 							}
-						else if (!regAmount || isNaN(regAmount) || regAmount < 0.01)
+						else if (regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
 							{
-								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
+								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 								return false;
 							}
 						else if (regAmount > /* $10,000.00 maximum. */ 10000.00 && currencyCode.toUpperCase() === 'USD')
@@ -272,14 +275,16 @@ jQuery(document).ready (function($)
 						var pageStyle = $.trim ($('input#ws-plugin--s2member-pro-sp-page-style').val ().replace (/"/g, ''));
 						var currencyCode = $('select#ws-plugin--s2member-pro-sp-currency').val ().replace (/[^A-Z]/g, '');
 
+						regAmount = /* Validate Regular Amount. */ (!regAmount || isNaN(regAmount) || regAmount < 0.01 || regAmount <= 0) ? '0' : regAmount;
+
 						if /* Must have a Leading Post/Page ID to work with. Otherwise, Link generation will fail. */ (!leading)
 							{
 								alert('— Oops, a slight problem: —\n\nPlease select a Leading Post/Page.\n\n*Tip* If there are no Posts/Pages in the menu, it\'s because you\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -› Restriction Options -› Specific Post/Page Access.');
 								return false;
 							}
-						else if (!regAmount || isNaN(regAmount) || regAmount < 0.01)
+						else if (regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
 							{
-								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.01');
+								alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 								return false;
 							}
 						else if (regAmount > /* $10,000.00 maximum. */ 10000.00 && currencyCode.toUpperCase() === 'USD')

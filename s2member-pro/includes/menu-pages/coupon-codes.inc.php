@@ -63,7 +63,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-coupon-codes-section">' . "\n";
 						echo '<h3>Coupon Code Configuration File (optional, to provide discounts)</h3>' . "\n";
 						echo '<p>Currently, this is ONLY compatible with Pro Forms for PayPal® Pro and Authorize.Net®, enabled by the s2Member Pro Module. Coupon Codes allow you to provide discounts <em>(through a special promotion)</em>. A Customer may enter a Coupon Code at checkout, and depending on the Code they enter, a discount may be applied <em>(based on your configuration below)</em>.</p>' . "\n";
-						echo '<p>You can have an unlimited number of Coupon Codes. Coupon Codes can be configured to provide a flat-rate discount, or a percentage-based discount. It is possible to force specific Coupon Codes to expire automatically, on a particular date in the future. It is possible to specify which charge(s) a specific Coupon Code applies to <em>( e.g. the Initial/Trial Amount only, the Regular Amount only, or both; including all Recurring fees. )</em>. In addition, it is also possible to limit the use of a particular Coupon Code, to a particular Post or Page ID, where a particular Pro Form Shortcode is made available to Customers. You\'ll find several configuration examples below.</p>' . "\n";
+						echo '<p>You can have an unlimited number of Coupon Codes. Coupon Codes can be configured to provide a flat-rate discount, or a percentage-based discount. It is possible to force specific Coupon Codes to expire automatically, on a particular date in the future. It is possible to specify which charge(s) a specific Coupon Code applies to <em>(e.g. the Initial/Trial Amount only, the Regular Amount only, or both; including all Recurring fees)</em>. In addition, it is also possible to limit the use of a particular Coupon Code, to a particular Post or Page ID, where a particular Pro Form Shortcode is made available to Customers. You\'ll find several configuration examples below.</p>' . "\n";
 						echo '<p><strong>Prerequisites:</strong> In order to display a "Coupon Code" field on your Checkout Form, you MUST add this special Shortcode Attribute to your s2Member Pro Form Shortcode(s): <code>accept_coupons="1"</code>. If you would like to force-feed a default Coupon Code <em>(optional)</em>, you can add this special Shortcode attribute: <code>coupon="[your default code]"</code>. Also optional, instead of <code>coupon="[your default code]"</code>, you could pass <code>?s2p-coupon=[your default code]</code> in the query string of a URL leading to a Checkout Form.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
@@ -81,18 +81,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo 'Here are a few basic Coupon Code examples you can follow:<br />' . "\n";
 
 						echo '<ul>' . "\n"; // Explaining Coupon Codes by example.
-						echo '<li><code>SAVE-10|10%</code> <em>( saves the Customer 10% )</em></li>' . "\n";
-						echo '<li><code>SAVE-20|20%</code> <em>( saves the Customer 20% )</em></li>' . "\n";
-						echo '<li><code>2$OFF|2.00</code> <em>( $2.00 off the normal price )</em></li>' . "\n";
-						echo '<li><code>EASTER|5.00</code> <em>( $5.00 off the normal price )</em></li>' . "\n";
-						echo '<li><code>CHRISTMAS|5.00|12/31/2020</code> <em>( $5.00 off, expires Dec 31st, 2020 )</em></li>' . "\n";
+						echo '<li><code>SAVE-10|10%</code> <em>(saves the Customer 10%)</em></li>' . "\n";
+						echo '<li><code>SAVE-20|20%</code> <em>(saves the Customer 20%)</em></li>' . "\n";
+						echo '<li><code>2$OFF|2.00</code> <em>($2.00 off the normal price)</em></li>' . "\n";
+						echo '<li><code>EASTER|5.00</code> <em>($5.00 off the normal price)</em></li>' . "\n";
+						echo '<li><code>CHRISTMAS|5.00|12/31/2020</code> <em>($5.00 off, expires Dec 31st, 2020)</em></li>' . "\n";
 						echo '<li><code>CHRISTMAS-25|25%|01/01/2021</code> <em>(25% off, expires Jan 1st, 2021)</em></li>' . "\n";
-						echo '<li><code>100%OFF|100%</code> <em>(note, the final Regular Billing Rate would still be <strong>$0.01</strong>)</em></li>' . "\n";
+						echo '<li><code>100%OFF|100%</code> <em>(100% FREE access @ <strong>$0.00</strong>)</em></li>' . "\n";
 						echo '</ul>' . "\n";
-
-						echo '<em>* s2Member will NEVER allow the Regular Billing Rate (or Total) to be less than: <strong>$0.01</strong>.<br />' . "\n";
-						echo 'If you want to offer something 100% free, please use a Free Registration Form instead.<br />';
-						echo 'Either that, or you can offer a Free Trial Period in your Shortcode.</em>' . "\n";
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
@@ -102,12 +98,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo '<ul>' . "\n"; // Explaining this by example.
 						echo '<li><code>SAVE-10|10%||ta-only</code> <em>(10% off an Initial/Trial Amount; the ta="" attribute in your Shortcode)</em></li>' . "\n";
 						echo '<li><code>SAVE-15|15%||ra-only</code> <em>(15% off the Regular Amount(s); the ra="" attribute in your Shortcode)</em></li>' . "\n";
-						echo '<li><code>XMAS|5.00|12/31/2021|ra-only</code> <em>( $5 off Regular Amount(s); the ra="" attribute in your Shortcode )</em></li>' . "\n";
-						echo '<li><code>5PER|5%|12/31/2021|all</code> <em>( 5% off All Amounts; this is the default behavior "all" )</em></li>' . "\n";
+						echo '<li><code>XMAS|5.00|12/31/2021|ra-only</code> <em>($5 off Regular Amount(s); the ra="" attribute in your Shortcode)</em></li>' . "\n";
+						echo '<li><code>5PER|5%|12/31/2021|all</code> <em>(5% off All Amounts; this is the default behavior "all")</em></li>' . "\n";
 						echo '</ul>' . "\n";
-
-						echo '<em>* As noted above, s2Member will NEVER allow the (ra) Regular Amount to be less than: <strong>$0.01</strong>.<br />' . "\n";
-						echo 'However, s2Member WILL allow the (ta) Trial Amount to be discounted all the way down to <strong>$0.00</strong>.</em>' . "\n";
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
@@ -117,8 +110,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 						echo '<ul>' . "\n"; // Explaining this by example.
 						echo '<li><code>SAVE-10|10%|||123</code> <em>(10% off; works only on Post or Page ID #<code>123</code>)</em></li>' . "\n";
 						echo '<li><code>SAVE-15|15%||ra-only|123</code> <em>(15% off Regular Amount(s); works only on Post or Page ID #<code>123</code>)</em></li>' . "\n";
-						echo '<li><code>XMAS|5.00|12/31/2021|ra-only|123,456</code> <em>( $5 off Regular Amount(s); works only on Post or Page IDs <code>123</code>,<code>456</code> )</em></li>' . "\n";
-						echo '<li><code>5PER|5%|12/31/2021|all|all</code> <em>( 5% off All Amounts; works on all Posts/Pages; this is the default behavior "all" )</em></li>' . "\n";
+						echo '<li><code>XMAS|5.00|12/31/2021|ra-only|123,456</code> <em>($5 off Regular Amount(s); works only on Post or Page IDs <code>123</code>,<code>456</code>)</em></li>' . "\n";
+						echo '<li><code>5PER|5%|12/31/2021|all|all</code> <em>(5% off All Amounts; works on all Posts/Pages; this is the default behavior "all")</em></li>' . "\n";
 						echo '</ul>' . "\n";
 
 						echo '<em>Remember, you still need a Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code></em><br />' . "\n";

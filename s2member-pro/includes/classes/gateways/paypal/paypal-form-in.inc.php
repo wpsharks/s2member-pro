@@ -178,6 +178,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_cancellation[nonce]" id="s2member-pro-paypal-cancellation-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-cancellation")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_cancellation[attr]" id="s2member-pro-paypal-cancellation-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -302,6 +303,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-paypal-registration-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_registration[attr]" id="s2member-pro-paypal-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -418,6 +420,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_update[nonce]" id="s2member-pro-paypal-update-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-update")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_update[attr]" id="s2member-pro-paypal-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -488,10 +491,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = '<input type="radio" name="s2member_pro_paypal_sp_checkout[card_type]" id="s2member-pro-paypal-sp-checkout-card-type-free" class="s2member-pro-paypal-card-type-free s2member-pro-paypal-sp-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
 								foreach(array("PayPal" => _x("PayPal®", "s2member-front", "s2member"), "Visa" => _x("Visa®", "s2member-front", "s2member"), "MasterCard" => _x("MasterCard®", "s2member-front", "s2member"), "Discover" => _x("Discover®", "s2member-front", "s2member"), "Amex" => _x("American Express®", "s2member-front", "s2member"), "Maestro" => _x("Maestro®", "s2member-front", "s2member"), "Solo" => _x("Solo®", "s2member-front", "s2member")) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" id="s2member-pro-paypal-sp-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label" class="s2member-pro-paypal-form-card-type-label s2member-pro-paypal-sp-checkout-form-card-type-label s2member-pro-paypal-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label s2member-pro-paypal-sp-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label'.((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled' : '').'">'."\n".
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_sp_checkout[card_type]" id="s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.((in_array(strtolower($card_type_v), $attr["accept_via_paypal"])) ? "PayPal" : esc_attr($card_type_v)).'"'.((!empty($_p["s2member_pro_paypal_sp_checkout"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_sp_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_sp_checkout"]["card_type"] === $card_type_v || ($attr["accept"] === array("paypal")&& $card_type_v === "PayPal")) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="100" />'."\n".
 										'</label>';
+
 								/*
 								Build the list of country code options.
 								*/
@@ -552,6 +557,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_sp_checkout[nonce]" id="s2member-pro-paypal-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-sp-checkout")).'" />';
 								$hidden_inputs .= (!$attr["accept_coupons"]) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_paypal_utilities::paypal_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_sp_checkout[attr]" id="s2member-pro-paypal-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*
@@ -646,6 +652,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = '<input type="radio" name="s2member_pro_paypal_checkout[card_type]" id="s2member-pro-paypal-checkout-card-type-free" class="s2member-pro-paypal-card-type-free s2member-pro-paypal-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
 								foreach(array("PayPal" => _x("PayPal®", "s2member-front", "s2member"), "Visa" => _x("Visa®", "s2member-front", "s2member"), "MasterCard" => _x("MasterCard®", "s2member-front", "s2member"), "Discover" => _x("Discover®", "s2member-front", "s2member"), "Amex" => _x("American Express®", "s2member-front", "s2member"), "Maestro" => _x("Maestro®", "s2member-front", "s2member"), "Solo" => _x("Solo®", "s2member-front", "s2member")) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" id="s2member-pro-paypal-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label" class="s2member-pro-paypal-form-card-type-label s2member-pro-paypal-checkout-form-card-type-label s2member-pro-paypal-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label s2member-pro-paypal-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label'.((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled' : '').'">'."\n".
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_checkout[card_type]" id="s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.((in_array(strtolower($card_type_v), $attr["accept_via_paypal"])) ? "PayPal" : esc_attr($card_type_v)).'"'.((!empty($_p["s2member_pro_paypal_checkout"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_checkout"]["card_type"] === $card_type_v || ($attr["accept"] === array("paypal")&& $card_type_v === "PayPal")) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="200" />'."\n".
@@ -746,6 +753,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$attr["accept_coupons"]) ? '<input type="hidden" id="s2member-pro-paypal-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-paypal-checkout-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_paypal_utilities::paypal_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-paypal-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-paypal-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_checkout[attr]" id="s2member-pro-paypal-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
 								/*

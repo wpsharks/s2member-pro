@@ -390,10 +390,31 @@ jQuery(document).ready (function($)
 
 				(handleBillingMethod = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
+						if ($(submissionSection + ' input#s2member-pro-paypal-sp-checkout-payment-not-required-or-not-possible').length)
+								$(cardType).val (['Free']); // No payment required in this VERY special case.
+
 						var billingMethod = /* Billing Method. */ $(cardType + ':checked').val ();
 
-						if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+						if ($.inArray (billingMethod, ['Free']) !== -1)
 							{
+								$(billingMethodSection).hide (), $(billingAddressSection).hide ();
+
+								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').hide ();
+								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaFalse);
+
+								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').hide ();
+								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaFalse);
+
+								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
+
+								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').focus () : null;
+							}
+						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaTrue);
 
@@ -405,12 +426,14 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-sp-checkout-card-number').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Maestro', 'Solo']) !== -1)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaTrue);
 
@@ -419,12 +442,14 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-sp-checkout-card-number').focus () : null;
 							}
 						else if ((!billingMethod || billingMethod === 'PayPal') && taxMayApply)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaTrue);
 
@@ -449,12 +474,14 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-city-div').hide ();
 								$(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-city-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(billingAddressSection + ' input#s2member-pro-paypal-sp-checkout-state').focus () : null;
 							}
 						else if (!billingMethod || billingMethod === 'PayPal')
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).hide ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').hide ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaFalse);
 
@@ -464,7 +491,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).hide (), $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').focus () : null;
 							}
@@ -667,10 +694,31 @@ jQuery(document).ready (function($)
 
 				(handleBillingMethod = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
+						if ($(submissionSection + ' input#s2member-pro-paypal-checkout-payment-not-required-or-not-possible').length)
+								$(cardType).val (['Free']); // No payment required in this VERY special case.
+
 						var billingMethod = /* Billing Method. */ $(cardType + ':checked').val ();
 
-						if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+						if ($.inArray (billingMethod, ['Free']) !== -1)
 							{
+								$(billingMethodSection).hide (), $(billingAddressSection).hide ();
+
+								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
+								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
+
+								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
+								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
+
+								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
+
+								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').focus () : null;
+							}
+						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaTrue);
 
@@ -682,12 +730,14 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-checkout-card-number').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Maestro', 'Solo']) !== -1)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaTrue);
 
@@ -696,12 +746,14 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-checkout-card-number').focus () : null;
 							}
 						else if ((!billingMethod || billingMethod === 'PayPal') && taxMayApply)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaTrue);
 
@@ -726,12 +778,14 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-city-div').hide ();
 								$(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-city-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).show (), $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(billingAddressSection + ' input#s2member-pro-paypal-checkout-state').focus () : null;
 							}
 						else if (!billingMethod || billingMethod === 'PayPal')
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).hide ();
+
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
 
@@ -741,7 +795,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).hide (), $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').focus () : null;
 							}

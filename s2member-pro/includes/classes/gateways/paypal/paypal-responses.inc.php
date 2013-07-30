@@ -396,14 +396,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["lc"] && strlen($attr["lc"]) !== 2)
 											$response = array("response" => _x('Invalid form configuration. Invalid "lc" attribute. Locale Code. When provided, must be a 2 character country code.', "s2member-admin", "s2member"), "error" => true);
 
-										else if(!$attr["ra"] || !is_string($attr["ra"]))
-											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
+										else if(!strlen($attr["ra"]) || !is_string($attr["ra"]))
+											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if(!is_numeric($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be numeric.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["ra"] < 0.01)
-											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["ra"] < 0.00)
+											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["ra"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
@@ -533,14 +533,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["level"] === "*" && !preg_match($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["membership_item_number_wo_level_regex"], $attr["level_ccaps_eotper"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "level_ccaps_eotper" attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
 
-										else if(!$attr["ra"] || !is_string($attr["ra"]))
-											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
+										else if(!strlen($attr["ra"]) || !is_string($attr["ra"]))
+											$response = array("response" => _x('Invalid form configuration. Missing "ra" attribute. The Regular Amount. Must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if(!is_numeric($attr["ra"]))
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be numeric.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["ra"] < 0.01)
-											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.01.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["ra"] < 0.00)
+											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["ra"] > 10000.00 && strtoupper($attr["cc"]) === "USD")
 											$response = array("response" => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 10000.00.', "s2member-admin", "s2member"), "error" => true);
@@ -554,7 +554,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["level"] === "*" && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "level, rr" attributes. The "level" (Level) attribute is "*" for (Independent Custom Capabilities), and "rr" is not "BN" (Buy Now).', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["ta"] === $attr["ra"] && $attr["tp"] === $attr["rp"] && $attr["tt"] === $attr["rt"])
+										else if($attr["ra"] && $attr["ta"] === $attr["ra"] && $attr["tp"] === $attr["rp"] && $attr["tt"] === $attr["rt"])
 											$response = array("response" => _x('Invalid form configuration. Invalid "ta, tp, tt" attributes. Trial Period. When provided, these cannot be exactly the same as your "ra, rp, rt" attributes.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["rrt"] && (!is_string($attr["rrt"]) || !is_numeric($attr["rrt"])))
@@ -710,7 +710,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) || !is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"]))
+										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal", "Free")))
+											$response = array("response" => _x('Invalid Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
+
+										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) && (!is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"])))
 											$response = array("response" => _x('Invalid Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_number"] || !is_string($s["card_number"])))
@@ -799,7 +802,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!$s["card_type"] || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) || !is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"]))
+										else if(!in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal", "Free")))
+											$response = array("response" => _x('Invalid Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
+
+										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo", "PayPal")) && (!is_array($s["attr"]["accept"]) || !in_array(strtolower($s["card_type"]), $s["attr"]["accept"])))
 											$response = array("response" => _x('Invalid Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (!$s["card_number"] || !is_string($s["card_number"])))

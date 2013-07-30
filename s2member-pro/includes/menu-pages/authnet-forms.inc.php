@@ -487,7 +487,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
 								echo '<li><code>%%subscr_id%%</code> = The Authorize.Net® Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Authorize.Net® does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%initial%%</code> = The Initial Fee charged during signup. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent, whenever they initially signed up, no matter what. Even if that amount is 0.\\n\\nIf a Customer signs up, under the terms of a 100% Free Trial Period, this will be 0. So be careful using %%initial%% when you offer a 100% Free Trial Period, because a $0.00 sale amount could cause havoc with affiliate programs.\\n\\nIf you\\\'re offering a 100% Free Trial Period, and you need to track sales through affiliate programs, you can either hard-code an amount; or use `s2Member -› API Notifications -› Payment Notifications` instead.\'); return false;">?</a> ]</li>'."\n";
-								echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. This value is <code>always > 0</code>, no matter what. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. The %%regular%% rate is always > 0. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
+								echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offer something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%recurring%%</code> = This is the amount that will be charged on a recurring basis, or <code>0</code> if non-recurring. [ <a href="#" onclick="alert(\'If Recurring Payments have not been required, this will be equal to 0. That being said, %%regular%% &amp; %%recurring%% are usually the same value. This variable can be used in two different ways. You can use it to determine what the Regular Recurring Rate is, or to determine whether the Subscription will recur or not. If it is going to recur, %%recurring%% will be > 0.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased the Membership Subscription.</li>'."\n";
 								echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who purchased the Membership Subscription.</li>'."\n";
@@ -687,7 +687,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<li><code>level="1"</code> Membership Level [1-4] <em>(or, up to the number of configured Levels)</em>. Only valid for Forms providing Membership Level Access, which includes Free Registration Forms too. Free Registration Forms allow a value of <code>level="0"</code> whenever <code>register="1"</code> for Free Registration. In addition, Free Registration Forms will also allow visitors to register for free, even at higher Levels if you wish. Free Registration Forms will accept any value [0-4] <em>(or, up to the number of configured Levels)</em>.'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' With Independent Custom Capabilities this MUST be set to <code>level="*"</code>, and <code>ccaps=""</code> must NOT be empty <em>(i.e. <code>level="*" ccaps="music,videos"</code>)</em>.').'</li>'."\n";
 						echo '<li><code>modify="0"</code> Modification directive. Only valid w/ Membership Level Access. Possible values: <code>0</code> = allows Customers to modify their current Subscription or sign up for a new one, <code>1</code> = allows Customers to only modify their current Subscription. When <code>modify="1"</code>, s2Member will force a Customer to be logged-in before they can fill out the Form (very handy).</li>'."\n";
 						echo '<li><code>register="0"</code> Free Registration Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Free Registration Form, <code>1</code> = this IS a Free Registration Form.</li>'."\n";
-						echo '<li><code>ra="0.01"</code> Regular, Buy Now, and/or Recurring Amount. Must be &gt;= <code>0.01</code>. Not valid when <code>cancel="1"</code>.</li>'."\n";
+						echo '<li><code>ra="0.01"</code> Regular, Buy Now, and/or Recurring Amount. Can also be <code>0.00</code> to provide free access. Not valid when <code>cancel="1"</code>.</li>'."\n";
 						echo '<li><code>rp="1"</code> Regular Period. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Must be &gt;= <code>1</code> (ex: <code>1</code> Week, <code>3</code> Weeks, <code>2</code> Months, <code>1</code> Year). Please note — Authorize.Net does NOT support daily recurring intervals. The minimum recurring interval is weekly and the maximum is yearly.</li>'."\n";
 						echo '<li><code>rt="M"</code> Regular Term. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Possible values: <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years, <code>L</code> = Lifetime. Please note — Authorize.Net does NOT support daily recurring intervals. The minimum recurring interval is weekly and the maximum is yearly.</li>'."\n";
 						echo '<li><code>rr="1"</code> Recurring directive. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Possible values: <code>0</code> = non-recurring "Subscription" with possible Trial Period for free, or at a different Trial Amount; <code>1</code> = recurring "Subscription" with possible Trial Period for free, or at a different Trial Amount; <code>BN</code> = non-recurring "Buy Now" functionality, no Trial Period possible.</li>'."\n";
@@ -708,6 +708,87 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '</div>'."\n";
 
 						echo '</div>'."\n";
+
+						echo '<div class="ws-menu-page-group" title="Wrapping Multiple Shortcodes as `Checkout Options`">' . "\n";
+
+						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-form-options-section">' . "\n";
+						echo '<h3>Wrapping Multiple Shortcodes as "Checkout Options"</h3>' . "\n";
+						echo '<p>If you would like to offer a single Pro Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro Form Shortcodes the same as you normally would (using some of the Pro Form Generators on this page). Then, you can simply wrap them all inside another Pro Form Shortcode (as seen below). For instance, if you generate two Pro Form Shortcodes (or you have multiple Pro Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro Form Shortcode and it consolidates all the Pro Form Shortcodes into a single Pro Form with multiple "Checkout Options" (e.g. it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>' . "\n";
+
+						echo '<table class="form-table">' . "\n";
+						echo '<tbody>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<td>' . "\n";
+						echo '<pre>'."\n";
+						echo '[s2Member-AuthNet-Pro-Form]'."\n";
+                  echo "\t".'[s2Member-AuthNet-Pro-Form /]'."\n";
+                  echo "\t".'[s2Member-AuthNet-Pro-Form /]'."\n";
+						echo '[/s2Member-AuthNet-Pro-Form]'."\n";
+						echo '</pre>'."\n";
+						echo '</td>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '</tbody>' . "\n";
+						echo '</table>' . "\n";
+
+						echo '<div class="ws-menu-page-hr"></div>' . "\n";
+
+						echo '<h3>Behind-The-Scene — How do "Checkout Options" work?</h3>' . "\n";
+						echo '<p>Given this simple example (as seen below); s2Member® will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (e.g. a child). The one s2Member® merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
+
+						echo '<table class="form-table">' . "\n";
+						echo '<tbody>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<td>' . "\n";
+						echo '<pre>'."\n";
+						echo '[s2Member-AuthNet-Pro-Form rp="1" rt="M" rr="1" accept_coupons="1"]'."\n";
+                  echo "\t".'[s2Member-AuthNet-Pro-Form level="1" desc="Option 1 ($10.00)" ra="10.00" /]'."\n";
+                  echo "\t".'[s2Member-AuthNet-Pro-Form level="2" desc="Option 2 ($20.00)" ra="20.00" /]'."\n";
+						echo "\t".'[s2Member-AuthNet-Pro-Form level="3" desc="Option 3 ($30.00)" ra="30.00" /]'."\n";
+						echo '[/s2Member-AuthNet-Pro-Form]'."\n";
+						echo '</pre>'."\n";
+						echo '</td>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '</tbody>' . "\n";
+						echo '</table>' . "\n";
+
+						echo '<p style="font-style:italic;">In this example, the default checkout Level is 1 (because the default Checkout Option is always the first Checkout Option); but that can change depending on which Checkout Option is selected by the customer. All of these Checkout Options will be associated with different prices; and each Checkout Option will provide access to a different Membership Level. The customer may choose which one they would like to pay for and gain access to.</p>'."\n";
+						echo '<p style="font-style:italic;">All of these Checkout Options will allow a Coupon Code; because that\'s an absolute default Shortcode Attribute (in this particular example); which is not overwritten by any of the children. All of these Checkout Options will charge the customer on a recurring basis (once each month); because those are absolute default Shortcode Attributes (in this particular example) e.g. <code>rp="1" rt="M" rr="1"</code>; which are not overwritten by any of the children.</p>'."\n";
+						echo '<p style="font-style:italic;">~ You\'ll be happy to know that ANY Shortcode Attribute can be declared (and/or overridden); in any of these tags. There is no special subset of restricted Shortcode Attributes in any of these; you can do whatever you like once you understand how this works. In addition, this works for Specific Post/Page Access, Buy Now Access, Recurring Access; etc. You can even mix these together if you like. Just wrap all of your Pro Form Shortcodes with another Pro Form Shortcode :-)</p>'."\n";
+						echo '</div>' . "\n";
+
+						echo '<div class="ws-menu-page-hr"></div>' . "\n";
+
+						echo '<h3>Linking To A Pro Form w/ Multiple "Checkout Options"</h3>' . "\n";
+						echo '<p>It is also possible to link to a Pro Form and pre-select a specific Checkout Option that appears in the list. Starting from the first Checkout Option in the list (we call this Checkout Option 1) you can choose which Checkout Option number you want to have selected by default. This is accomplished by linking to any Post/Page on your site which contains a Pro Form Shortcode; and then adding the <code>?s2p-option=</code> variable onto the end of that URL (as seen below).</p>' . "\n";
+
+						echo '<table class="form-table">' . "\n";
+						echo '<tbody>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<td>' . "\n";
+
+						echo 'This example would pre-select option 2.'."\n";
+						echo '<pre>'."\n";
+						echo 'http://www.example.com/my-checkout-form/?s2p-option=2'."\n";
+						echo '</pre>'."\n";
+
+						echo 'The absolute default Checkout Option is always the first one (Checkout Option 1).<br />'."\n";
+						echo 'This would pre-select option 1 (but this is NOT necessary, because it\'s the default already).'."\n";
+						echo '<pre>'."\n";
+						echo 'http://www.example.com/my-checkout-form/?s2p-option=1'."\n";
+						echo '</pre>'."\n";
+						echo '</td>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '</tbody>' . "\n";
+						echo '</table>' . "\n";
+						echo '</div>' . "\n";
+
+						echo '</div>' . "\n";
 
 						echo '</td>'."\n";
 

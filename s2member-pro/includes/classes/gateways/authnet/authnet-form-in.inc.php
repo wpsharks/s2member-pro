@@ -172,6 +172,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_authnet_cancellation[nonce]" id="s2member-pro-authnet-cancellation-nonce" value="' . esc_attr (wp_create_nonce ("s2member-pro-authnet-cancellation")) . '" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_authnet_cancellation[attr]" id="s2member-pro-authnet-cancellation-attr" value="' . esc_attr (c_ws_plugin__s2member_utils_encryption::encrypt (serialize ($attr))) . '" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -296,6 +297,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_names"]) ? '<input type="hidden" id="s2member-pro-authnet-registration-names-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-authnet-registration-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_authnet_registration[attr]" id="s2member-pro-authnet-registration-attr" value="' . esc_attr (c_ws_plugin__s2member_utils_encryption::encrypt (serialize ($attr))) . '" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -413,6 +415,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_authnet_update[nonce]" id="s2member-pro-authnet-update-nonce" value="' . esc_attr (wp_create_nonce ("s2member-pro-authnet-update")) . '" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_authnet_update[attr]" id="s2member-pro-authnet-update-attr" value="' . esc_attr (c_ws_plugin__s2member_utils_encryption::encrypt (serialize ($attr))) . '" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
+
 								/*
 								Get the form template.
 								*/
@@ -483,6 +487,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = '<input type="radio" name="s2member_pro_authnet_sp_checkout[card_type]" id="s2member-pro-authnet-sp-checkout-card-type-free" class="s2member-pro-authnet-card-type-free s2member-pro-authnet-sp-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
 								foreach (array ("Visa" => _x ("Visa®", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard®", "s2member-front", "s2member"), "Discover" => _x ("Discover®", "s2member-front", "s2member"), "Amex" => _x ("American Express®", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro®", "s2member-front", "s2member"), "Solo" => _x ("Solo®", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-sp-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
 									'<input type="radio" aria-required="true" name="s2member_pro_authnet_sp_checkout[card_type]" id="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_sp_checkout"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_sp_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_sp_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="100" />' . "\n" .
@@ -549,6 +554,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_authnet_sp_checkout[nonce]" id="s2member-pro-authnet-sp-checkout-nonce" value="' . esc_attr (wp_create_nonce ("s2member-pro-authnet-sp-checkout")) . '" />';
 								$hidden_inputs .= (!$attr["accept_coupons"]) ? '<input type="hidden" id="s2member-pro-authnet-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_authnet_utilities::authnet_tax_may_apply ()) ? '<input type="hidden" id="s2member-pro-authnet-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-authnet-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_authnet_sp_checkout[attr]" id="s2member-pro-authnet-sp-checkout-attr" value="' . esc_attr (c_ws_plugin__s2member_utils_encryption::encrypt (serialize ($attr))) . '" />';
 								/*
 								Get the form template.
@@ -640,6 +646,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = '<input type="radio" name="s2member_pro_authnet_checkout[card_type]" id="s2member-pro-authnet-checkout-card-type-free" class="s2member-pro-authnet-card-type-free s2member-pro-authnet-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
 								foreach (array ("Visa" => _x ("Visa®", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard®", "s2member-front", "s2member"), "Discover" => _x ("Discover®", "s2member-front", "s2member"), "Amex" => _x ("American Express®", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro®", "s2member-front", "s2member"), "Solo" => _x ("Solo®", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
 									'<input type="radio" aria-required="true" name="s2member_pro_authnet_checkout[card_type]" id="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_checkout"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="200" />' . "\n" .
@@ -743,6 +750,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$hidden_inputs .= (!$attr["accept_coupons"]) ? '<input type="hidden" id="s2member-pro-authnet-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-authnet-checkout-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= (!c_ws_plugin__s2member_pro_authnet_utilities::authnet_tax_may_apply ()) ? '<input type="hidden" id="s2member-pro-authnet-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-authnet-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_authnet_checkout[attr]" id="s2member-pro-authnet-checkout-attr" value="' . esc_attr (c_ws_plugin__s2member_utils_encryption::encrypt (serialize ($attr))) . '" />';
 								/*
 								Get the form template.

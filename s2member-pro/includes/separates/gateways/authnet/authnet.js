@@ -386,10 +386,29 @@ jQuery(document).ready (function($)
 
 				(handleBillingMethod = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
+						if ($(submissionSection + ' input#s2member-pro-authnet-sp-checkout-payment-not-required-or-not-possible').length)
+								$(cardType).val (['Free']); // No payment required in this VERY special case.
+
 						var billingMethod = /* Billing Method. */ $(cardType + ':checked').val ();
 
-						if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+						if ($.inArray (billingMethod, ['Free']) !== -1)
 							{
+								$(billingMethodSection).hide (), $(billingAddressSection).hide ();
+
+								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div').hide ();
+								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div :input').attr (ariaFalse);
+
+								$(billingAddressSection + ' > div.s2member-pro-authnet-sp-checkout-form-div').hide ();
+								$(billingAddressSection + ' > div.s2member-pro-authnet-sp-checkout-form-div :input').attr (ariaFalse);
+
+								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
+
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit').focus () : null;
+							}
+						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div :input').attr (ariaTrue);
 
@@ -401,10 +420,12 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), (eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-sp-checkout-card-number').focus () : null;
+								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-sp-checkout-card-number').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Maestro', 'Solo']) !== -1)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div :input').attr (ariaTrue);
 
@@ -413,10 +434,12 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), (eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-sp-checkout-card-number').focus () : null;
+								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-sp-checkout-card-number').focus () : null;
 							}
 						else if /* Else there was no Billing Method supplied. */ (!billingMethod)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).hide ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div').hide ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-sp-checkout-form-div :input').attr (ariaFalse);
 
@@ -428,7 +451,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit').focus () : null;
 							}
 
 						handleTaxIssues /* Tax issues. */ ();
@@ -627,10 +650,29 @@ jQuery(document).ready (function($)
 
 				(handleBillingMethod = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
+						if ($(submissionSection + ' input#s2member-pro-authnet-checkout-payment-not-required-or-not-possible').length)
+								$(cardType).val (['Free']); // No payment required in this VERY special case.
+
 						var billingMethod = /* Billing Method. */ $(cardType + ':checked').val ();
 
-						if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+						if ($.inArray (billingMethod, ['Free']) !== -1)
 							{
+								$(billingMethodSection).hide (), $(billingAddressSection).hide ();
+
+								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div').hide ();
+								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div :input').attr (ariaFalse);
+
+								$(billingAddressSection + ' > div.s2member-pro-authnet-checkout-form-div').hide ();
+								$(billingAddressSection + ' > div.s2member-pro-authnet-checkout-form-div :input').attr (ariaFalse);
+
+								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
+
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-checkout-submit').focus () : null;
+							}
+						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
+							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div :input').attr (ariaTrue);
 
@@ -642,10 +684,12 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), (eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-checkout-card-number').focus () : null;
+								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-checkout-card-number').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Maestro', 'Solo']) !== -1)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).show ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div :input').attr (ariaTrue);
 
@@ -654,10 +698,12 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).show (), (eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-checkout-card-number').focus () : null;
+								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-authnet-checkout-card-number').focus () : null;
 							}
 						else if /* Else there was no Billing Method supplied. */ (!billingMethod)
 							{
+								$(billingMethodSection).show (), $(billingAddressSection).hide ();
+
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div').hide ();
 								$(billingMethodSection + ' > div.s2member-pro-authnet-checkout-form-div :input').attr (ariaFalse);
 
@@ -669,7 +715,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-checkout-submit').focus () : null;
 							}
 					}) ();
 

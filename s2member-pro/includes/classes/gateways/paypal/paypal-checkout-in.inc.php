@@ -88,10 +88,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 												$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
 												$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost($cp_2gbp_attr["ta"], $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
 
+												if($cost_calculations["total"] <= 0 && $post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
+													{
+														$post_vars["attr"]["tp"] = "0"; // Ditch the trial period completely.
+														$cost_calculations["total"] = $cost_calculations["trial_total"]; // Use as regular total (ditch trial).
+														$cost_calculations["trial_sub_total"] = "0.00"; // Ditch the initial total (using as grand total).
+														$cost_calculations["trial_tax"] = "0.00"; // Ditch this calculation now also.
+														$cost_calculations["trial_tax_per"] = ""; // Ditch this calculation now also.
+														$cost_calculations["trial_total"] = "0.00"; // Ditch this calculation now also.
+													}
 												$use_recurring_profile = ($post_vars["attr"]["rr"] === "BN" || (!$post_vars["attr"]["tp"] && !$post_vars["attr"]["rr"])) ? false : true;
 												$is_independent_ccaps_sale = /* Selling Independent Custom Capabilities? */ ($post_vars["attr"]["level"] === "*") ? true : false;
 
-												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal")
+												if($use_recurring_profile && $cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+													{
+														if(!$post_vars["attr"]["rr"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
+
+														else if($post_vars["attr"]["rr"] && $post_vars["attr"]["rrt"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+													}
+												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && ($cost_calculations["trial_total"] > 0 || $cost_calculations["total"] > 0))
 													{
 														$return_url = $cancel_url = (is_ssl()) ? "https://" : "http://";
 														$return_url = $cancel_url = ($return_url = $cancel_url).$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
@@ -230,11 +247,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$paypal["ZIP"] = $post_vars["zip"];
 																			}
 																	}
-																if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+																if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 																	{
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
-																		$new__subscr_id = $paypal["PROFILEID"];
+
+																		if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																			$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated ID in this case.
+																		else $new__subscr_id = $paypal["PROFILEID"];
 
 																		if /* Simulated PayPal® IPN. */(!($ipn = array()))
 																			{
@@ -368,9 +388,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+														if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = $paypal["PROFILEID"];
+																if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																	$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+																else $new__subscr_id = $paypal["PROFILEID"];
 
 																if /* Simulated PayPal® IPN. */(!($ipn = array()))
 																	{
@@ -556,13 +578,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$paypal["ZIP"] = $post_vars["zip"];
 																			}
 																	}
-																if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+																if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 																	{
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
-																		$new__subscr_id = $new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
-																		$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
 
+																		if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+
+																		else // We handle this normally. The transaction ID comes from PayPal® as it always does.
+																			{
+																				$new__subscr_id = $new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
+																				$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																			}
 																		if /* Simulated PayPal® IPN. */(!($ipn = array()))
 																			{
 																				$ipn["txn_type"] = "web_accept";
@@ -686,11 +713,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+														if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
-																$new__subscr_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
+																else // We handle this normally. The transaction ID comes from PayPal® as it always does.
+																	{
+																		$new__subscr_id = $new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
+																		$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																	}
 																if /* Simulated PayPal® IPN. */(!($ipn = array()))
 																	{
 																		$ipn["txn_type"] = "web_accept";

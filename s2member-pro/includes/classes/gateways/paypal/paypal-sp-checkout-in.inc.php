@@ -87,7 +87,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 												$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
 												$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost(null, $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
 
-												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal")
+												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && $cost_calculations["total"] > 0)
 													{
 														$return_url = $cancel_url = (is_ssl()) ? "https://" : "http://";
 														$return_url = $cancel_url = ($return_url = $cancel_url).$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
@@ -154,7 +154,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																$global_response = array("response" => $paypal_set_xco["__error"], "error" => true);
 															}
 													}
-
 												else // Else we're good. Now ready to process this "Buy Now" transaction.
 													{
 														if(empty($post_vars["attr"]["invoice"])) // Only if it's empty.
@@ -227,12 +226,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+														if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
-																$new__txn_id = (!$new__txn_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__txn_id;
+																if($cost_calculations["total"] <= 0) $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
+																else // We handle this normally. The transaction ID comes from PayPal® as it always does.
+																	{
+																		$new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
+																		$new__txn_id = (!$new__txn_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__txn_id;
+																	}
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
@@ -274,7 +276,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-
 																if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars["attr"]["ids"], $post_vars["attr"]["exp"])))
 																	{
 																		setcookie("s2member_sp_tracking", ($s2member_sp_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_sp_tracking", $s2member_sp_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_sp_tracking"] = $s2member_sp_tracking);

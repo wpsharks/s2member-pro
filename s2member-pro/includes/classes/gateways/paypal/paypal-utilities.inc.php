@@ -477,7 +477,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.$ra.$tx);
@@ -490,7 +490,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -503,7 +503,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -516,7 +516,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -529,7 +529,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
@@ -542,7 +542,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 																					$ta = ($ta >= 0.00) ? $ta : "0.00";
 
 																					$ra = number_format($attr["ra"] - $coupon["flat-rate"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), $cs.number_format($coupon["flat-rate"], 2, ".", ""), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
@@ -564,7 +564,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.$ra.$tx);
@@ -579,7 +579,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"], 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -594,7 +594,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -609,7 +609,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s, then %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr["tp"]." ".$attr["tt"]).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]));
@@ -624,7 +624,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
@@ -639,7 +639,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 																					$p = ($attr["ra"] / 100) * $coupon["percentage"];
 																					$ra = number_format($attr["ra"] - $p, 2, ".", "");
-																					$ra = ($ra >= 0.01) ? $ra : "0.01";
+																					$ra = ($ra >= 0.00) ? $ra : "0.00";
 
 																					$desc = sprintf(_x("COUPON %s off. (Now: %s)", "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);
 																					$response = sprintf(_x('<div>Coupon: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', "s2member-front", "s2member"), number_format($coupon["percentage"], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr["rp"]." ".$attr["rt"], $attr["rr"]).$tx);

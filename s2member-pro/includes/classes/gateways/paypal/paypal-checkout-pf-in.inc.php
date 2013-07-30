@@ -89,10 +89,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 												$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
 												$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost($cp_2gbp_attr["ta"], $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
 
+												if($cost_calculations["total"] <= 0 && $post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
+													{
+														$post_vars["attr"]["tp"] = "0"; // Ditch the trial period completely.
+														$cost_calculations["total"] = $cost_calculations["trial_total"]; // Use as regular total (ditch trial).
+														$cost_calculations["trial_sub_total"] = "0.00"; // Ditch the initial total (using as grand total).
+														$cost_calculations["trial_tax"] = "0.00"; // Ditch this calculation now also.
+														$cost_calculations["trial_tax_per"] = ""; // Ditch this calculation now also.
+														$cost_calculations["trial_total"] = "0.00"; // Ditch this calculation now also.
+													}
 												$use_recurring_profile = ($post_vars["attr"]["rr"] === "BN" || (!$post_vars["attr"]["tp"] && !$post_vars["attr"]["rr"])) ? false : true;
 												$is_independent_ccaps_sale = ($post_vars["attr"]["level"] === "*") ? true : false; // Selling Independent Custom Capabilities?
 
-												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal")
+												if($use_recurring_profile && $cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+													{
+														if(!$post_vars["attr"]["rr"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
+
+														else if($post_vars["attr"]["rr"] && $post_vars["attr"]["rrt"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+															$post_vars["attr"]["level_ccaps_eotper"] .= ":".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+													}
+												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && ($cost_calculations["trial_total"] > 0 || $cost_calculations["total"] > 0))
 													{
 														$return_url = $cancel_url = (is_ssl()) ? "https://" : "http://";
 														$return_url = $cancel_url = ($return_url = $cancel_url).$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
@@ -121,13 +138,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal_set_xco["AMT"] = "0.00";
 																		$paypal_set_xco["CURRENCY"] = $cost_calculations["cur"];
 																		$paypal_set_xco["PAYMENTTYPE"] = "any";
-																		
+
 																		$paypal_set_xco["ORDERDESC"] = $cost_calculations["desc"];
 
 																		$paypal_set_xco["BILLINGTYPE"] = "RecurringBilling";
 																		$paypal_set_xco["BA_DESC"] = $cost_calculations["desc"];
 																		$paypal_set_xco["BA_CUSTOM"] = $_SERVER["HTTP_HOST"];
-																		
+
 																		$paypal_set_xco["ADDROVERRIDE"] = "1";
 																		$paypal_set_xco["SHIPTONAME"] = $post_vars["name"];
 																		$paypal_set_xco["SHIPTOSTREET"] = $post_vars["street"];
@@ -153,7 +170,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																				$global_response = array("response" => $paypal_set_xco["__error"], "error" => true);
 																			}
 																	}
-
 																else // We use the PayPal® Pro API, because this is NOT going to recur.
 																	{
 																		$paypal_set_xco["METHOD"] = "SetExpressCheckout";
@@ -207,14 +223,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																	}
 															}
 													}
-
 												else if($use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
 														if(($old__subscr_id = get_user_option("s2member_subscr_id")))
 															$paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($old__subscr_id);
 														$old__baid = (!empty($paypal) && !empty($paypal["BAID"])) ? $paypal["BAID"] : "";
 														$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
-																
+
 														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
 														$period3 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"]);
 
@@ -225,7 +240,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"];
 
 														update_user_meta($user_id, "first_name", $post_vars["first_name"]).update_user_meta($user_id, "last_name", $post_vars["last_name"]);
-														
+
 														if(!($paypal = array()) /* Recurring Profile. */)
 															{
 																$paypal["TRXTYPE"] = "R";
@@ -260,11 +275,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$paypal["TERM"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "0") : "1";
 
 																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
-																
+
 																	&& ($paypal_xco_details = array("TRXTYPE" => "A", "ACTION" => "G", "TENDER" => "P", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_details))
 																	&& empty($paypal_xco_details["__error"])
-																	
+
 																	&& ($paypal_xco_bagree = array("TRXTYPE" => "A", "ACTION" => "X", "TENDER" => "P", "TOKEN" => $paypal_xco_details["TOKEN"]))
 																	&& ($paypal_xco_bagree = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_bagree))
 																	&& empty($paypal_xco_bagree["__error"]))
@@ -297,10 +312,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal)) && empty($paypal["__error"]))
+														if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = $paypal["PROFILEID"];
+																if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																	$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+																else $new__subscr_id = $paypal["PROFILEID"];
 
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
@@ -345,7 +361,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-
 																if($old__subscr_id) // There is an old Recurring Profile?
 																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
 
@@ -361,7 +376,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$global_response = array("response" => $paypal["__error"], "error" => true);
 															}
 													}
-
 												else if($use_recurring_profile && !is_user_logged_in()) // Create a new account.
 													{
 														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
@@ -407,11 +421,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$paypal["TERM"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "0") : "1";
 
 																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
-																		
+
 																	&& ($paypal_xco_details = array("TRXTYPE" => "A", "ACTION" => "G", "TENDER" => "P", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_details))
 																	&& empty($paypal_xco_details["__error"])
-																	
+
 																	&& ($paypal_xco_bagree = array("TRXTYPE" => "A", "ACTION" => "X", "TENDER" => "P", "TOKEN" => $paypal_xco_details["TOKEN"]))
 																	&& ($paypal_xco_bagree = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_bagree))
 																	&& empty($paypal_xco_bagree["__error"]))
@@ -444,10 +458,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal)) && empty($paypal["__error"]))
+														if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = $paypal["PROFILEID"];
+																if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
+																	$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
+																else $new__subscr_id = $paypal["PROFILEID"];
 
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
@@ -490,7 +505,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																	}
-
 																if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																	{
 																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
@@ -517,7 +531,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																		$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																	}
-
 																if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
@@ -565,14 +578,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$global_response = array("response" => $paypal["__error"], "error" => true);
 															}
 													}
-
 												else if(!$use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
 														if(($old__subscr_id = get_user_option("s2member_subscr_id")))
 															$paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($old__subscr_id);
 														$old__baid = (!empty($paypal) && !empty($paypal["BAID"])) ? $paypal["BAID"] : "";
 														$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
-														
+
 														update_user_meta($user_id, "first_name", $post_vars["first_name"]).update_user_meta($user_id, "last_name", $post_vars["last_name"]);
 
 														if(!($paypal = array())) // Prepare a "Buy Now" transaction.
@@ -643,12 +655,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+														if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
-																$new__subscr_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
+																else // Handle this normally. The transaction ID comes from PayPal® as it always does.
+																	{
+																		$new__subscr_id = $new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
+																		$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																	}
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
@@ -680,7 +695,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-
 																if(!$is_independent_ccaps_sale && $old__subscr_id) // There is an old Recurring Profile?
 																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
 
@@ -696,7 +710,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$global_response = array("response" => $paypal["__error"], "error" => true);
 															}
 													}
-
 												else if(!$use_recurring_profile && !is_user_logged_in())
 													{
 														if(!($paypal = array())) // Prepare a "Buy Now" transaction.
@@ -767,12 +780,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-
-														if(($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"]))
+														if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
-																$new__subscr_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
-																$new__subscr_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
+																else // Handle this normally. The transaction ID comes from PayPal® as it always does.
+																	{
+																		$new__subscr_id = $new__txn_id = (!empty($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
+																		$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
+																	}
 																if(!($ipn = array())) // Simulated PayPal® IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
@@ -802,7 +818,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 																	}
-
 																if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																	{
 																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
@@ -829,7 +844,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																		$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																	}
-
 																if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
