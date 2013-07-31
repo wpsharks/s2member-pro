@@ -193,6 +193,7 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div textarea
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select
 	{
 		margin: /* Remove any existing margins. */ 0;
+		padding: /* Adding a default padding for these. */ 5px;
 		width: /* 100% does not work across all browsers. */ 100%;
 		width: /* 100% does not work in IE browsers < 8. */ 98% !ie<8;
 		box-sizing: /* Make all fields behave the same. */ border-box;
@@ -237,8 +238,7 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-custom-reg-f
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-coupon-div input[type="text"]
 	{
 		width: 75%;
-		float: left
-		!ie<8;
+		float: left !ie<8;
 	}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-coupon-div input[type="button"]
 	{

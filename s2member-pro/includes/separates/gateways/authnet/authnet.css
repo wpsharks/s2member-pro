@@ -185,6 +185,7 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div textar
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select
 	{
 		margin: /* Remove any existing margins. */ 0;
+		padding: /* Adding a default padding for these. */ 5px;
 		width: /* 100% does not work across all browsers. */ 100%;
 		width: /* 100% does not work in IE browsers < 8. */ 98% !ie<8;
 		box-sizing: /* Make all fields behave the same. */ border-box;

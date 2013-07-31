@@ -105,11 +105,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 
 												if($use_recurring_profile && $cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
 													{
-														if(!$post_vars["attr"]["rr"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
-															$post_vars["attr"]["level_ccaps_eotper"] .= ":".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
-
-														else if($post_vars["attr"]["rr"] && $post_vars["attr"]["rrt"] && $post_vars["attr"]["rt"] !== "L" && substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
-															$post_vars["attr"]["level_ccaps_eotper"] .= ":".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+														if(!$post_vars["attr"]["rr"] && $post_vars["attr"]["rt"] !== "L")
+															{
+																if(substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+																	$post_vars["attr"]["level_ccaps_eotper"] .= ":".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
+																else if(substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 0)
+																	$post_vars["attr"]["level_ccaps_eotper"] .= "::".$post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"];
+															}
+														else if($post_vars["attr"]["rr"] && $post_vars["attr"]["rrt"] && $post_vars["attr"]["rt"] !== "L")
+															{
+																if(substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 1)
+																	$post_vars["attr"]["level_ccaps_eotper"] .= ":".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+																else if(substr_count($post_vars["attr"]["level_ccaps_eotper"], ":") === 0)
+																	$post_vars["attr"]["level_ccaps_eotper"] .= "::".($post_vars["attr"]["rp"] * $post_vars["attr"]["rrt"])." ".$post_vars["attr"]["rt"];
+															}
 													}
 												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && ($cost_calculations["trial_total"] > 0 || $cost_calculations["total"] > 0))
 													{
