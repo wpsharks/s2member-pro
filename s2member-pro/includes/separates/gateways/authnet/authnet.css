@@ -207,6 +207,16 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div label
 	{
 		cursor: /* Make labels appear clickable. */ pointer;
 	}
+div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-month,
+div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-year
+	{
+		width: 50%;
+	}
+div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-year
+	{
+		width: 49%;
+		float: right;
+	}
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 	{
 		opacity: 0.7;

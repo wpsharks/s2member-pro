@@ -78,6 +78,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 								$post_vars["username"] = (is_multisite()) ? strtolower($post_vars["username"]) : $post_vars["username"]; // Force lowercase.
 								$post_vars["username"] = preg_replace("/\s+/", "", sanitize_user(($post_vars["_o_username"] = $post_vars["username"]), is_multisite()));
 
+								if(empty($post_vars["card_expiration"]) && isset($post_vars["card_expiration_month"], $post_vars["card_expiration_year"]))
+									$post_vars["card_expiration"] = $post_vars["card_expiration_month"]."/".$post_vars["card_expiration_year"];
+
 								(!empty($_GET["token"])) ? delete_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])) : null;
 
 								if /* Attr errors? */(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"]))

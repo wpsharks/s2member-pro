@@ -375,6 +375,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_update[card_type]" id="s2member-pro-paypal-update-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-update-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.esc_attr($card_type_v).'"'.((!empty($_p["s2member_pro_paypal_update"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_update"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_update"]["card_type"] === $card_type_v) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="10" />'."\n".
 										'</label>';
 								/*
+								Build the list of expiration date options.
+								*/
+								$card_expiration_month_options = '<option value=""></option>'; // Start with an empty option value.
+								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
+
+								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_update"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+								unset($month, $month_label); // Housekeeping.
+
+								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_update"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+								unset($i, $year); // Housekeeping.
+
+								/*
 								Build the list of country code options.
 								*/
 								$country_default_by_currency = (!$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
@@ -449,6 +463,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
 								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_number"])), $code);
 								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
+								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
 								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_verification"])), $code);
 								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_start_date_issue_number"])), $code);
 								/*
@@ -496,6 +512,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 									$card_type_options .= '<label for="s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" id="s2member-pro-paypal-sp-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label" class="s2member-pro-paypal-form-card-type-label s2member-pro-paypal-sp-checkout-form-card-type-label s2member-pro-paypal-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label s2member-pro-paypal-sp-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label'.((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled' : '').'">'."\n".
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_sp_checkout[card_type]" id="s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-sp-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.((in_array(strtolower($card_type_v), $attr["accept_via_paypal"])) ? "PayPal" : esc_attr($card_type_v)).'"'.((!empty($_p["s2member_pro_paypal_sp_checkout"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_sp_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_sp_checkout"]["card_type"] === $card_type_v || ($attr["accept"] === array("paypal")&& $card_type_v === "PayPal")) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="100" />'."\n".
 										'</label>';
+								/*
+								Build the list of expiration date options.
+								*/
+								$card_expiration_month_options = '<option value=""></option>'; // Start with an empty option value.
+								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
+
+								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+								unset($month, $month_label); // Housekeeping.
+
+								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+								unset($i, $year); // Housekeeping.
 
 								/*
 								Build the list of country code options.
@@ -605,6 +634,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
 								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_number"])), $code);
 								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
+								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
 								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_verification"])), $code);
 								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_start_date_issue_number"])), $code);
 								/*
@@ -657,6 +688,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 									$card_type_options .= '<label for="s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" id="s2member-pro-paypal-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label" class="s2member-pro-paypal-form-card-type-label s2member-pro-paypal-checkout-form-card-type-label s2member-pro-paypal-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label s2member-pro-paypal-checkout-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label'.((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled' : '').'">'."\n".
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_checkout[card_type]" id="s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-checkout-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.((in_array(strtolower($card_type_v), $attr["accept_via_paypal"])) ? "PayPal" : esc_attr($card_type_v)).'"'.((!empty($_p["s2member_pro_paypal_checkout"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_checkout"]["card_type"] === $card_type_v || ($attr["accept"] === array("paypal")&& $card_type_v === "PayPal")) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="200" />'."\n".
 										'</label>';
+								/*
+								Build the list of expiration date options.
+								*/
+								$card_expiration_month_options = '<option value=""></option>'; // Start with an empty option value.
+								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
+
+								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+								unset($month, $month_label); // Housekeeping.
+
+								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+								unset($i, $year); // Housekeeping.
+
 								/*
 								Build the list of country code options.
 								*/
@@ -808,6 +853,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
 								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_number"])), $code);
 								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
+								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
 								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_verification"])), $code);
 								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_start_date_issue_number"])), $code);
 								/*

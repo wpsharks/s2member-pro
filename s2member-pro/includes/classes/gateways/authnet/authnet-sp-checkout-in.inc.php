@@ -70,6 +70,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 								$post_vars["name"] = trim ($post_vars["first_name"] . " " . $post_vars["last_name"]);
 								$post_vars["email"] = apply_filters ("user_registration_email", sanitize_email ($post_vars["email"]), get_defined_vars ());
 
+								if(empty($post_vars["card_expiration"]) && isset($post_vars["card_expiration_month"], $post_vars["card_expiration_year"]))
+									$post_vars["card_expiration"] = $post_vars["card_expiration_month"]."/".$post_vars["card_expiration_year"];
+
 								if (!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors ($post_vars["attr"])) // Attr errors?
 									{
 										if (!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors ("sp-checkout", $post_vars)))

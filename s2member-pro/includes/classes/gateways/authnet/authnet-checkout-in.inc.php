@@ -74,6 +74,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 								$post_vars["username"] = (is_multisite()) ? strtolower($post_vars["username"]) : $post_vars["username"]; // Force lowercase.
 								$post_vars["username"] = preg_replace("/\s+/", "", sanitize_user(($post_vars["_o_username"] = $post_vars["username"]), is_multisite()));
 
+								if(empty($post_vars["card_expiration"]) && isset($post_vars["card_expiration_month"], $post_vars["card_expiration_year"]))
+									$post_vars["card_expiration"] = $post_vars["card_expiration_month"]."/".$post_vars["card_expiration_year"];
+
 								if(!c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($post_vars["attr"])) // Attr errors?
 									{
 										if(!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors("checkout", $post_vars)))

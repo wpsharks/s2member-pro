@@ -115,7 +115,12 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-checkout-form-card-expiration-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-card-expiration-div s2member-pro-authnet-checkout-form-card-expiration-div">
 			<label for="s2member-pro-authnet-checkout-card-expiration" id="s2member-pro-authnet-checkout-form-card-expiration-label" class="s2member-pro-authnet-form-card-expiration-label s2member-pro-authnet-checkout-form-card-expiration-label">
 				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_checkout[card_expiration]" id="s2member-pro-authnet-checkout-card-expiration" class="s2member-pro-authnet-card-expiration s2member-pro-authnet-checkout-card-expiration" value="%%card_expiration_value%%" tabindex="220" />
+				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_checkout[card_expiration_month]" id="s2member-pro-authnet-checkout-card-expiration-month" class="s2member-pro-authnet-card-expiration-month s2member-pro-authnet-checkout-card-expiration-month" value="%%card_expiration_month_value%%" tabindex="220">
+					%%card_expiration_month_options%%
+				</select>
+				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_checkout[card_expiration_year]" id="s2member-pro-authnet-checkout-card-expiration-year" class="s2member-pro-authnet-card-expiration-year s2member-pro-authnet-checkout-card-expiration-year" value="%%card_expiration_year_value%%" tabindex="221">
+					%%card_expiration_year_options%%
+				</select>
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-card-verification-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-card-verification-div s2member-pro-authnet-checkout-form-card-verification-div">

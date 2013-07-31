@@ -148,7 +148,7 @@ jQuery(document).ready (function($)
 							{
 								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
-								if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
+								if (id && (label = $.trim ($('label[for="' + id.replace(/-(month|year)/, '') + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 									{
 										if (error = ws_plugin__s2member_validationErrors(label, this, context))
 											errors += /* Collect errors. */ error + '\n\n';
@@ -523,7 +523,7 @@ jQuery(document).ready (function($)
 									{
 										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
-										if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
+										if (id && (label = $.trim ($('label[for="' + id.replace(/-(month|year)/, '') + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 											{
 												if (error = ws_plugin__s2member_validationErrors(label, this, context))
 													errors += /* Collect errors. */ error + '\n\n';
@@ -833,7 +833,7 @@ jQuery(document).ready (function($)
 									{
 										var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
-										if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
+										if (id && (label = $.trim ($('label[for="' + id.replace(/-(month|year)/, '') + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
 											{
 												if (error = ws_plugin__s2member_validationErrors(label, this, context))
 													errors += /* Collect errors. */ error + '\n\n';

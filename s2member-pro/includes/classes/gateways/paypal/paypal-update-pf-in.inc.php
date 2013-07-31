@@ -67,6 +67,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 								$post_vars["recaptcha_challenge_field"] = (!$post_vars["recaptcha_challenge_field"]) ? trim(stripslashes($_POST["recaptcha_challenge_field"])) : $post_vars["recaptcha_challenge_field"];
 								$post_vars["recaptcha_response_field"] = (!$post_vars["recaptcha_response_field"]) ? trim(stripslashes($_POST["recaptcha_response_field"])) : $post_vars["recaptcha_response_field"];
 
+								if(empty($post_vars["card_expiration"]) && isset($post_vars["card_expiration_month"], $post_vars["card_expiration_year"]))
+									$post_vars["card_expiration"] = $post_vars["card_expiration_month"]."/".$post_vars["card_expiration_year"];
+
 								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) // Must NOT have any attr errors.
 									{
 										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("update", $post_vars)))
