@@ -84,6 +84,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 												if($cost_calculations["total"] <= 0 && $post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
 													{
 														$post_vars["attr"]["tp"] = "0"; // Ditch the trial period completely.
+														$cost_calculations["sub_total"] = $cost_calculations["trial_sub_total"]; // Use as regular sub-total (ditch trial sub-total).
+														$cost_calculations["tax"] = $cost_calculations["trial_tax"]; // Use as regular tax (ditch trial tax).
+														$cost_calculations["tax_per"] = $cost_calculations["trial_tax_per"]; // Use as regular tax (ditch trial tax).
 														$cost_calculations["total"] = $cost_calculations["trial_total"]; // Use as regular total (ditch trial).
 														$cost_calculations["trial_sub_total"] = "0.00"; // Ditch the initial total (using as grand total).
 														$cost_calculations["trial_tax"] = "0.00"; // Ditch this calculation now also.

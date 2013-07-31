@@ -92,6 +92,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 												if($cost_calculations["total"] <= 0 && $post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
 													{
 														$post_vars["attr"]["tp"] = "0"; // Ditch the trial period completely.
+														$cost_calculations["sub_total"] = $cost_calculations["trial_sub_total"]; // Use as regular sub-total (ditch trial sub-total).
+														$cost_calculations["tax"] = $cost_calculations["trial_tax"]; // Use as regular tax (ditch trial tax).
+														$cost_calculations["tax_per"] = $cost_calculations["trial_tax_per"]; // Use as regular tax (ditch trial tax).
 														$cost_calculations["total"] = $cost_calculations["trial_total"]; // Use as regular total (ditch trial).
 														$cost_calculations["trial_sub_total"] = "0.00"; // Ditch the initial total (using as grand total).
 														$cost_calculations["trial_tax"] = "0.00"; // Ditch this calculation now also.
@@ -113,8 +116,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 													{
 														$return_url = $cancel_url = (is_ssl()) ? "https://" : "http://";
 														$return_url = $cancel_url = ($return_url = $cancel_url).$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
-														$return_url = $cancel_url = /* Ditch. */ remove_query_arg(array("token", "PayerID"), ($return_url = $cancel_url));
+														$return_url = $cancel_url = /* Ditch. */ remove_query_arg(array("token", "PayerID", "s2p-option"), ($return_url = $cancel_url));
+
+														$return_url = add_query_arg("s2p-option", urlencode((string)$_REQUEST["s2p-option"]), $return_url);
 														$return_url = add_query_arg("s2member_paypal_xco", urlencode("s2member_pro_paypal_checkout_return"), $return_url);
+
+														$cancel_url = add_query_arg("s2p-option", urlencode((string)$_REQUEST["s2p-option"]), $cancel_url);
 														$cancel_url = add_query_arg("s2member_paypal_xco", urlencode("s2member_pro_paypal_checkout_cancel"), $cancel_url);
 
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;
