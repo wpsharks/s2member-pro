@@ -721,10 +721,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>' . "\n";
 						echo '<pre>'."\n";
-						echo '[s2Member-AuthNet-Pro-Form]'."\n";
-                  echo "\t".'[s2Member-AuthNet-Pro-Form /]'."\n";
-                  echo "\t".'[s2Member-AuthNet-Pro-Form /]'."\n";
-						echo '[/s2Member-AuthNet-Pro-Form]'."\n";
+						echo '[s2Member-Pro-AuthNet-Form]'."\n";
+                  echo "\t".'[s2Member-Pro-AuthNet-Form /]'."\n";
+                  echo "\t".'[s2Member-Pro-AuthNet-Form /]'."\n";
+						echo '[/s2Member-Pro-AuthNet-Form]'."\n";
 						echo '</pre>'."\n";
 						echo '</td>' . "\n";
 
@@ -743,11 +743,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>' . "\n";
 						echo '<pre>'."\n";
-						echo '[s2Member-AuthNet-Pro-Form rp="1" rt="M" rr="1" accept_coupons="1"]'."\n";
-                  echo "\t".'[s2Member-AuthNet-Pro-Form level="1" desc="Option 1 ($10.00)" ra="10.00" /]'."\n";
-                  echo "\t".'[s2Member-AuthNet-Pro-Form level="2" desc="Option 2 ($20.00)" ra="20.00" /]'."\n";
-						echo "\t".'[s2Member-AuthNet-Pro-Form level="3" desc="Option 3 ($30.00)" ra="30.00" /]'."\n";
-						echo '[/s2Member-AuthNet-Pro-Form]'."\n";
+						echo '[s2Member-Pro-AuthNet-Form rp="1" rt="M" rr="1" accept_coupons="1"]'."\n";
+                  echo "\t".'[s2Member-Pro-AuthNet-Form level="1" desc="Option 1 ($10.00)" ra="10.00" /]'."\n";
+                  echo "\t".'[s2Member-Pro-AuthNet-Form level="2" desc="Option 2 ($20.00)" ra="20.00" /]'."\n";
+						echo "\t".'[s2Member-Pro-AuthNet-Form level="3" desc="Option 3 ($30.00)" ra="30.00" /]'."\n";
+						echo '[/s2Member-Pro-AuthNet-Form]'."\n";
 						echo '</pre>'."\n";
 						echo '</td>' . "\n";
 
