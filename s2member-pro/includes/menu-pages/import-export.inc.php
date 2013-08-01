@@ -87,7 +87,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 								echo 'Example: <code>"","Username","First Name","Last Name","Display Name","Email"</code><br /><br />' . "\n";
 
 								echo 'Additional extended information can also be included; even Custom Registration/Profile Fields:<br />' . "\n";
-								echo '<code>"ID","Username","First Name","Last Name","Display Name","Email","Website","Level[0-9]+ or Role ID","Custom Capabilities","Registration Date (mm/dd/yyyy)","First Payment Date (mm/dd/yyyy)","Last Payment Date (mm/dd/yyyy)","Auto-EOT Date (mm/dd/yyyy)","Custom Value (starts w/domain)","Paid Subscr. ID","Paid Subscr. Gateway","Custom Field Value","Another Custom Field Value", ...</code><br /><br />' . "\n";
+								echo '<code>"ID","Username","First Name","Last Name","Display Name","Email","Website","Level[0-9]+ or Role ID","Custom Capabilities","Registration Date (mm/dd/yyyy)","First Payment Date (mm/dd/yyyy)","Last Payment Date (mm/dd/yyyy)","Auto-EOT Date (mm/dd/yyyy)","Custom Value (starts w/domain)","Paid Subscr. ID","Paid Subscr. Gateway","Custom Registration/Profile Field Value","another Custom Registration/Profile Field Value", ... and so on — for as many Custom Registration/Profile Fields that you\'d like import.</code><br /><br />' . "\n";
 
 								echo 'Here is a full example with all fields filled in, including extended details; and two Custom Field values:<br />' . "\n";
 								echo '<code>"","johnsmith22","John","Smith","John Smith","john.smith@example.com","http://www.example.com/","2","music,videos","12/31/2000","01/10/2001","12/31/2020","12/31/2021","www.example.com|123.357.125.654","I-2342934SSER243","paypal","fishing,biking,computers","xx-large"</code><br /><br />' . "\n";
@@ -141,7 +141,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 								echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty (i.e. <code>""</code>).<br /><br />'."\n";
 
-								echo 'Example: <code>"","Username","First Name","Last Name","Display Name","Email"</code>' . "\n";
+								echo 'Example: <code>"","Username","Password","First Name","Last Name","Display Name","Email"</code>' . "\n";
 
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
