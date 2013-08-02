@@ -85,7 +85,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						$options = array(); // Initialize options to an empty array.
 						$option_selections = ''; // Initialize w/ no options.
 
-						if($content) // This allows for nested Pro Form Shortcodes as options.
+						if($content && ($content = strip_tags($content))) // This allows for nested Pro Form Shortcodes as options.
 							$content = str_replace('s2Member-Pro-PayPal-Form ', 's2Member-Pro-PayPal-Form-Option ', $content);
 
 						if($content && ($content_options = do_shortcode($content)))
