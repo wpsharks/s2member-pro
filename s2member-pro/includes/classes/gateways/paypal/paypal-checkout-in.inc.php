@@ -181,6 +181,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																$paypal_set_xco["PAYMENTREQUEST_0_SHIPTOZIP"] = $post_vars["zip"];
 
 																$paypal_set_xco["EMAIL"] = ($user) ? $user->user_email : $post_vars["email"];
+																
+																$paypal_set_xco = apply_filters('ws_plugin__s2member_pro_paypal_set_xco_vars', $paypal_set_xco, get_defined_vars());
 															}
 														if(($paypal_set_xco = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_set_xco)) && empty($paypal_set_xco["__error"]))
 															{
