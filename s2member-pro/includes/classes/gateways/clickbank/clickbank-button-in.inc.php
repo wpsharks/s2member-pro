@@ -113,6 +113,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 
 								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
@@ -150,6 +151,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 
@@ -191,6 +193,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 

@@ -38,10 +38,10 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-update-form-card-expiration-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-expiration-div s2member-pro-paypal-update-form-card-expiration-div">
 			<label for="s2member-pro-paypal-update-card-expiration" id="s2member-pro-paypal-update-form-card-expiration-label" class="s2member-pro-paypal-form-card-expiration-label s2member-pro-paypal-update-form-card-expiration-label">
 				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_month]" id="s2member-pro-paypal-update-card-expiration-month" class="s2member-pro-paypal-card-expiration-month s2member-pro-paypal-update-card-expiration-month" value="%%card_expiration_month_value%%" tabindex="30">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_month]" id="s2member-pro-paypal-update-card-expiration-month" class="s2member-pro-paypal-card-expiration-month s2member-pro-paypal-update-card-expiration-month" tabindex="30">
 					%%card_expiration_month_options%%
 				</select>
-				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_year]" id="s2member-pro-paypal-update-card-expiration-year" class="s2member-pro-paypal-card-expiration-year s2member-pro-paypal-update-card-expiration-year" value="%%card_expiration_year_value%%" tabindex="31">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_year]" id="s2member-pro-paypal-update-card-expiration-year" class="s2member-pro-paypal-card-expiration-year s2member-pro-paypal-update-card-expiration-year" tabindex="31">
 					%%card_expiration_year_options%%
 				</select>
 			</label>
