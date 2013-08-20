@@ -58,6 +58,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 				*/
 				public static function sc_paypal_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
+						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
+						do_action("ws_plugin__s2member_pro_before_sc_paypal_form", get_defined_vars());
+						unset /* Unset defined __refs, __v. */($__refs, $__v);
+
 						return serialize(c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr)).'|::|';
 					}
 				/**
