@@ -134,7 +134,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 
 						if(!empty($_POST["ws_plugin__s2member_pro_upgrade"]) && ($nonce = (string)$_POST["ws_plugin__s2member_pro_upgrade"]) && wp_verify_nonce($nonce, "ws-plugin--s2member-pro-upgrade") && ($_p = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST))))
 							{
-								if(@set_time_limit(0) !== "nill" && @ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT)) !== "nill" && @ini_get("memory_limit") === apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT))
+								if(@set_time_limit(0) !== "nill" && @ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT)) !== "nill" && c_ws_plugin__s2member_pro_upgrader::abbr_bytes(@ini_get("memory_limit")) >= c_ws_plugin__s2member_pro_upgrader::abbr_bytes(apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT)))
 									{
 										if(!empty($_p["ws_plugin__s2member_pro_upgrade_username"]) && !empty($_p["ws_plugin__s2member_pro_upgrade_password"]) && is_array($s2_pro_upgrade = maybe_unserialize(c_ws_plugin__s2member_utils_urls::remote(add_query_arg(urlencode_deep(array("s2_pro_upgrade" => array("username" => (string)$_p["ws_plugin__s2member_pro_upgrade_username"], "password" => (string)$_p["ws_plugin__s2member_pro_upgrade_password"], "version" => WS_PLUGIN__S2MEMBER_PRO_VERSION))), c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Auto-Update URL", dirname(dirname(dirname(__FILE__)))."/readme.txt"))))) && !empty($s2_pro_upgrade["zip"]) && !empty($s2_pro_upgrade["ver"]))
 											{
@@ -257,6 +257,48 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 									$wp_filesystem->delete($maintenance);
 							}
 						return /* Always return true. */ true;
+					}
+
+				/**
+				 * Converts an abbreviated byte notation into bytes.
+				 *
+				 * @package s2Member\Upgrader
+				 * @since 130819
+				 *
+				 * @param string $string A string value in byte notation.
+				 *
+				 * @return float A float indicating the number of bytes.
+				 */
+				public function abbr_bytes($string)
+					{
+						$string = (string)$string;
+
+						$notation = '/^(?P<value>[0-9\.]+)\s*(?P<modifier>bytes|byte|kbs|kb|k|mb|m|gb|g|tb|t)$/i';
+
+						if(!preg_match($notation, $string, $_op))
+							return (float)0;
+
+						$value    = (float)$_op['value'];
+						$modifier = strtolower($_op['modifier']);
+						unset($_op); // Housekeeping.
+
+						switch($modifier) // Fall through based on modifier.
+						{
+							case 't': // Multiplied four times.
+							case 'tb':
+									$value *= 1024;
+							case 'g': // Multiplied three times.
+							case 'gb':
+									$value *= 1024;
+							case 'm': // Multiple two times.
+							case 'mb':
+									$value *= 1024;
+							case 'k': // One time only.
+							case 'kb':
+							case 'kbs':
+									$value *= 1024;
+						}
+						return (float)$value;
 					}
 			}
 	}
