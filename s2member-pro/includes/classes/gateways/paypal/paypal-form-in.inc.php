@@ -44,12 +44,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 		class c_ws_plugin__s2member_pro_paypal_form_in
 			{
 				/**
-				* Shortcode `[s2Member-Pro-PayPal-Form-Option /]`.
+				* Shortcode `[s2Member-Pro-PayPal-xFormOption /]`.
 				*
 				* @package s2Member\PayPal
 				* @since 130728
 				*
-				* @attaches-to ``add_shortcode("s2Member-Pro-PayPal-Form-Option");``
+				* @attaches-to ``add_shortcode("s2Member-Pro-PayPal-xFormOption");``
 				*
 				* @param array $attr An array of Attributes.
 				* @param str $content Content inside the Shortcode.
@@ -90,7 +90,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						$option_selections = ''; // Initialize w/ no options.
 
 						if($content && ($content = strip_tags($content))) // This allows for nested Pro Form Shortcodes as options.
-							$content = str_replace('s2Member-Pro-PayPal-Form ', 's2Member-Pro-PayPal-Form-Option ', $content);
+							$content = str_replace('s2Member-Pro-PayPal-Form ', 's2Member-Pro-PayPal-xFormOption ', $content);
 
 						if($content && ($content_options = do_shortcode($content)))
 							{
