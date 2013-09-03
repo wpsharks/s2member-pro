@@ -602,7 +602,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-sp-checkout-form.php")));
-								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-sp-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-sp-checkout-form-billing-method-section" style="display:none;">', $code) : $code;
+								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-sp-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-sp-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/Billing Method/", _x("We Accept PayPal®", "s2member-front", "s2member"), $code) : $code;
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
 								/*
@@ -814,7 +814,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-checkout-form.php")));
-								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-checkout-form-billing-method-section" style="display:none;">', $code) : $code;
+								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/Billing Method/", _x("We Accept PayPal®", "s2member-front", "s2member"), $code) : $code;
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
 								/*

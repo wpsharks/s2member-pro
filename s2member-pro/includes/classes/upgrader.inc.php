@@ -149,7 +149,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 
 												if(WP_Filesystem(c_ws_plugin__s2member_pro_upgrader::$credentials, ($plugins_dir = $_plugins_dir = dirname(dirname(dirname(dirname(__FILE__)))))) && ($plugins_dir = rtrim($wp_filesystem->find_folder($plugins_dir), "/")) && ($plugin_dir = rtrim($wp_filesystem->find_folder($_plugin_dir = dirname(dirname(dirname(__FILE__)))), "/")))
 													{
-														if(($tmp_zip = wp_unique_filename($_plugins_dir, basename($plugin_dir).".zip")) && ($_tmp_zip = $_plugins_dir."/".$tmp_zip) && ($tmp_zip = $plugins_dir."/".$tmp_zip) && $wp_filesystem->put_contents($tmp_zip, c_ws_plugin__s2member_utils_urls::remote($s2_pro_upgrade["zip"]), FS_CHMOD_FILE))
+														if(($tmp_zip = wp_unique_filename($_plugins_dir, basename($plugin_dir).".zip")) && ($_tmp_zip = $_plugins_dir."/".$tmp_zip) && ($tmp_zip = $plugins_dir."/".$tmp_zip) && $wp_filesystem->put_contents($tmp_zip, c_ws_plugin__s2member_utils_urls::remote($s2_pro_upgrade["zip"], false, array("timeout" => 120)), FS_CHMOD_FILE))
 															{
 																if((!$wp_filesystem->is_dir($plugin_dir."-new") || $wp_filesystem->delete($plugin_dir."-new", true)) && $wp_filesystem->mkdir($plugin_dir."-new", FS_CHMOD_DIR))
 																	{
@@ -189,7 +189,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 																			{
 																				$wp_filesystem->delete($plugin_dir."-new", true).$wp_filesystem->delete($tmp_zip);
 
-																				c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0007. Please upgrade via FTP.";
+																				c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Error #0007. ".$unzip->get_error_message()." ~ Please upgrade via FTP. ";
 																			}
 																	}
 																else // Bummer. OK, now we'll deal with cleanup & error reporting.

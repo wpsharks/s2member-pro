@@ -752,7 +752,11 @@ jQuery(document).ready (function($)
 							}
 						else if ((!billingMethod || billingMethod === 'PayPal') && taxMayApply)
 							{
-								$(billingMethodSection).show (), $(billingAddressSection).show ();
+								if($(billingMethodSection).attr('data-paypal-only'))
+									$(billingMethodSection).hide();
+								else $(billingMethodSection).show ();
+
+								$(billingAddressSection).show (); // Need this when tax may apply.
 
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').show ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaTrue);
@@ -784,7 +788,11 @@ jQuery(document).ready (function($)
 							}
 						else if (!billingMethod || billingMethod === 'PayPal')
 							{
-								$(billingMethodSection).show (), $(billingAddressSection).hide ();
+								if($(billingMethodSection).attr('data-paypal-only'))
+									$(billingMethodSection).hide();
+								else $(billingMethodSection).show ();
+
+								$(billingAddressSection).hide (); // Don't need this either.
 
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
 								$(billingMethodSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
