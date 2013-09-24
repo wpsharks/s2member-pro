@@ -245,7 +245,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 											}
 
 										if ( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank["crebillstatus"].
-										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0))
+										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0) && apply_filters("c_ws_plugin__s2member_pro_clickbank_notify_handles_completions", TRUE, get_defined_vars()))
 										|| (preg_match ("/^(?:TEST_)?CANCEL-REBILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"])))
 											{
 												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).";
