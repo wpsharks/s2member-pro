@@ -49,8 +49,8 @@ add_action ("ws_plugin__s2member_during_js_w_globals", "c_ws_plugin__s2member_pr
 add_action ("ws_plugin__s2member_during_menu_pages_js", "c_ws_plugin__s2member_pro_admin_css_js::menu_pages_js");
 
 add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_2", "c_ws_plugin__s2member_pro_menu_pages::add_coupon_codes_page", 10, 2);
-add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_3", "c_ws_plugin__s2member_pro_menu_pages::add_import_export_page", 10, 2);
-add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_4", "c_ws_plugin__s2member_pro_menu_pages::add_other_gateways_page", 10, 2);
+add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_2", "c_ws_plugin__s2member_pro_menu_pages::add_import_export_page", 10, 2);
+add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_3", "c_ws_plugin__s2member_pro_menu_pages::add_other_gateways_page", 10, 2);
 
 add_action ("ws_plugin__s2member_during_add_admin_options_additional_pages", "c_ws_plugin__s2member_pro_menu_pages::add_info_page", 1);
 add_action ("ws_plugin__s2member_during_add_network_admin_options_additional_pages", "c_ws_plugin__s2member_pro_menu_pages::add_info_page", 1);
