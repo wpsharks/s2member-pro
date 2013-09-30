@@ -44,7 +44,7 @@ add_action ("ws_plugin__s2member_during_css", "c_ws_plugin__s2member_pro_alipay_
 add_action ("ws_plugin__s2member_during_js_w_globals", "c_ws_plugin__s2member_pro_alipay_css_js::alipay_js_w_globals");
 add_action ("ws_plugin__s2member_during_menu_pages_js", "c_ws_plugin__s2member_pro_alipay_admin_css_js::alipay_menu_pages_js");
 
-add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_4", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_admin_options", 10, 2);
+add_filter ("ws_plugin__s2member_during_add_admin_options_add_divider_3", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_admin_options", 10, 2);
 
 add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_scripting_page_api_constants");
 add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_scripting_page_api_constants");
