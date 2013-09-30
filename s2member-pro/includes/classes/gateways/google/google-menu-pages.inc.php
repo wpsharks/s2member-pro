@@ -49,7 +49,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_menu_pages"))
 				* @package s2Member\Menu_Pages
 				* @since 1.5
 				*
-				* @attaches-to ``add_filter("ws_plugin__s2member_during_add_admin_options_add_divider_4");``
+				* @attaches-to ``add_filter("ws_plugin__s2member_during_add_admin_options_add_divider_3");``
 				*
 				* @param bool $add_divider Expects a boolean value, passed through by the Filter.
 				* @param array $vars Expects an array of defined variables passed through by the Filter.
