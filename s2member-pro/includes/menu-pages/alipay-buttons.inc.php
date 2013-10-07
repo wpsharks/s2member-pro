@@ -1,14 +1,14 @@
 <?php
 /**
-* Menu page for s2Member Pro (AliPay® Buttons page).
+* Menu page for s2Member Pro (AliPay Buttons page).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 	{
 		/**
-		* Menu page for s2Member Pro (AliPay® Buttons page).
+		* Menu page for s2Member Pro (AliPay Buttons page).
 		*
 		* @package s2Member\Menu_Pages
 		* @since 110531
@@ -48,7 +48,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 						echo '<div class="wrap ws-menu-page">' . "\n";
 
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
-						echo '<h2>s2Member® / AliPay® Buttons</h2>' . "\n";
+						echo '<h2>s2Member / AliPay Buttons</h2>' . "\n";
 
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
@@ -57,11 +57,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						for ($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 							{
-								echo '<div class="ws-menu-page-group" title="AliPay® Buttons For Level #' . $n . ' Access">' . "\n";
+								echo '<div class="ws-menu-page-group" title="AliPay Buttons For Level #' . $n . ' Access">' . "\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level' . $n . '-buttons-section">' . "\n";
 								echo '<h3>Button Code Generator For Level #' . $n . ' Access</h3>' . "\n";
-								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Button Code). These special AliPay® Buttons are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. s2Member makes extensive use of the AliPay® IPN service. s2Member receives updates from AliPay® behind-the-scene. <em>* Buttons are NOT saved here. This is only a Button Generator. Once you\'ve generated your Button, copy/paste it into your Membership Options Page. If you lose your Button Code, you\'ll need to come back &amp; re-generate a new one.</em></p>' . "\n";
+								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Button Code). These special AliPay Buttons are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. s2Member makes extensive use of the AliPay IPN service. s2Member receives updates from AliPay behind-the-scene. <em>* Buttons are NOT saved here. This is only a Button Generator. Once you\'ve generated your Button, copy/paste it into your Membership Options Page. If you lose your Button Code, you\'ll need to come back &amp; re-generate a new one.</em></p>' . "\n";
 
 								echo '<table class="form-table">' . "\n";
 								echo '<tbody>' . "\n";
@@ -87,7 +87,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 								echo '<td colspan="2">' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
-								echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />' . "\n";
+								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-checkout-button-shortcode.php")));
 								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($n)), $ws_plugin__s2member_pro_temp_s);
 								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $n . "_label"])), $ws_plugin__s2member_pro_temp_s);
@@ -106,15 +106,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						if (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ())
 							{
-								echo '<div class="ws-menu-page-group" title="AliPay® Capability (Buy Now) Buttons">' . "\n";
+								echo '<div class="ws-menu-page-group" title="AliPay Capability (Buy Now) Buttons">' . "\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-buttons-section">' . "\n";
 								echo '<h3>Button Code Generator For Independent Custom Capabilities</h3>' . "\n";
 								echo '<p>This is VERY advanced. For further details, please check your Dashboard: <code>s2Member -› API Scripting -› Custom Capabiities</code>.</p>' . "\n";
 								echo '<p>With s2Member, you can sell one or more Custom Capabilities using Buy Now functionality, to "existing" Users/Members, regardless of which Membership Level they have on your site <em>(i.e. you could even sell Independent Custom Capabilities to Users at Membership Level #0, normally referred to as Free Subscribers, if you like)</em>. So this is quite flexible. Independent Custom Capabilities do NOT rely on any specific Membership Level. That\'s why s2Member refers to these as `Independent` Custom Capabilities, because you can sell Capabilities this way, through Buy Now functionality, and the Customer\'s Membership Level Access, along with any existing paid access they may already have with you, will remain completely unaffected.</p>' . "\n";
 								echo '<p>Independent Custom Capabilities are added to a Customer\'s account immediately after checkout, and the Customer will have the Custom Capabilities for as long as their Membership lasts, based on their primary Subscription with your site, and/or forever, if they have a Lifetime account with you. In other words, Independent Custom Capabilities will exist on the Customer\'s account forever, or until an EOT <em>(End Of Term)</em> occurs on their primary Subscription with you; in which case s2Member would demote or delete the Customer\'s account <em>(based on your EOT configuration)</em>, and all Custom Capabilities are removed as well.</p>' . "\n";
-								echo '<p>Very simple. All you do is customize the form fields provided, for each set of Custom Capabilities that you plan to sell. Then press (Generate Button Code). These special AliPay® Buttons are customized to work with s2Member seamlessly. The Customer will be granted additional access to one or more Custom Capabilities that you specify; while the Customer\'s Membership Level Access and any existing paid Subscription they may already have with you, will remain completely unaffected.</p>' . "\n";
-								echo '<p><em><strong>*Important Note*</strong> Independent Custom Capability Buttons should ONLY be displayed to existing Users/Members, and they MUST be logged-in, BEFORE clicking this Button. Otherwise, post-processing of their transaction will fail to recognize the Customer\'s existing account within WordPress®. Please display this Button only to Users/Members that are already logged into their account (perhaps in your Login Welcome Page for s2Member), or in another location where you can be absolutely sure that a User/Member is logged in. s2Member\'s Simple Conditionals could also be used to ensure a User/Member is logged in, by wrapping your Shortcode within a Conditional test. For further details, please see: <code>s2Member -› API Scripting -› Simple Conditionals</code>.</em></p>' . "\n";
+								echo '<p>Very simple. All you do is customize the form fields provided, for each set of Custom Capabilities that you plan to sell. Then press (Generate Button Code). These special AliPay Buttons are customized to work with s2Member seamlessly. The Customer will be granted additional access to one or more Custom Capabilities that you specify; while the Customer\'s Membership Level Access and any existing paid Subscription they may already have with you, will remain completely unaffected.</p>' . "\n";
+								echo '<p><em><strong>*Important Note*</strong> Independent Custom Capability Buttons should ONLY be displayed to existing Users/Members, and they MUST be logged-in, BEFORE clicking this Button. Otherwise, post-processing of their transaction will fail to recognize the Customer\'s existing account within WordPress. Please display this Button only to Users/Members that are already logged into their account (perhaps in your Login Welcome Page for s2Member), or in another location where you can be absolutely sure that a User/Member is logged in. s2Member\'s Simple Conditionals could also be used to ensure a User/Member is logged in, by wrapping your Shortcode within a Conditional test. For further details, please see: <code>s2Member -› API Scripting -› Simple Conditionals</code>.</em></p>' . "\n";
 								echo '<p><em>* Buttons are NOT saved here. This is only a Button Generator. If you lose your Button Code, you\'ll need to come back &amp; re-generate a new one.</em></p>' . "\n";
 
 								echo '<table class="form-table">' . "\n";
@@ -141,7 +141,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 								echo '<td colspan="2">' . "\n";
 								echo '<form onsubmit="return false;">' . "\n";
-								echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />' . "\n";
+								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-ccaps-checkout-button-shortcode.php")));
 								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
@@ -156,7 +156,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 								echo '</div>' . "\n";
 							}
 
-						echo '<div class="ws-menu-page-group" title="AliPay® Member Registration Access Links">' . "\n";
+						echo '<div class="ws-menu-page-group" title="AliPay Member Registration Access Links">' . "\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">' . "\n";
 						echo '<h3>Registration Access Link Generator (for Customer Service)</h3>' . "\n";
@@ -172,7 +172,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 						for ($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 							echo '<option value="' . $n . '">s2Member Level #' . $n . '</option>' . "\n";
 						echo '</select></p>' . "\n";
-						echo '<p>Paid Subscr. ID: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-subscr-id" value="" size="50" /> <a href="#" onclick="alert(\'The Customer\\\'s Paid Subscr. ID ( aka: AliPay® Trade No. ) must be unique. This value can be obtained from inside your AliPay® account. Each paying Customer MUST be associated with a unique Paid Subscr. ID. If the Customer is NOT associated with a Paid Subscr. ID, you will need to generate a unique value for this field on your own. But keep in mind, s2Member will be unable to maintain future communication with the AliPay® IPN (i.e. Notification) service if this value does not reflect a real Paid Subscr. ID that exists in your AliPay® transaction log.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
+						echo '<p>Paid Subscr. ID: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-subscr-id" value="" size="50" /> <a href="#" onclick="alert(\'The Customer\\\'s Paid Subscr. ID ( aka: AliPay Trade No. ) must be unique. This value can be obtained from inside your AliPay account. Each paying Customer MUST be associated with a unique Paid Subscr. ID. If the Customer is NOT associated with a Paid Subscr. ID, you will need to generate a unique value for this field on your own. But keep in mind, s2Member will be unable to maintain future communication with the AliPay IPN (i.e. Notification) service if this value does not reflect a real Paid Subscr. ID that exists in your AliPay transaction log.\'); return false;" tabindex="-1">[?]</a></p>' . "\n";
 						echo '<p>Custom String Value: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-custom" value="' . esc_attr ($_SERVER["HTTP_HOST"]) . '" size="30" /> <a href="#" onclick="alert(\'A Paid Subscription is always associated with a Custom String that is passed through the custom=\\\'\\\'' . c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"]), 3) . '\\\'\\\' attribute of your Shortcode. This Custom Value, MUST always start with your domain name. However, you can also pipe delimit additional values after your domain, if you need to.\\n\\nFor example:\n' . c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"]), 3) . '|cv1|cv2|cv3\'); return false;" tabindex="-1">[?]</a> <input type="button" value="Generate Access Link" onclick="ws_plugin__s2member_pro_alipayRegLinkGenerate();" class="button-primary" /> <img id="ws-plugin--s2member-pro-reg-link-loading" src="' . esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]) . '/images/ajax-loader.gif" alt="" style="display:none;" /></p>' . "\n";
 						echo '<p' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? ' style="display:none;"' : '') . '>Custom Capabilities (comma-delimited) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member -› API Scripting -› Custom Capabilities.\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-ccaps" size="40" onkeyup="if(this.value.match(/[^a-z_0-9,]/)) this.value = jQuery.trim (jQuery.trim (this.value).replace (/[ \-]/g, \'_\').replace (/[^a-z_0-9,]/gi, \'\').toLowerCase ());" /></p>' . "\n";
 						echo '<p>Fixed Term Length (for Buy Now transactions): <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-fixed-term" value="" size="10" /> <a href="#" onclick="alert(\'You may configure a Fixed Term Length in this field. This way the Customer\\\'s Membership Access is automatically revoked by s2Member at the appropriate time. This will be a numeric value, followed by a space, then a single letter.\\n\\nHere are some examples:\\n\\n1 D (this means 1 Day)\\n1 W (this means 1 Week)\\n1 M (this means 1 Month)\\n1 Y (this means 1 Year)\\n1 L (this means 1 Lifetime)\'); return false;">[?]</a></p>' . "\n";
@@ -187,14 +187,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						echo '</div>' . "\n";
 
-						echo '<div class="ws-menu-page-group" title="AliPay® Specific Post/Page (Buy Now) Buttons">' . "\n";
+						echo '<div class="ws-menu-page-group" title="AliPay Specific Post/Page (Buy Now) Buttons">' . "\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-buttons-section">' . "\n";
 						echo '<h3>Button Code Generator For Specific Post/Page Buttons</h3>' . "\n";
-						echo '<p>s2Member now supports an additional layer of functionality (very powerful), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress®. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" Buttons, and your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>' . "\n";
-						echo '<p>In other words, Customers will NOT need to login, just to receive access to the Specific Post/Page they purchased access to. s2Member will immediately redirect the Customer to the Specific Post/Page after checkout is completed successfully. An email is also sent to the Customer with a link (see: <code>s2Member -› AliPay® Options -› Specific Post/Page Email</code>). Authentication is handled automatically through self-expiring links, good for 72 hours by default.</p>' . "\n";
-						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress®. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress® Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>' . "\n";
-						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Button Code). These special AliPay® Buttons are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em>* Buttons are NOT saved here. This is only a Button Generator. Once you\'ve generated your Button, copy/paste it into your WordPress® Editor, wherever you feel it would be most appropriate. If you lose your Button Code, you\'ll need to come back &amp; re-generate a new one.</em></p>' . "\n";
+						echo '<p>s2Member now supports an additional layer of functionality (very powerful), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" Buttons, and your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>' . "\n";
+						echo '<p>In other words, Customers will NOT need to login, just to receive access to the Specific Post/Page they purchased access to. s2Member will immediately redirect the Customer to the Specific Post/Page after checkout is completed successfully. An email is also sent to the Customer with a link (see: <code>s2Member -› AliPay Options -› Specific Post/Page Email</code>). Authentication is handled automatically through self-expiring links, good for 72 hours by default.</p>' . "\n";
+						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>' . "\n";
+						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Button Code). These special AliPay Buttons are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em>* Buttons are NOT saved here. This is only a Button Generator. Once you\'ve generated your Button, copy/paste it into your WordPress Editor, wherever you feel it would be most appropriate. If you lose your Button Code, you\'ll need to come back &amp; re-generate a new one.</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -238,7 +238,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						echo '<td colspan="2">' . "\n";
 						echo '<form onsubmit="return false;">' . "\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />' . "\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 						$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-sp-checkout-button-shortcode.php")));
 						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />' . "\n";
@@ -252,7 +252,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						echo '</div>' . "\n";
 
-						echo '<div class="ws-menu-page-group" title="AliPay® Specific Post/Page Access Links">' . "\n";
+						echo '<div class="ws-menu-page-group" title="AliPay Specific Post/Page Access Links">' . "\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">' . "\n";
 						echo '<h3>Specific Post/Page Link Generator (for Customer Service)</h3>' . "\n";
@@ -299,7 +299,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-shortcode-attrs-section">' . "\n";
 						echo '<h3>Shortcode Attributes (Explained In Full Detail)</h3>' . "\n";
-						echo '<p>When you generate a Button Code, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress®, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Button Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>' . "\n";
+						echo '<p>When you generate a Button Code, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Button Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>' . "\n";
 
 						echo '<table class="form-table" style="margin-top:0;">' . "\n";
 						echo '<tbody>' . "\n";
@@ -312,9 +312,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 						echo '<li><code>desc="Gold Membership"</code> A brief purchase Description; which may also include pricing details.</li>' . "\n";
 						echo '<li><code>exp="72"</code> Access Expires (in hours). Only valid when <code>sp="1"</code> for Specific Post/Page Access.</li>' . "\n";
 						echo '<li><code>ids="14"</code> A Post/Page ID#, or a comma-delimited list of IDs. Only valid when <code>sp="1"</code> for Specific Post/Page Access.</li>' . "\n";
-						echo '<li><code>image="default"</code> Button Image Location. Possible values: <code>default</code> = use the default AliPay® Button, <code>http://...</code> = location of your custom Image.</li>' . "\n";
+						echo '<li><code>image="default"</code> Button Image Location. Possible values: <code>default</code> = use the default AliPay Button, <code>http://...</code> = location of your custom Image.</li>' . "\n";
 						echo '<li><code>level="1"</code> Membership Level [1-4] <em>(or, up to the number of configured Levels)</em>. Only valid for Buttons providing paid Membership Level Access.' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? '' : ' Or, with Independent Custom Capabilities this MUST be set to <code>level="*"</code>, and <code>ccaps=""</code> must NOT be empty <em>(i.e. <code>level="*" ccaps="music,videos"</code>)</em>.') . '</li>' . "\n";
-						echo '<li><code>output="anchor"</code> Output Type. Possible values: <code>anchor</code> = AliPay® Button (  &lt;a&gt; anchor tag ) URL w/ ?query string, <code>url</code> = raw URL w/ ?query string.</li>' . "\n";
+						echo '<li><code>output="anchor"</code> Output Type. Possible values: <code>anchor</code> = AliPay Button (  &lt;a&gt; anchor tag ) URL w/ ?query string, <code>url</code> = raw URL w/ ?query string.</li>' . "\n";
 						echo '<li><code>ra="0.01"</code> Regular / Buy Now Amount. Must be &gt;= <code>0.01</code>.</li>' . "\n";
 						echo '<li><code>rp="1"</code> Regular Period. Only valid w/ Membership Level Access' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? '' : ' and/or Independent Custom Capabilities') . '. Must be &gt;= <code>1</code> (ex: <code>1</code> Week, <code>2</code> Months, <code>1</code> Month, <code>3</code> Days).</li>' . "\n";
 						echo '<li><code>rt="M"</code> Regular Term. Only valid w/ Membership Level Access' . ((is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ()) ? '' : ' and/or Independent Custom Capabilities') . '. Possible values: <code>D</code> = Days, <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years, <code>L</code> = Lifetime.</li>' . "\n";

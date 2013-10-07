@@ -1,14 +1,14 @@
 <?php
 /**
-* Menu page for s2Member Pro (PayPal® options, Tax Rates).
+* Menu page for s2Member Pro (PayPal options, Tax Rates).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates"))
 	{
 		/**
-		* Menu page for s2Member Pro (PayPal® options, Tax Rates).
+		* Menu page for s2Member Pro (PayPal options, Tax Rates).
 		*
 		* @package s2Member\Menu_Pages
 		* @since 110531
@@ -48,9 +48,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates"))
 						echo '<div class="ws-menu-page-group" title="Tax Rate Calculations (Pro Form)">' . "\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-tax-rates-section">' . "\n";
-						echo '<h3>Tax Rate Calculations for PayPal® Pro Forms (optional)<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
-						echo '<p>With PayPal® Pro, your software (s2Member Pro) is solely responsible for calculating Tax Rates. In the fields below, you can set a Global Default Tax Rate, and/or a "Custom Tax Configuration File"; which can be applied to specific countries, specific states, provinces, and even to specific zip code ranges. * Tax Rate calculations are fully compatible with international currencies and locations.</p>' . "\n";
-						echo '<p>When you create a PayPal® Pro Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your PayPal® Pro Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create a PayPal® Pro Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>' . "\n";
+						echo '<h3>Tax Rate Calculations for PayPal Pro Forms (optional)<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
+						echo '<p>With PayPal Pro, your software (s2Member Pro) is solely responsible for calculating Tax Rates. In the fields below, you can set a Global Default Tax Rate, and/or a "Custom Tax Configuration File"; which can be applied to specific countries, specific states, provinces, and even to specific zip code ranges. * Tax Rate calculations are fully compatible with international currencies and locations.</p>' . "\n";
+						echo '<p>When you create a PayPal Pro Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your PayPal Pro Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create a PayPal Pro Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>' . "\n";
 						echo '<p><em><strong>*Quick Tip*</strong> If you configure Tax, it\'s good to include a note somewhere in the <code>desc=""</code> attribute of your Shortcode. Something like <code>desc="$x.xx (plus tax)"</code>.</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";

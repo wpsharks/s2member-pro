@@ -1,14 +1,14 @@
 <?php
 /**
-* Menu page for s2Member Pro (Authorize.Net® Forms page).
+* Menu page for s2Member Pro (Authorize.Net Forms page).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 	{
 		/**
-		* Menu page for s2Member Pro (Authorize.Net® Forms page).
+		* Menu page for s2Member Pro (Authorize.Net Forms page).
 		*
 		* @package s2Member\Menu_Pages
 		* @since 110531
@@ -48,28 +48,28 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<div class="wrap ws-menu-page">'."\n";
 
 						echo '<div id="icon-plugins" class="icon32"><br /></div>'."\n";
-						echo '<h2>s2Member® Pro / Authorize.Net® Pro Forms</h2>'."\n";
+						echo '<h2>s2Member Pro / Authorize.Net Pro Forms</h2>'."\n";
 
 						echo '<table class="ws-menu-page-table">'."\n";
 						echo '<tbody class="ws-menu-page-table-tbody">'."\n";
 						echo '<tr class="ws-menu-page-table-tr">'."\n";
 						echo '<td class="ws-menu-page-table-l">'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Quick-Start Guide For Authorize.Net®">'."\n";
+						echo '<div class="ws-menu-page-group" title="Quick-Start Guide For Authorize.Net">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-forms-guide-section">'."\n";
-						echo '<img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress®)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
-						echo '<h3>Quick-Start Guide For Authorize.Net® Integration</h3>'."\n";
-						echo '<p><strong>See also:</strong> This KB article: <a href="http://www.s2member.com/kb/pro-forms/" target="_blank" rel="external">s2Member® Pro Forms</a>.</p>'."\n";
-						echo '<p>The s2Member Pro Module makes it possible for s2Member to use <a href="http://www.s2member.com/authorize.net" target="_blank" rel="external">Authorize.Net®</a> Pro Forms. Pro Forms integrate seamlessly with WordPress® Shortcodes. This allows you to keep Customers on your site at all times, and it consolidates the Checkout / Registration steps into a single form that you can dress up just the way you like. If you would like to take advantage of Authorize.Net® integration, please supply your Authorize.Net® API Login ID, Transaction Key, and Secret MD5 Hash. See <code>s2Member -› Authorize.Net® Options</code>.</p>'."\n";
-						echo '<p><em><strong>*Recurring Billing*</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generators below, you will ALSO need <a href="http://www.s2member.com/authorize.net-arb" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net® account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the Form Generators below, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net® will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
-						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*Secure Server*</strong> In order to comply with Authorize.Net® and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net® Pro Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Authorize.Net® Pro Forms with s2Member; you\'ll be supplied with WordPress® Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>*Secure Server*</strong> In order to comply with Authorize.Net® and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net® Pro Forms on an SSL enabled page. When you create Authorize.Net® Pro Forms with s2Member; you\'ll be supplied with WordPress® Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
-						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*SSL Compatibility*</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress® itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress® theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer® browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
+						echo '<img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
+						echo '<h3>Quick-Start Guide For Authorize.Net Integration</h3>'."\n";
+						echo '<p><strong>See also:</strong> This KB article: <a href="http://www.s2member.com/kb/pro-forms/" target="_blank" rel="external">s2Member Pro Forms</a>.</p>'."\n";
+						echo '<p>The s2Member Pro Module makes it possible for s2Member to use <a href="http://www.s2member.com/authorize.net" target="_blank" rel="external">Authorize.Net</a> Pro Forms. Pro Forms integrate seamlessly with WordPress Shortcodes. This allows you to keep Customers on your site at all times, and it consolidates the Checkout / Registration steps into a single form that you can dress up just the way you like. If you would like to take advantage of Authorize.Net integration, please supply your Authorize.Net API Login ID, Transaction Key, and Secret MD5 Hash. See <code>s2Member -› Authorize.Net Options</code>.</p>'."\n";
+						echo '<p><em><strong>*Recurring Billing*</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generators below, you will ALSO need <a href="http://www.s2member.com/authorize.net-arb" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the Form Generators below, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
+						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*Secure Server*</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Authorize.Net Pro Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>*Secure Server*</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro Forms on an SSL enabled page. When you create Authorize.Net Pro Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
+						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*SSL Compatibility*</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
 						echo '</div>'."\n";
 
 						echo '</div>'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® / Free Registration Forms">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net / Free Registration Forms">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";
 						echo '<h3>One Form Does It All For Free Registrations (copy/paste)</h3>'."\n";
@@ -83,7 +83,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>'."\n";
 						echo '<form onsubmit="return false;">'."\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-registration-form-shortcode.php")));
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level0_label"])), $ws_plugin__s2member_pro_temp_s);
@@ -101,11 +101,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 							{
-								echo '<div class="ws-menu-page-group" title="Authorize.Net® Forms For Level #'.$n.' Access">'."\n";
+								echo '<div class="ws-menu-page-group" title="Authorize.Net Forms For Level #'.$n.' Access">'."\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level'.$n.'-forms-section">'."\n";
 								echo '<h3>Pro Form Generator For Level #'.$n.' Access</h3>'."\n";
-								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Form Code). These special Authorize.Net® Forms are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. When a Member cancels their Membership, or fails to make payments on time, s2Member will automatically terminate their Membership privileges. s2Member makes extensive use of the Authorize.Net® Silent Post and ARB services. s2Member receives updates from Authorize.Net® behind-the-scene.</p>'."\n";
+								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. When a Member cancels their Membership, or fails to make payments on time, s2Member will automatically terminate their Membership privileges. s2Member makes extensive use of the Authorize.Net Silent Post and ARB services. s2Member receives updates from Authorize.Net behind-the-scene.</p>'."\n";
 								echo '<p><em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located. We suggest placing a link to this Form on your Membership Options Page. That way your visitors can get registered &amp; checkout!</em></p>'."\n";
 
 								echo '<table class="form-table">'."\n";
@@ -127,7 +127,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<td>'."\n";
 								echo '<form onsubmit="return false;">'."\n";
-								echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 								$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-checkout-form-shortcode.php")));
 								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($n)), $ws_plugin__s2member_pro_temp_s);
 								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level".$n."_label"])), $ws_plugin__s2member_pro_temp_s);
@@ -144,11 +144,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</div>'."\n";
 							}
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Billing Modification Forms">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Billing Modification Forms">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-modification-forms-section">'."\n";
 						echo '<h3>Pro Form Generator For Billing Modifications</h3>'."\n";
-						echo '<p>If you\'d like to give your Members (and/or your Free Subscribers) the ability to change (modify) their billing plan; you can generate a new Authorize.Net® Modification Form here. Configure the updated Level, pricing, terms, etc. Then, make that new Modification Form available to Members who are logged into their existing account with you. For example, you might want to insert a "Level #2" Upgrade link into your Login Welcome Page, which would up-sell existing Level #1 Members to a more expensive plan that you offer.</p>'."\n";
+						echo '<p>If you\'d like to give your Members (and/or your Free Subscribers) the ability to change (modify) their billing plan; you can generate a new Authorize.Net Modification Form here. Configure the updated Level, pricing, terms, etc. Then, make that new Modification Form available to Members who are logged into their existing account with you. For example, you might want to insert a "Level #2" Upgrade link into your Login Welcome Page, which would up-sell existing Level #1 Members to a more expensive plan that you offer.</p>'."\n";
 						echo '<p><em><strong>*Modification Process*</strong> Very simple. A Member clicks a link to a special Post/Page, which contains a Modification Form you\'ve generated. The Member fills in their billing information. After a successful form submission, s2Member will update the status of their account to the Level, pricing, and terms that you configure below. If the Member already has an existing paid Subscription with you, that paid Subscription will be cancelled automatically behind-the-scene, and a new paid Subscription will be created to replace the old one. Again, the new paid Subscription is based on the Level, pricing, and terms that you specify below. If you need to give Customers some sort of grace period when/if they upgrade to a more expensive plan, please feel free to handle this through the application of free days, or with special pricing configured below.</em></p>'."\n";
 						echo '<p><em><strong>*Integrating Conditionals*</strong> Since each Modification Form is configured for a specific Level, you may want to create multiple Modification Forms, one for each combination you intend to make available. s2Member\'s API Conditionals can help you display the proper Form to each Customer, based on the status of their existing account. For further details, see: <code>s2Member -› API Scripting</code>.</em></p>'."\n";
 						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*Independent Custom Capabilities*</strong> If you just want to sell an existing Member new Custom Capabilities, without affecting their paid Subscription in any way, please see the next Form Generator: <code>Capability (Buy Now) Forms</code>. Independent Capability Forms facilitate Buy Now functionality, specifically for Custom Capabilities, without affecting the Customer\'s primary Subscription and Membership Level Access.</em></p>'."\n" : '';
@@ -187,7 +187,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>'."\n";
 						echo '<form onsubmit="return false;">'."\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-checkout-form-shortcode.php")));
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr("1")), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level1_label"])), $ws_plugin__s2member_pro_temp_s);
@@ -206,14 +206,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 							{
-								echo '<div class="ws-menu-page-group" title="Authorize.Net® Capability (Buy Now) Forms">'."\n";
+								echo '<div class="ws-menu-page-group" title="Authorize.Net Capability (Buy Now) Forms">'."\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-forms-section">'."\n";
 								echo '<h3>Pro Form Generator For Independent Custom Capabilities</h3>'."\n";
 								echo '<p>This is VERY advanced. For further details, please check your Dashboard: <code>s2Member -› API Scripting -› Custom Capabiities</code>.</p>'."\n";
 								echo '<p>With s2Member, you can sell one or more Custom Capabilities using Buy Now functionality, to "existing" Users/Members, regardless of which Membership Level they have on your site <em>(i.e. you could even sell Independent Custom Capabilities to Users at Membership Level #0, normally referred to as Free Subscribers, if you like)</em>. So this is quite flexible. Independent Custom Capabilities do NOT rely on any specific Membership Level. That\'s why s2Member refers to these as `Independent` Custom Capabilities, because you can sell Capabilities this way, through Buy Now functionality, and the Customer\'s Membership Level Access, along with any existing paid Subscription they may already have with you, will remain completely unaffected. That being said, if you intend to charge a recurring fee for Custom Capabilities, please use a <code>Billing Modification Form</code> instead; because Independent Custom Capabilities can only be sold through Buy Now functionality.</p>'."\n";
 								echo '<p>Independent Custom Capabilities are added to a Customer\'s account immediately after checkout, and the Customer will have the Custom Capabilities for as long as their Membership lasts, based on their primary Subscription with your site, and/or forever, if they have a Lifetime account with you. In other words, Independent Custom Capabilities will exist on the Customer\'s account forever, or until an EOT <em>(End Of Term)</em> occurs on their primary Subscription with you; in which case s2Member would demote or delete the Customer\'s account <em>(based on your EOT configuration)</em>, and all Custom Capabilities are removed as well.</p>'."\n";
-								echo '<p>Very simple. All you do is customize the form fields provided, for each set of Custom Capabilities that you plan to sell. Then press (Generate Form Code). These special Authorize.Net® Forms are customized to work with s2Member seamlessly. The Customer will be granted additional access to one or more Custom Capabilities that you specify; while the Customer\'s Membership Level Access and any existing paid Subscription they may already have with you, will remain completely unaffected.</p>'."\n";
+								echo '<p>Very simple. All you do is customize the form fields provided, for each set of Custom Capabilities that you plan to sell. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. The Customer will be granted additional access to one or more Custom Capabilities that you specify; while the Customer\'s Membership Level Access and any existing paid Subscription they may already have with you, will remain completely unaffected.</p>'."\n";
 
 								echo '<table class="form-table">'."\n";
 								echo '<tbody>'."\n";
@@ -234,7 +234,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<td>'."\n";
 								echo '<form onsubmit="return false;">'."\n";
-								echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 								$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-ccaps-checkout-form-shortcode.php")));
 								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />'."\n";
@@ -249,7 +249,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</div>'."\n";
 							}
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Billing Update Forms">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Billing Update Forms">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-update-forms-section">'."\n";
 						echo '<h3>One Form Does It All For Billing Updates (copy/paste)</h3>'."\n";
@@ -261,7 +261,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>'."\n";
 						echo '<form onsubmit="return false;">'."\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-update-form-shortcode.php")));
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-update-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />'."\n";
 						echo '</form>'."\n";
@@ -274,12 +274,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '</div>'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Billing Cancellation Forms">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Billing Cancellation Forms">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-cancellation-forms-section">'."\n";
 						echo '<h3>One Form Does It All For Cancellations (copy/paste)</h3>'."\n";
-						echo '<p>According to Authorize.Net\'s policy on recurring billing, you MUST provide each and every Customer with an easy to way to cancel future charges. Generating a Cancellation Form here, and making that Form available to all Customers is our recommendation. For further details and legalities, please visit the <a href="http://www.s2member.com/authorize.net-developers" target="_blank" rel="external">Authorize.Net® Developer Network</a>.</p>'."\n";
-						echo '<p><em><strong>*Cancellation Process*</strong> Very simple. A Member clicks a link to a Post/Page that contains a Cancellation Form you\'ve generated. The Member clicks the Submit button to confirm the cancellation. s2Member is notified silently behind-the-scene, and will immediately cancel all future billing. s2Member will later terminate their account access, at the correct point in time. This works in conjunction with the s2Member Auto-EOT System. For further details, see: <code>s2Member -› Authorize.Net® Options -› EOT Behavior</code>.</em></p>'."\n";
+						echo '<p>According to Authorize.Net\'s policy on recurring billing, you MUST provide each and every Customer with an easy to way to cancel future charges. Generating a Cancellation Form here, and making that Form available to all Customers is our recommendation. For further details and legalities, please visit the <a href="http://www.s2member.com/authorize.net-developers" target="_blank" rel="external">Authorize.Net Developer Network</a>.</p>'."\n";
+						echo '<p><em><strong>*Cancellation Process*</strong> Very simple. A Member clicks a link to a Post/Page that contains a Cancellation Form you\'ve generated. The Member clicks the Submit button to confirm the cancellation. s2Member is notified silently behind-the-scene, and will immediately cancel all future billing. s2Member will later terminate their account access, at the correct point in time. This works in conjunction with the s2Member Auto-EOT System. For further details, see: <code>s2Member -› Authorize.Net Options -› EOT Behavior</code>.</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -287,7 +287,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>'."\n";
 						echo '<form onsubmit="return false;">'."\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-cancellation-form-shortcode.php")));
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-cancellation-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />'."\n";
 						echo '</form>'."\n";
@@ -300,7 +300,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '</div>'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Member Registration Access Links">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Member Registration Access Links">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">'."\n";
 						echo '<h3>Registration Access Link Generator (for Customer Service)</h3>'."\n";
@@ -315,7 +315,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<p>Paid Membership Level#: <select id="ws-plugin--s2member-pro-reg-link-level">'."\n";
 						for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)echo '<option value="'.$n.'">s2Member Level #'.$n.'</option>'."\n";
 						echo '</select></p>'."\n";
-						echo '<p>Paid Subscr. ID: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-subscr-id" value="" size="50" /> <a href="#" onclick="alert(\'The Customer\\\'s Paid Subscr. ID (aka: Authorize.Net® Subscription ID or Transaction ID) must be unique. This value can be obtained from inside your Authorize.Net® account. Each paying Customer MUST be associated with a unique Paid Subscr. ID. If the Customer is NOT associated with a Paid Subscr. ID, you will need to generate a unique value for this field on your own. But keep in mind, s2Member will be unable to maintain future communication with the Authorize.Net® Silent Post and ARB services if this value does not reflect a real Paid Subscr. ID, one that exists in your Authorize.Net® transaction log.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
+						echo '<p>Paid Subscr. ID: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-subscr-id" value="" size="50" /> <a href="#" onclick="alert(\'The Customer\\\'s Paid Subscr. ID (aka: Authorize.Net Subscription ID or Transaction ID) must be unique. This value can be obtained from inside your Authorize.Net account. Each paying Customer MUST be associated with a unique Paid Subscr. ID. If the Customer is NOT associated with a Paid Subscr. ID, you will need to generate a unique value for this field on your own. But keep in mind, s2Member will be unable to maintain future communication with the Authorize.Net Silent Post and ARB services if this value does not reflect a real Paid Subscr. ID, one that exists in your Authorize.Net transaction log.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
 						echo '<p>Custom String Value: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-custom" value="'.esc_attr($_SERVER["HTTP_HOST"]).'" size="30" /> <a href="#" onclick="alert(\'A Paid Subscription is always associated with a Custom String that is passed through the custom=\\\'\\\''.c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr($_SERVER["HTTP_HOST"]), 3).'\\\'\\\' attribute of your Shortcode. This Custom Value, MUST always start with your domain name. However, you can also pipe delimit additional values after your domain, if you need to.\\n\\nFor example:\n'.c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr($_SERVER["HTTP_HOST"]), 3).'|cv1|cv2|cv3\'); return false;" tabindex="-1">[?]</a> <input type="button" value="Generate Access Link" onclick="ws_plugin__s2member_pro_authnetRegLinkGenerate();" class="button-primary" /> <img id="ws-plugin--s2member-pro-reg-link-loading" src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]).'/images/ajax-loader.gif" alt="" style="display:none;" /></p>'."\n";
 						echo '<p'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? ' style="display:none;"' : '').'>Custom Capabilities (comma-delimited) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member -› API Scripting -› Custom Capabilities.\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-ccaps" size="40" onkeyup="if(this.value.match(/[^a-z_0-9,]/)) this.value = jQuery.trim (jQuery.trim (this.value).replace (/[ \-]/g, \'_\').replace (/[^a-z_0-9,]/gi, \'\').toLowerCase ());" /></p>'."\n";
 						echo '<p>Fixed Term Length (for Buy Now transactions): <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-reg-link-fixed-term" value="" size="10" /> <a href="#" onclick="alert(\'If the Customer purchased Membership through a Buy Now transaction (i.e. there is no Initial/Trial Period and no recurring charges for ongoing access), you may configure a Fixed Term Length in this field. This way the Customer\\\'s Membership Access is revoked by s2Member at the appropriate time. This will be a numeric value, followed by a space, then a single letter.\\n\\nHere are some examples:\\n\\n1 D (this means 1 Day)\\n1 W (this means 1 Week)\\n1 M (this means 1 Month)\\n1 Y (this means 1 Year)\\n1 L (this means 1 Lifetime)\'); return false;">[?]</a></p>'."\n";
@@ -330,14 +330,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '</div>'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Specific Post/Page (Buy Now) Forms">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Specific Post/Page (Buy Now) Forms">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-forms-section">'."\n";
 						echo '<h3>Pro Form Generator For Specific Post/Page Forms</h3>'."\n";
-						echo '<p>s2Member now supports an additional layer of functionality (very powerful), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress®. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" functionality. Your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>'."\n";
-						echo '<p>In other words, Customers will NOT need to login, just to receive access to the Specific Post/Page they purchased access to. s2Member will immediately redirect the Customer to the Specific Post/Page after checkout is completed successfully. An email is also sent to the Customer with a link (see: <code>s2Member -› Authorize.Net® Options -› Specific Post/Page Email</code>). Authentication is handled automatically through self-expiring links, good for 72 hours by default.</p>'."\n";
-						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress®. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress® Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>'."\n";
-						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Form Code). These special Authorize.Net® Forms are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located.</em></p>'."\n";
+						echo '<p>s2Member now supports an additional layer of functionality (very powerful), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" functionality. Your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>'."\n";
+						echo '<p>In other words, Customers will NOT need to login, just to receive access to the Specific Post/Page they purchased access to. s2Member will immediately redirect the Customer to the Specific Post/Page after checkout is completed successfully. An email is also sent to the Customer with a link (see: <code>s2Member -› Authorize.Net Options -› Specific Post/Page Email</code>). Authentication is handled automatically through self-expiring links, good for 72 hours by default.</p>'."\n";
+						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>'."\n";
+						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located.</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -375,7 +375,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<td>'."\n";
 						echo '<form onsubmit="return false;">'."\n";
-						echo '<strong>WordPress® Shortcode:</strong> (recommended for both the WordPress® Visual &amp; HTML Editors)<br />'."\n";
+						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-sp-checkout-form-shortcode.php")));
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" style="font-family:Consolas, monospace; width:99%;" />'."\n";
@@ -389,7 +389,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '</div>'."\n";
 
-						echo '<div class="ws-menu-page-group" title="Authorize.Net® Specific Post/Page Access Links">'."\n";
+						echo '<div class="ws-menu-page-group" title="Authorize.Net Specific Post/Page Access Links">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">'."\n";
 						echo '<h3>Specific Post/Page Link Generator (for Customer Service)</h3>'."\n";
@@ -438,7 +438,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-forms-success-section">'."\n";
 								echo '<h3>Custom Return URLs Upon Success (optional, for developers)</h3>'."\n";
-								echo '<p>s2Member Pro opens the door for Custom Return URLs upon success. You can add a special attribute to any Form Shortcode (<code>success="/my-thank-you-page/"</code>). This makes it possible to integrate Authorize.Net® Pro Forms in very creative ways; and even receive/verify Replacement Code variables, as needed. For example, (<code>success="/my-thank-you-page/?subscr_id=%%subscr_id%%"</code>).</p>'."\n";
+								echo '<p>s2Member Pro opens the door for Custom Return URLs upon success. You can add a special attribute to any Form Shortcode (<code>success="/my-thank-you-page/"</code>). This makes it possible to integrate Authorize.Net Pro Forms in very creative ways; and even receive/verify Replacement Code variables, as needed. For example, (<code>success="/my-thank-you-page/?subscr_id=%%subscr_id%%"</code>).</p>'."\n";
 								echo '<p><em>A Custom Return URL is 100% optional. In fact, if you only need to obtain details for the purpose of tracking sales, you should just use the simpler API Tracking methods provided by s2Member, under: <code>s2Member -› API / Tracking</code>. In other words, if you don\'t use the <code>success=""</code> attribute in your Shortcode, s2Member will handle things gracefully, all on its own. So using a Custom Return URL is only necessary when you need advanced customization for one reason or another.</em></p>'."\n";
 
 								echo '<div class="ws-menu-page-hr"></div>'."\n";
@@ -457,7 +457,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<li><code>%%user_login%%</code> = The Username the Member selected during registration.</li>'."\n";
 								echo '<li><code>%%user_pass%%</code> = The Password selected or generated during registration.</li>'."\n";
 								echo '<li><code>%%user_ip%%</code> = The User\'s IP Address, via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
-								echo '<li><code>%%user_id%%</code> = A unique WordPress® User ID generated during registration.</li>'."\n";
+								echo '<li><code>%%user_id%%</code> = A unique WordPress User ID generated during registration.</li>'."\n";
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>'."\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>'."\n";
 								echo '</ul>'."\n";
@@ -485,7 +485,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<h3>Membership Sales / Signups &amp; Modifications (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-sales" style="display:none;">'."\n";
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
-								echo '<li><code>%%subscr_id%%</code> = The Authorize.Net® Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Authorize.Net® does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
+								echo '<li><code>%%subscr_id%%</code> = The Authorize.Net Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Authorize.Net does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%initial%%</code> = The Initial Fee charged during signup. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent, whenever they initially signed up, no matter what. Even if that amount is 0.\\n\\nIf a Customer signs up, under the terms of a 100% Free Trial Period, this will be 0. So be careful using %%initial%% when you offer a 100% Free Trial Period, because a $0.00 sale amount could cause havoc with affiliate programs.\\n\\nIf you\\\'re offering a 100% Free Trial Period, and you need to track sales through affiliate programs, you can either hard-code an amount; or use `s2Member -› API Notifications -› Payment Notifications` instead.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offer something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%recurring%%</code> = This is the amount that will be charged on a recurring basis, or <code>0</code> if non-recurring. [ <a href="#" onclick="alert(\'If Recurring Payments have not been required, this will be equal to 0. That being said, %%regular%% &amp; %%recurring%% are usually the same value. This variable can be used in two different ways. You can use it to determine what the Regular Recurring Rate is, or to determine whether the Subscription will recur or not. If it is going to recur, %%recurring%% will be > 0.\'); return false;">?</a> ]</li>'."\n";
@@ -504,7 +504,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<li><code>%%user_email%%</code> = The Email Address associated with their User account. This might be different than what is on file with your Payment Gateway.</li>'."\n";
 								echo '<li><code>%%user_login%%</code> = The Username associated with their account. The Customer created this during registration.</li>'."\n";
 								echo '<li><code>%%user_ip%%</code> = The Customer\'s original IP Address, during checkout/registration via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
-								echo '<li><code>%%user_id%%</code> = A unique WordPress® User ID that references this account in the WordPress® database.</li>'."\n";
+								echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>'."\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>'."\n";
 								echo '</ul>'."\n";
@@ -553,7 +553,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<li><code>%%user_email%%</code> = The Email Address associated with their User account. This might be different than what is on file with your Payment Gateway.</li>'."\n";
 								echo '<li><code>%%user_login%%</code> = The Username associated with their account. The Customer created this during registration.</li>'."\n";
 								echo '<li><code>%%user_ip%%</code> = The Customer\'s original IP Address, during checkout/registration via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
-								echo '<li><code>%%user_id%%</code> = A unique WordPress® User ID that references this account in the WordPress® database.</li>'."\n";
+								echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like.</li>'."\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, it might contain a link to the login page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>'."\n";
 								echo '</ul>'."\n";
@@ -590,7 +590,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
 								echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>'."\n";
 								echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>'."\n";
-								echo '<li><code>%%txn_id%%</code> = The Authorize.Net® Transaction ID. Authorize.Net® assigns a unique identifier for every purchase.</li>'."\n";
+								echo '<li><code>%%txn_id%%</code> = The Authorize.Net Transaction ID. Authorize.Net assigns a unique identifier for every purchase.</li>'."\n";
 								echo '<li><code>%%amount%%</code> = The full Amount of the sale. Most affiliate programs calculate commissions from this.</li>'."\n";
 								echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased Specific Post/Page Access.</li>'."\n";
 								echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who purchased Specific Post/Page Access.</li>'."\n";
@@ -664,7 +664,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-shortcode-attrs-section">'."\n";
 						echo '<h3>Shortcode Attributes (Explained In Full Detail)</h3>'."\n";
-						echo '<p>When you generate a Form, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress®, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Form Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>'."\n";
+						echo '<p>When you generate a Form, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Form Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>'."\n";
 
 						echo '<table class="form-table" style="margin-top:0;">'."\n";
 						echo '<tbody>'."\n";
@@ -676,7 +676,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<li><code>accept_coupons="1"</code> Accept Coupons? Possible values: <code>0</code> = do NOT accept Coupons on this particular Form; <code>1</code> = DO accept Coupon Codes on this particular Form.</li>'."\n";
 						echo '<li><code>cancel="0"</code> Cancellation Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Cancellation Form, <code>1</code> = this IS a Cancellation Form.</li>'."\n";
 						echo '<li><code>captcha="clean"</code> When you set this Attribute, visitors must prove they\'re human by typing a <a href="http://en.wikipedia.org/wiki/CAPTCHA" target="_blank" rel="external">captcha/security code</a>. Possible values: <code>0</code> = do NOT require a captcha code on this Form; <code>clean</code> = DO require a captcha code on this Form; using the <code>clean</code> theme style. Possible <a href="http://www.s2member.com/google-recaptcha-styles" target="_blank" rel="external">theme styles</a> include: <code>red</code>, <code>white</code>, <code>clean</code>, and <code>blackglass</code>. This service is powered by Google\'s reCaptcha system.</li>'."\n";
-						echo '<li><code>cc="USD"</code> 3 character Currency Code. Most Authorize.Net® accounts process all transactions in <code>USD</code> (by default). However, Authorize.Net has recently introduced support for <code>CAD</code>, <code>EUR</code> and/or <code>GBP</code> currency codes (perhaps others are coming in the near future). If your Authorize.Net account supports one of these additional currency codes, you can change this if you like. However, please be sure to consult with Authorize.Net and confirm which currency that your merchant account is billing in. Not valid when <code>cancel="1"</code>.</li>'."\n";
+						echo '<li><code>cc="USD"</code> 3 character Currency Code. Most Authorize.Net accounts process all transactions in <code>USD</code> (by default). However, Authorize.Net has recently introduced support for <code>CAD</code>, <code>EUR</code> and/or <code>GBP</code> currency codes (perhaps others are coming in the near future). If your Authorize.Net account supports one of these additional currency codes, you can change this if you like. However, please be sure to consult with Authorize.Net and confirm which currency that your merchant account is billing in. Not valid when <code>cancel="1"</code>.</li>'."\n";
 						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>ccaps="music,videos"</code> A comma-delimited list of Custom Capabilities. Only valid w/ Membership Level Access and/or Independent Custom Capabilities.</li>'."\n" : '';
 						echo '<li><code>coupon="SAVE-10"</code> Default/pre-filled Coupon Code. This is optional, and the Coupon Code (if supplied) must exist in your Coupon Code configuration.</li>'."\n";
 						echo '<li><code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'"</code> must start with your domain. Additional values can be piped in (ex: <code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'|cv1|cv2|cv3|etc"</code>). Not valid when <code>cancel="1"</code>.</li>'."\n";
@@ -691,10 +691,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<li><code>rp="1"</code> Regular Period. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Must be &gt;= <code>1</code> (ex: <code>1</code> Week, <code>3</code> Weeks, <code>2</code> Months, <code>1</code> Year). Please note — Authorize.Net does NOT support daily recurring intervals. The minimum recurring interval is weekly and the maximum is yearly.</li>'."\n";
 						echo '<li><code>rt="M"</code> Regular Term. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Possible values: <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years, <code>L</code> = Lifetime. Please note — Authorize.Net does NOT support daily recurring intervals. The minimum recurring interval is weekly and the maximum is yearly.</li>'."\n";
 						echo '<li><code>rr="1"</code> Recurring directive. Only valid w/ Membership Level Access'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' and/or Independent Custom Capabilities').'. Possible values: <code>0</code> = non-recurring "Subscription" with possible Trial Period for free, or at a different Trial Amount; <code>1</code> = recurring "Subscription" with possible Trial Period for free, or at a different Trial Amount; <code>BN</code> = non-recurring "Buy Now" functionality, no Trial Period possible.</li>'."\n";
-						echo '<li><code>rrt=""</code> Recurring Times <em>(i.e. a fixed number of installments)</em>. Only valid w/ Membership Level Access. When unspecified, any recurring charges will remain ongoing until cancelled, or until payments start failing. If this is set to <code>1 or higher</code> the regular recurring charges will only continue for X billing cycles, depending on what you specify. This is only valid when <code>rr="1"</code> for recurring "Subscriptions". Please note that a fixed number of installments, also means a fixed period of access. If a Customer\'s billing is monthly, and you set <code>rrt="3"</code>, billing will continue for only 3 monthly installments. After that, billing would stop, and their access to the site would be revoked as well <em>(based on your EOT Behavior setting under: s2Member -› Authorize.Net® Options)</em>.</li>'."\n";
+						echo '<li><code>rrt=""</code> Recurring Times <em>(i.e. a fixed number of installments)</em>. Only valid w/ Membership Level Access. When unspecified, any recurring charges will remain ongoing until cancelled, or until payments start failing. If this is set to <code>1 or higher</code> the regular recurring charges will only continue for X billing cycles, depending on what you specify. This is only valid when <code>rr="1"</code> for recurring "Subscriptions". Please note that a fixed number of installments, also means a fixed period of access. If a Customer\'s billing is monthly, and you set <code>rrt="3"</code>, billing will continue for only 3 monthly installments. After that, billing would stop, and their access to the site would be revoked as well <em>(based on your EOT Behavior setting under: s2Member -› Authorize.Net Options)</em>.</li>'."\n";
 						echo '<li><code>sp="0"</code> Specific Post/Page Form. Possible values: <code>0</code> = this is NOT a Specific Post/Page Access Form, <code>1</code> = this IS a Specific Post/Page Access Form.</li>'."\n";
 						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>success=""</code> 100% optional. This can be used to create a Custom Return URL on success. Please see the sub-section above titled: <em>Custom Return URLs on Success</em>.</li>'."\n" : '';
-						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>template=""</code> 100% optional. This can be a custom template file that exists inside your WordPress® theme directory. For example: <code>template="checkout.php"</code>.</li>'."\n" : '';
+						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>template=""</code> 100% optional. This can be a custom template file that exists inside your WordPress theme directory. For example: <code>template="checkout.php"</code>.</li>'."\n" : '';
 						echo '<li><code>ta="0.00"</code> Trial Amount. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 						echo '<li><code>tp="0"</code> Trial Period. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 						echo '<li><code>tt="D"</code> Trial Term. Only valid w/ Membership Level Access. Possible values: <code>D</code> = Days, <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years.</li>'."\n";
@@ -735,7 +735,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
 						echo '<h3>Behind-The-Scene — How do "Checkout Options" work?</h3>' . "\n";
-						echo '<p>Given this simple example (as seen below); s2Member® will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (e.g. a child). The one s2Member® merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
+						echo '<p>Given this simple example (as seen below); s2Member will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (e.g. a child). The one s2Member merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";

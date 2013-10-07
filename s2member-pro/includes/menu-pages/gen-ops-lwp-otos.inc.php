@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -49,7 +49,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-one-time-offers-section">' . "\n";
 						echo '<h3>Optional One-Time-Offers (Upon Login)</h3>' . "\n";
-						echo '<p>This is enabled by s2Member Pro. One-Time-Offers allow you to override your default Login Welcome Page, based on the number of times a User/Member has logged in previously. s2Member Pro gives you the ability to write your own configuration file for One-Time-Offers. Please follow the instructions below. It is also possible for advanced site owners to use these <a href="#" onclick="alert(\'Replacement Codes:\\n\\n%%current_user_login%% = The current User\\\'s Username, lowercase.\\n%%current_user_id%% = The current User\\\'s ID.\\n%%current_user_level%% = The current User\\\'s s2Member Level.\\n%%current_user_role%% = The current User\\\'s WordPress® Role.' . ((!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '\\n%%current_user_ccaps%% = The current User\\\'s Custom Capabilities.' : '') . '\\n%%current_user_logins%% = Number of times the current User has logged in.\\n\\nFor example, if you\\\'re using BuddyPress, and you want to redirect Members to their BuddyPress Profile page after logging in, you would use: ' . site_url ("/members/%%current_user_login%%/profile/") . '\\n\\nOr, using %%current_user_level%%, you could have a separate One-Time-Offer page for each Membership Level that you plan to offer.\'); return false;">Replacement Codes</a> in their One-Time-Offer URLs.</p>' . "\n";
+						echo '<p>This is enabled by s2Member Pro. One-Time-Offers allow you to override your default Login Welcome Page, based on the number of times a User/Member has logged in previously. s2Member Pro gives you the ability to write your own configuration file for One-Time-Offers. Please follow the instructions below. It is also possible for advanced site owners to use these <a href="#" onclick="alert(\'Replacement Codes:\\n\\n%%current_user_login%% = The current User\\\'s Username, lowercase.\\n%%current_user_id%% = The current User\\\'s ID.\\n%%current_user_level%% = The current User\\\'s s2Member Level.\\n%%current_user_role%% = The current User\\\'s WordPress Role.' . ((!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '\\n%%current_user_ccaps%% = The current User\\\'s Custom Capabilities.' : '') . '\\n%%current_user_logins%% = Number of times the current User has logged in.\\n\\nFor example, if you\\\'re using BuddyPress, and you want to redirect Members to their BuddyPress Profile page after logging in, you would use: ' . site_url ("/members/%%current_user_login%%/profile/") . '\\n\\nOr, using %%current_user_level%%, you could have a separate One-Time-Offer page for each Membership Level that you plan to offer.\'); return false;">Replacement Codes</a> in their One-Time-Offer URLs.</p>' . "\n";
 						echo (c_ws_plugin__s2member_utils_conds::bp_is_installed ()) ? '<p><em><strong>BuddyPress:</strong> s2Member integrates with BuddyPress. This configuration affects BuddyPress too.</em></p>' . "\n" : '';
 
 						echo '<table class="form-table">' . "\n";

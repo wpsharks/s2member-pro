@@ -1,14 +1,14 @@
 <?php
 /**
-* Menu page for s2Member Pro (PayPal® options, Signup Email).
+* Menu page for s2Member Pro (PayPal options, Signup Email).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"))
 	{
 		/**
-		* Menu page for s2Member Pro (PayPal® options, Signup Email).
+		* Menu page for s2Member Pro (PayPal options, Signup Email).
 		*
 		* @package s2Member\Menu_Pages
 		* @since 110531
@@ -49,7 +49,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-signup-confirmation-email-section">' . "\n";
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
-						echo '<p>This email is sent to new Customers after they successfully complete a PayPal® "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because PayPal® Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
+						echo '<p>This email is sent to new Customers after they successfully complete a PayPal "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because PayPal Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -84,7 +84,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_signup_email_subject" id="ws-plugin--s2member-pro-signup-email-subject" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_signup_email_subject"]) . '" /><br />' . "\n";
-						echo 'Subject Line used in the email sent to a Customer after a successful signup has occurred through a PayPal® Pro Form.' . "\n";
+						echo 'Subject Line used in the email sent to a Customer after a successful signup has occurred through a PayPal Pro Form.' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -101,11 +101,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 
 						echo '<td>' . "\n";
 						echo '<textarea name="ws_plugin__s2member_pro_signup_email_message" id="ws-plugin--s2member-pro-signup-email-message" rows="10">' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_signup_email_message"]) . '</textarea><br />' . "\n";
-						echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through a PayPal® Pro Form.<br /><br />' . "\n";
+						echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through a PayPal Pro Form.<br /><br />' . "\n";
 						echo '<strong>You can also use these special Replacement Codes if you need them:</strong>' . "\n";
 						echo '<ul>' . "\n";
-						echo '<li><code>%%registration_url%%</code> = Not needed with PayPal® Pro Form integration. Pro Forms handle this automatically.</li>' . "\n";
-						echo '<li><code>%%subscr_id%%</code> = The PayPal® Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. PayPal® does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>' . "\n";
+						echo '<li><code>%%registration_url%%</code> = Not needed with PayPal Pro Form integration. Pro Forms handle this automatically.</li>' . "\n";
+						echo '<li><code>%%subscr_id%%</code> = The PayPal Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. PayPal does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%initial%%</code> = The Initial Fee charged during signup. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent, whenever they initially signed up, no matter what. If a Customer signs up, under the terms of a 100% Free Trial Period, this will be 0.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offer something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%recurring%%</code> = This is the amount that will be charged on a recurring basis, or <code>0</code> if non-recurring. [ <a href="#" onclick="alert(\'If Recurring Payments have not been required, this will be equal to 0. That being said, %%regular%% &amp; %%recurring%% are usually the same value. This variable can be used in two different ways. You can use it to determine what the Regular Recurring Rate is, or to determine whether the Subscription will recur or not. If it is going to recur, %%recurring%% will be > 0.\'); return false;">?</a> ]</li>' . "\n";
@@ -134,7 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 
 						echo (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ?
 							'<div class="ws-menu-page-hr"></div>' . "\n".
-							'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags — optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$paypal</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from PayPal\'s IPN service — or from an s2Member® Pro Form integration (e.g. <code>$paypal["item_number"]</code>, <code>$paypal["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+							'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags — optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$paypal</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from PayPal\'s IPN service — or from an s2Member Pro Form integration (e.g. <code>$paypal["item_number"]</code>, <code>$paypal["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
 							: '';
 						echo '</td>' . "\n";
 
