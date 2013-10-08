@@ -1,13 +1,13 @@
 /**
-* Core JavaScript routines for Authorize.Net® menu pages.
+* Core JavaScript routines for Authorize.Net menu pages.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -119,7 +119,7 @@ jQuery(document).ready (function($)
 						return this.id.match (/^ws-plugin--s2member-pro-(level[1-9][0-9]*|modification)-currency$/);
 					}).change (handleFormDescriptions);
 
-				ws_plugin__s2member_pro_authnetFormGenerate = /* Handles Authorize.Net® Form Generation. */ function(form)
+				ws_plugin__s2member_pro_authnetFormGenerate = /* Handles Authorize.Net Form Generation. */ function(form)
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AuthNet-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '', labels = {};
 
@@ -179,9 +179,9 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nMaximum Trial Months is: 12.\nIf you want to offer more than 12 months, please choose Years from the drop-down.');
 								return false;
 							}
-						else if (trialTerm === 'Y' && /* 1 year max for Authorize.Net®. */ trialPeriod > 1)
+						else if (trialTerm === 'Y' && /* 1 year max for Authorize.Net. */ trialPeriod > 1)
 							{
-								alert('— Oops, a slight problem: —\n\nMax Trial Period Years is: 1. *This is an Authorize.Net® limitation.');
+								alert('— Oops, a slight problem: —\n\nMax Trial Period Years is: 1. *This is an Authorize.Net limitation.');
 								return false;
 							}
 						else if (regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
@@ -205,7 +205,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '" rrt="' + esc_attr(regRecurTimes) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -215,7 +215,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_authnetCcapFormGenerate = /* Handles Authorize.Net® Form Generation. */ function(form)
+				ws_plugin__s2member_pro_authnetCcapFormGenerate = /* Handles Authorize.Net Form Generation. */ function(form)
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AuthNet-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
 
@@ -263,7 +263,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -273,7 +273,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_authnetSpFormGenerate = /* Handles Authorize.Net® Form Generation. */ function()
+				ws_plugin__s2member_pro_authnetSpFormGenerate = /* Handles Authorize.Net Form Generation. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AuthNet-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
 
@@ -319,7 +319,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>" ra="' + esc_attr(regAmount) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -329,7 +329,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_authnetRegLinkGenerate = /* Handles Authorize.Net® Link Generation. */ function()
+				ws_plugin__s2member_pro_authnetRegLinkGenerate = /* Handles Authorize.Net Link Generation. */ function()
 					{
 						var level = $('select#ws-plugin--s2member-pro-reg-link-level').val ().replace (/[^0-9]/g, '');
 						var subscrID = $.trim ($('input#ws-plugin--s2member-pro-reg-link-subscr-id').val ());
@@ -365,7 +365,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_authnetSpLinkGenerate = /* Handles Authorize.Net® Link Generation. */ function()
+				ws_plugin__s2member_pro_authnetSpLinkGenerate = /* Handles Authorize.Net Link Generation. */ function()
 					{
 						var leading = $('select#ws-plugin--s2member-pro-sp-link-leading-id').val ().replace (/[^0-9]/g, '');
 						var additionals = $('select#ws-plugin--s2member-pro-sp-link-additional-ids').val () || [];

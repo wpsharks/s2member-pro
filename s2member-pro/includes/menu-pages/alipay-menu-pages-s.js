@@ -1,13 +1,13 @@
 /**
-* Core JavaScript routines for AliPay® menu pages.
+* Core JavaScript routines for AliPay menu pages.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -62,7 +62,7 @@ jQuery(document).ready (function($)
 							this.value = _all + $.trim ($.trim (value).replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 					});
 
-				ws_plugin__s2member_pro_alipayButtonGenerate = /* Handles AliPay® Button Generation. */ function(button)
+				ws_plugin__s2member_pro_alipayButtonGenerate = /* Handles AliPay Button Generation. */ function(button)
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AliPay-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '', labels = {};
 
@@ -114,7 +114,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_alipayCcapButtonGenerate = /* Handles AliPay® Button Generation. */ function()
+				ws_plugin__s2member_pro_alipayCcapButtonGenerate = /* Handles AliPay Button Generation. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AliPay-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
 
@@ -157,7 +157,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -167,7 +167,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_alipaySpButtonGenerate = /* Handles AliPay® Button Generation for Specific Post/Page Access. */ function()
+				ws_plugin__s2member_pro_alipaySpButtonGenerate = /* Handles AliPay Button Generation for Specific Post/Page Access. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-AliPay-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
 
@@ -210,7 +210,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>" ra="' + esc_attr(regAmount) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -220,7 +220,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_alipayRegLinkGenerate = /* Handles AliPay® Link Generation. */ function()
+				ws_plugin__s2member_pro_alipayRegLinkGenerate = /* Handles AliPay Link Generation. */ function()
 					{
 						var level = $('select#ws-plugin--s2member-pro-reg-link-level').val ().replace (/[^0-9]/g, '');
 						var subscrID = $.trim ($('input#ws-plugin--s2member-pro-reg-link-subscr-id').val ());
@@ -256,7 +256,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_alipaySpLinkGenerate = /* Handles AliPay® Link Generation. */ function()
+				ws_plugin__s2member_pro_alipaySpLinkGenerate = /* Handles AliPay Link Generation. */ function()
 					{
 						var leading = $('select#ws-plugin--s2member-pro-sp-link-leading-id').val ().replace (/[^0-9]/g, '');
 						var additionals = $('select#ws-plugin--s2member-pro-sp-link-additional-ids').val () || [];

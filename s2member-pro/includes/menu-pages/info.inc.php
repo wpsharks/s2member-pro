@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -48,7 +48,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_info"))
 						echo '<div class="wrap ws-menu-page">' . "\n";
 
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
-						echo '<h2>s2Member® Pro Module Information</h2>' . "\n";
+						echo '<h2>s2Member Pro Module Information</h2>' . "\n";
 
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";

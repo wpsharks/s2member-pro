@@ -1,14 +1,14 @@
 <?php
 /**
-* AliPay® Menu Pages.
+* AliPay Menu Pages.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_alipay_menu_pages"))
 	{
 		/**
-		* AliPay® Menu Pages.
+		* AliPay Menu Pages.
 		*
 		* @package s2Member\Menu_Pages
 		* @since 1.5
@@ -58,8 +58,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_menu_pages"))
 				public static function alipay_admin_options ($add_divider = TRUE, $vars = FALSE)
 					{
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
-						add_submenu_page ($vars["menu"], "s2Member Pro / AliPay® Options", "AliPay® Options", "create_users", "ws-plugin--s2member-pro-alipay-ops", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_ops_page");
-						add_submenu_page ($vars["menu"], "s2Member Pro / AliPay® Buttons", "AliPay® Buttons", "create_users", "ws-plugin--s2member-pro-alipay-buttons", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_buttons_page");
+						add_submenu_page ($vars["menu"], "s2Member Pro / AliPay Options", "AliPay Options", "create_users", "ws-plugin--s2member-pro-alipay-ops", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_ops_page");
+						add_submenu_page ($vars["menu"], "s2Member Pro / AliPay Buttons", "AliPay Buttons", "create_users", "ws-plugin--s2member-pro-alipay-buttons", "c_ws_plugin__s2member_pro_alipay_menu_pages::alipay_buttons_page");
 
 						return $add_divider; // Now add the divider.
 					}
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_menu_pages"))
 				public static function alipay_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› AliPay® Options</code> first. Once all of your AliPay® Options have been configured, return to this page &amp; generate your AliPay® Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› AliPay Options</code> first. Once all of your AliPay Options have been configured, return to this page &amp; generate your AliPay Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/alipay-buttons.inc.php";
 
