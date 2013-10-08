@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -48,7 +48,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 						echo '<div class="wrap ws-menu-page">' . "\n";
 
 						echo '<div id="icon-plugins" class="icon32"><br /></div>' . "\n";
-						echo '<h2>s2Member® Pro / Other Payment Gateways</h2>' . "\n";
+						echo '<h2>s2Member Pro / Other Payment Gateways</h2>' . "\n";
 
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
@@ -62,7 +62,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-other-gateways-section">' . "\n";
 						echo '<h3>Other Payment Gateways (enable / disable)</h3>' . "\n";
-						echo '<p>s2Member recommends PayPal® Pro as the best available option for payment processing. However, s2Member has also been integrated with the additional Payment Gateways listed below. If you wish to take advantage of these additional Gateway integrations, you must enable them explicitly from this page. Once enabled, options will become available in your s2Member Menu on the left-hand side. s2Member has the ability to operate with as many Gateways integrations as you like. If you\'d like to use them all, you can! Just remember, for each Payment Gateway that you integrate, you must configure the options for that Gateway, and you must use s2Member\'s Button Generator to create WordPress® Shortcodes that go into your Membership Options Page <em>(aka: your Signup Page)</em>.</p>' . "\n";
+						echo '<p>s2Member recommends PayPal Pro as the best available option for payment processing. However, s2Member has also been integrated with the additional Payment Gateways listed below. If you wish to take advantage of these additional Gateway integrations, you must enable them explicitly from this page. Once enabled, options will become available in your s2Member Menu on the left-hand side. s2Member has the ability to operate with as many Gateways integrations as you like. If you\'d like to use them all, you can! Just remember, for each Payment Gateway that you integrate, you must configure the options for that Gateway, and you must use s2Member\'s Button Generator to create WordPress Shortcodes that go into your Membership Options Page <em>(aka: your Signup Page)</em>.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -73,7 +73,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 						echo '<input type="hidden" name="ws_plugin__s2member_pro_gateways_enabled[]" value="update-signal" />' . "\n";
 						foreach (c_ws_plugin__s2member_pro_gateways::available_gateways () as $ws_plugin__s2member_temp_s_key => $ws_plugin__s2member_temp_s_val)
 							echo '<input type="checkbox" name="ws_plugin__s2member_pro_gateways_enabled[]" id="ws-plugin--s2member-pro-gateways-enabled-' . esc_attr ($ws_plugin__s2member_temp_s_key) . '" value="' . esc_attr ($ws_plugin__s2member_temp_s_key) . '"' . ((in_array ($ws_plugin__s2member_temp_s_key, $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_gateways_enabled"])) ? ' checked="checked"' : '') . ' /> <label for="ws-plugin--s2member-pro-gateways-enabled-' . esc_attr ($ws_plugin__s2member_temp_s_key) . '">' . $ws_plugin__s2member_temp_s_val . '</label><br /><br />' . "\n";
-						echo '<input type="checkbox" checked="checked" disabled="disabled" /> <label><strong>PayPal® Website Payments Standard</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring. (core / always on)</label>' . "\n";
+						echo '<input type="checkbox" checked="checked" disabled="disabled" /> <label><strong>PayPal Website Payments Standard</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring. (core / always on)</label>' . "\n";
 						echo '</div>' . "\n";
 						echo 'Enable/disable Payment Gateways integrated with s2Member Pro.' . "\n";
 						echo '</td>' . "\n";

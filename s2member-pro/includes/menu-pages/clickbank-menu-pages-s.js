@@ -1,13 +1,13 @@
 /**
-* Core JavaScript routines for ClickBank® menu pages.
+* Core JavaScript routines for ClickBank menu pages.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -81,7 +81,7 @@ jQuery(document).ready (function($)
 							this.value = _all + $.trim ($.trim (value).replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 					});
 
-				ws_plugin__s2member_pro_clickbankButtonGenerate = /* Handles ClickBank® Button Generation. */ function(button)
+				ws_plugin__s2member_pro_clickbankButtonGenerate = /* Handles ClickBank Button Generation. */ function(button)
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '', labels = {};
 
@@ -105,7 +105,7 @@ jQuery(document).ready (function($)
 								var regTerm = $('select#ws-plugin--s2member-pro-' + button + '-term').val ().split ('-')[1].replace (/[^A-Z]/g, '');
 								var regRecur = '0'; // No, it is NOT recurring.
 							}
-						else if /* Here we use the ClickBank® Trial Period and Re-Bill configuration. */ (prodType === 'recurring')
+						else if /* Here we use the ClickBank Trial Period and Re-Bill configuration. */ (prodType === 'recurring')
 							{
 								var trialPeriod = $('select#ws-plugin--s2member-pro-' + button + '-p1').val ().split ('-')[0].replace (/[^0-9]/g, '');
 								var trialTerm = $('select#ws-plugin--s2member-pro-' + button + '-p1').val ().split ('-')[1].replace (/[^A-Z]/g, '');
@@ -122,7 +122,7 @@ jQuery(document).ready (function($)
 
 						if /* Must have a Product Item Number to work with. */ (!prodItem)
 							{
-								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank® Product Item #.');
+								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank Product Item #.');
 								return false;
 							}
 						else if /* Each Button should have a Description. */ (!desc)
@@ -146,7 +146,7 @@ jQuery(document).ready (function($)
 					};
 
 
-				ws_plugin__s2member_pro_clickbankCcapButtonGenerate = /* Handles ClickBank® Button Generation. */ function()
+				ws_plugin__s2member_pro_clickbankCcapButtonGenerate = /* Handles ClickBank Button Generation. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
 
@@ -175,7 +175,7 @@ jQuery(document).ready (function($)
 
 						if /* Must have a Product Item Number to work with. */ (!prodItem)
 							{
-								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank® Product Item #.');
+								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank Product Item #.');
 								return false;
 							}
 						else if /* Must have some Independent Custom Capabilities. */ (!cCaps || cCaps === '-all')
@@ -193,7 +193,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -203,7 +203,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_clickbankSpButtonGenerate = /* Handles ClickBank® Button Generation for Specific Post/Page Access. */ function()
+				ws_plugin__s2member_pro_clickbankSpButtonGenerate = /* Handles ClickBank Button Generation for Specific Post/Page Access. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
 
@@ -220,7 +220,7 @@ jQuery(document).ready (function($)
 
 						if /* Must have a Product Item Number to work with. Otherwise, Button generation will fail. */ (!prodItem)
 							{
-								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank® Product Item #.');
+								alert('— Oops, a slight problem: —\n\nPlease supply a valid ClickBank Product Item #.');
 								return false;
 							}
 						else if /* Must have a Leading Post/Page ID to work with. Otherwise, Link generation will fail. */ (!leading)
@@ -244,7 +244,7 @@ jQuery(document).ready (function($)
 						shortCodeTemplateAttrs += ' custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
 
-						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress® Editor.');
+						alert('Your Button has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
 
 						shortCode.each ( /* Focus and select the Shortcode. */function()
 							{
@@ -254,7 +254,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_clickbankRegLinkGenerate = /* Handles ClickBank® Link Generation. */ function()
+				ws_plugin__s2member_pro_clickbankRegLinkGenerate = /* Handles ClickBank Link Generation. */ function()
 					{
 						var level = $('select#ws-plugin--s2member-pro-reg-link-level').val ().replace (/[^0-9]/g, '');
 						var subscrID = $.trim ($('input#ws-plugin--s2member-pro-reg-link-subscr-id').val ());
@@ -290,7 +290,7 @@ jQuery(document).ready (function($)
 						return false;
 					};
 
-				ws_plugin__s2member_pro_clickbankSpLinkGenerate = /* Handles ClickBank® Link Generation. */ function()
+				ws_plugin__s2member_pro_clickbankSpLinkGenerate = /* Handles ClickBank Link Generation. */ function()
 					{
 						var leading = $('select#ws-plugin--s2member-pro-sp-link-leading-id').val ().replace (/[^0-9]/g, '');
 						var additionals = $('select#ws-plugin--s2member-pro-sp-link-additional-ids').val () || [];
