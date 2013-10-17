@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® Update Forms (inner processing routines).
+* Authorize.Net Update Forms (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_update_in"))
 	{
 		/**
-		* Authorize.Net® Update Forms (inner processing routines).
+		* Authorize.Net Update Forms (inner processing routines).
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_update_in"))
 															{
 																if (($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response ($authnet)) && empty ($authnet["__error"]) && preg_match ("/^(active|suspended)$/i", $authnet["subscription_status"]))
 																	{
-																		$authnet = array (); // Reset the Authorize.Net® array.
+																		$authnet = array (); // Reset the Authorize.Net array.
 
 																		$authnet["x_method"] = "update";
 																		$authnet["x_subscription_id"] = $cur__subscr_id;

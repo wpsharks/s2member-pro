@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® utilities.
+* Authorize.Net utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 	{
 		/**
-		* Authorize.Net® utilities.
+		* Authorize.Net utilities.
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -44,12 +44,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 		class c_ws_plugin__s2member_pro_authnet_utilities
 			{
 				/**
-				* Calls upon Authorize.Net® AIM, and returns the response.
+				* Calls upon Authorize.Net AIM, and returns the response.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $post_vars An array of variables to send through the Authorize.Net® API call.
+				* @param array $post_vars An array of variables to send through the Authorize.Net API call.
 				* @return array An array of variables returned from the API call.
 				*
 				* @todo Continue optimizing this routine with ``empty()`` and ``isset()``.
@@ -62,7 +62,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 						$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
 
-						$post_vars["x_version"] = "3.1"; // Configure the Authorize.Net® transaction version.
+						$post_vars["x_version"] = "3.1"; // Configure the Authorize.Net transaction version.
 						$post_vars["x_login"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"];
 						$post_vars["x_tran_key"] = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"];
 
@@ -90,7 +90,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						if(empty($response["response_code"]) || $response["response_code"] !== "1") // A value of 1 indicates success.
 							{
 								if(strlen($response["response_reason_code"]) || $response["response_reason_text"])
-									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_aim_response`.
+									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_aim_response`.
 									$response["__error"] = sprintf(_x('Error #%1$s. %2$s.', "s2member-front", "s2member"), $response["response_reason_code"], rtrim($response["response_reason_text"], "."));
 
 								else // Else, generate an error messsage - so something is reported back to the Customer.
@@ -124,7 +124,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return apply_filters("ws_plugin__s2member_pro_authnet_aim_response", c_ws_plugin__s2member_pro_authnet_utilities::_authnet_aim_response_filters($response), get_defined_vars());
 					}
 				/**
-				* A sort of callback function that Filters Authorize.Net® AIM responses.
+				* A sort of callback function that Filters Authorize.Net AIM responses.
 				*
 				* Provides alternative explanations in some cases that require special attention.
 				*
@@ -139,12 +139,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return $response; // Nothing here yet.
 					}
 				/**
-				* Calls upon Authorize.Net® ARB, and returns the response.
+				* Calls upon Authorize.Net ARB, and returns the response.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $post_vars An array of variables to send through the Authorize.Net® API call.
+				* @param array $post_vars An array of variables to send through the Authorize.Net API call.
 				* @return array An array of variables returned from the API call.
 				*
 				* @todo Continue optimizing this routine with ``empty()`` and ``isset()``.
@@ -322,7 +322,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						if(empty($response["response_code"]) || $response["response_code"] !== "I00001") // A value of I00001 indicates success.
 							{
 								if(strlen($response["response_reason_code"]) || $response["response_reason_text"])
-									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net®. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_arb_response`.
+									// translators: Exclude `%2$s`. This is an English error returned by Authorize.Net. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response["__error"]`` with `ws_plugin__s2member_pro_authnet_arb_response`.
 									$response["__error"] = sprintf(_x('Error #%1$s. %2$s.', "s2member-front", "s2member"), $response["response_reason_code"], rtrim($response["response_reason_text"], "."));
 
 								else // Else, generate an error messsage - so something is reported back to the Customer.
@@ -356,7 +356,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return apply_filters("ws_plugin__s2member_pro_authnet_arb_response", c_ws_plugin__s2member_pro_authnet_utilities::_authnet_arb_response_filters($response), get_defined_vars());
 					}
 				/**
-				* A sort of callback function that parses Authorize.Net® ARB responses.
+				* A sort of callback function that parses Authorize.Net ARB responses.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
@@ -392,7 +392,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($response));
 					}
 				/**
-				* A sort of callback function that Filters Authorize.Net® ARB responses.
+				* A sort of callback function that Filters Authorize.Net ARB responses.
 				*
 				* Provides alternative explanations in some cases that require special attention.
 				*
@@ -407,9 +407,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return $response; // Nothing here yet.
 					}
 				/**
-				* Get ``$_POST`` or ``$_REQUEST`` vars from Authorize.Net®.
+				* Get ``$_POST`` or ``$_REQUEST`` vars from Authorize.Net.
 				*
-				* Authorize.Net® returns `x_MD5_Hash` in uppercase format for some reason.
+				* Authorize.Net returns `x_MD5_Hash` in uppercase format for some reason.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
@@ -502,7 +502,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return $start_time;
 					}
 				/**
-				* Calculates period in days for Authorize.Net® ARB integration.
+				* Calculates period in days for Authorize.Net ARB integration.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
@@ -526,13 +526,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							return 0;
 					}
 				/**
-				* Re-formats credit card expiration dates for Authorize.Net®.
+				* Re-formats credit card expiration dates for Authorize.Net.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
 				* @param str $exp Expects a credit card expiration date in `mm/yyyy` format.
-				* @return str A credit card expiration date in `yyyy-mm` format for Authorize.Net®.
+				* @return str A credit card expiration date in `yyyy-mm` format for Authorize.Net.
 				*/
 				public static function authnet_exp_date($exp = FALSE)
 					{
@@ -541,15 +541,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return trim($yyyy."-".$mm, "- \t\n\r\0\x0B");
 					}
 				/**
-				* Parses an Authorize.Net® Silent Post.
+				* Parses an Authorize.Net Silent Post.
 				*
 				* Parses `s2_reference`, `s2_domain`, `s2_invoice`, `s2_start_time`, `s2_p1`, `s2_p3`, `s2_custom`
-				* from an Authorize.Net® Silent Post *(aka: IPN)* response.
+				* from an Authorize.Net Silent Post *(aka: IPN)* response.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $array Expects an array of details returned by an Authorize.Net® Silent Post.
+				* @param array $array Expects an array of details returned by an Authorize.Net Silent Post.
 				* @return array|bool The same ``$array``, but with additional details filled by this routine; else false.
 				*
 				* @todo Continue optimizing this routine with ``empty()`` and ``isset()``.
@@ -638,7 +638,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							}
 					}
 				/**
-				* Handles all cost calculations for Authorize.Net®.
+				* Handles all cost calculations for Authorize.Net.
 				*
 				* Returns an associative array with a possible Percentage Rate, along with the calculated Tax Amount.
 				* Tax calculations are based on State/Province, Country, and/or Zip Code.
@@ -1042,7 +1042,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 									if(is_array($process) && /* Processing affiliates? */ (in_array("affiliates-silent-post", $process) || in_array("affiliates-1px-response", $process)))
 										if(isset($coupon_applies) && $coupon_applies && /* Now, is this an Affiliate Coupon Code? Contains an affiliate ID? */ !empty($affiliate_id))
-											if(empty($_COOKIE["idev"]) /* Special consideration here. iDevAffiliate® must NOT have already tracked this customer. */)
+											if(empty($_COOKIE["idev"]) /* Special consideration here. iDevAffiliate must NOT have already tracked this customer. */)
 												if(($_urls = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_affiliate_coupon_code_tracking_urls"]))
 
 													foreach(preg_split("/[\r\n\t]+/", $_urls) as $_url /* Notify each of the URLs. */)

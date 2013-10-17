@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® ARB.
+* Authorize.Net ARB.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 	{
 		/**
-		* Authorize.Net® ARB.
+		* Authorize.Net ARB.
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 		class c_ws_plugin__s2member_pro_authnet_arb
 			{
 				/**
-				* Connect to and process ARB service information for Authorize.Net®.
+				* Connect to and process ARB service information for Authorize.Net.
 				*
 				* s2Member's Auto EOT System must be enabled for this to work properly.
 				*
@@ -72,7 +72,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 
 								if (is_array ($objs = $wpdb->get_results ("SELECT `user_id` AS `ID` FROM `" . $wpdb->usermeta . "` WHERE `meta_key` = '" . $wpdb->prefix . "s2member_subscr_gateway' AND `meta_value` = 'authnet' AND `user_id` NOT IN(SELECT `user_id` FROM `" . $wpdb->usermeta . "` WHERE `meta_key` = '" . $wpdb->prefix . "s2member_last_status_scan' AND `meta_value` > '" . esc_sql ($scan_time) . "')")))
 									{
-										foreach ($objs as $obj) // Run through all of the Paid Member IDs that originated their Subscription through the Authorize.Net® gateway.
+										foreach ($objs as $obj) // Run through all of the Paid Member IDs that originated their Subscription through the Authorize.Net gateway.
 											{
 												if (($user_id = $obj->ID) && ($counter = (int)$counter + 1)) // Update counter. Only run through X records; given by $per_process.
 													{
@@ -86,11 +86,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 																			{
 																				if (preg_match ("/^expired$/i", $authnet["subscription_status"])) // Expired?
 																					{
-																						$authnet["s2member_log"][] = "Authorize.Net® ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
+																						$authnet["s2member_log"][] = "Authorize.Net ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
 
-																						$authnet["s2member_log"][] = "Authorize.Net® transaction identified as ( `SUBSCRIPTION EXPIRATION` ).";
-																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_eot` ).";
-																						$authnet["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																						$authnet["s2member_log"][] = "Authorize.Net transaction identified as ( `SUBSCRIPTION EXPIRATION` ).";
+																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_eot` ).";
+																						$authnet["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																						$processing = $processed = true;
 																						$ipn = array (); // Reset.
@@ -125,11 +125,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_arb"))
 
 																				else if (preg_match ("/^(suspended|canceled|terminated)$/i", $authnet["subscription_status"]))
 																					{
-																						$authnet["s2member_log"][] = "Authorize.Net® ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
+																						$authnet["s2member_log"][] = "Authorize.Net ARB/IPN processed on: " . date ("D M j, Y g:i:s a T");
 
-																						$authnet["s2member_log"][] = "Authorize.Net® transaction identified as ( `SUBSCRIPTION " . strtoupper ($authnet["subscription_status"]) . "` ).";
-																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
-																						$authnet["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																						$authnet["s2member_log"][] = "Authorize.Net transaction identified as ( `SUBSCRIPTION " . strtoupper ($authnet["subscription_status"]) . "` ).";
+																						$authnet["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).";
+																						$authnet["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																						$processing = $processed = true;
 																						$ipn = array (); // Reset.

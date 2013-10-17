@@ -1,9 +1,9 @@
 <?php /* ---- Central IPN Processing (aka: Callback URL): -------------------------------------------------------------------
 
-With Google® Checkout you absolutely MUST set a Callback (aka: IPN) URL inside your Google® Checkout account.
-Google® Checkout integration does NOT allow the Callback location to be overridden on a per-transaction basis.
+With Google Checkout you absolutely MUST set a Callback (aka: IPN) URL inside your Google Checkout account.
+Google Checkout integration does NOT allow the Callback location to be overridden on a per-transaction basis.
 
-So, if you're using one Google® Checkout account for multiple cross-domain installations,
+So, if you're using one Google Checkout account for multiple cross-domain installations,
 and you need to receive IPN notifications for each of your domains; you'll want to create
 a central IPN processing script that scans variables in each IPN response,
 forking itself out to each of your individual domains.
@@ -19,7 +19,7 @@ This XML component can be used to test incoming IPNs, and fork to the proper ins
 
 1. Save this PHP file to your website.
 
-2. Set the Callback URL (in your Google® Checkout account) to the location of this script on your server.
+2. Set the Callback URL (in your Google Checkout account) to the location of this script on your server.
 	This central processor forks IPNs out to the proper installation domain.
 
 3. Configuration (below).

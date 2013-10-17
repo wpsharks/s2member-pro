@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® Checkout Form handler (inner processing routines).
+* Authorize.Net Checkout Form handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 	{
 		/**
-		* Authorize.Net® Checkout Form handler (inner processing routines).
+		* Authorize.Net Checkout Form handler (inner processing routines).
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -232,7 +232,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
 
-																		if(!($ipn = array())) // Simulated PayPal® IPN.
+																		if(!($ipn = array())) // Simulated PayPal IPN.
 																			{
 																				$ipn["txn_type"] = "subscr_signup";
 																				$ipn["subscr_id"] = $new__subscr_id;
@@ -411,7 +411,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$new__txn_id = ($_authnet && !empty($_authnet["transaction_id"])) ? $_authnet["transaction_id"] : false;
 																				$new__subscr_id = ($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018") ? $new__txn_id : $authnet["subscription_id"];
 																			}
-																		if(!($ipn = array())) // Simulated PayPal® IPN.
+																		if(!($ipn = array())) // Simulated PayPal IPN.
 																			{
 																				$ipn["txn_type"] = "subscr_signup";
 																				$ipn["subscr_id"] = $new__subscr_id;
@@ -585,7 +585,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	$new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 																else $new__subscr_id = $new__txn_id = $authnet["transaction_id"];
 
-																if(!($ipn = array())) // Simulated PayPal® IPN.
+																if(!($ipn = array())) // Simulated PayPal IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
 																		$ipn["txn_id"] = $new__subscr_id;
@@ -677,7 +677,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	$new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 																else $new__subscr_id = $new__txn_id = $authnet["transaction_id"];
 
-																if(!($ipn = array())) // Simulated PayPal® IPN.
+																if(!($ipn = array())) // Simulated PayPal IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
 																		$ipn["txn_id"] = $new__subscr_id;

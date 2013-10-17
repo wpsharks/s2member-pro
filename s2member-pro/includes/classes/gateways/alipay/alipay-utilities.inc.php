@@ -1,14 +1,14 @@
 <?php
 /**
-* AliPay® utilities.
+* AliPay utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 	{
 		/**
-		* AliPay® utilities.
+		* AliPay utilities.
 		*
 		* @package s2Member\AliPay
 		* @since 1.5
@@ -44,13 +44,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 		class c_ws_plugin__s2member_pro_alipay_utilities
 			{
 				/**
-				* Generates an AliPay® link.
+				* Generates an AliPay link.
 				*
 				* @package s2Member\AliPay
 				* @since 1.5
 				*
 				* @param array $vars An array of variables to place in the link.
-				* @return str Full URL to AliPay® checkout.
+				* @return str Full URL to AliPay checkout.
 				*/
 				public static function alipay_link_gen ($vars = FALSE)
 					{
@@ -72,12 +72,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 						return $gateway . "?" . $query . "&sign=" . urlencode (md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])) . "&sign_type=MD5";
 					}
 				/**
-				* Get ``$_POST`` or ``$_REQUEST`` vars from AliPay®.
+				* Get ``$_POST`` or ``$_REQUEST`` vars from AliPay.
 				*
 				* @package s2Member\AliPay
 				* @since 1.5
 				*
-				* @return array|bool An array of verified AliPay® ``$_POST`` or ``$_REQUEST`` vars, else false.
+				* @return array|bool An array of verified AliPay ``$_POST`` or ``$_REQUEST`` vars, else false.
 				*/
 				public static function alipay_postvars ()
 					{

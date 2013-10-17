@@ -1,14 +1,14 @@
 <?php
 /**
-* Payflow® Poll.
+* Payflow Poll.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 	{
 		/**
-		* Payflow® Poll.
+		* Payflow Poll.
 		*
 		* @package s2Member\PayPal
 		* @since 120514
@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 		class c_ws_plugin__s2member_pro_paypal_payflow_poll
 			{
 				/**
-				* Connect to and process cancellations/refunds/chargebacks/etc via Payflow®.
+				* Connect to and process cancellations/refunds/chargebacks/etc via Payflow.
 				*
 				* s2Member's Auto EOT System must be enabled for this to work properly.
 				*
@@ -72,7 +72,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 
 								if(is_array($objs = $wpdb->get_results("SELECT `user_id` AS `ID` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_subscr_gateway' AND `meta_value` = 'paypal' AND `user_id` NOT IN(SELECT `user_id` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_last_status_scan' AND `meta_value` > '".esc_sql($scan_time)."')")))
 									{
-										foreach($objs as $obj /* Run through all of the Paid Member IDs that originated their Subscription through the PayPal® gateway. */)
+										foreach($objs as $obj /* Run through all of the Paid Member IDs that originated their Subscription through the PayPal gateway. */)
 											{
 												if(($user_id = $obj->ID) && ($counter = (int)$counter + 1) /* Update counter. Only run through X records; given by $per_process. */)
 													{
@@ -85,11 +85,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																	{
 																		if(preg_match("/expired/i", $paypal["STATUS"]) /* Expired? */)
 																			{
-																				$paypal["s2member_log"][] = "Payflow® IPN via polling, processed on: ".date("D M j, Y g:i:s a T");
+																				$paypal["s2member_log"][] = "Payflow IPN via polling, processed on: ".date("D M j, Y g:i:s a T");
 
-																				$paypal["s2member_log"][] = "Payflow® transaction identified as ( `SUBSCRIPTION EXPIRATION` ).";
-																				$paypal["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_eot` ).";
-																				$paypal["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																				$paypal["s2member_log"][] = "Payflow transaction identified as ( `SUBSCRIPTION EXPIRATION` ).";
+																				$paypal["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_eot` ).";
+																				$paypal["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																				$processing = $processed = true;
 																				$ipn = array(); // Reset.
@@ -124,11 +124,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 
 																		else if(preg_match("/(suspended|canceled|terminated|deactivated)/i", $paypal["STATUS"]))
 																			{
-																				$paypal["s2member_log"][] = "Payflow® IPN via polling, processed on: ".date("D M j, Y g:i:s a T");
+																				$paypal["s2member_log"][] = "Payflow IPN via polling, processed on: ".date("D M j, Y g:i:s a T");
 
-																				$paypal["s2member_log"][] = "Payflow® transaction identified as ( `SUBSCRIPTION ".strtoupper($paypal["STATUS"])."` ).";
-																				$paypal["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
-																				$paypal["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																				$paypal["s2member_log"][] = "Payflow transaction identified as ( `SUBSCRIPTION ".strtoupper($paypal["STATUS"])."` ).";
+																				$paypal["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).";
+																				$paypal["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																				$processing = $processed = true;
 																				$ipn = array(); // Reset.

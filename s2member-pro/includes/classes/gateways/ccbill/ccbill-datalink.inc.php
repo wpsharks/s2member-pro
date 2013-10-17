@@ -1,14 +1,14 @@
 <?php
 /**
-* ccBill® DataLink integration.
+* ccBill DataLink integration.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 	{
 		/**
-		* ccBill® DataLink integration.
+		* ccBill DataLink integration.
 		*
 		* @package s2Member\ccBill
 		* @since 1.5
@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 		class c_ws_plugin__s2member_pro_ccbill_datalink
 			{
 				/**
-				* Connect to and process DataLink information for ccBill®.
+				* Connect to and process DataLink information for ccBill.
 				*
 				* s2Member's Auto EOT System must be enabled for this to work properly.
 				*
@@ -67,7 +67,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 
 						if /* Configd? */($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
 							{
-								$mst_time_10m_ago = /* ccBill® runs on MST. */ time() - (6 * 3600) - 600;
+								$mst_time_10m_ago = /* ccBill runs on MST. */ time() - (6 * 3600) - 600;
 								$datalink = /* DataLink service. */ "https://datalink.ccbill.com/data/main.cgi";
 
 								if(!($last = get_transient("s2m_".md5("s2member_pro_ccbill_last_datalink"))) || $last < ($mst_time_10m_ago - 86400))
@@ -146,9 +146,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 															{
 																if /* Recurring payments. */(preg_match("/^REBILL$/i", $ccbill["dl_ipn"][0]))
 																	{
-																		$ccbill["s2member_log"][] = "ccBill® transaction identified as (SUBSCRIPTION PAYMENT).";
-																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as txn_type (subscr_payment).";
-																		$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																		$ccbill["s2member_log"][] = "ccBill transaction identified as (SUBSCRIPTION PAYMENT).";
+																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as txn_type (subscr_payment).";
+																		$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																		$processing = $processed = true;
 																		$ipn = /* Reset. */ array();
@@ -186,9 +186,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 
 																else if /* Cancellations. */(preg_match("/^CANCELLATION$/i", $ccbill["dl_ipn"][0]))
 																	{
-																		$ccbill["s2member_log"][] = "ccBill® transaction identified as (SUBSCRIPTION CANCELLATION).";
-																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as txn_type (subscr_cancel).";
-																		$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																		$ccbill["s2member_log"][] = "ccBill transaction identified as (SUBSCRIPTION CANCELLATION).";
+																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as txn_type (subscr_cancel).";
+																		$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																		$processing = $processed = true;
 																		$ipn = /* Reset. */ array();
@@ -223,9 +223,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 
 																else if /* Expired Subscriptions. */(preg_match("/^EXPIRE$/i", $ccbill["dl_ipn"][0]))
 																	{
-																		$ccbill["s2member_log"][] = "ccBill® transaction identified as (SUBSCRIPTION EXPIRATION).";
-																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as txn_type (subscr_eot).";
-																		$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																		$ccbill["s2member_log"][] = "ccBill transaction identified as (SUBSCRIPTION EXPIRATION).";
+																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as txn_type (subscr_eot).";
+																		$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																		$processing = $processed = true;
 																		$ipn = /* Reset. */ array();
@@ -260,9 +260,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 
 																else if /* Refunds/Reversals. */(preg_match("/^(REFUND|CHARGEBACK)$/i", $ccbill["dl_ipn"][0]))
 																	{
-																		$ccbill["s2member_log"][] = "ccBill® transaction identified as (REFUND|CHARGEBACK).";
-																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as payment_status (refunded|reversed).";
-																		$ccbill["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+																		$ccbill["s2member_log"][] = "ccBill transaction identified as (REFUND|CHARGEBACK).";
+																		$ccbill["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as payment_status (refunded|reversed).";
+																		$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 																		$processing = $processed = true;
 																		$ipn = /* Reset. */ array();

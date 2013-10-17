@@ -1,14 +1,14 @@
 <?php
 /**
-* ClickBank® IPN Handler (inner processing routines).
+* ClickBank IPN Handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 	{
 		/**
-		* ClickBank® IPN Handler (inner processing routines).
+		* ClickBank IPN Handler (inner processing routines).
 		*
 		* @package s2Member\ClickBank
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 		class c_ws_plugin__s2member_pro_clickbank_notify_in
 			{
 				/**
-				* Handles ClickBank® IPN URL processing.
+				* Handles ClickBank IPN URL processing.
 				*
 				* @package s2Member\ClickBank
 				* @since 1.5
@@ -64,7 +64,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 								if (is_array ($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars ()) && ($_clickbank = $clickbank))
 									{
 										$clickbank["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
-										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank®.";
+										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank.";
 
 										$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars ($clickbank["cvendthru"], $clickbank["ctransaction"]);
 
@@ -78,9 +78,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 
 										if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^STANDARD$/i", $clickbank["cprodtype"]))
 											{
-												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/STANDARD` ).";
-												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `SALE/STANDARD` ).";
+												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `web_accept` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -117,9 +117,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 
 										else if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
 											{
-												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/RECURRING` ).";
-												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `SALE/RECURRING` ).";
+												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_signup` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -166,9 +166,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 
 										else if (preg_match ("/^(?:TEST_)?BILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
 											{
-												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `BILL/RECURRING` ).";
-												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_payment` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `BILL/RECURRING` ).";
+												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_payment` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -206,9 +206,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 
 										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) // Product Type irrelevant here; checked below.
 											{
-												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RFND|CGBK|INSF` ).";
-												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `payment_status` ( `refunded|reversed` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `RFND|CGBK|INSF` ).";
+												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `payment_status` ( `refunded|reversed` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -248,9 +248,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 										(preg_match ("/^(?:TEST_)?(?:SALE|BILL)$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]) && (preg_match ("/^COMPLETED$/i", $clickbank["crebillstatus"]) || $clickbank["cfuturepayments"] <= 0) && apply_filters("c_ws_plugin__s2member_pro_clickbank_notify_handles_completions", TRUE, get_defined_vars()))
 										|| (preg_match ("/^(?:TEST_)?CANCEL-REBILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"])))
 											{
-												$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).";
-												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).";
+												$clickbank["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -288,9 +288,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 									}
 								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
-										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -› ClickBank® Options.";
-										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank® over an HTTPS connection.";
-										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
+										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank configuration. Please check: s2Member -› ClickBank Options.";
+										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank over an HTTPS connection.";
+										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.";
 										$clickbank["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*

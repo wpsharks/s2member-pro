@@ -23,7 +23,7 @@ if(/* No ``$_POST`` vars? */empty($_POST) || !is_array($_POST))
 $_p = (get_magic_quotes_gpc()) ? stripslashes_deep($_POST) : $_POST;
 $_p = trim_deep /* Now trim this array deeply. */($_p);
 
-$_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal® IPN server here. */ "216.113.188.202";
+$_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal IPN server here. */ "216.113.188.202";
 // See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>.
 
 $_p["custom"] = $config["custom"]; $_p["item_number"] = $config["item_number"];

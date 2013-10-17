@@ -1,14 +1,14 @@
 <?php
 /**
-* ClickBank® utilities.
+* ClickBank utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 	{
 		/**
-		* ClickBank® utilities.
+		* ClickBank utilities.
 		*
 		* @package s2Member\ClickBank
 		* @since 1.5
@@ -49,7 +49,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 				* @package s2Member\ClickBank
 				* @since 1.5
 				*
-				* @return array Request Authorization headers for ClickBank® API communication.
+				* @return array Request Authorization headers for ClickBank API communication.
 				*/
 				public static function clickbank_api_headers()
 					{
@@ -59,7 +59,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 						return $req; // Return array with headers.
 					}
 				/**
-				* Get ``$_POST`` or ``$_REQUEST`` vars from ClickBank®.
+				* Get ``$_POST`` or ``$_REQUEST`` vars from ClickBank.
 				*
 				* @package s2Member\ClickBank
 				* @since 1.5
@@ -123,13 +123,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 							return false;
 					}
 				/**
-				* Parses s2Vars passed through by ClickBank®.
+				* Parses s2Vars passed through by ClickBank.
 				*
 				* @package s2Member\ClickBank
 				* @since 111205
 				*
 				* @param str $cvendthru Expects the URL-encoded query string of s2Vars, including `_s2member_sig`.
-				* @param str $type Optional. The type of ClickBank® transaction. This deals with backward compatibility.
+				* @param str $type Optional. The type of ClickBank transaction. This deals with backward compatibility.
 				* 	For SALE transactions, do NOT accept the older format. For others, remain backward compatible.
 				* @return array Array of s2Vars. Possibly an empty array.
 				*/
@@ -164,8 +164,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 				public static function clickbank_cc_reminder($support = FALSE, $vars = FALSE)
 					{
 						if(!empty($vars["template"]) && $vars["template"] === "clickbank")
-							return $support. // Now add the reminder below this. ClickBank® requires site owners to display this.
-							'<div class="cc-reminder">'._x('<strong>Reminder:</strong> Purchases at this site will appear on your credit card or bank statement as: <code>ClickBank®</code> or <code>CLKBANK*COM</code>.', "s2member-front", "s2member").'</div>';
+							return $support. // Now add the reminder below this. ClickBank requires site owners to display this.
+							'<div class="cc-reminder">'._x('<strong>Reminder:</strong> Purchases at this site will appear on your credit card or bank statement as: <code>ClickBank</code> or <code>CLKBANK*COM</code>.', "s2member-front", "s2member").'</div>';
 
 						return $support;
 					}

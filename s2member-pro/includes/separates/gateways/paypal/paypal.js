@@ -36,7 +36,7 @@ jQuery(document).ready (function($)
 		preloadAjaxLoader = new Image (), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
 
 		if($('form.s2member-pro-paypal-registration-form').length > 1 || $('form.s2member-pro-paypal-checkout-form').length > 1 || $('form.s2member-pro-paypal-sp-checkout-form').length > 1)
-			return alert('Detected more than one s2Member® Pro Form.\n\nPlease use only ONE s2Member® Pro Form Shortcode on each Post/Page. Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
+			return alert('Detected more than one s2Member Pro Form.\n\nPlease use only ONE s2Member Pro Form Shortcode on each Post/Page. Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
 
 		if (($clForm = $('form#s2member-pro-paypal-cancellation-form')).length === 1)
 			{

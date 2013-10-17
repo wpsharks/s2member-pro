@@ -1,14 +1,14 @@
 <?php
 /**
-* PayPal® Update Forms (inner processing routines).
+* PayPal Update Forms (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 	{
 		/**
-		* PayPal® Update Forms (inner processing routines).
+		* PayPal Update Forms (inner processing routines).
 		*
 		* @package s2Member\PayPal
 		* @since 1.5
@@ -74,9 +74,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 									{
 										if (!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors ("update", $post_vars)))
 											{
-												if ($post_vars["card_type"] === "PayPal") // A Customer must log into their PayPal® account to update billing info.
+												if ($post_vars["card_type"] === "PayPal") // A Customer must log into their PayPal account to update billing info.
 													{
-														$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+														$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
 													}
 												else if (is_user_logged_in () && ($user = wp_get_current_user ()) && ($user_id = $user->ID)) // Logged in?
 													{
@@ -84,7 +84,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 															{
 																if (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($paypal)) && empty ($paypal["__error"]) && strlen ($paypal["ACCT"]) === 4 && preg_match ("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 																	{
-																		$paypal = array (); // Reset the PayPal® array.
+																		$paypal = array (); // Reset the PayPal array.
 
 																		$paypal["METHOD"] = "UpdateRecurringPaymentsProfile";
 																		$paypal["PROFILEID"] = $cur__subscr_id;
@@ -130,13 +130,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 																	{
 																		$global_response = array ("response" => _x ('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 																	}
-																else if ($paypal && empty ($paypal["__error"]) && strlen ($paypal["ACCT"]) !== 4) // They used a PayPal® account?
+																else if ($paypal && empty ($paypal["__error"]) && strlen ($paypal["ACCT"]) !== 4) // They used a PayPal account?
 																	{
-																		$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+																		$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
 																	}
 																else if ($paypal && !empty ($paypal["__error"]) && $paypal["L_ERRORCODE0"] === "11592") // Subscription?
 																	{
-																		$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+																		$global_response = array ("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
 																	}
 																else // Else, an error.
 																	{

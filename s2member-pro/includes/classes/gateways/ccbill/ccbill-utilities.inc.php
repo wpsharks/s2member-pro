@@ -1,14 +1,14 @@
 <?php
 /**
-* ccBill® utilities.
+* ccBill utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 	{
 		/**
-		* ccBill® utilities.
+		* ccBill utilities.
 		*
 		* @package s2Member\ccBill
 		* @since 1.5
@@ -44,13 +44,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 		class c_ws_plugin__s2member_pro_ccbill_utilities
 			{
 				/**
-				* Generates a ccBill® link.
+				* Generates a ccBill link.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param array $vars An array of variables to include in the ccBill® link.
-				* @return str A full URL to the ccBill® Payment Gateway.
+				* @param array $vars An array of variables to include in the ccBill link.
+				* @return str A full URL to the ccBill Payment Gateway.
 				*
 				* @todo Optimize this routine with ``empty()`` and ``isset()``.
 				* @todo Candidate for the use of ``ifsetor()``?
@@ -65,16 +65,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 
 						$vars["formDigest"] = md5 ($digest_vars . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"]);
 
-						return add_query_arg (urlencode_deep ($vars), $gateway); // ccBill® link.
+						return add_query_arg (urlencode_deep ($vars), $gateway); // ccBill link.
 					}
 				/**
-				* Converts currency code to a numeric code for ccBill®.
+				* Converts currency code to a numeric code for ccBill.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
 				* @param str $currency_code Expects a 3 character Currency Code.
-				* @return int|str A numeric string with a ccBill® Currency Number. Defaults to `840` *( i.e. `USD` )*.
+				* @return int|str A numeric string with a ccBill Currency Number. Defaults to `840` *( i.e. `USD` )*.
 				*/
 				public static function ccbill_currency_numr ($currency_code = FALSE)
 					{
@@ -85,12 +85,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 						return (!empty ($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
 					}
 				/**
-				* Converts Currency Number for ccBill® forms into a valid Currency Code.
+				* Converts Currency Number for ccBill forms into a valid Currency Code.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param int|str $currency_numr Expects a valid ccBill® Currency Number, numeric.
+				* @param int|str $currency_numr Expects a valid ccBill Currency Number, numeric.
 				* @return str A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
 				*/
 				public static function ccbill_currency_code ($currency_numr = FALSE)
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 						return (!empty ($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
 					}
 				/**
-				* Calculates period in days for ccBill® forms.
+				* Calculates period in days for ccBill forms.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5
@@ -125,7 +125,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 							return 0;
 					}
 				/**
-				* Get ``$_POST`` or ``$_REQUEST`` vars from ccBill®.
+				* Get ``$_POST`` or ``$_REQUEST`` vars from ccBill.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5

@@ -4,5 +4,5 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 ?>
 
 <a href="https://support.ccbill.com/">
- <img src="%%images%%/ccbill-edit-button.png" style="width:auto; height:auto; border:0;" alt="ccBill®" />
+ <img src="%%images%%/ccbill-edit-button.png" style="width:auto; height:auto; border:0;" alt="ccBill" />
 </a>

@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -63,7 +63,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 * 	Link Gravatar image to Gravatar.com? `1` = yes, `0` = no. Allows Users to setup a Gravatar.
 *
 * 	o ``"display_name" => "1"``
-* 	Display the current User's WordPress® "Display Name" when logged in? `1` = yes, `0` = no.
+* 	Display the current User's WordPress "Display Name" when logged in? `1` = yes, `0` = no.
 *
 * 	o ``"logged_in_code" => ""``
 * 	HTML/PHP code to display when logged in. May also contain WP Shortcodes if you like.
@@ -113,24 +113,24 @@ if (!function_exists ("s2member_pro_login_widget"))
 			}
 	}
 /**
-* Pulls an array of details from the PayPal® Pro API; related to a customer's Recurring Billing Profile.
+* Pulls an array of details from the PayPal Pro API; related to a customer's Recurring Billing Profile.
 *
 * This function will return an array of data (as described below); else an empty array if no Recurring Billing Profile exists.
 * 	Example usage: ``<!php print_r(s2member_pro_paypal_rbp_for_user(123)); !>``
 *
-* Array elements returned by this function correlate with the PayPal® Pro API call method: `GetRecurringPaymentsProfileDetails`.
+* Array elements returned by this function correlate with the PayPal Pro API call method: `GetRecurringPaymentsProfileDetails`.
 * 	Please see {@link https://www.x.com/developers/paypal/documentation-tools/api/getrecurringpaymentsprofiledetails-api-operation-nvp}.
 *
 * @package s2Member\API_Functions
 * @since 130405
 *
 * @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
-* @return array An array of data (from the PayPal® Pro API); else an empty array if no Recurring Billing Profile exists.
+* @return array An array of data (from the PayPal Pro API); else an empty array if no Recurring Billing Profile exists.
 *
-* 	Array elements returned by this function correlate with the PayPal® Pro API call method: `GetRecurringPaymentsProfileDetails`.
+* 	Array elements returned by this function correlate with the PayPal Pro API call method: `GetRecurringPaymentsProfileDetails`.
 * 	Please see {@link https://www.x.com/developers/paypal/documentation-tools/api/getrecurringpaymentsprofiledetails-api-operation-nvp}.
 *
-* @note If your PayPal® Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_for_user()} instead.
+* @note If your PayPal Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_for_user()} instead.
 */
 if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 	{
@@ -153,7 +153,7 @@ if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 			}
 	}
 /**
-* Pulls last/next billing times from the PayPal® Pro API; associated with a customer's Recurring Billing Profile.
+* Pulls last/next billing times from the PayPal Pro API; associated with a customer's Recurring Billing Profile.
 *
 * This function will return an array of data (as described below); else an empty array if no Recurring Billing Profile exists.
 * 	Example usage: ``<!php print_r(s2member_pro_paypal_rbp_times_for_user(123)); !>``
@@ -170,7 +170,7 @@ if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 * If one or more times (e.g. `last_billing_time`, `next_billing_time`) are irrelevant (i.e. there was no payment received yet; or there are no future payments to receive);
 * 	that time will default to a value of `0` indicating it's irrelevant and/or not applicable.
 *
-* @note If your PayPal® Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_times_for_user()} instead.
+* @note If your PayPal Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_times_for_user()} instead.
 */
 if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 	{
@@ -192,21 +192,21 @@ if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 			}
 	}
 /**
-* Pulls an array of details from PayPal® Pro (Payflow™ Edition) API; related to a customer's Recurring Billing Profile.
+* Pulls an array of details from PayPal Pro (Payflow™ Edition) API; related to a customer's Recurring Billing Profile.
 *
 * This function will return an array of data (as described below); else an empty array if no Recurring Billing Profile exists.
 * 	Example usage: ``<!php print_r(s2member_pro_payflow_rbp_for_user(123)); !>``
 *
-* Array elements returned by this function correlate with the PayPal® Pro (Payflow™ Edition) API call method: `ACTION=I`.
+* Array elements returned by this function correlate with the PayPal Pro (Payflow™ Edition) API call method: `ACTION=I`.
 * 	Please see {@link https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/wpppe_rp_guide.pdf#page=54}.
 *
 * @package s2Member\API_Functions
 * @since 130405
 *
 * @param str|int $user_id Optional. A specific User ID. Defaults to the current User ID that is logged into the site.
-* @return array An array of data from the PayPal® Pro (Payflow™ Edition) API; else an empty array if no Recurring Billing Profile exists.
+* @return array An array of data from the PayPal Pro (Payflow™ Edition) API; else an empty array if no Recurring Billing Profile exists.
 *
-* 	Array elements returned by this function correlate with the PayPal® Pro (Payflow™ Edition) API call method: `ACTION=I`.
+* 	Array elements returned by this function correlate with the PayPal Pro (Payflow™ Edition) API call method: `ACTION=I`.
 * 	Please see {@link https://www.paypalobjects.com/webstatic/en_US/developer/docs/pdf/wpppe_rp_guide.pdf#page=54}.
 */
 if (!function_exists ("s2member_pro_payflow_rbp_for_user"))
@@ -230,7 +230,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_for_user"))
 			}
 	}
 /**
-* Pulls last/next billing times from the PayPal® Pro (Payflow™ Edition) API; associated with a customer's Recurring Billing Profile.
+* Pulls last/next billing times from the PayPal Pro (Payflow™ Edition) API; associated with a customer's Recurring Billing Profile.
 *
 * This function will return an array of data (as described below); else an empty array if no Recurring Billing Profile exists.
 * 	Example usage: ``<!php print_r(s2member_pro_payflow_rbp_times_for_user(123)); !>``
@@ -257,7 +257,7 @@ if (!function_exists ("s2member_pro_payflow_rbp_times_for_user"))
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
 				
 				if(($last_billing_time = get_user_option("s2member_last_payment_time", $user_id)))
-					$array["last_billing_time"] = $last_billing_time; // Must use this because the PayFlow® API does not offer it up.
+					$array["last_billing_time"] = $last_billing_time; // Must use this because the PayFlow API does not offer it up.
 				
 				if(($payflow["TERM"] === "0" || $payflow["PAYMENTSLEFT"] > 0) && preg_match ("/^(Active|ActiveProfile)$/i", $payflow["STATUS"]))
 					if(preg_match("/^[0-9]{8}/", $payflow["NEXTPAYMENT"]))

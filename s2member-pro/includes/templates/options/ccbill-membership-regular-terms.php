@@ -3,7 +3,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
 ?>
 
-<optgroup label="<?php echo esc_attr (_x ("ccBill® Recurring Plans", "s2member-admin", "s2member")); ?>">
+<optgroup label="<?php echo esc_attr (_x ("ccBill Recurring Plans", "s2member-admin", "s2member")); ?>">
 <option value="1-M-1" selected="selected"><?php echo esc_html (_x ("Monthly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="2-M-1"><?php echo esc_html (_x ("Bi-Monthly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="3-M-1"><?php echo esc_html (_x ("Quarterly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
@@ -11,7 +11,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 
 <option disabled="disabled"></option>
 
-<optgroup label="<?php echo esc_attr (_x ("ccBill® Non-Recurring / Buy Now", "s2member-admin", "s2member")); ?>">
+<optgroup label="<?php echo esc_attr (_x ("ccBill Non-Recurring / Buy Now", "s2member-admin", "s2member")); ?>">
 <option value="2-D-0"><?php echo esc_html (_x ("One Time (for 2 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>
 <option value="3-D-0"><?php echo esc_html (_x ("One Time (for 3 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>
 <option value="4-D-0"><?php echo esc_html (_x ("One Time (for 4 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>
