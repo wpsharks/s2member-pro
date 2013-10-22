@@ -129,7 +129,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_checkout[card_verification]" id="s2member-pro-authnet-checkout-card-verification" class="s2member-pro-authnet-card-verification s2member-pro-authnet-checkout-card-verification" value="%%card_verification_value%%" tabindex="230" />
 			</label>
 		</div>
-		<!-- This is displayed only when Maestro®/Solo® cards are selected as the Payment Method. -->
+		<!-- This is displayed only when Maestro/Solo cards are selected as the Payment Method. -->
 		<div id="s2member-pro-authnet-checkout-form-card-start-date-issue-number-div" class="s2member-pro-authnet-form-div  s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-card-start-date-issue-number-div s2member-pro-authnet-checkout-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-authnet-checkout-card-start-date-issue-number" id="s2member-pro-authnet-checkout-form-card-start-date-issue-number-label" class="s2member-pro-authnet-form-card-start-date-issue-number-label s2member-pro-authnet-checkout-form-card-start-date-issue-number-label">
 				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />

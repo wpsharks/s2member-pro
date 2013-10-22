@@ -1,14 +1,14 @@
 <?php
 /**
-* PayPal® Checkout Forms (inner processing routines).
+* PayPal Checkout Forms (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 	{
 		/**
-		* PayPal® Checkout Forms (inner processing routines).
+		* PayPal Checkout Forms (inner processing routines).
 		*
 		* This version handles Real-Time Direct Pay *(mission critical)*, when:
 		* ``$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_paypal_checkout_rdp"] == true``.
@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 				public static function paypal_checkout ()
 					{
 						if ((!empty ($_POST["s2member_pro_paypal_checkout"]["nonce"]) && ($nonce = $_POST["s2member_pro_paypal_checkout"]["nonce"]) && wp_verify_nonce ($nonce, "s2member-pro-paypal-checkout"))
-						|| (!empty ($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" //  PayPal® Express Checkout with $_GET["token"] & $_GET["PayerID"]?
+						|| (!empty ($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" //  PayPal Express Checkout with $_GET["token"] & $_GET["PayerID"]?
 						&& !empty ($_GET["token"]) && ($_GET["token"] = esc_html ($_GET["token"])) && (empty ($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html ($_GET["PayerID"]))) // PayerID is not required.
 						&& ($xco_post_vars = get_transient ("s2m_" . md5 ("s2member_transient_express_checkout_" . $_GET["token"])))))
 							{
@@ -141,7 +141,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 
 														$user = (is_user_logged_in () && is_object ($user = wp_get_current_user ()) && ($user_id = $user->ID)) ? $user : false;
 
-														if (!($paypal_set_xco = array ())) // PayPal® Express Checkout.
+														if (!($paypal_set_xco = array ())) // PayPal Express Checkout.
 															{
 																$paypal_set_xco["METHOD"] = "SetExpressCheckout";
 
@@ -290,7 +290,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																						$_paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																					}
 																			}
-																		else // NOT using PayPal® Express Checkout.
+																		else // NOT using PayPal Express Checkout.
 																			{
 																				$_paypal["METHOD"] = "DoDirectPayment";
 																				$_paypal["PAYMENTACTION"] = "Sale";
@@ -402,7 +402,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
 																					$new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
-																				else // We handle this normally. The transaction ID comes from PayPal® as it always does.
+																				else // We handle this normally. The transaction ID comes from PayPal as it always does.
 																					{
 																						$new__txn_id = ($_paypal && !empty ($_paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $_paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
 																						$new__txn_id = (!$new__txn_id && $_paypal && !empty ($_paypal["TRANSACTIONID"])) ? $_paypal["TRANSACTIONID"] : $new__txn_id;
@@ -414,7 +414,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																					$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 																				else $new__subscr_id = $paypal["PROFILEID"];
 
-																				if (!($ipn = array ())) // Simulated PayPal® IPN.
+																				if (!($ipn = array ())) // Simulated PayPal IPN.
 																					{
 																						$ipn["txn_type"] = "subscr_signup";
 																						$ipn["subscr_id"] = $new__subscr_id;
@@ -538,7 +538,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$_paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																			}
 																	}
-																else // NOT using PayPal® Express Checkout.
+																else // NOT using PayPal Express Checkout.
 																	{
 																		$_paypal["METHOD"] = "DoDirectPayment";
 																		$_paypal["PAYMENTACTION"] = "Sale";
@@ -650,7 +650,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
 																			$new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
-																		else // We handle this normally. The transaction ID comes from PayPal® as it always does.
+																		else // We handle this normally. The transaction ID comes from PayPal as it always does.
 																			{
 																				$new__txn_id = ($_paypal && !empty ($_paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $_paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
 																				$new__txn_id = (!$new__txn_id && $_paypal && !empty ($_paypal["TRANSACTIONID"])) ? $_paypal["TRANSACTIONID"] : $new__txn_id;
@@ -659,7 +659,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																			$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 																		else $new__subscr_id = $paypal["PROFILEID"];
 
-																		if (!($ipn = array ())) // Simulated PayPal® IPN.
+																		if (!($ipn = array ())) // Simulated PayPal IPN.
 																			{
 																				$ipn["txn_type"] = "subscr_signup";
 																				$ipn["subscr_id"] = $new__subscr_id;
@@ -809,7 +809,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$paypal["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["level_ccaps_eotper"];
 																				$paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																			}
-																		else // NOT using PayPal® Express Checkout.
+																		else // NOT using PayPal Express Checkout.
 																			{
 																				$paypal["METHOD"] = "DoDirectPayment";
 																				$paypal["PAYMENTACTION"] = "Sale";
@@ -857,12 +857,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 
 																		if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
-																		else // Handle this normally. The transaction ID comes from PayPal® as it always does.
+																		else // Handle this normally. The transaction ID comes from PayPal as it always does.
 																			{
 																				$new__subscr_id = $new__txn_id = (!empty ($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
 																				$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty ($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
 																			}
-																		if (!($ipn = array ())) // Simulated PayPal® IPN.
+																		if (!($ipn = array ())) // Simulated PayPal IPN.
 																			{
 																				$ipn["txn_type"] = "web_accept";
 																				$ipn["txn_id"] = $new__subscr_id;
@@ -944,7 +944,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$paypal["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["level_ccaps_eotper"];
 																		$paypal["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																	}
-																else // NOT using PayPal® Express Checkout.
+																else // NOT using PayPal Express Checkout.
 																	{
 																		$paypal["METHOD"] = "DoDirectPayment";
 																		$paypal["PAYMENTACTION"] = "Sale";
@@ -989,12 +989,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 															{
 																if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
-																else // Handle this normally. The transaction ID comes from PayPal® as it always does.
+																else // Handle this normally. The transaction ID comes from PayPal as it always does.
 																	{
 																		$new__subscr_id = $new__txn_id = (!empty ($paypal["PAYMENTINFO_0_TRANSACTIONID"])) ? $paypal["PAYMENTINFO_0_TRANSACTIONID"] : false;
 																		$new__subscr_id = $new__txn_id = (!$new__subscr_id && !empty ($paypal["TRANSACTIONID"])) ? $paypal["TRANSACTIONID"] : $new__subscr_id;
 																	}
-																if (!($ipn = array ())) // Simulated PayPal® IPN.
+																if (!($ipn = array ())) // Simulated PayPal IPN.
 																	{
 																		$ipn["txn_type"] = "web_accept";
 																		$ipn["txn_id"] = $new__subscr_id;

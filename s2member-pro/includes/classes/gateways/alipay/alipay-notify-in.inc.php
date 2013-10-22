@@ -1,14 +1,14 @@
 <?php
 /**
-* AliPay® IPN Handler (inner processing routines).
+* AliPay IPN Handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 	{
 		/**
-		* AliPay® IPN Handler (inner processing routines).
+		* AliPay IPN Handler (inner processing routines).
 		*
 		* @package s2Member\AliPay
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 		class c_ws_plugin__s2member_pro_alipay_notify_in
 			{
 				/**
-				* Handles AliPay® IPN URL processing.
+				* Handles AliPay IPN URL processing.
 				*
 				* @package s2Member\AliPay
 				* @since 1.5
@@ -64,7 +64,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 								if (is_array ($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
 									{
 										$alipay["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
-										$alipay["s2member_log"][] = "s2Member POST vars verified through a POST back to AliPay®.";
+										$alipay["s2member_log"][] = "s2Member POST vars verified through a POST back to AliPay.";
 
 										if (!is_array ($alipay_already_p = get_transient ("s2m_" . md5 ("s2member_pro_alipay_notify_ids"))) || !in_array ($alipay["notify_id"], $alipay_already_p))
 											{
@@ -73,9 +73,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 
 												if (preg_match ("/^(TRADE_FINISHED|TRADE_SUCCESS)$/i", $alipay["trade_status"]) && !$alipay["refund_status"])
 													{
-														$alipay["s2member_log"][] = "AliPay® transaction identified as ( `TRADE_FINISHED|TRADE_SUCCESS` ).";
-														$alipay["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
-														$alipay["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+														$alipay["s2member_log"][] = "AliPay transaction identified as ( `TRADE_FINISHED|TRADE_SUCCESS` ).";
+														$alipay["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `web_accept` ).";
+														$alipay["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
@@ -113,9 +113,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 													}
 												else if (preg_match ("/^(TRADE_CLOSED|TRADE_SUCCESS)$/i", $alipay["trade_status"]) && $alipay["refund_status"])
 													{
-														$alipay["s2member_log"][] = "AliPay® transaction identified as ( `REFUND_SUCCESS` ).";
-														$alipay["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `payment_status` ( `refunded` ).";
-														$alipay["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+														$alipay["s2member_log"][] = "AliPay transaction identified as ( `REFUND_SUCCESS` ).";
+														$alipay["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `payment_status` ( `refunded` ).";
+														$alipay["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
@@ -156,13 +156,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 													$alipay["s2member_log"][] = "Ignoring this IPN request. The status does NOT require any action on the part of s2Member.";
 											}
 										else
-											$alipay["s2member_log"][] = "Ignoring duplicate IPN. s2Member has already processed AliPay® Notification ID: " . $alipay["notify_id"] . ".";
+											$alipay["s2member_log"][] = "Ignoring duplicate IPN. s2Member has already processed AliPay Notification ID: " . $alipay["notify_id"] . ".";
 									}
 								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
-										$alipay["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid AliPay® configuration. Please check: s2Member -› AliPay® Options.";
-										$alipay["s2member_log"][] = "If you're absolutely SURE that your AliPay® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to AliPay® over an HTTPS connection.";
-										$alipay["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
+										$alipay["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid AliPay configuration. Please check: s2Member -› AliPay Options.";
+										$alipay["s2member_log"][] = "If you're absolutely SURE that your AliPay configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to AliPay over an HTTPS connection.";
+										$alipay["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.";
 										$alipay["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*

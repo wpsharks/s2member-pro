@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -54,7 +54,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 				* @param array $attr An array of Attributes.
 				* @param str $content Content inside the Shortcode.
 				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting ClickBank® Button Code, HTML markup.
+				* @return str The resulting ClickBank Button Code, HTML markup.
 				*/
 				public static function sc_clickbank_button($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
@@ -70,8 +70,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 						$attr["rr"] = /* Lifetime Subscriptions do NOT recur. Only after running shortcode_atts(). */ ($attr["rt"] === "L") ? "0" : $attr["rr"];
 						$attr["rr"] = /* Independent Ccaps do NOT recur. Only after running shortcode_atts(). */ ($attr["level"] === "*") ? "0" : $attr["rr"];
 
-						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank®.
-						// ClickBank® will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank® checkout forms.
+						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank.
+						// ClickBank will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank checkout forms.
 
 						if($attr["cbur"] && $attr["cbf"] === "auto" && !empty($_REQUEST["cbf"]))
 							$attr["cbf"] = esc_html((string)$_REQUEST["cbf"]);

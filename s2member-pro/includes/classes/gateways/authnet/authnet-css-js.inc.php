@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® CSS/JS for theme integration.
+* Authorize.Net CSS/JS for theme integration.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_css_js"))
 	{
 		/**
-		* Authorize.Net® CSS for theme integration.
+		* Authorize.Net CSS for theme integration.
 		*
 		* @package s2Member\CSS_JS
 		* @since 1.5

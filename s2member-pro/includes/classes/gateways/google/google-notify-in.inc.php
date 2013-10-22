@@ -1,14 +1,14 @@
 <?php
 /**
-* Google® IPN Handler (inner processing routines).
+* Google IPN Handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 	{
 		/**
-		* Google® IPN Handler (inner processing routines).
+		* Google IPN Handler (inner processing routines).
 		*
 		* @package s2Member\Google
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 		class c_ws_plugin__s2member_pro_google_notify_in
 			{
 				/**
-				* Handles Google® IPN URL processing.
+				* Handles Google IPN URL processing.
 				*
 				* @package s2Member\Google
 				* @since 1.5
@@ -64,15 +64,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 								if (is_array ($google = c_ws_plugin__s2member_pro_google_utilities::google_postvars ()) && ($_google = $google))
 									{
 										$google["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
-										$google["s2member_log"][] = "s2Member POST vars verified with Google®.";
+										$google["s2member_log"][] = "s2Member POST vars verified with Google.";
 
 										if (preg_match ("/^new-order-notification$/i", $google["_type"])
 										&& is_array ($s2vars_item1 = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google["order-summary_shopping-cart_items_item-1_merchant-private-item-data"]))
 										 && !$s2vars_item1["s2_subscr_id"])
 											{
-												$google["s2member_log"][] = "Google® transaction identified as ( `SALE/BUY-NOW` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
-												$google["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$google["s2member_log"][] = "Google transaction identified as ( `SALE/BUY-NOW` ).";
+												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `web_accept` ).";
+												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -111,9 +111,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 										&& is_array ($s2vars_item1 = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google["order-summary_shopping-cart_items_item-1_merchant-private-item-data"]))
 										 && $s2vars_item1["s2_subscr_id"] && !$s2vars_item1["s2_subscr_payment"])
 											{
-												$google["s2member_log"][] = "Google® transaction identified as ( `SALE/SUBSCRIPTION` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
-												$google["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$google["s2member_log"][] = "Google transaction identified as ( `SALE/SUBSCRIPTION` ).";
+												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_signup` ).";
+												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -163,9 +163,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 										&& is_array ($s2vars_item1 = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google["order-summary_shopping-cart_items_item-1_merchant-private-item-data"]))
 										 && $s2vars_item1["s2_subscr_id"] && $s2vars_item1["s2_subscr_payment"])
 											{
-												$google["s2member_log"][] = "Google® transaction identified as ( `SUBSCRIPTION PAYMENT` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_payment` ).";
-												$google["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$google["s2member_log"][] = "Google transaction identified as ( `SUBSCRIPTION PAYMENT` ).";
+												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_payment` ).";
+												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -205,9 +205,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 										&& is_array ($s2vars_item1 = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google["order-summary_shopping-cart_items_item-1_merchant-private-item-data"]))
 										 && $s2vars_item1["s2_subscr_id"])
 											{
-												$google["s2member_log"][] = "Google® transaction identified as ( `SUBSCRIPTION CANCELLATION` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_cancel` ).";
-												$google["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$google["s2member_log"][] = "Google transaction identified as ( `SUBSCRIPTION CANCELLATION` ).";
+												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).";
+												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -245,9 +245,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 										 && ((preg_match ("/^refund/", $google["_type"]) && $google["latest-fee-refund-amount"] >= $google["order-summary_total-charge-amount"])
 										 || (preg_match ("/^chargeback/", $google["_type"]) && $google["latest-chargeback-amount"] >= $google["order-summary_total-charge-amount"])))
 											{
-												$google["s2member_log"][] = "Google® transaction identified as ( `REFUND|CHARGEBACK` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal® processor as `payment_status` ( `refunded|reversed` ).";
-												$google["s2member_log"][] = "Please check PayPal® IPN logs for further processing details.";
+												$google["s2member_log"][] = "Google transaction identified as ( `REFUND|CHARGEBACK` ).";
+												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `payment_status` ( `refunded|reversed` ).";
+												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
 												$ipn = array (); // Reset.
@@ -305,15 +305,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 									}
 								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
-										$google["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid Google® configuration. Please check: s2Member -› Google® Options.";
-										$google["s2member_log"][] = "If you're absolutely SURE that your Google® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to Google® over an HTTPS connection.";
-										$google["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
+										$google["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid Google configuration. Please check: s2Member -› Google Options.";
+										$google["s2member_log"][] = "If you're absolutely SURE that your Google configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to Google over an HTTPS connection.";
+										$google["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.";
 										$google["s2member_log"][] = var_export ($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 									}
 								/*
 								We need to log this final event before it occurs, so that is makes it into the log entry.
 								*/
-								$google["s2member_log"][] = "Sending Google® an XML Notification Acknowlegment w/ original serial number.";
+								$google["s2member_log"][] = "Sending Google an XML Notification Acknowlegment w/ original serial number.";
 								/*
 								If debugging/logging is enabled; we need to append $google to the log file.
 									Logging now supports Multisite Networking as well.
@@ -338,7 +338,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 								$confirmation .= ' serial-number="' . esc_attr (trim (stripslashes ($_REQUEST["serial-number"]))) . '" />';
 
 								status_header (200); // Send a 200 OK status header.
-								header ("Content-Type: application/xml"); // Google® expects application/xml here.
+								header ("Content-Type: application/xml"); // Google expects application/xml here.
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
 								exit ($confirmation); // Exit w/ serial number confirmation.

@@ -1,14 +1,14 @@
 <?php
 /**
-* Google® Checkout (inner processing routines).
+* Google Checkout (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 	{
 		/**
-		* Google® Checkout (inner processing routines).
+		* Google Checkout (inner processing routines).
 		*
 		* @package s2Member\Google
 		* @since 1.5
@@ -44,14 +44,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 		class c_ws_plugin__s2member_pro_google_co_in
 			{
 				/**
-				* Handles Google® XML Checkout redirections.
+				* Handles Google XML Checkout redirections.
 				*
 				* @package s2Member\Google
 				* @since 1.5
 				*
 				* @attaches-to ``add_action("init");``
 				*
-				* @return null Or exits script execution after redirection to Google® Checkout.
+				* @return null Or exits script execution after redirection to Google Checkout.
 				*/
 				public static function google_co ()
 					{
@@ -69,7 +69,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 								$attr["rr"] = ($attr["level"] === "*") ? "BN" : $attr["rr"]; // Independent Ccaps do NOT recur. Only after running shortcode_atts().
 								$attr["rr"] = (!$attr["tp"] && !$attr["rr"]) ? "BN" : $attr["rr"]; // No Trial / non-recurring. Only after running shortcode_atts().
 
-								if ($attr["modify"] || $attr["cancel"]) // This is a special routine for Google® Modifications/Cancellations (one in the same).
+								if ($attr["modify"] || $attr["cancel"]) // This is a special routine for Google Modifications/Cancellations (one in the same).
 									{
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
@@ -127,7 +127,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
 										if (($xml = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/merchantCheckout/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $xml, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && preg_match ("/\<redirect-url\>(.+?)\<\/redirect-url\>/i", preg_replace ("/[\r\n\t]+/", "", $xml), $m) && ($google = $m[1]))
-											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google® Checkout.
+											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google Checkout.
 										else // Display error message.
 											echo strip_tags ($xml);
 									}
@@ -183,7 +183,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
 										if (($xml = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/merchantCheckout/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $xml, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && preg_match ("/\<redirect-url\>(.+?)\<\/redirect-url\>/i", preg_replace ("/[\r\n\t]+/", "", $xml), $m) && ($google = $m[1]))
-											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google® Checkout.
+											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google Checkout.
 										else // Display error message.
 											echo strip_tags ($xml);
 									}
@@ -253,7 +253,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
 										if (($xml = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/merchantCheckout/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $xml, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && preg_match ("/\<redirect-url\>(.+?)\<\/redirect-url\>/i", preg_replace ("/[\r\n\t]+/", "", $xml), $m) && ($google = $m[1]))
-											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google® Checkout.
+											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google Checkout.
 										else // Display error message.
 											echo strip_tags ($xml);
 									}
@@ -268,7 +268,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 										$attr["level_ccaps_eotper"] = $attr["level"] . ":" . $attr["ccaps"]; // Actual Subscriptions will always end on their own.
 										$attr["level_ccaps_eotper"] = rtrim ($attr["level_ccaps_eotper"], ":"); // Clean any trailing separators from this string.
 
-										$attr["periodicity"] = c_ws_plugin__s2member_pro_google_utilities::google_periodicity ($attr["rp"] . " " . $attr["rt"]); // Google® periodicity.
+										$attr["periodicity"] = c_ws_plugin__s2member_pro_google_utilities::google_periodicity ($attr["rp"] . " " . $attr["rt"]); // Google periodicity.
 
 										$attr["register_access_link"] = c_ws_plugin__s2member_register_access::register_link_gen ("google", "s2-" . $attr["uniqid"], $attr["custom"], $attr["level_ccaps_eotper"]);
 
@@ -518,7 +518,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_co_in"))
 										$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
 
 										if (($xml = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/merchantCheckout/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $xml, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && preg_match ("/\<redirect-url\>(.+?)\<\/redirect-url\>/i", preg_replace ("/[\r\n\t]+/", "", $xml), $m) && ($google = $m[1]))
-											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google® Checkout.
+											wp_redirect(wp_specialchars_decode ($google, ENT_QUOTES)); // Redirect to Google Checkout.
 										else // Display error message.
 											echo strip_tags ($xml);
 									}

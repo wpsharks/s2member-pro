@@ -3,7 +3,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
 ?>
 
-<optgroup label="<?php echo esc_attr (_x ("PayPal® Pro (Subscriptions)", "s2member-admin", "s2member")); ?>">
+<optgroup label="<?php echo esc_attr (_x ("PayPal Pro (Subscriptions)", "s2member-admin", "s2member")); ?>">
 <option value="1-D-1"><?php echo esc_html (_x ("Daily (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="1-W-1"><?php echo esc_html (_x ("Weekly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 <option value="2-W-1"><?php echo esc_html (_x ("Bi-Weekly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
@@ -16,7 +16,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 
 <option disabled="disabled"></option>
 
-<optgroup label="<?php echo esc_attr (_x ("PayPal® Pro (Subscriptions)", "s2member-admin", "s2member")); ?>">
+<optgroup label="<?php echo esc_attr (_x ("PayPal Pro (Subscriptions)", "s2member-admin", "s2member")); ?>">
 <option value="1-D-0"><?php echo esc_html (_x ("One Time (for 1 day access, non-recurring)", "s2member-admin", "s2member")); ?></option>
 <option value="2-D-0"><?php echo esc_html (_x ("One Time (for 2 day access, non-recurring)", "s2member-admin", "s2member")); ?></option>
 <option value="3-D-0"><?php echo esc_html (_x ("One Time (for 3 day access, non-recurring)", "s2member-admin", "s2member")); ?></option>
@@ -40,7 +40,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 
 <option disabled="disabled"></option>
 
-<optgroup label="<?php echo esc_attr (_x ("PayPal® Pro (Buy Now)", "s2member-admin", "s2member")); ?>">
+<optgroup label="<?php echo esc_attr (_x ("PayPal Pro (Buy Now)", "s2member-admin", "s2member")); ?>">
 <option value="1-D-BN"><?php echo esc_html (_x ("One Time (for 1 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>
 <option value="2-D-BN"><?php echo esc_html (_x ("One Time (for 2 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>
 <option value="3-D-BN"><?php echo esc_html (_x ("One Time (for 3 day access, non-recurring, no trial)", "s2member-admin", "s2member")); ?></option>

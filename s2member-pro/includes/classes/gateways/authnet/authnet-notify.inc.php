@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® Silent Post *(aka: IPN)* handler.
+* Authorize.Net Silent Post *(aka: IPN)* handler.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify"))
 	{
 		/**
-		* Authorize.Net® Silent Post *(aka: IPN)* handler.
+		* Authorize.Net Silent Post *(aka: IPN)* handler.
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify"))
 		class c_ws_plugin__s2member_pro_authnet_notify
 			{
 				/**
-				* Handles Authorize.Net® IPN URL processing.
+				* Handles Authorize.Net IPN URL processing.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5

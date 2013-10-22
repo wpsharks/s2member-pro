@@ -1,14 +1,14 @@
 <?php
 /**
-* Authorize.Net® Pro Form responses.
+* Authorize.Net Pro Form responses.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 	{
 		/**
-		* Authorize.Net® Pro Form responses.
+		* Authorize.Net Pro Form responses.
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -202,13 +202,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				public static function authnet_form_api_validation_errors($attr = FALSE)
 					{
 						if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"])
-							$response = array("response" => _x('Authorize.Net® configuration error. Please configure your Authorize.Net® API Login ID.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('Authorize.Net configuration error. Please configure your Authorize.Net API Login ID.', "s2member-admin", "s2member"), "error" => true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"])
-							$response = array("response" => _x('Authorize.Net® configuration error. Your Authorize.Net® API Transaction Key is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('Authorize.Net configuration error. Your Authorize.Net API Transaction Key is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"])
-							$response = array("response" => _x('Authorize.Net® configuration error. Your Authorize.Net® Secret MD5 Hash is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('Authorize.Net configuration error. Your Authorize.Net Secret MD5 Hash is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						return (empty($response) || !empty($attr["register"])) ? null : $response;
 					}

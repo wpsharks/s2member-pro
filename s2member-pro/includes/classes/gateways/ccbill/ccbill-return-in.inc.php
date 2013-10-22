@@ -1,14 +1,14 @@
 <?php
 /**
-* ccBill® Return URL handler (inner processing routines).
+* ccBill Return URL handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 	{
 		/**
-		* ccBill® Return URL handler (inner processing routines).
+		* ccBill Return URL handler (inner processing routines).
 		*
 		* @package s2Member\ccBill
 		* @since 1.5
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 		class c_ws_plugin__s2member_pro_ccbill_return_in
 			{
 				/**
-				* Handles ccBill® Return URL processing.
+				* Handles ccBill Return URL processing.
 				*
 				* @package s2Member\ccBill
 				* @since 1.5
@@ -60,8 +60,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 						if (!empty ($_GET["s2member_pro_ccbill_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
 							{
 								$ccbill["s2member_log"][] = "Return URL processed on: " . date ("D M j, Y g:i:s a T");
-								$ccbill["s2member_log"][] = "Piping through s2Member's core/standard PayPal® processor with `proxy_use` ( `ty-email` ).";
-								$ccbill["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
+								$ccbill["s2member_log"][] = "Piping through s2Member's core/standard PayPal processor with `proxy_use` ( `ty-email` ).";
+								$ccbill["s2member_log"][] = "Please check PayPal RTN logs for further processing details.";
 
 								$rtn_q = "&s2member_paypal_proxy=ccbill&s2member_paypal_proxy_use=standard-emails,ty-email";
 								if (!empty /* Using a custom Return URL on success? */ ($_GET["s2member_pro_ccbill_return_success"]))
@@ -72,7 +72,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 
 								$ccbill["s2member_log"][] = /* Log the full Return redirection URL here. */ $rtn_r;
 
-								wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
+								wp_redirect /* Proxy this through s2Member's core PayPal processor. */($rtn_r);
 
 								$logt = c_ws_plugin__s2member_utilities::time_details ();
 								$logv = c_ws_plugin__s2member_utilities::ver_details ();

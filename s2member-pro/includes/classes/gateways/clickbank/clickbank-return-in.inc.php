@@ -1,14 +1,14 @@
 <?php
 /**
-* ClickBank® Return URL handler (inner processing routines).
+* ClickBank Return URL handler (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 	{
 		/**
-		* ClickBank® Return URL handler (inner processing routines).
+		* ClickBank Return URL handler (inner processing routines).
 		*
 		* @package s2Member\ClickBank
 		* @since 1.5
@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 		class c_ws_plugin__s2member_pro_clickbank_return_in
 			{
 				/**
-				* Handles ClickBank® Return URL processing.
+				* Handles ClickBank Return URL processing.
 				*
 				* @package s2Member\ClickBank
 				* @since 1.5
@@ -62,15 +62,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 								if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && ($_clickbank = $clickbank))
 									{
 										$clickbank["s2member_log"][] = "Return-Data received on: ".date("D M j, Y g:i:s a T");
-										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank®.";
+										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank.";
 
-										$clickbank["s2member_log"][] = "Sleeping for 5 seconds. Giving ClickBank® a chance to finalize processing.";
-										sleep /* Sleep here to give ClickBank® a chance to finalize processing. Allows the API call to succeed. */(5);
+										$clickbank["s2member_log"][] = "Sleeping for 5 seconds. Giving ClickBank a chance to finalize processing.";
+										sleep /* Sleep here to give ClickBank a chance to finalize processing. Allows the API call to succeed. */(5);
 										$clickbank["s2member_log"][] = "Awake. It's ".date("D M j, Y g:i:s a T").". Processing will continue.";
 
 										if(is_array($order = json_decode(c_ws_plugin__s2member_utils_urls::remote("https://api.clickbank.com/rest/1.3/orders/".$clickbank["cbreceipt"], false, array_merge(c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_headers(), array("timeout" => 20))), true)) && ($order = $order["orderData"]))
 											{
-												$clickbank["s2member_log"][] = "Order API variables have been obtained from ClickBank®.";
+												$clickbank["s2member_log"][] = "Order API variables have been obtained from ClickBank.";
 
 												$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars(http_build_query($clickbank, null, "&"), $order["txnType"]);
 
@@ -84,9 +84,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 												if(preg_match("/^(TEST_)?SALE$/i", $order["txnType"]) && !isset($s2vars["s2_p1"], $s2vars["s2_p3"]))
 													{
-														$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/STANDARD` ).";
-														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `web_accept` ).";
-														$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
+														$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `SALE/STANDARD` ).";
+														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `web_accept` ).";
+														$clickbank["s2member_log"][] = "Please check PayPal RTN logs for further processing details.";
 
 														$rtn = array(); // Reset.
 
@@ -121,13 +121,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 														$clickbank["s2member_log"][] = /* Log the full Return redirection URL here. */ $rtn_r;
 
-														wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
+														wp_redirect /* Proxy this through s2Member's core PayPal processor. */($rtn_r);
 													}
 												else if(preg_match("/^(TEST_)?SALE$/i", $order["txnType"]) && isset($s2vars["s2_p1"], $s2vars["s2_p3"]))
 													{
-														$clickbank["s2member_log"][] = "ClickBank® transaction identified as ( `SALE/RECURRING` ).";
-														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor as `txn_type` ( `subscr_signup` ).";
-														$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
+														$clickbank["s2member_log"][] = "ClickBank transaction identified as ( `SALE/RECURRING` ).";
+														$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_signup` ).";
+														$clickbank["s2member_log"][] = "Please check PayPal RTN logs for further processing details.";
 
 														$rtn = array(); // Reset.
 
@@ -169,27 +169,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 														$clickbank["s2member_log"][] = /* Log the full Return redirection URL here. */ $rtn_r;
 
-														wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
+														wp_redirect /* Proxy this through s2Member's core PayPal processor. */($rtn_r);
 													}
 												else // Else, we were unable to determine the txnType that is being handled here.
 													{
-														$clickbank["s2member_log"][] = "Unexpected txnType. The ClickBank® txnType did not match a required action.";
+														$clickbank["s2member_log"][] = "Unexpected txnType. The ClickBank txnType did not match a required action.";
 
 														$clickbank["s2member_log"][] = "Redirecting Customer to the Home Page, due to an error that occurred.";
 
 														echo '<script type="text/javascript">'."\n";
-														echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unexpected txnType. Please contact Support for assistance.\n\nThe ClickBank® txnType did not match a required action.", "s2member-front", "s2member"))."');"."\n";
+														echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unexpected txnType. Please contact Support for assistance.\n\nThe ClickBank txnType did not match a required action.", "s2member-front", "s2member"))."');"."\n";
 														echo "window.location = '".c_ws_plugin__s2member_utils_strings::esc_js_sq(home_url("/"))."';";
 														echo '</script>'."\n";
 													}
 											}
-										else // Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank® API to receive data for new orders. This is here in case that happens.
+										else // Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank API to receive data for new orders. This is here in case that happens.
 											{
-												$clickbank["s2member_log"][] = "Unable to obtain API vars. The ClickBank® API may NOT have data for this order yet. Or, your ClickBank® API Keys are NOT configured properly under `s2Member -› ClickBank® Options`.";
+												$clickbank["s2member_log"][] = "Unable to obtain API vars. The ClickBank API may NOT have data for this order yet. Or, your ClickBank API Keys are NOT configured properly under `s2Member -› ClickBank Options`.";
 												$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording ``$_POST`` + ``$_GET`` vars for analysis and debugging.
 
-												$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal® processor with `proxy_use` ( `ty-email` ).";
-												$clickbank["s2member_log"][] = "Please check PayPal® RTN logs for further processing details.";
+												$clickbank["s2member_log"][] = "Return-Data reformulated. Piping through s2Member's core/standard PayPal processor with `proxy_use` ( `ty-email` ).";
+												$clickbank["s2member_log"][] = "Please check PayPal RTN logs for further processing details.";
 
 												$rtn_q = "&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=standard-emails,ty-email";
 												if(!empty /* Using a custom Return URL on success? */($_GET["s2member_pro_clickbank_return_success"]))
@@ -200,20 +200,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 												$clickbank["s2member_log"][] = /* Log the full Return redirection URL here. */ $rtn_r;
 
-												wp_redirect /* Proxy this through s2Member's core PayPal® processor. */($rtn_r);
+												wp_redirect /* Proxy this through s2Member's core PayPal processor. */($rtn_r);
 											}
 									}
 								else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 									{
-										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank® configuration. Please check: s2Member -› ClickBank® Options.";
-										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank® configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank® over an HTTPS connection.";
-										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows® server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows® server.";
+										$clickbank["s2member_log"][] = "Unable to verify POST vars. This is most likely related to an invalid ClickBank configuration. Please check: s2Member -› ClickBank Options.";
+										$clickbank["s2member_log"][] = "If you're absolutely SURE that your ClickBank configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to ClickBank over an HTTPS connection.";
+										$clickbank["s2member_log"][] = "s2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.";
 										$clickbank["s2member_log"][] = var_export($_REQUEST, true); // Recording _POST + _GET vars for analysis and debugging.
 
 										$clickbank["s2member_log"][] = "Redirecting Customer to the Home Page, due to an error that occurred.";
 
 										echo '<script type="text/javascript">'."\n";
-										echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unable to verify POST vars. Please contact Support for assistance.\n\nThis is most likely related to an invalid ClickBank® configuration. If you are the site owner, please check: s2Member -› ClickBank® Options.", "s2member-front", "s2member"))."');"."\n";
+										echo "alert('".c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("ERROR: Unable to verify POST vars. Please contact Support for assistance.\n\nThis is most likely related to an invalid ClickBank configuration. If you are the site owner, please check: s2Member -› ClickBank Options.", "s2member-front", "s2member"))."');"."\n";
 										echo "window.location = '".c_ws_plugin__s2member_utils_strings::esc_js_sq(home_url("/"))."';";
 										echo '</script>'."\n";
 									}

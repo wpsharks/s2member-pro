@@ -1,14 +1,14 @@
 <?php
 /**
-* PayPal® Cancellation Forms (inner processing routines).
+* PayPal Cancellation Forms (inner processing routines).
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 	{
 		/**
-		* PayPal® Cancellation Forms (inner processing routines).
+		* PayPal Cancellation Forms (inner processing routines).
 		*
 		* @package s2Member\PayPal
 		* @since 1.5
@@ -79,7 +79,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 																	{
 																		if(preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"])) // Possible?
 																			{
-																				if(!($ipn = array())) // Build a simulated PayPal® IPN response.
+																				if(!($ipn = array())) // Build a simulated PayPal IPN response.
 																					{
 																						$ipn["txn_type"] = "subscr_cancel";
 																						$ipn["subscr_id"] = $paypal["PROFILEID"];
@@ -125,7 +125,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_cancellation_pf_in"))
 																	}
 																else if($paypal && $paypal["TENDER"] === "P")
 																	{
-																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
+																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
 																	}
 																else // Else, there is no Billing Profile.
 																	{

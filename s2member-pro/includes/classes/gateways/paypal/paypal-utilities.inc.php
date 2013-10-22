@@ -1,14 +1,14 @@
 <?php
 /**
-* PayPal® utilities.
+* PayPal utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 	{
 		/**
-		* PayPal® utilities.
+		* PayPal utilities.
 		*
 		* @package s2Member\PayPal
 		* @since 1.5
@@ -118,7 +118,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 						return false;
 					}
 				/**
-				* Gets a Payflow® recurring profile.
+				* Gets a Payflow recurring profile.
 				*
 				* @package s2Member\PayPal
 				* @since 110531
@@ -143,7 +143,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 						return false;
 					}
 				/**
-				* Cancels a Payflow® recurring profile.
+				* Cancels a Payflow recurring profile.
 				*
 				* @package s2Member\PayPal
 				* @since 110531
@@ -171,7 +171,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 						return false;
 					}
 				/**
-				* Cancels a Payflow® Billing Agreement.
+				* Cancels a Payflow Billing Agreement.
 				*
 				* @package s2Member\PayPal
 				* @since 130510
@@ -194,7 +194,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				/**
 				* Handles currency conversions for Maestro/Solo cards.
 				*
-				* PayPal® requires Maestro/Solo to be charged in GBP. So if a site owner is using
+				* PayPal requires Maestro/Solo to be charged in GBP. So if a site owner is using
 				* another currency *(i.e. something NOT in GBP)*, we have to convert all of the charge amounts dynamically.
 				*
 				* Coupon Codes should always be applied before this conversion takes place.
@@ -205,7 +205,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @package s2Member\PayPal
 				* @since 110531
 				*
-				* @param array $attr An array of PayPal® Pro Form Attributes.
+				* @param array $attr An array of PayPal Pro Form Attributes.
 				* @param str $card_type The Card Type *(i.e. Billing Method)* selected.
 				* @return array The same array of Pro Form Attributes, with possible currency conversions.
 				*/
@@ -267,7 +267,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 							}
 					}
 				/**
-				* Handles all cost calculations for PayPal®.
+				* Handles all cost calculations for PayPal.
 				*
 				* Returns an associative array with a possible Percentage Rate, along with the calculated Tax Amount.
 				* Tax calculations are based on State/Province, Country, and/or Zip Code.
@@ -671,7 +671,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 									if(is_array($process) && /* Processing affiliates? */ (in_array("affiliates-silent-post", $process) || in_array("affiliates-1px-response", $process)))
 										if(isset($coupon_applies) && $coupon_applies && /* Now, is this an Affiliate Coupon Code? Contains an affiliate ID? */ !empty($affiliate_id))
-											if(empty($_COOKIE["idev"]) /* Special consideration here. iDevAffiliate® must NOT have already tracked this customer. */)
+											if(empty($_COOKIE["idev"]) /* Special consideration here. iDevAffiliate must NOT have already tracked this customer. */)
 												if(($_urls = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_affiliate_coupon_code_tracking_urls"]))
 
 													foreach(preg_split("/[\r\n\t]+/", $_urls) as $_url /* Notify each of the URLs. */)

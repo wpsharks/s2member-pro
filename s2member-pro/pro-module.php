@@ -3,15 +3,15 @@
 * The main plugin file.
 *
 * This file loads the plugin after checking
-* PHP, WordPress® and other compatibility requirements.
+* PHP, WordPress and other compatibility requirements.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -56,7 +56,7 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_VERSION"))
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION", "5.2" /* !#php-requires-at-least-version#! */);
 /**
-* Minimum WordPress® version required to run s2Member Pro.
+* Minimum WordPress version required to run s2Member Pro.
 *
 * @package s2Member
 * @since 1.0
@@ -123,7 +123,7 @@ else if(is_admin()) //  Admin compatibility errors.
 			}
 		else if(!version_compare(get_bloginfo("version"), WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION, ">="))
 			{
-				add_action("all_admin_notices", create_function('', 'echo \'<div class="error fade"><p>You need WordPress® v\' . WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION . \'+ to use the s2Member Pro Module.</p></div>\';'));
+				add_action("all_admin_notices", create_function('', 'echo \'<div class="error fade"><p>You need WordPress v\' . WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION . \'+ to use the s2Member Pro Module.</p></div>\';'));
 			}
 		else if(!defined("WS_PLUGIN__S2MEMBER_VERSION") || !defined("WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION") || !version_compare(WS_PLUGIN__S2MEMBER_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION, ">="))
 			{

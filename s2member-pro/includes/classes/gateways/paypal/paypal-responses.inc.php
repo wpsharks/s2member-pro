@@ -1,14 +1,14 @@
 <?php
 /**
-* PayPal® Pro Form responses.
+* PayPal Pro Form responses.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 	{
 		/**
-		* PayPal® Pro Form responses.
+		* PayPal Pro Form responses.
 		*
 		* @package s2Member\PayPal
 		* @since 1.5
@@ -202,16 +202,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_form_api_validation_errors($attr = FALSE)
 					{
 						if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"])
-							$response = array("response" => _x('PayPal® configuration error. Please configure your PayPal® Email Address.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('PayPal configuration error. Please configure your PayPal Email Address.', "s2member-admin", "s2member"), "error" => true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_username"])
-							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Username is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('PayPal configuration error. Your PayPal API Username is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_password"])
-							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Password is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('PayPal configuration error. Your PayPal API Password is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_signature"])
-							$response = array("response" => _x('PayPal® configuration error. Your PayPal® API Signature is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+							$response = array("response" => _x('PayPal configuration error. Your PayPal API Signature is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						return (empty($response) || !empty($attr["register"])) ? null : $response;
 					}
@@ -254,7 +254,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]))
 													{
 														if($paypal && !empty($paypal["__error"]) &&  /* Subscription Profile? */$paypal["L_ERRORCODE0"] === "11592")
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
 
 														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
@@ -280,7 +280,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 
 												else if(strtoupper($paypal["TENDER"]) === "P")
-													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
@@ -292,11 +292,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 											{
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]) || strlen($paypal["ACCT"]) !== 4)
 													{
-														if($paypal && empty($paypal["__error"]) && /* It's NOT associated with a credit card; they used PayPal®. */ strlen($paypal["ACCT"]) !== 4)
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+														if($paypal && empty($paypal["__error"]) && /* It's NOT associated with a credit card; they used PayPal. */ strlen($paypal["ACCT"]) !== 4)
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
 														else if($paypal && !empty($paypal["__error"]) && /* Subscription Profile? */ $paypal["L_ERRORCODE0"] === "11592")
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal®</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
 														else // Else there was no Recurring Profile on record.
 														$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
@@ -510,7 +510,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "M", "rp" (Regular Period) > 12, and "rr" is not "BN" (Buy Now).', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["rr"] !== "BN" && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"] && !in_array($attr["rp"]."-".$attr["rt"], array("1-D", "1-W", "2-W", "1-M", "3-M", "6-M", "1-Y"), TRUE)) // We allow daily here in case Payflow begins to support this in the future.
-											$response = array("response" => _x('Invalid Payflow® form configuration. Invalid "rt, rp, rr" attributes. Payflow® supports a specific set of recurring intervals. Pro Forms can be configured to charge: weekly, bi-weekly, monthly, quarterly, semi-yearly or yearly. Any other combination results in this error. This is a Payflow® limitation.', "s2member-admin", "s2member"), "error" => true);
+											$response = array("response" => _x('Invalid Payflow form configuration. Invalid "rt, rp, rr" attributes. Payflow supports a specific set of recurring intervals. Pro Forms can be configured to charge: weekly, bi-weekly, monthly, quarterly, semi-yearly or yearly. Any other combination results in this error. This is a Payflow limitation.', "s2member-admin", "s2member"), "error" => true);
 
 										else if($attr["rt"] === "Y" && $attr["rp"] > 5 && $attr["rr"] !== "BN")
 											$response = array("response" => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "Y", "rp" (Regular Period) > 5, and "rr" is not "BN" (Buy Now).', "s2member-admin", "s2member"), "error" => true);

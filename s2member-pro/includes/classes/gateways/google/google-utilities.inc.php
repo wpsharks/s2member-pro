@@ -1,14 +1,14 @@
 <?php
 /**
-* Google® utilities.
+* Google utilities.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -36,7 +36,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 	{
 		/**
-		* Google® utilities.
+		* Google utilities.
 		*
 		* @package s2Member\Google
 		* @since 1.5
@@ -64,7 +64,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				* @package s2Member\Google
 				* @since 1.5
 				*
-				* @return array Request Authorization headers for Google® API communication.
+				* @return array Request Authorization headers for Google API communication.
 				*/
 				public static function google_api_headers ()
 					{
@@ -75,13 +75,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 						return $req; // Return array with headers.
 					}
 				/**
-				* Converts a "Period Term" into a Google® periodicity for XML subscription attribute.
+				* Converts a "Period Term" into a Google periodicity for XML subscription attribute.
 				*
 				* @package s2Member\Google
 				* @since 1.5
 				*
 				* @param str $period_term A "Period Term" combination.
-				* @return str The Google® Checkout equivalent for ``$period_term``.
+				* @return str The Google Checkout equivalent for ``$period_term``.
 				* 	One of `DAILY`, `WEEKLY`, `SEMI_MONTHLY`, `MONTHLY`, `EVERY_TWO_MONTHS`, `QUARTERLY`, or `YEARLY`.
 				* 	Defaults to `MONTHLY` if ``$period_term`` is not configured properly.
 				*/
@@ -114,12 +114,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 						return "MONTHLY";
 					}
 				/**
-				* Parses s2Vars from Google® IPN Notifications.
+				* Parses s2Vars from Google IPN Notifications.
 				*
 				* @package s2Member\Google
 				* @since 1.5
 				*
-				* @param str $xml XML data section returned by Google® for s2Vars.
+				* @param str $xml XML data section returned by Google for s2Vars.
 				* @return array|bool An array of s2Vars, else false on failure.
 				*/
 				public static function google_parse_s2vars ($xml = FALSE)
@@ -135,7 +135,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 							return false;
 					}
 				/**
-				* Get ``$_POST`` or ``$_REQUEST`` vars from Google®.
+				* Get ``$_POST`` or ``$_REQUEST`` vars from Google.
 				*
 				* @package s2Member\Google
 				* @since 1.5

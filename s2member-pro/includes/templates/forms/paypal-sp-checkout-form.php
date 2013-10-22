@@ -80,7 +80,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div style="clear:both;"></div>
 	</div>
 
-	<!-- Billing Method (Customers can use a Credit/Debit card, or PayPal® w/Express Checkout). -->
+	<!-- Billing Method (Customers can use a Credit/Debit card, or PayPal w/Express Checkout). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-billing-method-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-billing-method-section s2member-pro-paypal-sp-checkout-form-billing-method-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-billing-method-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-billing-method-section-title s2member-pro-paypal-sp-checkout-form-billing-method-section-title">
 			<?php echo _x ("Billing Method", "s2member-front", "s2member"); ?>
@@ -111,7 +111,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_sp_checkout[card_verification]" id="s2member-pro-paypal-sp-checkout-card-verification" class="s2member-pro-paypal-card-verification s2member-pro-paypal-sp-checkout-card-verification" value="%%card_verification_value%%" tabindex="130" />
 			</label>
 		</div>
-		<!-- This is displayed only when Maestro®/Solo® cards are selected as the Payment Method. -->
+		<!-- This is displayed only when Maestro/Solo cards are selected as the Payment Method. -->
 		<div id="s2member-pro-paypal-sp-checkout-form-card-start-date-issue-number-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-card-start-date-issue-number-div s2member-pro-paypal-sp-checkout-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-paypal-sp-checkout-card-start-date-issue-number" id="s2member-pro-paypal-sp-checkout-form-card-start-date-issue-number-label" class="s2member-pro-paypal-form-card-start-date-issue-number-label s2member-pro-paypal-sp-checkout-form-card-start-date-issue-number-label">
 				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
@@ -121,7 +121,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div style="clear:both;"></div>
 	</div>
 
-	<!-- Billing Address (hidden dynamically when/if PayPal® is selected as the Payment Method). -->
+	<!-- Billing Address (hidden dynamically when/if PayPal is selected as the Payment Method). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-billing-address-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-billing-address-section s2member-pro-paypal-sp-checkout-form-billing-address-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-billing-address-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-billing-address-section-title s2member-pro-paypal-sp-checkout-form-billing-address-section-title">
 			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>

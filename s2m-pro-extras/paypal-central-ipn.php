@@ -1,9 +1,9 @@
 <?php /* ---- Central IPN Processing: ---------------------------------------------------------------------------------------
 
-With PayPal® Pro integration you absolutely MUST set an IPN URL inside your PayPal® account.
-PayPal® Pro integration does NOT allow the IPN location to be overridden on a per-transaction basis.
+With PayPal Pro integration you absolutely MUST set an IPN URL inside your PayPal account.
+PayPal Pro integration does NOT allow the IPN location to be overridden on a per-transaction basis.
 
-So, if you're using a single PayPal® Pro account for multiple cross-domain installations,
+So, if you're using a single PayPal Pro account for multiple cross-domain installations,
 and you need to receive IPN notifications for each of your domains; you'll want to create
 a central IPN processing script that scans variables in each IPN response,
 forking itself out to each of your individual domains.
@@ -18,7 +18,7 @@ These variables can be used to test incoming IPNs, and fork to the proper instal
 
 1. Save this PHP file to your website.
 
-2. Set the IPN URL (in your PayPal® account) to the location of this script on your server.
+2. Set the IPN URL (in your PayPal account) to the location of this script on your server.
 	This central processor forks IPNs out to the proper installation domain.
 
 3. Configuration (below).
@@ -50,7 +50,7 @@ $_p = trim_deep /* Now trim this array deeply. */($_p);
 
 if ((preg_match("/^(.+?)(?:\||$)/i", (string)@$_p["custom"], $_m) || preg_match("/~(.+?)~/i", (string)@$_p["rp_invoice_id"], $_m)) && !empty($config[$_m[1]]))
 	{
-		$_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal® IPN server here. */ "216.113.188.202";
+		$_paypal_ipn_server_ip = $_ip = /* Forge IP address to match the PayPal IPN server here. */ "216.113.188.202";
 		// See list of IPs here: <https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/howto_api_golivechecklist>.
 
 		echo (trim(curlpsr(($_url = $config[$_m[1]]), http_build_query($_p, null, "&"), 20, 20, array

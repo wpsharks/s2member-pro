@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -54,7 +54,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 				* @param array $attr An array of Attributes.
 				* @param str $content Content inside the Shortcode.
 				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting ccBill® Button Code, HTML markup.
+				* @return str The resulting ccBill Button Code, HTML markup.
 				*/
 				public static function sc_ccbill_button($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
@@ -70,10 +70,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 						$attr["rr"] = /* Lifetime Subscriptions do NOT recur. Only after running shortcode_atts(). */ ($attr["rt"] === "L") ? "0" : $attr["rr"];
 						$attr["rr"] = /* Independent Ccaps do NOT recur. Only after running shortcode_atts(). */ ($attr["level"] === "*") ? "0" : $attr["rr"];
 
-						if /* With ccBill®, a Recurring Subscription MUST have an Initial/Trial Period. */($attr["rr"] && ($attr["ta"] <= 0 || $attr["tp"] <= 0 || !$attr["tt"]))
+						if /* With ccBill, a Recurring Subscription MUST have an Initial/Trial Period. */($attr["rr"] && ($attr["ta"] <= 0 || $attr["tp"] <= 0 || !$attr["tt"]))
 							eval /* In this case, just use the same as Regular values. */('$attr["ta"] = $attr["ra"]; $attr["tp"] = $attr["rp"]; $attr["tt"] = $attr["rt"];');
 
-						if /* ccBill® Modifications/Cancellations. */($attr["modify"] || $attr["cancel"])
+						if /* ccBill Modifications/Cancellations. */($attr["modify"] || $attr["cancel"])
 							{
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images/ccbill-edit-button.png";
 

@@ -6,9 +6,9 @@
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
 * (coded in the USA)
 *
-* This WordPress® plugin (s2Member Pro) is comprised of two parts:
+* This WordPress plugin (s2Member Pro) is comprised of two parts:
 *
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress®.
+* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
 * 	You should have received a copy of the GNU General Public License,
 * 	along with this software. In the main directory, see: /licensing/
 * 	If not, see: {@link http://www.gnu.org/licenses/}.
@@ -54,7 +54,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 				* @param array $attr An array of Attributes.
 				* @param str $content Content inside the Shortcode.
 				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting AliPay® Button Code, HTML markup.
+				* @return str The resulting AliPay Button Code, HTML markup.
 				*/
 				public static function sc_alipay_button ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
