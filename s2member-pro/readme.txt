@@ -67,8 +67,6 @@ You can learn more about s2Member® Pro at [s2Member.com](http://www.s2member.co
 
 == Frequently Asked Questions ==
 
-**NOTE:** Please do NOT use the WordPress® forums to seek company support. Support for s2Member® is handled at [s2Member.com](https://www.s2member.com/contact/?s2-ssl=yes).
-
 = Please check the following s2Member® resources: =
 * s2Member® FAQs: http://www.s2member.com/faqs/
 * Knowledge Base: http://www.s2member.com/kb/
