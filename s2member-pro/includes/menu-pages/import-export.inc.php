@@ -74,7 +74,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 								echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form">' . "\n";
 								echo '<input type="hidden" name="ws_plugin__s2member_pro_import_users" id="ws-plugin--s2member-pro-import-users" value="' . esc_attr (wp_create_nonce ("ws-plugin--s2member-pro-import-users")) . '" />' . "\n";
 
-								echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" class="button-primary" value="Import Now" /><br /><br />' . "\n";
+								echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />' . "\n";
 								echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">' . format_to_edit (trim (stripslashes ($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))) . '</textarea><br />' . "\n";
 
 								echo 'One User/Member per line please. Here is a quick example:<br />' . "\n";
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 								echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form">' . "\n";
 								echo '<input type="hidden" name="ws_plugin__s2member_pro_import_users" id="ws-plugin--s2member-pro-import-users" value="' . esc_attr (wp_create_nonce ("ws-plugin--s2member-pro-import-users")) . '" />' . "\n";
 
-								echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" class="button-primary" value="Import Now" /><br /><br />' . "\n";
+								echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />' . "\n";
 								echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">' . format_to_edit (trim (stripslashes ($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))) . '</textarea><br />' . "\n";
 
 								echo 'One User/Member per line please. Here is a quick example:<br />' . "\n";
@@ -222,7 +222,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 						echo '<td>' . "\n";
 						echo 'You have a total of ' . number_format (c_ws_plugin__s2member_utils_users::users_in_database ()) . ' User/Member rows in the database' . ((is_multisite ()) ? ' for this site' : '') . '.<br />' . "\n";
 						echo 'You can export up to 1000 database rows in each file; starting from a particular row that you specify.<br />' . "\n";
-						echo 'Export, starting with row#: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_start" id="ws-plugin--s2member-pro-export-users-start" style="width:100px;" value="1" /> <input type="submit" class="button-primary" value="Export Now" />' . "\n";
+						echo 'Export, starting with row#: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_start" id="ws-plugin--s2member-pro-export-users-start" style="width:100px;" value="1" /> <input type="submit" value="Export Now" style="font-size:120%; font-weight:normal;" />' . "\n";
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
@@ -257,7 +257,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 						echo '<td>' . "\n";
 						echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_ops_form" id="ws-plugin--s2member-pro-import-ops-form">' . "\n";
 						echo '<input type="hidden" name="ws_plugin__s2member_pro_import_ops" id="ws-plugin--s2member-pro-import-ops" value="' . esc_attr (wp_create_nonce ("ws-plugin--s2member-pro-import-ops")) . '" />' . "\n";
-						echo '<input type="file" name="ws_plugin__s2member_pro_import_ops_file" id="ws-plugin--s2member-pro-import-ops-file" />&nbsp;&nbsp;&nbsp;<input type="submit" class="button-primary" value="Import Now" />' . "\n";
+						echo '<input type="file" name="ws_plugin__s2member_pro_import_ops_file" id="ws-plugin--s2member-pro-import-ops-file" />&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
 

@@ -281,7 +281,9 @@ jQuery(document).ready (function($)
 								$(optionsSection + ' select#s2member-pro-authnet-sp-checkout-options').change
 									(function() // Handle option changes.
 									 {
-										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+										$(submissionNonceVerification).val ('option');
+										 $spForm.attr('action', $spForm.attr('action').replace(/#.*$/, '')+'#'+$spForm[0].id);
+										 $spForm.submit ();
 									 });
 							}
 					}) ();
@@ -531,7 +533,9 @@ jQuery(document).ready (function($)
 								$(optionsSection + ' select#s2member-pro-authnet-checkout-options').change
 									(function() // Handle option changes.
 									 {
-										$(submissionNonceVerification).val ('option'), $coForm.submit ();
+										$(submissionNonceVerification).val ('option');
+										 $coForm.attr('action', $coForm.attr('action').replace(/#.*$/, '')+'#'+$coForm[0].id);
+										 $coForm.submit ();
 									 });
 							}
 					}) ();
