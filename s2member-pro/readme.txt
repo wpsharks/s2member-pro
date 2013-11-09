@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 131026
-Stable tag: 131026
+Version: 131109
+Stable tag: 131109
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -16,7 +16,7 @@ Authorize.Net® Compatible: yes
 Google® Checkout Compatible: yes
 ClickBank® Compatible: yes
 
-Tested up to: 3.7
+Tested up to: 3.7.1
 Requires at least: 3.3
 Requires: s2Member® Framework
 
@@ -80,10 +80,21 @@ Please see [this FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
 
 == Upgrade Notice ==
 
-= v131026 =
+= v131109 =
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v131109 =
+* (s2Member/s2Member Pro) **UI Makeover** This release of s2Member upgrades all administrative UI panels.
+* (s2Member/s2Member Pro) **Compatibility** Updating s2Member for compatibility with the coming release of both Quick Cache LITE and Quick Cache Pro for WordPress. These are not available publicly yet, but they are expected for release very soon. This release of s2Member is compatible with both the current and future releases of Quick Cache for WordPress.
+* (s2Member/s2Member Pro) **Improvement (Speed)** Lazy load s2Member's JS file at all times. Done, this release will speed your site up for first-time visitors.
+* (s2Member/s2Member Pro) **Improvement (Speed)** Lazy load s2Member's CSS file at all times. Done, this release will speed your site up for first-time visitors.
+* (s2Member/s2Member Pro) **Improvement (Speed)** Load s2Member's JS library in the footer if at all possible (instead of the `<head>`). Done, this will improve the speed of your site for first-time visitors.
+* (s2Member/s2Member Pro) **Debug Notices** Resolved all of the most obvious PHP notices when running s2Member in debug mode. This improvement impacts developers only.
+* (s2Member/s2Member Pro) **Password Strength Meter** Removed dependence on `password-strength-meter` (a JavaScript library) from the WordPress core. This was causing some SSL issues for site owners. In the past it was necessary for s2Member to load an additional JS resource for registration/checkout and Pro Forms (`password-strength-meter`). Starting with this release, s2Member handles password strength meters all by itself, thereby avoiding the additional overhead; and also the issues associated with this core functionality over SSL pages. Fixed in this release.
+* (s2Member/s2Member Pro) **Mobile Devices** The s2Stream shortcode (for protected audio/video files) was updated to better support mobile device playback. See also: <http://www.s2member.com/kb/jwplayer-s2stream-shortcodes/#s2stream-mobile-devices>.
+* (s2Member Pro) **Checkout Options** Improving support for multiple Checkout Options. When a customer changes to a new Checkout Option by selecting an option from the drop-down menu in a Pro Form; this action will now result in a hash jump back to the location of the Pro Form on any given page; instead of to the top of the page, which could potentially result in a confusing experience on some sites (depending on the implementation). Aside: for developers, it's helpful to know that all s2Member Pro Forms now have a hashable ID `#s2p-form` that is cleaner than the longer (product-specific) IDs associated with Pro Forms; e.g. `s2member-pro-paypal-form...`, etc. If you need to hash a Pro Form, please use the more general `#s2p-form` on the end of a URL. This will take a customer directly to that Pro Form in the context of any given page.
 
 = v131026 =
 * (s2Member) **WordPress v3.7 Compatibility** s2Member further updated to support subtle changes in the WordPress v3.7 `wp-login.php` file. This release corrects a minor issue w/ patches applied by s2Member when running in a Multisite Network environment. If you are running s2Member on a Multisite Network, please be sure to run the automatic patcher provided in your Dashboard against WordPress v3.7 after updating to this release of s2Member.
