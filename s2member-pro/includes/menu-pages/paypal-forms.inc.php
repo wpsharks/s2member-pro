@@ -735,11 +735,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<tr>' . "\n";
 
 						echo '<td>' . "\n";
-						echo '<pre>'."\n";
+						echo '<pre class="code">';
+						echo '<code>';
 						echo '[s2Member-Pro-PayPal-Form]'."\n";
                   echo "\t".'[s2Member-Pro-PayPal-Form /]'."\n";
                   echo "\t".'[s2Member-Pro-PayPal-Form /]'."\n";
-						echo '[/s2Member-Pro-PayPal-Form]'."\n";
+						echo '[/s2Member-Pro-PayPal-Form]';
+						echo '</code>';
 						echo '</pre>'."\n";
 						echo '</td>' . "\n";
 
@@ -757,12 +759,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<tr>' . "\n";
 
 						echo '<td>' . "\n";
-						echo '<pre>'."\n";
+						echo '<pre class="code">';
+						echo '<code>';
 						echo '[s2Member-Pro-PayPal-Form rp="1" rt="M" rr="1" accept_coupons="1"]'."\n";
                   echo "\t".'[s2Member-Pro-PayPal-Form level="1" desc="Option 1 ($10.00)" ra="10.00" /]'."\n";
                   echo "\t".'[s2Member-Pro-PayPal-Form level="2" desc="Option 2 ($20.00)" ra="20.00" /]'."\n";
 						echo "\t".'[s2Member-Pro-PayPal-Form level="3" desc="Option 3 ($30.00)" ra="30.00" /]'."\n";
-						echo '[/s2Member-Pro-PayPal-Form]'."\n";
+						echo '[/s2Member-Pro-PayPal-Form]';
+						echo '</code>';
 						echo '</pre>'."\n";
 						echo '</td>' . "\n";
 
@@ -787,14 +791,18 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<td>' . "\n";
 
 						echo 'This example would pre-select option 2.'."\n";
-						echo '<pre>'."\n";
-						echo 'http://www.example.com/my-checkout-form/?s2p-option=2'."\n";
+						echo '<pre class="code">';
+						echo '<code>';
+						echo 'http://www.example.com/my-checkout-form/?s2p-option=2';
+						echo '</code>';
 						echo '</pre>'."\n";
 
 						echo 'The absolute default Checkout Option is always the first one (Checkout Option 1).<br />'."\n";
 						echo 'This would pre-select option 1 (but this is NOT necessary, because it\'s the default already).'."\n";
-						echo '<pre>'."\n";
-						echo 'http://www.example.com/my-checkout-form/?s2p-option=1'."\n";
+						echo '<pre class="code">';
+						echo '<code>';
+						echo 'http://www.example.com/my-checkout-form/?s2p-option=1';
+						echo '</code>';
 						echo '</pre>'."\n";
 						echo '</td>' . "\n";
 

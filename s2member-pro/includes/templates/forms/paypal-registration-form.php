@@ -3,6 +3,8 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
 ?>
 
+<div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
+
 <form id="s2member-pro-paypal-registration-form" class="s2member-pro-paypal-form s2member-pro-paypal-registration-form" method="post" action="%%action%%">
 
 	<!-- Response Section (this is auto-filled after form submission). -->

@@ -286,7 +286,7 @@ jQuery(document).ready (function($)
 									(function() // Handle option changes.
 									 {
 										$(submissionNonceVerification).val ('option');
-										 $spForm.attr('action', $spForm.attr('action').replace(/#.*$/, '')+'#'+$spForm[0].id);
+										 $spForm.attr('action', $spForm.attr('action').replace(/#.*$/, '')+'#s2p-form');
 										 $spForm.submit ();
 									 });
 							}
@@ -578,7 +578,7 @@ jQuery(document).ready (function($)
 									(function() // Handle option changes.
 									 {
 										$(submissionNonceVerification).val ('option');
-										 $coForm.attr('action', $coForm.attr('action').replace(/#.*$/, '')+'#'+$coForm[0].id);
+										 $coForm.attr('action', $coForm.attr('action').replace(/#.*$/, '')+'#s2p-form');
 										 $coForm.submit ();
 									 });
 							}
