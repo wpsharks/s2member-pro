@@ -192,8 +192,9 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div input[
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div label
 {
-	display : inline;
-	cursor  : pointer;
+	display     : inline;
+	cursor      : pointer;
+	font-weight : normal;
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-month,
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-year
