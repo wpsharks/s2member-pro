@@ -32,33 +32,33 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-registration-form-first-name-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-first-name-div s2member-pro-paypal-registration-form-first-name-div">
 			<label for="s2member-pro-paypal-registration-first-name" id="s2member-pro-paypal-registration-form-first-name-label" class="s2member-pro-paypal-form-first-name-label s2member-pro-paypal-registration-form-first-name-label">
 				<span><?php echo _x ("First Name", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[first_name]" id="s2member-pro-paypal-registration-first-name" class="s2member-pro-paypal-first-name s2member-pro-paypal-registration-first-name" value="%%first_name_value%%" tabindex="10" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[first_name]" id="s2member-pro-paypal-registration-first-name" class="s2member-pro-paypal-first-name s2member-pro-paypal-registration-first-name form-control" value="%%first_name_value%%" tabindex="10" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-registration-form-last-name-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-last-name-div s2member-pro-paypal-registration-form-last-name-div">
 			<label for="s2member-pro-paypal-registration-last-name" id="s2member-pro-paypal-registration-form-last-name-label" class="s2member-pro-paypal-form-last-name-label s2member-pro-paypal-registration-form-last-name-label">
 				<span><?php echo _x ("Last Name", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[last_name]" id="s2member-pro-paypal-registration-last-name" class="s2member-pro-paypal-last-name s2member-pro-paypal-registration-last-name" value="%%last_name_value%%" tabindex="20" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[last_name]" id="s2member-pro-paypal-registration-last-name" class="s2member-pro-paypal-last-name s2member-pro-paypal-registration-last-name form-control" value="%%last_name_value%%" tabindex="20" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-registration-form-email-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-email-div s2member-pro-paypal-registration-form-email-div">
 			<label for="s2member-pro-paypal-registration-email" id="s2member-pro-paypal-registration-form-email-label" class="s2member-pro-paypal-form-email-label s2member-pro-paypal-registration-form-email-label">
 				<span><?php echo _x ("Email Address", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" data-expected="email" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[email]" id="s2member-pro-paypal-registration-email" class="s2member-pro-paypal-email s2member-pro-paypal-registration-email" value="%%email_value%%" tabindex="30" />
+				<input type="email" aria-required="true" data-expected="email" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[email]" id="s2member-pro-paypal-registration-email" class="s2member-pro-paypal-email s2member-pro-paypal-registration-email form-control" value="%%email_value%%" tabindex="30" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-registration-form-username-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-username-div s2member-pro-paypal-registration-form-username-div">
 			<label for="s2member-pro-paypal-registration-username" id="s2member-pro-paypal-registration-form-username-label" class="s2member-pro-paypal-form-username-label s2member-pro-paypal-registration-form-username-label">
 				<span><?php echo _x ("Username (lowercase letters and/or numbers)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_paypal_registration[username]" id="s2member-pro-paypal-registration-username" class="s2member-pro-paypal-username s2member-pro-paypal-registration-username" value="%%username_value%%" tabindex="40" />
+				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_paypal_registration[username]" id="s2member-pro-paypal-registration-username" class="s2member-pro-paypal-username s2member-pro-paypal-registration-username form-control" value="%%username_value%%" tabindex="40" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-registration-form-password-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-password-div s2member-pro-paypal-registration-form-password-div">
 			<label for="s2member-pro-paypal-registration-password1" id="s2member-pro-paypal-registration-form-password-label" class="s2member-pro-paypal-form-password-label s2member-pro-paypal-registration-form-password-label">
 				<span><?php echo _x ("Password (type this twice please)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="password" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[password1]" id="s2member-pro-paypal-registration-password1" class="s2member-pro-paypal-password1 s2member-pro-paypal-registration-password1" value="%%password1_value%%" tabindex="50" />
+				<input type="password" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[password1]" id="s2member-pro-paypal-registration-password1" class="s2member-pro-paypal-password1 s2member-pro-paypal-registration-password1 form-control" value="%%password1_value%%" tabindex="50" />
 			</label>
-			<input type="password" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[password2]" id="s2member-pro-paypal-registration-password2" class="s2member-pro-paypal-password2 s2member-pro-paypal-registration-password2" value="%%password2_value%%" tabindex="60" />
+			<input type="password" maxlength="100" autocomplete="off" name="s2member_pro_paypal_registration[password2]" id="s2member-pro-paypal-registration-password2" class="s2member-pro-paypal-password2 s2member-pro-paypal-registration-password2 form-control" value="%%password2_value%%" tabindex="60" />
 			<div id="s2member-pro-paypal-registration-form-password-strength" class="ws-plugin--s2member-password-strength s2member-pro-paypal-form-password-strength s2member-pro-paypal-registration-form-password-strength"><em><?php echo _x ("password strength indicator", "s2member-front", "s2member"); ?></em></div>
 		</div>
 		<div style="clear:both;"></div>
@@ -78,7 +78,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		%%opt_in%% <!-- s2Member will fill this when/if there are list servers integrated, and the Opt-In Box is turned on. -->
 		<div id="s2member-pro-paypal-registration-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-registration-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-paypal-registration-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-registration-submit" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="400" />
+			<input type="submit" id="s2member-pro-paypal-registration-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-registration-submit btn btn-primary" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="400" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>

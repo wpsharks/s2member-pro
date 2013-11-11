@@ -119,12 +119,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 								echo '<div class="ws-plugin--s2member-pro-login-widget-username">'."\n";
 								echo '<label for="ws-plugin--s2member-pro-login-widget-username">'._x("Username", "s2member-front", "s2member").':</label><br />'."\n";
-								echo '<input type="text" name="log" id="ws-plugin--s2member-pro-login-widget-username" title="Username" />'."\n";
+								echo '<input type="text" name="log" id="ws-plugin--s2member-pro-login-widget-username" class="form-control" title="Username" />'."\n";
 								echo '</div>'."\n";
 
 								echo '<div class="ws-plugin--s2member-pro-login-widget-password">'."\n";
 								echo '<label for="ws-plugin--s2member-pro-login-widget-password">'._x("Password", "s2member-front", "s2member").':</label><br />'."\n";
-								echo '<input type="password" name="pwd" id="ws-plugin--s2member-pro-login-widget-password" title="Password" />'."\n";
+								echo '<input type="password" name="pwd" id="ws-plugin--s2member-pro-login-widget-password" class="form-control" title="Password" />'."\n";
 								echo '</div>'."\n";
 
 								echo '<div class="ws-plugin--s2member-pro-login-widget-lost-password">'."\n";
@@ -139,7 +139,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 								echo '<div class="ws-plugin--s2member-pro-login-widget-submit">'."\n";
 								echo ($redirect_to) ? '<input type="hidden" name="redirect_to" value="'.esc_attr($redirect_to).'" />'."\n" : '';
-								echo '<input type="submit" value="'.esc_attr(_x("Log Me In", "s2member-front", "s2member")).'" />'."\n";
+								echo '<input type="submit" class="btn btn-primary" value="'.esc_attr(_x("Log Me In", "s2member-front", "s2member")).'" />'."\n";
 								echo '</div>'."\n";
 
 								echo '</form>'."\n";

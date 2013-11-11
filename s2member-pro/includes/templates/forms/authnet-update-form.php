@@ -34,16 +34,16 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-update-form-card-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-number-div s2member-pro-authnet-update-form-card-number-div">
 			<label for="s2member-pro-authnet-update-card-number" id="s2member-pro-authnet-update-form-card-number-label" class="s2member-pro-authnet-form-card-number-label s2member-pro-authnet-update-form-card-number-label">
 				<span><?php echo _x ("Card Number (no dashes or spaces)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_number]" id="s2member-pro-authnet-update-card-number" class="s2member-pro-authnet-card-number s2member-pro-authnet-update-card-number" value="%%card_number_value%%" tabindex="20" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_number]" id="s2member-pro-authnet-update-card-number" class="s2member-pro-authnet-card-number s2member-pro-authnet-update-card-number form-control" value="%%card_number_value%%" tabindex="20" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-card-expiration-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-expiration-div s2member-pro-authnet-update-form-card-expiration-div">
 			<label for="s2member-pro-authnet-update-card-expiration" id="s2member-pro-authnet-update-form-card-expiration-label" class="s2member-pro-authnet-form-card-expiration-label s2member-pro-authnet-update-form-card-expiration-label">
 				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_update[card_expiration_month]" id="s2member-pro-authnet-update-card-expiration-month" class="s2member-pro-authnet-card-expiration-month s2member-pro-authnet-update-card-expiration-month" tabindex="30">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_update[card_expiration_month]" id="s2member-pro-authnet-update-card-expiration-month" class="s2member-pro-authnet-card-expiration-month s2member-pro-authnet-update-card-expiration-month form-control" tabindex="30">
 					%%card_expiration_month_options%%
 				</select>
-				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_update[card_expiration_year]" id="s2member-pro-authnet-update-card-expiration-year" class="s2member-pro-authnet-card-expiration-year s2member-pro-authnet-update-card-expiration-year" tabindex="31">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_authnet_update[card_expiration_year]" id="s2member-pro-authnet-update-card-expiration-year" class="s2member-pro-authnet-card-expiration-year s2member-pro-authnet-update-card-expiration-year form-control" tabindex="31">
 					%%card_expiration_year_options%%
 				</select>
 			</label>
@@ -51,14 +51,14 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-update-form-card-verification-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-verification-div s2member-pro-authnet-update-form-card-verification-div">
 			<label for="s2member-pro-authnet-update-card-verification" id="s2member-pro-authnet-update-form-card-verification-label" class="s2member-pro-authnet-form-card-verification-label s2member-pro-authnet-update-form-card-verification-label">
 				<span><?php echo _x ("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_verification]" id="s2member-pro-authnet-update-card-verification" class="s2member-pro-authnet-card-verification s2member-pro-authnet-update-card-verification" value="%%card_verification_value%%" tabindex="40" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_verification]" id="s2member-pro-authnet-update-card-verification" class="s2member-pro-authnet-card-verification s2member-pro-authnet-update-card-verification form-control" value="%%card_verification_value%%" tabindex="40" />
 			</label>
 		</div>
 		<!-- This is displayed only when Maestro/Solo cards are selected as the Payment Method. -->
 		<div id="s2member-pro-authnet-update-form-card-start-date-issue-number-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-start-date-issue-number-div s2member-pro-authnet-update-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-authnet-update-card-start-date-issue-number" id="s2member-pro-authnet-update-form-card-start-date-issue-number-label" class="s2member-pro-authnet-form-card-start-date-issue-number-label s2member-pro-authnet-update-form-card-start-date-issue-number-label">
 				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_start_date_issue_number]" id="s2member-pro-authnet-update-card-start-date-issue-number" class="s2member-pro-authnet-card-start-date-issue-number s2member-pro-authnet-update-card-start-date-issue-number" value="%%card_start_date_issue_number_value%%" tabindex="50" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_authnet_update[card_start_date_issue_number]" id="s2member-pro-authnet-update-card-start-date-issue-number" class="s2member-pro-authnet-card-start-date-issue-number s2member-pro-authnet-update-card-start-date-issue-number form-control" value="%%card_start_date_issue_number_value%%" tabindex="50" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
@@ -72,25 +72,25 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-update-form-street-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-street-div s2member-pro-authnet-update-form-street-div">
 			<label for="s2member-pro-authnet-update-street" id="s2member-pro-authnet-update-form-street-label" class="s2member-pro-authnet-form-street-label s2member-pro-authnet-update-form-street-label">
 				<span><?php echo _x ("Street Address", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_authnet_update[street]" id="s2member-pro-authnet-update-street" class="s2member-pro-authnet-street s2member-pro-authnet-update-street" value="%%street_value%%" tabindex="100" />
+				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_authnet_update[street]" id="s2member-pro-authnet-update-street" class="s2member-pro-authnet-street s2member-pro-authnet-update-street form-control" value="%%street_value%%" tabindex="100" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-city-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-city-div s2member-pro-authnet-update-form-city-div">
 			<label for="s2member-pro-authnet-update-city" id="s2member-pro-authnet-update-form-city-label" class="s2member-pro-authnet-form-city-label s2member-pro-authnet-update-form-city-label">
 				<span><?php echo _x ("City / Town", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="40" autocomplete="off" name="s2member_pro_authnet_update[city]" id="s2member-pro-authnet-update-city" class="s2member-pro-authnet-city s2member-pro-authnet-update-city" value="%%city_value%%" tabindex="110" />
+				<input type="text" aria-required="true" maxlength="40" autocomplete="off" name="s2member_pro_authnet_update[city]" id="s2member-pro-authnet-update-city" class="s2member-pro-authnet-city s2member-pro-authnet-update-city form-control" value="%%city_value%%" tabindex="110" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-state-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-state-div s2member-pro-authnet-update-form-state-div">
 			<label for="s2member-pro-authnet-update-state" id="s2member-pro-authnet-update-form-state-label" class="s2member-pro-authnet-form-state-label s2member-pro-authnet-update-form-state-label">
 				<span><?php echo _x ("State / Province", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="2" autocomplete="off" name="s2member_pro_authnet_update[state]" id="s2member-pro-authnet-update-state" class="s2member-pro-authnet-state s2member-pro-authnet-update-state" value="%%state_value%%" tabindex="120" />
+				<input type="text" aria-required="true" maxlength="2" autocomplete="off" name="s2member_pro_authnet_update[state]" id="s2member-pro-authnet-update-state" class="s2member-pro-authnet-state s2member-pro-authnet-update-state form-control" value="%%state_value%%" tabindex="120" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-country-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-country-div s2member-pro-authnet-update-form-country-div">
 			<label for="s2member-pro-authnet-update-country" id="s2member-pro-authnet-update-form-country-label" class="s2member-pro-authnet-form-country-label s2member-pro-authnet-update-form-country-label">
 				<span><?php echo _x ("Country", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" name="s2member_pro_authnet_update[country]" id="s2member-pro-authnet-update-country" class="s2member-pro-authnet-country s2member-pro-authnet-update-country" tabindex="130">
+				<select aria-required="true" name="s2member_pro_authnet_update[country]" id="s2member-pro-authnet-update-country" class="s2member-pro-authnet-country s2member-pro-authnet-update-country form-control" tabindex="130">
 					%%country_options%%
 				</select>
 			</label>
@@ -98,7 +98,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-update-form-zip-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-zip-div s2member-pro-authnet-update-form-zip-div">
 			<label for="s2member-pro-authnet-update-zip" id="s2member-pro-authnet-update-form-zip-label" class="s2member-pro-authnet-form-zip-label s2member-pro-authnet-update-form-zip-label">
 				<span><?php echo _x ("Postal / Zip Code", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_update[zip]" id="s2member-pro-authnet-update-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-update-zip" value="%%zip_value%%" tabindex="140" />
+				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_update[zip]" id="s2member-pro-authnet-update-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-update-zip form-control" value="%%zip_value%%" tabindex="140" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
@@ -114,7 +114,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-update-form-submit-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-submit-div s2member-pro-authnet-update-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-authnet-update-submit" class="s2member-pro-authnet-submit s2member-pro-authnet-update-submit" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="300" />
+			<input type="submit" id="s2member-pro-authnet-update-submit" class="s2member-pro-authnet-submit s2member-pro-authnet-update-submit btn btn-primary" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="300" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>

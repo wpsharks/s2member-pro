@@ -34,16 +34,16 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-update-form-card-number-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-number-div s2member-pro-paypal-update-form-card-number-div">
 			<label for="s2member-pro-paypal-update-card-number" id="s2member-pro-paypal-update-form-card-number-label" class="s2member-pro-paypal-form-card-number-label s2member-pro-paypal-update-form-card-number-label">
 				<span><?php echo _x ("Card Number (no dashes or spaces)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_number]" id="s2member-pro-paypal-update-card-number" class="s2member-pro-paypal-card-number s2member-pro-paypal-update-card-number" value="%%card_number_value%%" tabindex="20" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_number]" id="s2member-pro-paypal-update-card-number" class="s2member-pro-paypal-card-number s2member-pro-paypal-update-card-number form-control" value="%%card_number_value%%" tabindex="20" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-update-form-card-expiration-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-expiration-div s2member-pro-paypal-update-form-card-expiration-div">
 			<label for="s2member-pro-paypal-update-card-expiration" id="s2member-pro-paypal-update-form-card-expiration-label" class="s2member-pro-paypal-form-card-expiration-label s2member-pro-paypal-update-form-card-expiration-label">
 				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_month]" id="s2member-pro-paypal-update-card-expiration-month" class="s2member-pro-paypal-card-expiration-month s2member-pro-paypal-update-card-expiration-month" tabindex="30">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_month]" id="s2member-pro-paypal-update-card-expiration-month" class="s2member-pro-paypal-card-expiration-month s2member-pro-paypal-update-card-expiration-month form-control" tabindex="30">
 					%%card_expiration_month_options%%
 				</select>
-				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_year]" id="s2member-pro-paypal-update-card-expiration-year" class="s2member-pro-paypal-card-expiration-year s2member-pro-paypal-update-card-expiration-year" tabindex="31">
+				<select aria-required="true" autocomplete="off" name="s2member_pro_paypal_update[card_expiration_year]" id="s2member-pro-paypal-update-card-expiration-year" class="s2member-pro-paypal-card-expiration-year s2member-pro-paypal-update-card-expiration-year form-control" tabindex="31">
 					%%card_expiration_year_options%%
 				</select>
 			</label>
@@ -51,14 +51,14 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-update-form-card-verification-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-verification-div s2member-pro-paypal-update-form-card-verification-div">
 			<label for="s2member-pro-paypal-update-card-verification" id="s2member-pro-paypal-update-form-card-verification-label" class="s2member-pro-paypal-form-card-verification-label s2member-pro-paypal-update-form-card-verification-label">
 				<span><?php echo _x ("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_verification]" id="s2member-pro-paypal-update-card-verification" class="s2member-pro-paypal-card-verification s2member-pro-paypal-update-card-verification" value="%%card_verification_value%%" tabindex="40" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_verification]" id="s2member-pro-paypal-update-card-verification" class="s2member-pro-paypal-card-verification s2member-pro-paypal-update-card-verification form-control" value="%%card_verification_value%%" tabindex="40" />
 			</label>
 		</div>
 		<!-- This is displayed only when Maestro/Solo cards are selected as the Payment Method. -->
 		<div id="s2member-pro-paypal-update-form-card-start-date-issue-number-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-start-date-issue-number-div s2member-pro-paypal-update-form-card-start-date-issue-number-div">
 			<label for="s2member-pro-paypal-update-card-start-date-issue-number" id="s2member-pro-paypal-update-form-card-start-date-issue-number-label" class="s2member-pro-paypal-form-card-start-date-issue-number-label s2member-pro-paypal-update-form-card-start-date-issue-number-label">
 				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_start_date_issue_number]" id="s2member-pro-paypal-update-card-start-date-issue-number" class="s2member-pro-paypal-card-start-date-issue-number s2member-pro-paypal-update-card-start-date-issue-number" value="%%card_start_date_issue_number_value%%" tabindex="50" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_start_date_issue_number]" id="s2member-pro-paypal-update-card-start-date-issue-number" class="s2member-pro-paypal-card-start-date-issue-number s2member-pro-paypal-update-card-start-date-issue-number form-control" value="%%card_start_date_issue_number_value%%" tabindex="50" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
@@ -72,25 +72,25 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-update-form-street-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-street-div s2member-pro-paypal-update-form-street-div">
 			<label for="s2member-pro-paypal-update-street" id="s2member-pro-paypal-update-form-street-label" class="s2member-pro-paypal-form-street-label s2member-pro-paypal-update-form-street-label">
 				<span><?php echo _x ("Street Address", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[street]" id="s2member-pro-paypal-update-street" class="s2member-pro-paypal-street s2member-pro-paypal-update-street" value="%%street_value%%" tabindex="100" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[street]" id="s2member-pro-paypal-update-street" class="s2member-pro-paypal-street s2member-pro-paypal-update-street form-control" value="%%street_value%%" tabindex="100" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-update-form-city-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-city-div s2member-pro-paypal-update-form-city-div">
 			<label for="s2member-pro-paypal-update-city" id="s2member-pro-paypal-update-form-city-label" class="s2member-pro-paypal-form-city-label s2member-pro-paypal-update-form-city-label">
 				<span><?php echo _x ("City / Town", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[city]" id="s2member-pro-paypal-update-city" class="s2member-pro-paypal-city s2member-pro-paypal-update-city" value="%%city_value%%" tabindex="110" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[city]" id="s2member-pro-paypal-update-city" class="s2member-pro-paypal-city s2member-pro-paypal-update-city form-control" value="%%city_value%%" tabindex="110" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-update-form-state-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-state-div s2member-pro-paypal-update-form-state-div">
 			<label for="s2member-pro-paypal-update-state" id="s2member-pro-paypal-update-form-state-label" class="s2member-pro-paypal-form-state-label s2member-pro-paypal-update-form-state-label">
 				<span><?php echo _x ("State / Province", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[state]" id="s2member-pro-paypal-update-state" class="s2member-pro-paypal-state s2member-pro-paypal-update-state" value="%%state_value%%" tabindex="120" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[state]" id="s2member-pro-paypal-update-state" class="s2member-pro-paypal-state s2member-pro-paypal-update-state form-control" value="%%state_value%%" tabindex="120" />
 			</label>
 		</div>
 		<div id="s2member-pro-paypal-update-form-country-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-country-div s2member-pro-paypal-update-form-country-div">
 			<label for="s2member-pro-paypal-update-country" id="s2member-pro-paypal-update-form-country-label" class="s2member-pro-paypal-form-country-label s2member-pro-paypal-update-form-country-label">
 				<span><?php echo _x ("Country", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" name="s2member_pro_paypal_update[country]" id="s2member-pro-paypal-update-country" class="s2member-pro-paypal-country s2member-pro-paypal-update-country" tabindex="130">
+				<select aria-required="true" name="s2member_pro_paypal_update[country]" id="s2member-pro-paypal-update-country" class="s2member-pro-paypal-country s2member-pro-paypal-update-country form-control" tabindex="130">
 					%%country_options%%
 				</select>
 			</label>
@@ -98,7 +98,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-paypal-update-form-zip-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-zip-div s2member-pro-paypal-update-form-zip-div">
 			<label for="s2member-pro-paypal-update-zip" id="s2member-pro-paypal-update-form-zip-label" class="s2member-pro-paypal-form-zip-label s2member-pro-paypal-update-form-zip-label">
 				<span><?php echo _x ("Postal / Zip Code", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[zip]" id="s2member-pro-paypal-update-zip" class="s2member-pro-paypal-zip s2member-pro-paypal-update-zip" value="%%zip_value%%" tabindex="140" />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[zip]" id="s2member-pro-paypal-update-zip" class="s2member-pro-paypal-zip s2member-pro-paypal-update-zip form-control" value="%%zip_value%%" tabindex="140" />
 			</label>
 		</div>
 		<div style="clear:both;"></div>
@@ -114,7 +114,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-paypal-update-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-update-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-paypal-update-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-update-submit" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="300" />
+			<input type="submit" id="s2member-pro-paypal-update-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-update-submit btn btn-primary" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="300" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>

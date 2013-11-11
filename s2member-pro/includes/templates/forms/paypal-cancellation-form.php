@@ -33,7 +33,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-paypal-cancellation-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-cancellation-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-cancellation-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-paypal-cancellation-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-cancellation-submit" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="100" />
+			<input type="submit" id="s2member-pro-paypal-cancellation-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-cancellation-submit btn btn-warning" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="100" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>
