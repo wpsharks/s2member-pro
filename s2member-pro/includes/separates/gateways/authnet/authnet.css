@@ -180,11 +180,6 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select
 	width      : 100%;
 	box-sizing : border-box;
 }
-div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div input[type="button"],
-div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div input[type="submit"]
-{
-	font-weight : bold;
-}
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div input[type="checkbox"],
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div input[type="radio"]
 {

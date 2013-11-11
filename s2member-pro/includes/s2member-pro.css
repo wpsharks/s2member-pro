@@ -36,6 +36,7 @@ These are basic CSS rules. You can override any of these
 through the `/style.css` file for your WordPress theme.
 */
 div.ws-plugin--s2member-pro-login-widget > form input[type = "text"],
+div.ws-plugin--s2member-pro-login-widget > form input[type = "email"],
 div.ws-plugin--s2member-pro-login-widget > form input[type = "password"],
 div.ws-plugin--s2member-pro-login-widget > form input[type = "submit"],
 div.ws-plugin--s2member-pro-login-widget > form textarea,

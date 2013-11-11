@@ -196,11 +196,6 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select
 	width      : 100%;
 	box-sizing : border-box;
 }
-div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[type="button"],
-div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[type="submit"]
-{
-	font-weight : bold;
-}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[type="checkbox"],
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div input[type="radio"]
 {
