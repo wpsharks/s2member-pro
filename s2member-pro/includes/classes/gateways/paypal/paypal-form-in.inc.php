@@ -257,7 +257,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 															$custom_fields .= '<label for="s2member-pro-paypal-registration-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 															$custom_fields .= '<span'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? ' style="display:none;"' : '').'>'.$field["label"].(($field["required"] === "yes") ? ' *' : '').'</span></label>'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? '' : '<br />')."\n";
-															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_registration[custom_fields][", "s2member-pro-paypal-registration-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-registration-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, $_p["s2member_pro_paypal_registration"]["custom_fields"][$field_var], "registration");
+															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_registration[custom_fields][", "s2member-pro-paypal-registration-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-registration-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, @$_p["s2member_pro_paypal_registration"]["custom_fields"][$field_var], "registration");
 
 															$custom_fields .= '</div>'."\n";
 														}
@@ -293,7 +293,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-registration-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-registration-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_registration[custom_fields][opt_in]" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-registration-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || $_p["s2member_pro_paypal_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="300" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_registration[custom_fields][opt_in]" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-registration-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="300" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 
@@ -307,7 +307,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"]) ? '<input type="hidden" id="s2member-pro-paypal-registration-password-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_registration[attr]" id="s2member-pro-paypal-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
-								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -333,12 +333,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the registration section.
 								*/
-								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_registration"]["first_name"])), $code);
-								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_registration"]["last_name"])), $code);
-								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_registration"]["email"])), $code);
-								$code = preg_replace("/%%username_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_registration"]["username"])), $code);
-								$code = preg_replace("/%%password1_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_registration"]["password1"])), $code);
-								$code = preg_replace("/%%password2_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_registration"]["password2"])), $code);
+								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_registration"]["first_name"])), $code);
+								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_registration"]["last_name"])), $code);
+								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_registration"]["email"])), $code);
+								$code = preg_replace("/%%username_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_registration"]["username"])), $code);
+								$code = preg_replace("/%%password1_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_registration"]["password1"])), $code);
+								$code = preg_replace("/%%password2_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_registration"]["password2"])), $code);
 								/*
 								Fill in the custom fields section.
 								*/
@@ -385,19 +385,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_update"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_paypal_update"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
-									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_update"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.((@$_p["s2member_pro_paypal_update"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
 								unset($i, $year); // Housekeeping.
 
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_update"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_paypal_default_country", $country_default_by_currency, get_defined_vars());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
@@ -409,7 +409,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 
 										if /* Here we also check on the default pre-selected country; as determined above; based on currency. */($country_l && $country_v)
-											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_update"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
+											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.((@$_p["s2member_pro_paypal_update"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*
 								Build the reCaptcha box via JavaScript.
@@ -465,20 +465,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								Fill in the billing method section.
 								*/
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
-								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_number"])), $code);
-								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["card_number"])), $code);
+								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["card_expiration"])), $code);
 								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
 								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
-								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_verification"])), $code);
-								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["card_start_date_issue_number"])), $code);
+								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["card_verification"])), $code);
+								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["card_start_date_issue_number"])), $code);
 								/*
 								Fill in the billing address section.
 								*/
-								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["street"])), $code);
-								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["city"])), $code);
-								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["state"])), $code);
+								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["street"])), $code);
+								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["city"])), $code);
+								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["state"])), $code);
 								$code = preg_replace("/%%country_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($country_options), $code);
-								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_update"]["zip"])), $code);
+								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_update"]["zip"])), $code);
 								/*
 								Fill the captcha section.
 								*/
@@ -499,7 +499,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								Configure internal attributes.
 								*/
 								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:".$attr["ids"].":".$attr["exp"];
-								$attr["coupon"] = ($_p["s2member_pro_paypal_sp_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_sp_checkout"]["coupon"] : $attr["coupon"];
+								$attr["coupon"] = (@$_p["s2member_pro_paypal_sp_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_sp_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
 								*/
@@ -523,19 +523,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_paypal_sp_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
-									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.((@$_p["s2member_pro_paypal_sp_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
 								unset($i, $year); // Housekeeping.
 
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_sp_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_paypal_default_country", $country_default_by_currency, get_defined_vars());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
@@ -547,7 +547,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 
 										if($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
-											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_sp_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
+											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.((@$_p["s2member_pro_paypal_sp_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*
 								Build the reCaptcha box via JavaScript.
@@ -578,7 +578,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_sp_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || $_p["s2member_pro_paypal_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="400" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_sp_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="400" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 
@@ -629,27 +629,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the registration section.
 								*/
-								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_sp_checkout"]["first_name"])), $code);
-								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_sp_checkout"]["last_name"])), $code);
-								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["email"])), $code);
+								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_sp_checkout"]["first_name"])), $code);
+								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_sp_checkout"]["last_name"])), $code);
+								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["email"])), $code);
 								/*
 								Fill in the billing method section.
 								*/
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
-								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_number"])), $code);
-								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["card_number"])), $code);
+								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["card_expiration"])), $code);
 								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
 								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
-								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_verification"])), $code);
-								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["card_start_date_issue_number"])), $code);
+								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["card_verification"])), $code);
+								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["card_start_date_issue_number"])), $code);
 								/*
 								Fill in the billing address section.
 								*/
-								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["street"])), $code);
-								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["city"])), $code);
-								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["state"])), $code);
+								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["street"])), $code);
+								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["city"])), $code);
+								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["state"])), $code);
 								$code = preg_replace("/%%country_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($country_options), $code);
-								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_sp_checkout"]["zip"])), $code);
+								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_sp_checkout"]["zip"])), $code);
 								/*
 								Fill the captcha section.
 								*/
@@ -675,7 +675,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								*/
 								$attr["level_ccaps_eotper"] = ($attr["rr"] === "BN" && $attr["rt"] !== "L") ? $attr["level"].":".$attr["ccaps"].":".$attr["rp"]." ".$attr["rt"] : $attr["level"].":".$attr["ccaps"];
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
-								$attr["coupon"] = ($_p["s2member_pro_paypal_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_checkout"]["coupon"] : $attr["coupon"];
+								$attr["coupon"] = (@$_p["s2member_pro_paypal_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_checkout"]["coupon"] : $attr["coupon"];
 								/*
 								Obtain a possible response and/or validation error.
 								*/
@@ -699,19 +699,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.(($_p["s2member_pro_paypal_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_paypal_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
-									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.(($_p["s2member_pro_paypal_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
+									$card_expiration_year_options .= '<option value="'.esc_attr($year+$i).'"'.((@$_p["s2member_pro_paypal_checkout"]["card_expiration_year"] === (string)($year+$i)) ? ' selected="selected"' : '').'>'.esc_html($year+$i).'</option>';
 								unset($i, $year); // Housekeeping.
 
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
-								$country_default_by_currency = (!$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_paypal_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_paypal_default_country", $country_default_by_currency, get_defined_vars());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
@@ -723,7 +723,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										list($country_l, $country_v) = preg_split("/;/", $country, 2);
 
 										if /* Here we also check on the default pre-selected country; as determined above; based on currency. */($country_l && $country_v)
-											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.(($_p["s2member_pro_paypal_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
+											$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.((@$_p["s2member_pro_paypal_checkout"]["country"] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 									}
 								/*
 								Build all of the custom fields.
@@ -753,7 +753,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 															$custom_fields .= '<label for="s2member-pro-paypal-checkout-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 															$custom_fields .= '<span'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? ' style="display:none;"' : '').'>'.$field["label"].(($field["required"] === "yes") ? ' *' : '').'</span></label>'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? '' : '<br />')."\n";
-															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_checkout[custom_fields][", "s2member-pro-paypal-checkout-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-checkout-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, $_p["s2member_pro_paypal_checkout"]["custom_fields"][$field_var], "registration");
+															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_checkout[custom_fields][", "s2member-pro-paypal-checkout-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-checkout-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, @$_p["s2member_pro_paypal_checkout"]["custom_fields"][$field_var], "registration");
 
 															$custom_fields .= '</div>'."\n";
 														}
@@ -789,7 +789,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || $_p["s2member_pro_paypal_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="500" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="500" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 
@@ -841,12 +841,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the registration section.
 								*/
-								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_checkout"]["first_name"])), $code);
-								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_p["s2member_pro_paypal_checkout"]["last_name"])), $code);
-								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["email"])), $code);
-								$code = preg_replace("/%%username_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["username"])), $code);
-								$code = preg_replace("/%%password1_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["password1"])), $code);
-								$code = preg_replace("/%%password2_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["password2"])), $code);
+								$code = preg_replace("/%%first_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_checkout"]["first_name"])), $code);
+								$code = preg_replace("/%%last_name_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(@$_p["s2member_pro_paypal_checkout"]["last_name"])), $code);
+								$code = preg_replace("/%%email_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["email"])), $code);
+								$code = preg_replace("/%%username_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["username"])), $code);
+								$code = preg_replace("/%%password1_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["password1"])), $code);
+								$code = preg_replace("/%%password2_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["password2"])), $code);
 								/*
 								Fill in the custom fields section.
 								*/
@@ -855,20 +855,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								Fill in the billing method section.
 								*/
 								$code = preg_replace("/%%card_type_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_type_options), $code);
-								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_number"])), $code);
-								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_expiration"])), $code);
+								$code = preg_replace("/%%card_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["card_number"])), $code);
+								$code = preg_replace("/%%card_expiration_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["card_expiration"])), $code);
 								$code = preg_replace("/%%card_expiration_month_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_month_options), $code);
 								$code = preg_replace("/%%card_expiration_year_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($card_expiration_year_options), $code);
-								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_verification"])), $code);
-								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["card_start_date_issue_number"])), $code);
+								$code = preg_replace("/%%card_verification_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["card_verification"])), $code);
+								$code = preg_replace("/%%card_start_date_issue_number_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["card_start_date_issue_number"])), $code);
 								/*
 								Fill in the billing address section.
 								*/
-								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["street"])), $code);
-								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["city"])), $code);
-								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["state"])), $code);
+								$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["street"])), $code);
+								$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["city"])), $code);
+								$code = preg_replace("/%%state_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["state"])), $code);
 								$code = preg_replace("/%%country_options%%/", c_ws_plugin__s2member_utils_strings::esc_ds($country_options), $code);
-								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit($_p["s2member_pro_paypal_checkout"]["zip"])), $code);
+								$code = preg_replace("/%%zip_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds(format_to_edit(@$_p["s2member_pro_paypal_checkout"]["zip"])), $code);
 								/*
 								Fill the captcha section.
 								*/

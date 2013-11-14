@@ -54,9 +54,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				*/
 				public static function authnet_cancellation_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_authnet_cancellation_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -83,9 +83,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				*/
 				public static function authnet_update_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_authnet_update_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_authnet_update_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -112,9 +112,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				*/
 				public static function authnet_registration_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_authnet_registration_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_authnet_registration_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -141,9 +141,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				*/
 				public static function authnet_sp_checkout_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_authnet_sp_checkout_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -170,9 +170,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				*/
 				public static function authnet_checkout_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_authnet_checkout_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_authnet_checkout_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{

@@ -112,9 +112,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_registration_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_registration_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_registration_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -141,9 +141,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_sp_checkout_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -170,9 +170,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_checkout_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_checkout_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_checkout_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
 						if /* Error reporting. */($_response && ($error = $_response["error"]))
 							{
@@ -257,7 +257,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
 
 														else // Else there was no Recurring Profile on record.
-														$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
+															$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 													}
 												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
