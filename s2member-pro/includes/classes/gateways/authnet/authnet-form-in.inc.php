@@ -116,7 +116,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 									$option_selections .= '<option value="'.esc_attr($_option_id).'"'.((!empty($_option['selected'])) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
 								unset($_option_id, $_option); // Housekeeping.
 							}
-						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => (($attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => ""), $attr);
+						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => ((@$attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => ""), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
