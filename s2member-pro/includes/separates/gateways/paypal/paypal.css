@@ -208,15 +208,21 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div label
 	cursor      : pointer;
 	font-weight : normal;
 }
+div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div label.s2member-pro-paypal-form-card-type-label
+{
+	display : inline-block;
+}
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s2member-pro-paypal-card-expiration-month,
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s2member-pro-paypal-card-expiration-year
 {
-	width : 50%;
+	width   : 50%;
+	display : inline-block;
 }
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s2member-pro-paypal-card-expiration-year
 {
-	width : 49%;
-	float : right;
+	width   : 49%;
+	float   : right;
+	display : inline-block;
 }
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 {
