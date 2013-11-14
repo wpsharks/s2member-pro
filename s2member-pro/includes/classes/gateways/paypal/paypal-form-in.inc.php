@@ -208,7 +208,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill the captcha section.
 								*/
-								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds($captcha), $code);
+								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$captcha), $code);
 								/*
 								Fill hidden inputs.
 								*/
@@ -342,15 +342,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the custom fields section.
 								*/
-								$code = preg_replace("/%%custom_fields%%/", c_ws_plugin__s2member_utils_strings::esc_ds($custom_fields), $code);
+								$code = preg_replace("/%%custom_fields%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$custom_fields), $code);
 								/*
 								Fill the captcha section.
 								*/
-								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds($captcha), $code);
+								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$captcha), $code);
 								/*
 								Fill the opt-in box.
 								*/
-								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds($opt_in), $code);
+								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$opt_in), $code);
 								/*
 								Fill hidden inputs.
 								*/
@@ -482,7 +482,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill the captcha section.
 								*/
-								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds($captcha), $code);
+								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$captcha), $code);
 								/*
 								Fill hidden inputs.
 								*/
@@ -653,11 +653,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill the captcha section.
 								*/
-								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds($captcha), $code);
+								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$captcha), $code);
 								/*
 								Fill the opt-in box.
 								*/
-								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds($opt_in), $code);
+								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$opt_in), $code);
 								/*
 								Fill hidden inputs.
 								*/
@@ -850,7 +850,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the custom fields section.
 								*/
-								$code = preg_replace("/%%custom_fields%%/", c_ws_plugin__s2member_utils_strings::esc_ds($custom_fields), $code);
+								$code = preg_replace("/%%custom_fields%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$custom_fields), $code);
 								/*
 								Fill in the billing method section.
 								*/
@@ -872,11 +872,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill the captcha section.
 								*/
-								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds($captcha), $code);
+								$code = preg_replace("/%%captcha%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$captcha), $code);
 								/*
 								Fill the opt-in box.
 								*/
-								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds($opt_in), $code);
+								$code = preg_replace("/%%opt_in%%/", c_ws_plugin__s2member_utils_strings::esc_ds(@$opt_in), $code);
 								/*
 								Fill hidden inputs.
 								*/
