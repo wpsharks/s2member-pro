@@ -49,7 +49,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_signup_email"
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-signup-confirmation-email-section">' . "\n";
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro Form integrations</h3>' . "\n";
-						echo '<p>This email is sent to new Customers after they successfully complete a PayPal "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because PayPal Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
+						echo '<p>This email is sent to new Customers after they successfully complete a PayPal "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because PayPal Pro Form integration handles that automatically; based on scenario. You may want to customize this email further by providing details that are specifically geared to your site.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
