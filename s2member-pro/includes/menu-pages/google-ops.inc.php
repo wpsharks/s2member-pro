@@ -65,8 +65,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-account-details-section">' . "\n";
 						echo '<h3>Google Account Details (required)</h3>' . "\n";
-						echo '<p><a href="http://www.s2member.com/google-wallet" target="_blank" rel="external">Google Wallet</a> is a fast, secure checkout process that helps increase sales by bringing you more customers and allowing them to buy from you quickly and easily with a single login. Google\'s Payment Guarantee protects 98% of Checkout orders on average. When an order is guaranteed, you get paid even if it results in a chargeback.</p>' . "\n";
-						echo '<p>s2Member has been integrated with Google for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a Google Wallet Account. Once you have an account, all of the details below can be obtained from inside of your Google Merchant account. If you need assistance, please check their <a href="http://www.s2member.com/google-wallet-help" target="_blank" rel="external">help section</a>.</p>' . "\n";
+						echo '<p><a href="http://www.s2member.com/r/google-wallet" target="_blank" rel="external">Google Wallet</a> is a fast, secure checkout process that helps increase sales by bringing you more customers and allowing them to buy from you quickly and easily with a single login. Google\'s Payment Guarantee protects 98% of Checkout orders on average. When an order is guaranteed, you get paid even if it results in a chargeback.</p>' . "\n";
+						echo '<p>s2Member has been integrated with Google for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a Google Wallet Account. Once you have an account, all of the details below can be obtained from inside of your Google Merchant account. If you need assistance, please check their <a href="http://www.s2member.com/r/google-wallet-help" target="_blank" rel="external">help section</a>.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -124,7 +124,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="radio" name="ws_plugin__s2member_pro_google_sandbox" id="ws-plugin--s2member-pro-google-sandbox-0" value="0"' . ((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? ' checked="checked"' : '') . ' /> <label for="ws-plugin--s2member-pro-google-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_google_sandbox" id="ws-plugin--s2member-pro-google-sandbox-1" value="1"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? ' checked="checked"' : '') . ' /> <label for="ws-plugin--s2member-pro-google-sandbox-1">Yes, enable support for Sandbox testing.</label><br />' . "\n";
-						echo '<em>Only enable this if you\'ve provided Sandbox credentials above.<br />This puts s2Member\'s Google integration into Sandbox mode.<br />See: <a href="http://www.s2member.com/google-wallet-sandbox-accounts" target="_blank" rel="external">Google Sandbox Accounts</a></em>' . "\n";
+						echo '<em>Only enable this if you\'ve provided Sandbox credentials above.<br />This puts s2Member\'s Google integration into Sandbox mode.<br />See: <a href="http://www.s2member.com/r/google-wallet-sandbox-accounts" target="_blank" rel="external">Google Sandbox Accounts</a></em>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -174,6 +174,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '<h3>Google Wallet Postback Integration (required)<br />aka: Google IPN (Instant Payment Notifications)</h3>' . "\n";
 						echo '<p>Log into your Google Wallet account and navigate to this section:<br /><code>Merchant Settings -› In App Settings</code></p>' . "\n";
 						echo '<p>Your Google Postback URL is:<br /><code>' . esc_html (site_url ("/?s2member_pro_google_notify=1")) . '</code></p>' . "\n";
+						echo '</div>' . "\n";
 
 						echo '</div>' . "\n";
 
