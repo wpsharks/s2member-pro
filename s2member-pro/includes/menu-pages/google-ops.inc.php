@@ -51,7 +51,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						c_ws_plugin__s2member_menu_pages_tb::display ();
 						echo '</div>'."\n";
 
-						echo '<h2>Google Checkout Options</h2>' . "\n";
+						echo '<h2>Google Wallet Options</h2>' . "\n";
 
 						echo '<table class="ws-menu-page-table">' . "\n";
 						echo '<tbody class="ws-menu-page-table-tbody">' . "\n";
@@ -65,8 +65,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-account-details-section">' . "\n";
 						echo '<h3>Google Account Details (required)</h3>' . "\n";
-						echo '<p><a href="http://www.s2member.com/google-checkout" target="_blank" rel="external">Google Checkout</a> is a fast, secure checkout process that helps increase sales by bringing you more customers and allowing them to buy from you quickly and easily with a single login. Google\'s Payment Guarantee protects 98% of Checkout orders on average. When an order is guaranteed, you get paid even if it results in a chargeback.</p>' . "\n";
-						echo '<p>s2Member has been integrated with Google for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a Google Checkout Account. Once you have an account, all of the details below can be obtained from inside of your Google Merchant account. If you need assistance, please check their <a href="http://www.s2member.com/google-checkout-help" target="_blank" rel="external">help section</a>.</p>' . "\n";
+						echo '<p><a href="http://www.s2member.com/google-checkout" target="_blank" rel="external">Google Wallet</a> is a fast, secure checkout process that helps increase sales by bringing you more customers and allowing them to buy from you quickly and easily with a single login. Google\'s Payment Guarantee protects 98% of Checkout orders on average. When an order is guaranteed, you get paid even if it results in a chargeback.</p>' . "\n";
+						echo '<p>s2Member has been integrated with Google for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a Google Wallet Account. Once you have an account, all of the details below can be obtained from inside of your Google Merchant account. If you need assistance, please check their <a href="http://www.s2member.com/google-checkout-help" target="_blank" rel="external">help section</a>.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -83,7 +83,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_id" id="ws-plugin--s2member-pro-google-merchant-id" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google Checkout account, under: <code>Settings -› Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google Wallet account, under: <code>Settings -› Integration</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_key" id="ws-plugin--s2member-pro-google-merchant-key" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google Checkout account, under: <code>Settings -› Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google Wallet account, under: <code>Settings -› Integration</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -172,7 +172,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-api-section">' . "\n";
 						echo '<h3>Google API Callback v2.5 Integration (required)<br />aka: Google IPN (Instant Payment Notifications)</h3>' . "\n";
-						echo '<p>Log into your Google Checkout account and navigate to this section:<br /><code>Settings -› Integration</code></p>' . "\n";
+						echo '<p>Log into your Google Wallet account and navigate to this section:<br /><code>Settings -› Integration</code></p>' . "\n";
 						echo '<p>Your Google API v2.5 (Callback URL) is:<br /><code>' . esc_html (site_url ("/?s2member_pro_google_notify=1")) . '</code></p>' . "\n";
 						echo '<p>Set your API (Callback Content) to:<br /><code>Notification Serial Number</code>.</strong></p>' . "\n";
 						echo '<p>Only Post Digitally Signed Carts: <code>On</code></p>' . "\n";
@@ -464,7 +464,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo 'Message Body used in the email sent to a Customer after a purchase is completed through Google.<br /><br />'."\n";
 						echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 						echo '<ul>'."\n";
-						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase (always generated by Google). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google Checkout.\'); return false;">?</a> ]</li>' . "\n";
+						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase (always generated by Google). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google Wallet.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%amount%%</code> = The full Amount that you charged for Custom Capability access.</li>'."\n";
 						echo '<li><code>%%first_name%%</code> = The First Name of the Customer who completed the purchase.</li>'."\n";
 						echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who completed the purchase.</li>'."\n";
@@ -574,7 +574,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '<ul>' . "\n";
 						echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>' . "\n";
 						echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>' . "\n";
-						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase (always generated by Google). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google Checkout.\'); return false;">?</a> ]</li>' . "\n";
+						echo '<li><code>%%txn_id%%</code> = A unique Transaction ID for this purchase (always generated by Google). [ <a href="#" onclick="alert(\'This is always the built-in Order # generated by Google Wallet.\'); return false;">?</a> ]</li>' . "\n";
 						echo '<li><code>%%amount%%</code> = The full Amount that you charged for Specific Post/Page Access.</li>' . "\n";
 						echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased Specific Post/Page Access.</li>' . "\n";
 						echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who purchased Specific Post/Page Access.</li>' . "\n";
