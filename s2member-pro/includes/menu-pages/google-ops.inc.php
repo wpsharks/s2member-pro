@@ -83,7 +83,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_id" id="ws-plugin--s2member-pro-google-merchant-id" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google Wallet account, under: <code>Settings -› Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google Wallet account, under: <code>Merchant Settings -› Business Information</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -91,7 +91,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-pro-google-merchant-key">' . "\n";
-						echo 'Google Merchant Key:' . "\n";
+						echo 'Google Merchant Secret Key:' . "\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
 
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_google_merchant_key" id="ws-plugin--s2member-pro-google-merchant-key" value="' . format_to_edit ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]) . '" /><br />' . "\n";
-						echo 'You\'ll find this in your Google Wallet account, under: <code>Settings -› Integration</code>' . "\n";
+						echo 'You\'ll find this in your Google Wallet account, under: <code>Merchant Settings -› In App Settings</code>' . "\n";
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
@@ -168,21 +168,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '</div>' . "\n";
 
-						echo '<div class="ws-menu-page-group" title="Google API v2.5 Integration">' . "\n";
+						echo '<div class="ws-menu-page-group" title="Google Postback Integration">' . "\n";
 
-						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-api-section">' . "\n";
-						echo '<h3>Google API Callback v2.5 Integration (required)<br />aka: Google IPN (Instant Payment Notifications)</h3>' . "\n";
-						echo '<p>Log into your Google Wallet account and navigate to this section:<br /><code>Settings -› Integration</code></p>' . "\n";
-						echo '<p>Your Google API v2.5 (Callback URL) is:<br /><code>' . esc_html (site_url ("/?s2member_pro_google_notify=1")) . '</code></p>' . "\n";
-						echo '<p>Set your API (Callback Content) to:<br /><code>Notification Serial Number</code>.</strong></p>' . "\n";
-						echo '<p>Only Post Digitally Signed Carts: <code>On</code></p>' . "\n";
-						echo '<p>Notification Filtering: <code>Off (important)</code></p>' . "\n";
-
-						echo '<div class="ws-menu-page-hr"></div>' . "\n";
-
-						echo '<p>Now navigate to this section:<br /><code>Settings -› Preferences</code></p>' . "\n";
-						echo '<p>Set Order Processing to: <code>Authorize And Charge</code></p>' . "\n";
-						echo '</div>' . "\n";
+						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-google-ipn-section">' . "\n";
+						echo '<h3>Google Wallet Postback Integration (required)<br />aka: Google IPN (Instant Payment Notifications)</h3>' . "\n";
+						echo '<p>Log into your Google Wallet account and navigate to this section:<br /><code>Merchant Settings -› In App Settings</code></p>' . "\n";
+						echo '<p>Your Google Postback URL is:<br /><code>' . esc_html (site_url ("/?s2member_pro_google_notify=1")) . '</code></p>' . "\n";
 
 						echo '</div>' . "\n";
 
