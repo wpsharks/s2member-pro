@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_menu_pages"))
 				public static function google_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› Google Options</code> first. Once all of your Google Options have been configured, return to this page &amp; generate your Google Checkout Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› Google Options</code> first. Once all of your Google Options have been configured, return to this page &amp; generate your Google Wallet Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/google-buttons.inc.php";
 

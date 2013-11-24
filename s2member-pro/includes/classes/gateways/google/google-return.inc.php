@@ -1,6 +1,6 @@
 <?php
 /**
-* Google Checkout.
+* Google Return URL handler.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -28,36 +28,36 @@
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Google
-* @since 1.5
+* @since 131123
 */
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
-	exit ("Do not access this file directly.");
+	exit("Do not access this file directly.");
 
-if (!class_exists ("c_ws_plugin__s2member_pro_google_co"))
+if (!class_exists ("c_ws_plugin__s2member_pro_google_return"))
 	{
 		/**
-		* Google Checkout.
+		* Google Return URL handler.
 		*
 		* @package s2Member\Google
-		* @since 1.5
+		* @since 131123
 		*/
-		class c_ws_plugin__s2member_pro_google_co
+		class c_ws_plugin__s2member_pro_google_return
 			{
 				/**
-				* Handles Google XML Checkout redirections.
+				* Handles Google Return URL processing.
 				*
 				* @package s2Member\Google
-				* @since 1.5
+				* @since 131123
 				*
 				* @attaches-to ``add_action("init");``
 				*
 				* @return null|inner Return-value of inner routine.
 				*/
-				public static function google_co ()
+				public static function google_return ()
 					{
-						if (!empty ($_GET["s2member_pro_google_co"]))
+						if (!empty ($_GET["s2member_pro_google_return"]))
 							{
-								return c_ws_plugin__s2member_pro_google_co_in::google_co ();
+								return c_ws_plugin__s2member_pro_google_return_in::google_return ();
 							}
 					}
 			}

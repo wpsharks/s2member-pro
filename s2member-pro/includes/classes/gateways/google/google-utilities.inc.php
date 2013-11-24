@@ -44,46 +44,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 		class c_ws_plugin__s2member_pro_google_utilities
 			{
 				/**
-				* Builds an HMAC-SHA1 signature for XML data transfer verification.
-				*
-				* @package s2Member\Google
-				* @since 1.5
-				*
-				* @param str $xml An XML data string to sign.
-				* @return str An HMAC-SHA1 signature string.
-				*/
-				public static function google_sign ($xml = FALSE)
-					{
-						$key = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"];
-
-						return c_ws_plugin__s2member_utils_strings::hmac_sha1_sign ((string)$xml, $key);
-					}
-				/**
-				* Formulates request Authorization headers.
-				*
-				* @package s2Member\Google
-				* @since 1.5
-				*
-				* @return array Request Authorization headers for Google API communication.
-				*/
-				public static function google_api_headers ()
-					{
-						$req["headers"]["Accept"] = "application/xml; charset=UTF-8";
-						$req["headers"]["Content-Type"] = "application/xml; charset=UTF-8";
-						$req["headers"]["Authorization"] = "Basic " . base64_encode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"] . ":" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]);
-
-						return $req; // Return array with headers.
-					}
-				/**
-				* Converts a "Period Term" into a Google periodicity for XML subscription attribute.
+				* Converts a "Period Term" into a Google periodicity.
 				*
 				* @package s2Member\Google
 				* @since 1.5
 				*
 				* @param str $period_term A "Period Term" combination.
-				* @return str The Google Checkout equivalent for ``$period_term``.
-				* 	One of `DAILY`, `WEEKLY`, `SEMI_MONTHLY`, `MONTHLY`, `EVERY_TWO_MONTHS`, `QUARTERLY`, or `YEARLY`.
-				* 	Defaults to `MONTHLY` if ``$period_term`` is not configured properly.
+				* @return str The Google Wallet equivalent for ``$period_term``.
+				* 	One of `daily`, `weekly`, `semi_monthly`, `monthly`, `every_two_months`, `quarterly`, or `yearly`.
+				* 	Defaults to `monthly` if ``$period_term`` is not configured properly.
 				*/
 				public static function google_periodicity ($period_term = FALSE)
 					{
@@ -91,27 +60,27 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 						$num = (int)$num; // Force this to an integer.
 
 						if ($num === 1 && $span === "D")
-							return "DAILY";
+							return "daily";
 
 						else if ($num === 1 && $span === "W")
-							return "WEEKLY";
+							return "weekly";
 
 						else if ($num === 2 && $span === "W")
-							return "SEMI_MONTHLY";
+							return "semi_monthly";
 
 						else if ($num === 1 && $span === "M")
-							return "MONTHLY";
+							return "monthly";
 
 						else if ($num === 2 && $span === "M")
-							return "EVERY_TWO_MONTHS";
+							return "every_two_months";
 
 						else if ($num === 3 && $span === "M")
-							return "QUARTERLY";
+							return "quarterly";
 
 						else if ($num === 1 && $span === "Y")
-							return "YEARLY";
+							return "yearly";
 
-						return "MONTHLY";
+						return "monthly";
 					}
 				/**
 				* Parses s2Vars from Google IPN Notifications.
@@ -119,20 +88,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				* @package s2Member\Google
 				* @since 1.5
 				*
-				* @param str $xml XML data section returned by Google for s2Vars.
+				* @param array $jwt The JWT from Google.
 				* @return array|bool An array of s2Vars, else false on failure.
 				*/
-				public static function google_parse_s2vars ($xml = FALSE)
+				public static function google_parse_s2vars ($jwt = FALSE)
 					{
-						if (preg_match_all ("/<([^\>]+)>([^\<]+)<\/([^\>]+)>/", $xml, $m) && is_array ($m[1]))
-							{
-								foreach ($m[1] as $key => $var)
-									$s2vars[$var] = wp_specialchars_decode ($m[2][$key]);
-
-								return $s2vars;
-							}
-						else
-							return false;
+						if (!empty($jwt["request"]["sellerData"]))
+							return json_decode($jwt["request"]["sellerData"], TRUE);
+						return false;
 					}
 				/**
 				* Get ``$_POST`` or ``$_REQUEST`` vars from Google.
@@ -147,20 +110,26 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				*/
 				public static function google_postvars ()
 					{
-						if (!empty ($_REQUEST["s2member_pro_google_notify"]) && !empty ($_REQUEST["serial-number"]))
-							{
-								$postback["_type"] = "notification-history-request";
-								$postback["serial-number"] = trim (stripslashes ((string)$_REQUEST["serial-number"]));
+						if (!empty ($_REQUEST["s2member_pro_google_notify"]) && !empty ($_REQUEST["jwt"]))
+							if(is_object($jwt = JWT::decode(stripslashes($_REQUEST["jwt"], $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]))))
+								{
+									$jwt = (array)$jwt;
 
-								$endpoint = ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"]) ? "sandbox.google.com/checkout" : "checkout.google.com";
+									if(!empty($jwt["request"]))
+										$jwt["request"] = (array)$jwt["request"];
 
-								if (($response = c_ws_plugin__s2member_utils_urls::remote ("https://" . $endpoint . "/api/checkout/v2/reportsForm/Merchant/" . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"], $postback, array_merge (c_ws_plugin__s2member_pro_google_utilities::google_api_headers (), array ("timeout" => 20)))) && wp_parse_str ($response, $postvars) !== "nill" && !empty ($postvars["_type"]))
-									return c_ws_plugin__s2member_utils_strings::trim_deep ($postvars);
-								else // Nope. Return false.
-									return false;
-							}
-						else // Nope.
-							return false;
+									if(!empty($jwt["request"]["initialPayment"]))
+										$jwt["request"]["initialPayment"] = (array)$jwt["request"]["initialPayment"];
+
+									if(!empty($jwt["request"]["recurrence"]))
+										$jwt["request"]["recurrence"] = (array)$jwt["request"]["recurrence"];
+
+									if(!empty($jwt["response"]))
+										$jwt["response"] = (array)$jwt["response"];
+
+									return $jwt;
+								}
+						return false;
 					}
 				/**
 				* Calculates start date for a Recurring Payment Profile.

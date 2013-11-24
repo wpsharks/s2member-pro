@@ -30,4 +30,4 @@
 * @since 1.5
 */
 jQuery(document).ready (function($) {});
-document.write('<script src="https://wallet.google.com/inapp/lib/buy.js"></script>');
+document.write('<script src="https://sandbox.google.com/checkout/inapp/lib/buy.js"></script>');

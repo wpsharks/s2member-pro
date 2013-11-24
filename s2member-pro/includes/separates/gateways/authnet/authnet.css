@@ -233,6 +233,7 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-coupon-div
 	margin         : 0;
 	width          : 74%;
 	vertical-align : middle;
+	display        : inline;
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-coupon-div input[type="button"]
 {

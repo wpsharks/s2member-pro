@@ -53,7 +53,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 				*/
 				public static function available_gateways () // Payment Gateways available.
 					{
-						$gateways = array ("alipay" => "<strong>AliPay</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google Checkout</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal Website Payments Pro</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
+						$gateways = array ("alipay" => "<strong>AliPay</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now transactions only.", "authnet" => "<strong>Authorize.Net</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "ccbill" => "<strong>ccBill</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "clickbank" => "<strong>ClickBank</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "google" => "<strong>Google Wallet</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.", "paypal" => "<strong>PayPal Website Payments Pro</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.");
 
 						return apply_filters ("ws_plugin__s2member_pro_available_gateways", $gateways, get_defined_vars ());
 					}
@@ -72,7 +72,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_gateways"))
 					{
 						$available_gateways = array_keys (c_ws_plugin__s2member_pro_gateways::available_gateways ());
 
-						foreach (($others = array ("alipay" => "AliPay (code: alipay)", "authnet" => "Authorize.Net (code: authnet)", "ccbill" => "ccBill (code: ccbill)", "clickbank" => "ClickBank (code: clickbank)", "google" => "Google Checkout (code: google)")) as $other => $gateway)
+						foreach (($others = array ("alipay" => "AliPay (code: alipay)", "authnet" => "Authorize.Net (code: authnet)", "ccbill" => "ccBill (code: ccbill)", "clickbank" => "ClickBank (code: clickbank)", "google" => "Google Wallet (code: google)")) as $other => $gateway)
 							if (!in_array ($other, $available_gateways))
 								unset($others[$other]);
 

@@ -1,1 +1,1 @@
-jQuery(document).ready(function(a){});
+jQuery(document).ready(function(a){});document.write('<script src="https://wallet.google.com/inapp/lib/buy.js"><\/script>');
