@@ -1,5 +1,6 @@
+<?php
 /**
-* Core JavaScript routines for Google.
+* Google JWT generator.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -27,7 +28,36 @@
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Google
-* @since 1.5
+* @since 131123
 */
-jQuery(document).ready (function($) {});
-document.write('<script src="https://sandbox.google.com/checkout/inapp/lib/buy.js"></script>');
+if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
+	exit ("Do not access this file directly.");
+
+if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt"))
+	{
+		/**
+		* Google JWT generator.
+		*
+		* @package s2Member\Google
+		* @since 131123
+		*/
+		class c_ws_plugin__s2member_pro_google_jwt
+			{
+				/**
+				* Google JWT generator.
+				*
+				* @package s2Member\Google
+				* @since 131123
+				*
+				* @attaches-to ``add_action("init");``
+				*
+				* @return null|inner Return-value of inner routine.
+				*/
+				public static function google_jwt ()
+					{
+						if (!empty($_GET["s2member_pro_google_jwt"]))
+							return c_ws_plugin__s2member_pro_google_jwt_in::google_jwt ();
+					}
+			}
+	}
+?>

@@ -32,4 +32,9 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 
 <optgroup label="<?php echo esc_attr (_x ("Expires In Years", "s2member-admin", "s2member")); ?>">
 <option value="8760"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 1 year)", "s2member-admin", "s2member")); ?></option>
+<option value="17520"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 2 years)", "s2member-admin", "s2member")); ?></option>
+<option value="26280"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 3 years)", "s2member-admin", "s2member")); ?></option>
+<option value="35040"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 4 years)", "s2member-admin", "s2member")); ?></option>
+<option value="43800"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 5 years)", "s2member-admin", "s2member")); ?></option>
+<option value="438291"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 50 years)", "s2member-admin", "s2member")); ?></option>
 </optgroup>

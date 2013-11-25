@@ -61,14 +61,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (0===1 && is_array ($google = c_ws_plugin__s2member_pro_google_utilities::google_postvars ()) && ($_google = $google))
+								if (is_array ($google = c_ws_plugin__s2member_pro_google_utilities::google_postvars ()) && ($_google = $google))
 									{
 										$google["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$google["s2member_log"][] = "s2Member POST vars verified with Google.";
 
-										if (preg_match ("/^new-order-notification$/i", $google["_type"])
+										if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/item\/v[0-9]+\/postback\/buy$/i', $google["typ"])
 										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
-										 && !$s2vars["s2_subscr_id"])
+										 && !empty($google["response"]["orderId"]))
 											{
 												$google["s2member_log"][] = "Google transaction identified as ( `SALE/BUY-NOW` ).";
 												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `web_accept` ).";
@@ -78,27 +78,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
+												$ipn["txn_id"] = $google["response"]["orderId"];
+												$ipn["custom"] = $s2vars["cs"];
 
-												$ipn["txn_id"] = ($s2vars["s2_txn_id"]) ? $s2vars["s2_txn_id"] : $google["order-summary_google-order-number"];
+												$ipn["mc_gross"] = number_format ($google["request"]["price"], 2, ".", "");
+												$ipn["mc_currency"] = strtoupper ($google["request"]["currencyCode"]);
+												$ipn["tax"] = number_format ((float)@$google["request"]["tax"], 2, ".", "");
 
-												$ipn["custom"] = $s2vars["s2_custom"];
+												$ipn["payer_email"] = $s2vars["em"];
+												$ipn["first_name"] = $s2vars["fn"];
+												$ipn["last_name"] = $s2vars["ln"];
 
-												$ipn["mc_gross"] = number_format ($google["order-summary_order-total"], 2, ".", "");
-												$ipn["mc_currency"] = strtoupper ($google["order-summary_order-total_currency"]);
-												$ipn["tax"] = number_format ($google["order-summary_order-adjustment_total-tax"], 2, ".", "");
-
-												$ipn["payer_email"] = $google["buyer-billing-address_email"];
-												$ipn["first_name"] = $google["buyer-billing-address_structured-name_first-name"];
-												$ipn["last_name"] = $google["buyer-billing-address_structured-name_last-name"];
-
-												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
-												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
+												$ipn["option_name1"] = ($s2vars["rf"]) ? "Referencing Customer ID" : "Originating Domain";
+												$ipn["option_selection1"] = ($s2vars["rf"]) ? $s2vars["rf"] : $_SERVER["HTTP_HOST"];
 
 												$ipn["option_name2"] = "Customer IP Address"; // IP Address.
-												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
+												$ipn["option_selection2"] = $s2vars["ip"];
 
-												$ipn["item_number"] = $s2vars["s2_item_number"];
-												$ipn["item_name"] = $google["order-summary_shopping-cart_items_item-1_item-name"];
+												$ipn["item_number"] = $s2vars["in"];
+												$ipn["item_name"] = $google["request"]["description"];
 
 												$ipn["s2member_paypal_proxy"] = "google";
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
@@ -107,9 +105,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
-										else if (preg_match ("/^new-order-notification$/i", $google["_type"])
+										else if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/subscription\/v[0-9]+\/postback\/buy$/i', $google["typ"])
 										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
-										 && $s2vars["s2_subscr_id"] && !$s2vars["s2_subscr_payment"])
+										 && !empty($google["response"]["orderId"]))
 											{
 												$google["s2member_log"][] = "Google transaction identified as ( `SALE/SUBSCRIPTION` ).";
 												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_signup` ).";
@@ -119,37 +117,31 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
-												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
+												$ipn["subscr_id"] = $google["response"]["orderId"];
+												$ipn["txn_id"] = $google["response"]["orderId"];
+												$ipn["recurring"] = $s2vars["rr"];
+												$ipn["custom"] = $s2vars["cs"];
 
-												$ipn["recurring"] = (!($times = $google["order-summary_shopping-cart_items_item-2_subscription_payments_subscription-payment-1_times"]) || $times > 1) ? "1" : "0";
+												$ipn["period1"] = $s2vars["p1"];
+												$ipn["period3"] = $s2vars["p3"];
 
-												$ipn["txn_id"] = $google["order-summary_google-order-number"];
+												$ipn["mc_amount1"] = $ipn["mc_gross"] = number_format ($google["request"]["initialPayment"]["price"], 2, ".", "");
+												$ipn["mc_currency"] = strtoupper ($google["request"]["initialPayment"]["currencyCode"]);
+												$ipn["tax"] = number_format ((float)@$google["request"]["initialPayment"]["tax"], 2, ".", "");
+												$ipn["mc_amount3"] = number_format ($google["request"]["recurrence"]["price"], 2, ".", "");
 
-												$ipn["custom"] = $s2vars["s2_custom"];
+												$ipn["payer_email"] = $s2vars["em"];
+												$ipn["first_name"] = $s2vars["fn"];
+												$ipn["last_name"] = $s2vars["ln"];
 
-												$ipn["period1"] = $s2vars["s2_period1"]; // Just use s2Member's period calculations to make this easier.
-												$ipn["period3"] = $s2vars["s2_period3"]; // Just use s2Member's period calculations to make this easier.
-
-												$ipn["mc_amount1"] = number_format ($google["order-summary_shopping-cart_items_item-1_unit-price"], 2, ".", "");
-												$ipn["mc_amount3"] = number_format ($google["order-summary_shopping-cart_items_item-2_subscription_recurrent-item_unit-price"], 2, ".", "");
-
-												$ipn["mc_gross"] = (preg_match ("/^[1-9]/", $ipn["period1"])) ? $ipn["mc_amount1"] : $ipn["mc_amount3"];
-
-												$ipn["mc_currency"] = strtoupper ($google["order-summary_order-total_currency"]);
-												$ipn["tax"] = number_format ($google["order-summary_order-adjustment_total-tax"], 2, ".", "");
-
-												$ipn["payer_email"] = $google["buyer-billing-address_email"];
-												$ipn["first_name"] = $google["buyer-billing-address_structured-name_first-name"];
-												$ipn["last_name"] = $google["buyer-billing-address_structured-name_last-name"];
-
-												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
-												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
+												$ipn["option_name1"] = ($s2vars["rf"]) ? "Referencing Customer ID" : "Originating Domain";
+												$ipn["option_selection1"] = ($s2vars["rf"]) ? $s2vars["rf"] : $_SERVER["HTTP_HOST"];
 
 												$ipn["option_name2"] = "Customer IP Address"; // IP Address.
-												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
+												$ipn["option_selection2"] = $s2vars["ip"];
 
-												$ipn["item_number"] = $s2vars["s2_item_number"];
-												$ipn["item_name"] = $google["order-summary_shopping-cart_items_item-1_item-name"];
+												$ipn["item_number"] = $s2vars["in"];
+												$ipn["item_name"] = $google["request"]["description"];
 
 												$ipn["s2member_paypal_proxy"] = "google";
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
@@ -159,51 +151,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
 											}
 
-										else if (preg_match ("/^new-order-notification$/i", $google["_type"])
-										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
-										 && $s2vars["s2_subscr_id"] && $s2vars["s2_subscr_payment"])
-											{
-												$google["s2member_log"][] = "Google transaction identified as ( `SUBSCRIPTION PAYMENT` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_payment` ).";
-												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
-
-												$processing = $processed = true;
-												$ipn = array (); // Reset.
-
-												$ipn["txn_type"] = "subscr_payment";
-												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
-
-												$ipn["txn_id"] = $google["order-summary_google-order-number"];
-
-												$ipn["custom"] = $s2vars["s2_custom"];
-
-												$ipn["mc_gross"] = number_format ($google["order-summary_order-total"], 2, ".", "");
-												$ipn["mc_currency"] = strtoupper ($google["order-summary_order-total_currency"]);
-												$ipn["tax"] = number_format ($google["order-summary_order-adjustment_total-tax"], 2, ".", "");
-
-												$ipn["payer_email"] = $google["buyer-billing-address_email"];
-												$ipn["first_name"] = $google["buyer-billing-address_structured-name_first-name"];
-												$ipn["last_name"] = $google["buyer-billing-address_structured-name_last-name"];
-
-												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
-												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-
-												$ipn["option_name2"] = "Customer IP Address"; // IP Address.
-												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-
-												$ipn["item_number"] = $s2vars["s2_item_number"];
-												$ipn["item_name"] = $google["order-summary_shopping-cart_items_item-1_item-name"];
-
-												$ipn["s2member_paypal_proxy"] = "google";
-												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
-												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
-											}
-
-										else if (!empty($google["response"]["statusCode"]) && preg_match ("/^SUBSCRIPTION_CANCELED/i", $google["response"]["statusCode"])
-										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
-										 && $s2vars["s2_subscr_id"])
+										else if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/subscription\/v[0-9]+\/canceled$/i', $google["typ"])
+										&& !empty($google["response"]["statusCode"]) && preg_match ("/^SUBSCRIPTION_CANCELED$/i", $google["response"]["statusCode"])
+										 && !empty($google["response"]["orderId"]) && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars (false, $google["response"]["orderId"])))
 											{
 												$google["s2member_log"][] = "Google transaction identified as ( `SUBSCRIPTION_CANCELED` ).";
 												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).";
@@ -213,85 +163,25 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn = array (); // Reset.
 
 												$ipn["txn_type"] = "subscr_cancel";
-												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
+												$ipn["subscr_id"] = $google["response"]["orderId"];
 
-												$ipn["custom"] = $s2vars["s2_custom"];
+												$ipn["custom"] = $ipn_signup_vars["custom"];
 
-												$ipn["period1"] = $s2vars["s2_period1"];
-												$ipn["period3"] = $s2vars["s2_period3"];
+												$ipn["period1"] = $ipn_signup_vars["period1"];
+												$ipn["period3"] = $ipn_signup_vars["period3"];
 
-												$ipn["payer_email"] = $google["order-summary_risk-information_billing-address_email"];
-												$ipn["first_name"] = preg_replace ("/( )(.+)/", "", $google["order-summary_risk-information_billing-address_contact-name"]);
-												$ipn["last_name"] = preg_replace ("/(.+?)( )/", "", $google["order-summary_risk-information_billing-address_contact-name"]);
+												$ipn["payer_email"] = $ipn_signup_vars["payer_email"];
+												$ipn["first_name"] = $ipn_signup_vars["first_name"];
+												$ipn["last_name"] = $ipn_signup_vars["last_name"];
 
-												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
-												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
+												$ipn["option_name1"] = $ipn_signup_vars["option_name1"];
+												$ipn["option_selection1"] = $ipn_signup_vars["option_selection1"];
 
-												$ipn["option_name2"] = "Customer IP Address"; // IP Address.
-												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
+												$ipn["option_name2"] = $ipn_signup_vars["option_name2"];
+												$ipn["option_selection2"] = $ipn_signup_vars["option_selection2"];
 
-												$ipn["item_number"] = $s2vars["s2_item_number"];
-												$ipn["item_name"] = $google["order-summary_shopping-cart_items_item-1_item-name"];
-
-												$ipn["s2member_paypal_proxy"] = "google";
-												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
-												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
-											}
-
-										else if (preg_match ("/^(refund|chargeback)-amount-notification$/i", $google["_type"]) // Do NOT process partial refunds/chargebacks.
-										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
-										 && ((preg_match ("/^refund/", $google["_type"]) && $google["latest-fee-refund-amount"] >= $google["order-summary_total-charge-amount"])
-										 || (preg_match ("/^chargeback/", $google["_type"]) && $google["latest-chargeback-amount"] >= $google["order-summary_total-charge-amount"])))
-											{
-												$google["s2member_log"][] = "Google transaction identified as ( `REFUND|CHARGEBACK` ).";
-												$google["s2member_log"][] = "IPN reformulated. Piping through s2Member's core/standard PayPal processor as `payment_status` ( `refunded|reversed` ).";
-												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
-
-												$processing = $processed = true;
-												$ipn = array (); // Reset.
-
-												$ipn["custom"] = $s2vars["s2_custom"];
-
-												if ($s2vars["s2_subscr_id"] && !$s2vars["s2_txn_id"])
-													$ipn["parent_txn_id"] = $s2vars["s2_subscr_id"];
-
-												else if ($s2vars["s2_txn_id"] && !$s2vars["s2_subscr_id"])
-													$ipn["parent_txn_id"] = $s2vars["s2_txn_id"];
-
-												else // Default to Google's Order #.
-													$ipn["parent_txn_id"] = $google["order-summary_google-order-number"];
-
-												if (preg_match ("/^refund/", $google["_type"])) // Use refunded amounts.
-													{
-														$ipn["payment_status"] = "refunded"; // Refunding.
-														$ipn["mc_fee"] = "-" . number_format ($google["latest-fee-refund-amount"], 2, ".", "");
-														$ipn["mc_gross"] = "-" . number_format ($google["latest-refund-amount"], 2, ".", "");
-														$ipn["mc_currency"] = strtoupper ($google["latest-refund-amount_currency"]);
-														$ipn["tax"] = "-" . number_format ("0.00", 2, ".", "");
-													}
-												else if (preg_match ("/^chargeback/", $google["_type"])) // Chargeback.
-													{
-														$ipn["payment_status"] = "reversed"; // Reversed/chargeback.
-														$ipn["mc_fee"] = "-" . number_format ($google["latest-chargeback-fee-amount"], 2, ".", "");
-														$ipn["mc_gross"] = "-" . number_format ($google["latest-chargeback-amount"], 2, ".", "");
-														$ipn["mc_currency"] = strtoupper ($google["latest-chargeback-amount_currency"]);
-														$ipn["tax"] = "-" . number_format ("0.00", 2, ".", "");
-													}
-
-												$ipn["payer_email"] = $google["order-summary_risk-information_billing-address_email"];
-												$ipn["first_name"] = preg_replace ("/( )(.+)/", "", $google["order-summary_risk-information_billing-address_contact-name"]);
-												$ipn["last_name"] = preg_replace ("/(.+?)( )/", "", $google["order-summary_risk-information_billing-address_contact-name"]);
-
-												$ipn["option_name1"] = ($s2vars["s2_referencing"]) ? "Referencing Customer ID" : "Originating Domain";
-												$ipn["option_selection1"] = ($s2vars["s2_referencing"]) ? $s2vars["s2_referencing"] : $_SERVER["HTTP_HOST"];
-
-												$ipn["option_name2"] = "Customer IP Address"; // IP Address.
-												$ipn["option_selection2"] = $s2vars["s2_customer_ip"];
-
-												$ipn["item_number"] = $s2vars["s2_item_number"];
-												$ipn["item_name"] = $google["order-summary_shopping-cart_items_item-1_item-name"];
+												$ipn["item_number"] = $ipn_signup_vars["item_number"];
+												$ipn["item_name"] = $ipn_signup_vars["item_name"];
 
 												$ipn["s2member_paypal_proxy"] = "google";
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
@@ -313,7 +203,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 								/*
 								We need to log this final event before it occurs.
 								*/
-								$google["s2member_log"][] = "Sending Google an Acknowlegment w/ order ID.";
+								$google["s2member_log"][] = "Sending Google an acknowlegment w/ order ID.";
 								/*
 								If debugging/logging is enabled; we need to append $google to the log file.
 									Logging now supports Multisite Networking as well.

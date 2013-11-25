@@ -110,8 +110,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				*/
 				public static function google_postvars ()
 					{
+						include_once dirname(dirname(dirname(dirname(__FILE__)))).'/_xtnls/JWT.php';
+
 						if (!empty ($_REQUEST["s2member_pro_google_notify"]) && !empty ($_REQUEST["jwt"]))
-							if(is_object($jwt = JWT::decode(stripslashes($_REQUEST["jwt"], $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"]))))
+							if(is_object($jwt = JWT::decode(stripslashes((string)$_REQUEST["jwt"]), $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"])))
 								{
 									$jwt = (array)$jwt;
 

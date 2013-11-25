@@ -35,6 +35,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 /*
 Add the plugin Actions/Filters here.
 */
+add_action ("init", "c_ws_plugin__s2member_pro_google_jwt::google_jwt", 1);
 add_action ("init", "c_ws_plugin__s2member_pro_google_return::google_return", 1);
 add_action ("init", "c_ws_plugin__s2member_pro_google_notify::google_notify", 1);
 

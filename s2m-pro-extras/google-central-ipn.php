@@ -1,30 +1,24 @@
-<?php /* ---- Central IPN Processing (aka: Callback URL): -------------------------------------------------------------------
+<?php /* ---- Central IPN Processing (aka: Postback URL): -------------------------------------------------------------------
 
-With Google Wallet you absolutely MUST set a Callback (aka: IPN) URL inside your Google Wallet account.
-Google Wallet integration does NOT allow the Callback location to be overridden on a per-transaction basis.
+With Google Wallet you absolutely MUST set a Postback (aka: IPN) URL inside your Google Wallet account.
+Google Wallet integration does NOT allow the Postback location to be overridden on a per-transaction basis.
 
 So, if you're using one Google Wallet account for multiple cross-domain installations,
 and you need to receive IPN notifications for each of your domains; you'll want to create
 a central IPN processing script that scans variables in each IPN response,
 forking itself out to each of your individual domains.
 
-In rare cases when this is necessary, you'll find an XML component in all IPN responses for s2Member.
-The originating domain name will always be included as the first value in:
-	$_POST["order-summary_shopping-cart_items_item-1_merchant-private-item-data"]
-		Inside: `<s2_custom></s2_custom>`
-
-This XML component can be used to test incoming IPNs, and fork to the proper installation.
-
 ---- Instructions: ----------------------------------------------------------------------------------------------------------
 
 1. Save this PHP file to your website.
 
-2. Set the Callback URL (in your Google Wallet account) to the location of this script on your server.
+2. Set the Postback URL (in your Google Wallet account) to the location of this script on your server.
 	This central processor forks IPNs out to the proper installation domain.
 
 3. Configuration (below).
 
 ---- Configuration: --------------------------------------------------------------------------------------------------------*/
+$key = ""; // Your Google Wallet Merchant "Key" (a secret key).
 $config = /* One line for each domain (follow the examples here please). */ array
 	(
 		"[YOUR DOMAIN]" => "[FULL URL TO AN IPN HANDLER FOR YOUR DOMAIN]",
@@ -49,9 +43,9 @@ unset($_key, $_value);
 $_p = (get_magic_quotes_gpc()) ? stripslashes_deep($_POST) : $_POST;
 $_p = trim_deep /* Now trim this array deeply. */($_p);
 
-if (preg_match("/\<s2_custom\>\s*(.+?)(?:\|.*?)?\s*\<\/s2_custom\>/i", (string)@$_p["order-summary_shopping-cart_items_item-1_merchant-private-item-data"], $_m) && !empty($config[$_m[1]]))
+if (is_object($_jwt = JWT::decode((string)@$_p["jwt"], $key)) && !empty($_jwt->request->sellerData->cs) && preg_match("/^(.+?)(?:\||$)/i", (string)$_jwt->request->sellerData->cs, $_m) && !empty($config[$_m[1]]))
 	echo (trim(curlpsr(($_url = $config[$_m[1]]), http_build_query($_p, null, "&"))));
-unset($_url, $_m);
+unset($_jwt, $_url, $_m);
 /*
 ---- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------*/
 
@@ -94,4 +88,167 @@ function curlpsr ($url = FALSE, $post_vars = array (), $max_con_secs = 20, $max_
 
 		return (!empty($o)) ? $o : false;
 	}
+/**
+ * JSON Web Token implementation
+ *
+ * Minimum implementation used by Realtime auth, based on this spec:
+ * http://self-issued.info/docs/draft-jones-json-web-token-01.html.
+ *
+ * @author Neuman Vong <neuman@twilio.com>
+ */
+class JWT
+{
+    /**
+     * @param string      $jwt    The JWT
+     * @param string|null $key    The secret key
+     * @param bool        $verify Don't skip verification process
+     *
+     * @return object The JWT's payload as a PHP object
+     */
+    public static function decode($jwt, $key = null, $verify = true)
+    {
+        $tks = explode('.', $jwt);
+        if (count($tks) != 3) {
+            throw new UnexpectedValueException('Wrong number of segments');
+        }
+        list($headb64, $payloadb64, $cryptob64) = $tks;
+        if (null === ($header = JWT::jsonDecode(JWT::urlsafeB64Decode($headb64)))
+        ) {
+            throw new UnexpectedValueException('Invalid segment encoding');
+        }
+        if (null === $payload = JWT::jsonDecode(JWT::urlsafeB64Decode($payloadb64))
+        ) {
+            throw new UnexpectedValueException('Invalid segment encoding');
+        }
+        $sig = JWT::urlsafeB64Decode($cryptob64);
+        if ($verify) {
+            if (empty($header->alg)) {
+                throw new DomainException('Empty algorithm');
+            }
+            if ($sig != JWT::sign("$headb64.$payloadb64", $key, $header->alg)) {
+                throw new UnexpectedValueException('Signature verification failed');
+            }
+        }
+        return $payload;
+    }
+
+    /**
+     * @param object|array $payload PHP object or array
+     * @param string       $key     The secret key
+     * @param string       $algo    The signing algorithm
+     *
+     * @return string A JWT
+     */
+    public static function encode($payload, $key, $algo = 'HS256')
+    {
+        $header = array('typ' => 'JWT', 'alg' => $algo);
+
+        $segments = array();
+        $segments[] = JWT::urlsafeB64Encode(JWT::jsonEncode($header));
+        $segments[] = JWT::urlsafeB64Encode(JWT::jsonEncode($payload));
+        $signing_input = implode('.', $segments);
+
+        $signature = JWT::sign($signing_input, $key, $algo);
+        $segments[] = JWT::urlsafeB64Encode($signature);
+
+        return implode('.', $segments);
+    }
+
+    /**
+     * @param string $msg    The message to sign
+     * @param string $key    The secret key
+     * @param string $method The signing algorithm
+     *
+     * @return string An encrypted message
+     */
+    public static function sign($msg, $key, $method = 'HS256')
+    {
+        $methods = array(
+            'HS256' => 'sha256',
+            'HS384' => 'sha384',
+            'HS512' => 'sha512',
+        );
+        if (empty($methods[$method])) {
+            throw new DomainException('Algorithm not supported');
+        }
+        return hash_hmac($methods[$method], $msg, $key, true);
+    }
+
+    /**
+     * @param string $input JSON string
+     *
+     * @return object Object representation of JSON string
+     */
+    public static function jsonDecode($input)
+    {
+        $obj = json_decode($input);
+        if (function_exists('json_last_error') && $errno = json_last_error()) {
+            JWT::handleJsonError($errno);
+        }
+        else if ($obj === null && $input !== 'null') {
+            throw new DomainException('Null result with non-null input');
+        }
+        return $obj;
+    }
+
+    /**
+     * @param object|array $input A PHP object or array
+     *
+     * @return string JSON representation of the PHP object or array
+     */
+    public static function jsonEncode($input)
+    {
+        $json = json_encode($input);
+        if (function_exists('json_last_error') && $errno = json_last_error()) {
+            JWT::handleJsonError($errno);
+        }
+        else if ($json === 'null' && $input !== null) {
+            throw new DomainException('Null result with non-null input');
+        }
+        return $json;
+    }
+
+    /**
+     * @param string $input A base64 encoded string
+     *
+     * @return string A decoded string
+     */
+    public static function urlsafeB64Decode($input)
+    {
+        $remainder = strlen($input) % 4;
+        if ($remainder) {
+            $padlen = 4 - $remainder;
+            $input .= str_repeat('=', $padlen);
+        }
+        return base64_decode(strtr($input, '-_', '+/'));
+    }
+
+    /**
+     * @param string $input Anything really
+     *
+     * @return string The base64 encode of what you passed in
+     */
+    public static function urlsafeB64Encode($input)
+    {
+        return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
+    }
+
+    /**
+     * @param int $errno An error number from json_last_error()
+     *
+     * @return void
+     */
+    private static function handleJsonError($errno)
+    {
+        $messages = array(
+            JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+            JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
+            JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON'
+        );
+        throw new DomainException(isset($messages[$errno])
+            ? $messages[$errno]
+            : 'Unknown JSON error: ' . $errno
+        );
+    }
+}
 ?>

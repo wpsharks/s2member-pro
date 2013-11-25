@@ -93,8 +93,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_css_js"))
 						echo "\n" . $g . "\n"; // Add a line break before inclusion.
 
 						if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_sandbox"])
-							include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/google/google-sandbox-min.js";
-						else include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/google/google-min.js";
+							echo "document.write('<script src=\"https://sandbox.google.com/checkout/inapp/lib/buy.js\"></script>');"."\n";
+						else echo "document.write('<script src=\"https://wallet.google.com/inapp/lib/buy.js\"></script>');"."\n";
+
+						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/google/google-min.js";
 
 						return /* Return for uniformity. */;
 					}

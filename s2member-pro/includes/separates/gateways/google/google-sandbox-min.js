@@ -1,1 +1,0 @@
-jQuery(document).ready(function(a){});document.write('<script src="https://sandbox.google.com/checkout/inapp/lib/buy.js"><\/script>');

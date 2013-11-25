@@ -109,7 +109,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level'.$n.'-forms-section">'."\n";
 								echo '<h3>Pro Form Generator For Level #'.$n.' Access</h3>'."\n";
 								echo '<p>Very simple. All you do is customize the form fields provided, for each Membership Level that you plan to offer. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. Member accounts will be activated instantly, in an automated fashion. When a Member cancels their Membership, or fails to make payments on time, s2Member will automatically terminate their Membership privileges. s2Member makes extensive use of the Authorize.Net Silent Post and ARB services. s2Member receives updates from Authorize.Net behind-the-scene.</p>'."\n";
-								echo '<p><em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located. We suggest placing a link to this Form on your Membership Options Page. That way your visitors can get registered &amp; checkout!</em></p>'."\n";
+								echo '<p><em><strong>Please note:</strong> forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located. We suggest placing a link to this Form on your Membership Options Page. That way your visitors can get registered &amp; checkout!</em></p>'."\n";
 
 								echo '<table class="form-table">'."\n";
 								echo '<tbody>'."\n";
@@ -307,7 +307,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">'."\n";
 						echo '<h3>Registration Access Link Generator (for Customer Service)</h3>'."\n";
-						echo '<p>s2Member Pro Forms consolidate the Registration/Checkout process into a single-step solution, so it is unlikely that you will ever need this tool. That being said, if you DO need to deal with a Customer Service issue that requires a simple paid Registration Access Link to be created manually, you can use this tool for that. Alternatively, you can create their account yourself/manually by going to <code>s2Member -› Add A Member</code>. Either of these methods will work fine.</p>'."\n";
+						echo '<p>s2Member Pro Forms consolidate the Registration/Checkout process into a single-step solution, so it is unlikely that you will ever need this tool. That being said, if you DO need to deal with a Customer Service issue that requires a simple paid Registration Access Link to be created manually, you can use this tool for that. Alternatively, you can create their account yourself/manually by going to <code>Users -› Add New</code>. Either of these methods will work fine.</p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -340,7 +340,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<p>s2Member now supports an additional layer of functionality (very powerful), which allows you to sell access to specific Posts/Pages that you\'ve created in WordPress. Specific Post/Page Access works independently from Member Level Access. That is, you can sell an unlimited number of Posts/Pages using "Buy Now" functionality. Your Customers will NOT be required to have a Membership Account with your site in order to receive access. If they are already a Member, that\'s fine, but they won\'t need to be.</p>'."\n";
 						echo '<p>In other words, Customers will NOT need to login, just to receive access to the Specific Post/Page they purchased access to. s2Member will immediately redirect the Customer to the Specific Post/Page after checkout is completed successfully. An email is also sent to the Customer with a link (see: <code>s2Member -› Authorize.Net Options -› Specific Post/Page Email</code>). Authentication is handled automatically through self-expiring links, good for 72 hours by default.</p>'."\n";
 						echo '<p>Specific Post/Page Access, is sort of like selling a product. Only, instead of shipping anything to the Customer, you just give them access to a specific Post/Page on your site; one that you created in WordPress. A Specific Post/Page that is protected by s2Member, might contain a download link for your eBook, access to file &amp; music downloads, access to additional support services, and the list goes on and on. The possibilities with this are endless; as long as your digital product can be delivered through access to a WordPress Post/Page that you\'ve created. To protect Specific Posts/Pages, please see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>. Once you\'ve configured your Specific Post/Page Restrictions, those Posts/Pages will be available in the menus below.</p>'."\n";
-						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em>* Forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located.</em></p>'."\n";
+						echo '<p>Very simple. All you do is customize the form fields provided, for each Post/Page that you plan to sell. Then press (Generate Form Code). These special Authorize.Net Forms are customized to work with s2Member seamlessly. You can even Package Additional Posts/Pages together into one transaction. <em><strong>Please note:</strong> forms are NOT saved here. This is only a Form Generator. Once you\'ve generated your Form, copy/paste it into any Post/Page you like. You\'ll want to provide your visitors with a link to the Post/Page where this Form is located.</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -395,8 +395,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<div class="ws-menu-page-group" title="Authorize.Net Specific Post/Page Access Links">'."\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">'."\n";
-						echo '<h3>Specific Post/Page Link Generator (for Customer Service)</h3>'."\n";
-						echo '<p>s2Member automatically generates Specific Post/Page Links for your Customers after checkout, and also sends them a link in a Confirmation Email. However, if you ever need to deal with a Customer Service issue that requires a new Specific Post/Page Link to be created manually, you can use this tool for that.</p>'."\n";
+						echo '<h3>Specific Post/Page Access Link Generator (for Customer Service)</h3>'."\n";
+						echo '<p>s2Member automatically generates Specific Post/Page Access Links for your Customers after checkout, and also sends them a link in a Confirmation Email. However, if you ever need to deal with a Customer Service issue that requires a new Specific Post/Page Access Link to be created manually, you can use this tool for that.</p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
