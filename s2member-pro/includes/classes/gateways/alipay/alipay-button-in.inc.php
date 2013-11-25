@@ -66,6 +66,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
 						$attr["ccaps"] = /* Custom Capabilities must be typed in lower-case format. Only after running shortcode_atts(). */ strtolower ($attr["ccaps"]);
+						$attr["ccaps"] = /* Custom Capabilities should not have spaces. */ str_replace(" ", "", $attr["ccaps"]);
 						$attr["success"] = /* Convert ampersands. */ str_ireplace (array ("&#038;", "&amp;"), "&", $attr["success"]);
 
 						if /* Specific Post/Page Buttons. */ ($attr["sp"])
