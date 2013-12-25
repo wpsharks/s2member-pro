@@ -83,7 +83,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_payflow_poll"))
 																if(is_array($ipn_sv = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(false, $subscr_id)) #
 																&& ($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)) && is_array($paypal["ipn_signup_vars"] = $ipn_sv))
 																	{
-																		if(preg_match("/expired/i", $paypal["STATUS"]) /* Expired? */)
+																		if(preg_match("/expired|too many failures/i", $paypal["STATUS"]))
 																			{
 																				$paypal["s2member_log"][] = "Payflow IPN via polling, processed on: ".date("D M j, Y g:i:s a T");
 
