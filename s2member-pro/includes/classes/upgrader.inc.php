@@ -269,7 +269,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 				 *
 				 * @return float A float indicating the number of bytes.
 				 */
-				public function abbr_bytes($string)
+				public static function abbr_bytes($string)
 					{
 						$string = (string)$string;
 
