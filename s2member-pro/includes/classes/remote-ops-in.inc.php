@@ -44,6 +44,89 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 		class c_ws_plugin__s2member_pro_remote_ops_in
 			{
 				/**
+				* Gets data for an existing User.
+				*
+				* @package s2Member\API_Remote_Ops
+				* @since 140103
+				*
+				* @param array An input array of Remote Operation parameters.
+				* @return str Returns a serialized array with an `ID` element object on success (among other array elements);
+				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+				*/
+				public static function get_user ($op = NULL)
+					{
+						if (!empty ($op["op"]) && $op["op"] === "get_user" && !empty ($op["data"]) && is_array ($op["data"]))
+							{
+								if(!empty($op["data"]["user_id"]) && ($_user = new WP_User((integer)$op["data"]["user_id"])) && !empty($_user->ID))
+									$user = $_user;
+
+								else if(!empty($op["data"]["user_login"]) && ($_user = new WP_User((string)$op["data"]["user_login"])) && !empty($_user->ID))
+									$user = $_user;
+
+								else if(!empty($op["data"]["user_email"]) && ($_user = get_user_by('email', (string)$op["data"]["user_email"])) && !empty($_user->ID))
+									$user = $_user;
+
+								else return "Error: Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e. ID/Username/Email not found).";
+
+								if (is_multisite () && !is_user_member_of_blog ($user->ID))
+									return "Error: Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e. ID/Username/Email not a part of this Blog).";
+
+								$role = c_ws_plugin__s2member_user_access::user_access_role ($user);
+								$level = c_ws_plugin__s2member_user_access::user_access_role_to_level($role);
+								$ccaps = c_ws_plugin__s2member_user_access::user_access_ccaps($user);
+								$data = (array)$user->data; unset($data['user_pass']);
+								$s2member_originating_blog = get_user_option("s2member_originating_blog", $user->ID);
+								$s2member_subscr_gateway = get_user_option("s2member_subscr_gateway", $user->ID);
+								$s2member_subscr_id = get_user_option("s2member_subscr_id", $user->ID);
+								$s2member_custom = get_user_option("s2member_custom", $user->ID);
+								$s2member_registration_ip = get_user_option("s2member_registration_ip", $user->ID);
+								$s2member_notes = get_user_option("s2member_notes", $user->ID);
+								$s2member_auto_eot_time = get_user_option("s2member_auto_eot_time", $user->ID);
+								$s2member_custom_fields = get_user_option("s2member_custom_fields", $user->ID);
+								$s2member_paid_registration_times = get_user_option("s2member_paid_registration_times", $user->ID);
+								$s2member_file_download_access_log = get_user_option("s2member_file_download_access_log", $user->ID);
+
+								return serialize (array ("ID" => $user->ID, "role" => $role, "level" => $level, "ccaps" => $ccaps, "data" => $user->data,
+								                           "s2member_originating_blog" => $s2member_originating_blog,
+								                           "s2member_subscr_gateway" => $s2member_subscr_gateway,
+								                           "s2member_subscr_id" => $s2member_subscr_id,
+								                           "s2member_custom" => $s2member_custom,
+								                           "s2member_registration_ip" => $s2member_registration_ip,
+								                           "s2member_notes" => $s2member_notes,
+								                           "s2member_auto_eot_time" => $s2member_auto_eot_time,
+								                           "s2member_custom_fields" => $s2member_custom_fields,
+								                           "s2member_paid_registration_times" => $s2member_paid_registration_times,
+								                           "s2member_file_download_access_log" => $s2member_file_download_access_log));
+							}
+						return "Error: Empty or invalid request ( `get_user` ). Please try again.";
+					}
+				/**
+				* Checks authentication for an existing User.
+				*
+				* @package s2Member\API_Remote_Ops
+				* @since 140103
+				*
+				* @param array An input array of Remote Operation parameters.
+				* @return str Returns a serialized array with an `ID` element object on success;
+				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+				*/
+				public static function auth_check_user ($op = NULL)
+					{
+						if (!empty ($op["op"]) && $op["op"] === "auth_check_user" && !empty ($op["data"]) && is_array ($op["data"]))
+							{
+								if(!empty($op["data"]["user_login"]) && !empty($op["data"]["user_pass"]) && ($_user = wp_authenticate($op["data"]["user_login"], $op["data"]["user_pass"])) && !empty($_user->ID))
+									$user = $_user;
+
+								else return "Error: Failed to authenticate this User. Unable to authenticate User/Member with data supplied (i.e. Username/Password invalid).";
+
+								if (is_multisite () && !is_user_member_of_blog ($user->ID))
+									return "Error: Failed to authenticate this User (i.e. the supplied Username is not a part of this Blog).";
+
+								return serialize (array ("ID" => $user->ID));
+							}
+						return "Error: Empty or invalid request ( `auth_check_user` ). Please try again.";
+					}
+				/**
 				* Creates a new User.
 				*
 				* @package s2Member\API_Remote_Ops
