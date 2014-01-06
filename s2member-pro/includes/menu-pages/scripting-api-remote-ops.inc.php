@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_remote_ops_api"))
 								echo '<h4>Remote Operations API: <strong>Your secret API Key</strong></h4>'."\n";
 								echo '<input type="text" autocomplete="off" value="' . format_to_edit (c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen ()) . '" style="width:99%;" />' . "\n";
 
-								echo '<p><em><strong class="ws-menu-page-hilite">Experimental:</strong> The Remote Operations API is currently in an experimental state. The Operations that are currently possible include: <code>create_user</code>, <code>modify_user</code>, <code>delete_user</code>. In a future release of s2Member Pro, we will add further documentation and some additional Remote Operations to this API. Thanks for your patience.</em></p>' . "\n";
+								echo '<p><em><strong class="ws-menu-page-hilite">Experimental:</strong> The Remote Operations API is currently in an experimental state. The Operations that are currently possible include: <code>auth_check_user</code>, <code>get_user</code>, <code>create_user</code>, <code>modify_user</code>, <code>delete_user</code>. In a future release of s2Member Pro, we will add further documentation and some additional Remote Operations to this API. Thanks for your patience.</em></p>' . "\n";
 
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
