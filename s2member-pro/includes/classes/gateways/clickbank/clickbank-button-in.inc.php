@@ -62,7 +62,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
 
-						$attr = shortcode_atts(array("cbp" => "0", "cbskin" => "", "cbfid" => "", "cbur" => "", "cbf" => "auto", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
+						$attr = shortcode_atts(array("cbp" => "0", "cbskin" => "", "cbfid" => "", "cbur" => "", "cbf" => "auto", "tid" => "", "vtid" => "", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["rt"]);
@@ -114,7 +114,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
+								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
 								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
@@ -152,7 +157,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
+								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 
@@ -194,7 +204,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
 								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
 								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
+								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
 

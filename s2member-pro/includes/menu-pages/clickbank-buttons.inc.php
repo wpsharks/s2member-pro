@@ -391,6 +391,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 						echo '<li><code>sp="0"</code> Specific Post/Page Button. Possible values: <code>0</code> = this is NOT a Specific Post/Page Access Button, <code>1</code> = this IS a Specific Post/Page Access Button.</li>' . "\n";
 						echo '<li><code>tp="0"</code> Trial Period. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when you\'re selling a "Standard" ClickBank Product. <a href="#" onclick="alert(\'This MUST correlate with a Recurring Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a></li>' . "\n";
 						echo '<li><code>tt="D"</code> Trial Term. Only valid w/ Membership Level Access. Possible values: <code>D</code> = Days, <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years. <a href="#" onclick="alert(\'This MUST correlate with a Recurring Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a></li>' . "\n";
+						echo '<li><code>vtid=""</code> Optional ClickBank <a href="http://www.s2member.com/r/clickbank-vtid-support/" target="_blank" rel="external">Vendor Tracking ID</a>.</li>' . "\n";
 						echo '</ul>' . "\n";
 						echo '</td>' . "\n";
 
