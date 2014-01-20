@@ -279,7 +279,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																			{
 																				update_user_option($user_id, "s2member_auto_eot_time", $start_time);
 																			}
-																		if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id))
+																		if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																			{
 																				c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet);
 																			}
@@ -617,7 +617,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																		$ipn["s2member_authnet_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
 																if(!$is_independent_ccaps_sale) // Independent?
-																	if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id))
+																	if(($authnet = array("x_method" => "cancel")) && ($authnet["x_subscription_id"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																		{
 																			c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response($authnet);
 																		}

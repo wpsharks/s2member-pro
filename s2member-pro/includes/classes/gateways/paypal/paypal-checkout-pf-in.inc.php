@@ -380,7 +380,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-																if($old__subscr_id) // There is an old Recurring Profile?
+																if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
 
 																setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
@@ -714,7 +714,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
-																if(!$is_independent_ccaps_sale && $old__subscr_id) // There is an old Recurring Profile?
+																if(!$is_independent_ccaps_sale && $old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
 
 																setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);

@@ -181,7 +181,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																$paypal_set_xco["PAYMENTREQUEST_0_SHIPTOZIP"] = $post_vars["zip"];
 
 																$paypal_set_xco["EMAIL"] = ($user) ? $user->user_email : $post_vars["email"];
-																
+
 																$paypal_set_xco = apply_filters('ws_plugin__s2member_pro_paypal_set_xco_vars', $paypal_set_xco, get_defined_vars());
 															}
 														if(($paypal_set_xco = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_set_xco)) && empty($paypal_set_xco["__error"]))
@@ -320,7 +320,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 
 																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
-																		if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id))
+																		if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																			{
 																				$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
 																				$paypal["ACTION"] = "Cancel";
@@ -643,7 +643,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
 																		if /* Independent? */(!$is_independent_ccaps_sale)
-																			if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id))
+																			if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
 																				{
 																					$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
 																					$paypal["ACTION"] = "Cancel";
