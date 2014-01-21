@@ -96,7 +96,7 @@ jQuery(document).ready (function($)
 						var desc = $.trim ($('input#ws-plugin--s2member-pro-' + button + '-desc').val ().replace (/"/g, ""));
 
 						var prodType = $('select#ws-plugin--s2member-pro-' + button + '-type').val ().replace (/[^A-Z]/gi, '').toLowerCase ();
-						var prodItem = $('input#ws-plugin--s2member-pro-' + button + '-item-number').val ().replace (/[^0-9]/g, '');
+						var prodItem = $('input#ws-plugin--s2member-pro-' + button + '-item-number').val ().replace (/[^A-Z0-9]/gi, '');
 
 						if /* In this case, we used the Fixed-Term configuration. */ (prodType === 'standard')
 							{
@@ -157,7 +157,7 @@ jQuery(document).ready (function($)
 						var desc = $.trim ($('input#ws-plugin--s2member-pro-ccap-desc').val ().replace (/"/g, ""));
 
 						var prodType = $('select#ws-plugin--s2member-pro-ccap-type').val ().replace (/[^A-Z]/gi, '').toLowerCase ();
-						var prodItem = $('input#ws-plugin--s2member-pro-ccap-item-number').val ().replace (/[^0-9]/g, '');
+						var prodItem = $('input#ws-plugin--s2member-pro-ccap-item-number').val ().replace (/[^A-Z0-9]/gi, '');
 
 						if /* In this case, we used the Fixed-Term configuration. */ (prodType === 'standard')
 							{
@@ -211,7 +211,7 @@ jQuery(document).ready (function($)
 
 						var shortCode = $('input#ws-plugin--s2member-pro-sp-shortcode');
 
-						var prodItem = $('input#ws-plugin--s2member-pro-sp-item-number').val ().replace (/[^0-9]/g, '');
+						var prodItem = $('input#ws-plugin--s2member-pro-sp-item-number').val ().replace (/[^A-Z0-9]/gi, '');
 
 						var leading = $('select#ws-plugin--s2member-pro-sp-leading-id').val ().replace (/[^0-9]/g, '');
 						var additionals = $('select#ws-plugin--s2member-pro-sp-additional-ids').val () || [];
