@@ -22,7 +22,7 @@ Requires: s2Member® Framework
 
 Copyright: © 2009 WebSharks, Inc.
 License: GNU General Public License v2 or later.
-Contributors: WebSharks, anguz, raamdev
+Contributors: WebSharks, JasWSInc, anguz, raamdev
 
 Author: s2Member® / WebSharks, Inc.
 Author URI: http://www.s2member.com/
