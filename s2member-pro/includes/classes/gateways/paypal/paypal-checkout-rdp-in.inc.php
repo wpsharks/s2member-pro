@@ -160,6 +160,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$paypal_set_xco["L_BILLINGTYPE0"] = "RecurringPayments";
 																		$paypal_set_xco["L_BILLINGAGREEMENTDESCRIPTION0"] = $cost_calculations["desc"];
 
+																		if($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0
+																		   && $cost_calculations["trial_total"] > $cost_calculations["total"])
+																			$paypal_set_xco["MAXAMT"] = $cost_calculations["trial_total"];
+																		else $paypal_set_xco["MAXAMT"] = $cost_calculations["total"];
+
 																		if (!$post_vars["attr"]["tp"] || ($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0))
 																			{
 																				$paypal_set_xco["PAYMENTREQUEST_0_PAYMENTACTION"] = "Sale";
@@ -197,6 +202,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																	{
 																		$paypal_set_xco["PAYMENTREQUEST_0_PAYMENTACTION"] = "Sale";
 
+																		$paypal_set_xco["MAXAMT"] = $cost_calculations["total"];
+
 																		$paypal_set_xco["PAYMENTREQUEST_0_DESC"] = $cost_calculations["desc"];
 																		$paypal_set_xco["PAYMENTREQUEST_0_CUSTOM"] = $post_vars["attr"]["custom"];
 
@@ -210,7 +217,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$paypal_set_xco["L_PAYMENTREQUEST_0_NUMBER0"] = $post_vars["attr"]["level_ccaps_eotper"];
 																		$paypal_set_xco["L_PAYMENTREQUEST_0_AMT0"] = $cost_calculations["sub_total"];
 																	}
-
 																$paypal_set_xco["PAYMENTREQUEST_0_SHIPTONAME"] = $post_vars["name"];
 																$paypal_set_xco["PAYMENTREQUEST_0_SHIPTOSTREET"] = $post_vars["street"];
 																$paypal_set_xco["PAYMENTREQUEST_0_SHIPTOCITY"] = $post_vars["city"];

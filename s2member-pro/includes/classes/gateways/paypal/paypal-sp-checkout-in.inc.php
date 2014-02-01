@@ -118,6 +118,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 																$paypal_set_xco["PAYMENTREQUEST_0_PAYMENTACTION"] = "Sale";
 
+																$paypal_set_xco["MAXAMT"] = $cost_calculations["total"];
+
 																$paypal_set_xco["PAYMENTREQUEST_0_DESC"] = $cost_calculations["desc"];
 																$paypal_set_xco["PAYMENTREQUEST_0_CUSTOM"] = $post_vars["attr"]["custom"];
 																$paypal_set_xco["PAYMENTREQUEST_0_INVNUM"] = $post_vars["attr"]["invoice"];
