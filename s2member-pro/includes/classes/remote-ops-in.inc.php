@@ -86,7 +86,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 								$s2member_paid_registration_times = get_user_option("s2member_paid_registration_times", $user->ID);
 								$s2member_file_download_access_log = get_user_option("s2member_file_download_access_log", $user->ID);
 
-								return serialize (array ("ID" => $user->ID, "role" => $role, "level" => $level, "ccaps" => $ccaps, "data" => $user->data,
+								return serialize (array ("ID" => $user->ID, "role" => $role, "level" => $level, "ccaps" => $ccaps, "data" => $data,
 								                           "s2member_originating_blog" => $s2member_originating_blog,
 								                           "s2member_subscr_gateway" => $s2member_subscr_gateway,
 								                           "s2member_subscr_id" => $s2member_subscr_id,
