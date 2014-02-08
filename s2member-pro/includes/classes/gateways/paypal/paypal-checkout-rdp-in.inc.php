@@ -160,8 +160,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$paypal_set_xco["L_BILLINGTYPE0"] = "RecurringPayments";
 																		$paypal_set_xco["L_BILLINGAGREEMENTDESCRIPTION0"] = $cost_calculations["desc"];
 
-																		if($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0
-																		   && $cost_calculations["trial_total"] > $cost_calculations["total"])
+																		if($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
 																			$paypal_set_xco["MAXAMT"] = $cost_calculations["trial_total"];
 																		else $paypal_set_xco["MAXAMT"] = $cost_calculations["total"];
 
