@@ -96,7 +96,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 												if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 													{
 														$ID = $data[0];
-														
+
 														$user_login = (is_multisite()) ? strtolower($data[1]) : $data[1];
 														$user_login = preg_replace("/\s+/", "", sanitize_user($user_login, is_multisite()));
 														$user_pass = (string)"";
@@ -196,6 +196,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
 
 																																		if(($user_id = wp_update_user($user_details)))
 																																			{
+																																				$user = new WP_User($ID); // Refresh object value.
+
 																																				update_user_option($user_id, "s2member_custom", $custom);
 																																				update_user_option($user_id, "s2member_subscr_id", $subscr_id);
 																																				update_user_option($user_id, "s2member_subscr_gateway", $subscr_gateway);
