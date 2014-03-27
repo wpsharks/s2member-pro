@@ -92,7 +92,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_registration_in"))
 																	if (isset ($post_vars["custom_fields"][$field_var]))
 																		$_POST["ws_plugin__s2member_custom_reg_field_" . $field_var] = $post_vars["custom_fields"][$field_var];
 																}
-
 														$GLOBALS["ws_plugin__s2member_registration_vars"]["ws_plugin__s2member_custom_reg_field_s2member_level"] = $post_vars["attr"]["level"];
 														$GLOBALS["ws_plugin__s2member_registration_vars"]["ws_plugin__s2member_custom_reg_field_s2member_ccaps"] = $post_vars["attr"]["ccaps"];
 														$GLOBALS["ws_plugin__s2member_registration_vars"]["ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time"] = $post_vars["attr"]["tp"] . " " . $post_vars["attr"]["tt"];

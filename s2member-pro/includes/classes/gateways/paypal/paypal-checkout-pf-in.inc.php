@@ -554,9 +554,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = $post_vars["last_name"]; // Fake this for registration configuration.
 																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = $post_vars["custom_fields"]["opt_in"]; // Fake this too.
 
-																		if(!empty($paypal_xco_bagree["BAID"])) // For registration configuration.
-																			$GLOBALS["ws_plugin__s2member_subscr_baid"] = $paypal_xco_bagree["BAID"]; // @TODO
-
 																		if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
 																			foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 																				{
@@ -566,6 +563,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																					if(isset($post_vars["custom_fields"][$field_var]))
 																						$_POST["ws_plugin__s2member_custom_reg_field_".$field_var] = $post_vars["custom_fields"][$field_var];
 																				}
+																		if(!empty($paypal_xco_bagree["BAID"])) // For registration configuration.
+																			$GLOBALS["ws_plugin__s2member_registration_vars"]["ws_plugin__s2member_custom_reg_field_s2member_subscr_baid"] = $paypal_xco_bagree["BAID"];
 
 																		$_COOKIE["s2member_subscr_gateway"] = c_ws_plugin__s2member_utils_encryption::encrypt("paypal"); // Fake this for registration configuration.
 																		$_COOKIE["s2member_subscr_id"] = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id); // Fake this for registration configuration.
