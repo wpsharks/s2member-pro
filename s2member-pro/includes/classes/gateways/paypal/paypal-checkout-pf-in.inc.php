@@ -169,14 +169,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal_set_xco["INVNUM"] = $reference;
 
 																		$paypal_set_xco["BILLINGTYPE"] = "RecurringBilling";
-																		$paypal_set_xco["L_BILLINGTYPE0"] = "RecurringBilling";
+																		// When this is present an amount of 0.00 is not allowed for whatever reason.
+																		// $paypal_set_xco["L_BILLINGTYPE0"] = "RecurringBilling";
 
 																		$paypal_set_xco["ORDERDESC"] = $cost_calculations["desc"];
 																		$paypal_set_xco["BA_DESC"] = $cost_calculations["desc"];
+																		// This is required to get the description to show up during checkout; and in `mb_desc` via IPNs.
 																		$paypal_set_xco["L_BILLINGAGREEMENTDESCRIPTION0"] = $cost_calculations["desc"];
 
 																		$paypal_set_xco["CUSTOM"] = $_SERVER["HTTP_HOST"];
 																		$paypal_set_xco["BA_CUSTOM"] = $_SERVER["HTTP_HOST"];
+																		$paypal_set_xco["L_BILLINGAGREEMENTCUSTOM0"] = $_SERVER["HTTP_HOST"];
 
 																		$paypal_set_xco["ADDROVERRIDE"] = "1";
 																		$paypal_set_xco["SHIPTONAME"] = $post_vars["name"];
