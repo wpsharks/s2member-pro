@@ -138,6 +138,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;
 
+														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
+														$period3 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars["attr"]["rp"]." ".$post_vars["attr"]["rt"]);
+
+														$start_time = ($post_vars["attr"]["tp"]) ? // If there's an Initial/Trial Period; start when it's over.
+														c_ws_plugin__s2member_pro_paypal_utilities::paypal_start_time($period1) : // After Trial is over.
+														c_ws_plugin__s2member_pro_paypal_utilities::paypal_start_time($period3); // Or next billing cycle.
+
+														$reference = $start_time.":".$period1.":".$period3."~".$_SERVER["HTTP_HOST"]."~".$post_vars["attr"]["level_ccaps_eotper"];
+
 														if(!($paypal_set_xco = array()) /* PayPal Express Checkout. */)
 															{
 																if($use_recurring_profile /* Use Payflow API instead? */)
@@ -157,11 +166,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal_set_xco["AMT"] = "0.00";
 																		$paypal_set_xco["CURRENCY"] = $cost_calculations["cur"];
 																		$paypal_set_xco["PAYMENTTYPE"] = "any";
-
-																		$paypal_set_xco["ORDERDESC"] = $cost_calculations["desc"];
+																		$paypal_set_xco["INVNUM"] = $reference;
 
 																		$paypal_set_xco["BILLINGTYPE"] = "RecurringBilling";
+																		$paypal_set_xco["L_BILLINGTYPE0"] = "RecurringBilling";
+
+																		$paypal_set_xco["ORDERDESC"] = $cost_calculations["desc"];
 																		$paypal_set_xco["BA_DESC"] = $cost_calculations["desc"];
+																		$paypal_set_xco["L_BILLINGAGREEMENTDESCRIPTION0"] = $cost_calculations["desc"];
+
+																		$paypal_set_xco["CUSTOM"] = $_SERVER["HTTP_HOST"];
 																		$paypal_set_xco["BA_CUSTOM"] = $_SERVER["HTTP_HOST"];
 
 																		$paypal_set_xco["ADDROVERRIDE"] = "1";
@@ -282,7 +296,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["FAILEDOPTIONALTRXACTION"] = "CancelOnFailure";
 																		$paypal["FAILEDINITAMTACTION"] = "CancelOnFailure";
 																	}
-
 																$paypal["CURRENCY"] = $cost_calculations["cur"];
 																$paypal["AMT"] = $cost_calculations["sub_total"];
 																$paypal["TAXAMT"] = $cost_calculations["tax"];
@@ -325,7 +338,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																					$paypal["CARDISSUE"] = $post_vars["card_start_date_issue_number"];
 																				unset /* A little housekeeping. */($_m);
 																			}
-
 																		$paypal["STREET"] = $post_vars["street"];
 																		$paypal["CITY"] = $post_vars["city"];
 																		$paypal["STATE"] = $post_vars["state"];
@@ -428,7 +440,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["FAILEDOPTIONALTRXACTION"] = "CancelOnFailure";
 																		$paypal["FAILEDINITAMTACTION"] = "CancelOnFailure";
 																	}
-
 																$paypal["CURRENCY"] = $cost_calculations["cur"];
 																$paypal["AMT"] = $cost_calculations["sub_total"];
 																$paypal["TAXAMT"] = $cost_calculations["tax"];
@@ -471,7 +482,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																					$paypal["CARDISSUE"] = $post_vars["card_start_date_issue_number"];
 																				unset /* A little housekeeping. */($_m);
 																			}
-
 																		$paypal["STREET"] = $post_vars["street"];
 																		$paypal["CITY"] = $post_vars["city"];
 																		$paypal["STATE"] = $post_vars["state"];

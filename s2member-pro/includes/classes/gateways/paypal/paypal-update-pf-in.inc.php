@@ -107,7 +107,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 																				else $paypal["CARDISSUE"] = $post_vars["card_start_date_issue_number"];
 																				unset /* A little housekeeping. */($_m);
 																			}
-
 																		$paypal["STREET"] = $post_vars["street"];
 																		$paypal["CITY"] = $post_vars["city"];
 																		$paypal["STATE"] = $post_vars["state"];
