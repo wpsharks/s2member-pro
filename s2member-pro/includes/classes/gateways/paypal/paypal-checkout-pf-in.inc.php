@@ -362,6 +362,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 																		$ipn["txn_id"] = $new__subscr_id;
 
+																		if(!empty($paypal_xco_bagree["BAID"]))
+																			$ipn["txn_baid"] = $paypal_xco_bagree["BAID"];
+
 																		$ipn["period1"] = $period1;
 																		$ipn["period3"] = $period3;
 
@@ -505,6 +508,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$ipn["custom"] = $post_vars["attr"]["custom"];
 
 																		$ipn["txn_id"] = $new__subscr_id;
+
+																		if(!empty($paypal_xco_bagree["BAID"]))
+																			$ipn["txn_baid"] = $paypal_xco_bagree["BAID"];
 
 																		$ipn["period1"] = $period1;
 																		$ipn["period3"] = $period3;
