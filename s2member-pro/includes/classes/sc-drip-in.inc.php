@@ -59,50 +59,49 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 			 */
 			public static function shortcode($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 				{
-					$drip = FALSE;
-					shortcode_atts(array("level" => "0", "after_day" => "0", "until_day" => ""), $attr, $shortcode);
-					$attr["level"] = (integer)$attr["level"]; // Non-integers become `0` here.
+					foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
+					do_action("ws_plugin__s2member_pro_before_sc_drip", get_defined_vars());
+					unset /* Unset defined __refs, __v. */ ($__refs, $__v);
 
-					if(is_super_admin() || current_user_can("administrator")) $drip = TRUE;
-					// This is a bit confusing even still; we need to note this behavior in the docs.
-					// Particularly in the case of `until_day`; which is completely ignored here.
-
-					else if(current_user_can("access_s2member_level".$attr["level"]))
+					if(current_user_can("administrator"))
+						$drip = TRUE;
+					else
 						{
-							$level_time = 0; // Initialize as `0` (not paid).
+							$drip          = FALSE;
+							$attr          = shortcode_atts(array("level" => "0", "from_day" => "0", "to_day" => ""), $attr, $shortcode);
+							$attr["level"] = abs((integer)$attr["level"]);
 
-							if($attr["level"] === 0) // Zero indicates registration time (paid or not).
-								$level_time = c_ws_plugin__s2member_registration_times::registration_time();
-
-							// Here we"re looking at the paid registration time.
-							// We need to look at Levels >= the Level requirement passed to the shortcode.
-							else if(is_array($pr_times = get_user_option("s2member_paid_registration_times")))
-								foreach($pr_times as $_pr_level => $_pr_level_time)
-									{
-										if(is_numeric($_pr_level)) // Considers `level` index.
-											if($_pr_level >= $attr["level"] && (!$level_time || $_pr_level_time < $level_time))
-												// The oldest time; at a Level >= the Level requirement.
-												$level_time = $_pr_level_time;
-									}
-							unset($_pr_level, $_pr_level_time);
-
-							if($level_time) // If they have a paid registration time.
-								// Or, a registration time in the case of `$attr["level"] === 0`.
+							if(current_user_can("access_s2member_level".$attr["level"]))
 								{
-									$time = time(); // Current UTC time.
+									$level_time = 0;
 
-									if($time > ($level_time + ($attr["after_day"] * 86400)))
+									if($attr["level"] === 0)
+										$level_time = c_ws_plugin__s2member_registration_times::registration_time();
+									else
 										{
-											$drip = TRUE; // It is after the required day.
-
-											if(!empty($attr["until_day"]) && $attr["until_day"] > 1)
-												if($time > ($level_time + (($attr["until_day"] - 1) * 86400)))
-													// Do NOT drip, it is after the `until_day` requirement.
-													$drip = FALSE; // Looks good to me also.
+											$paid_times = get_user_option("s2member_paid_registration_times");
+											if(is_array($paid_times))
+												{
+													foreach($paid_times as $_level => $_time)
+														if(is_integer($_level) && $_level >= $attr["level"] && (!$level_time || $_time < $level_time))
+															$level_time = $_time;
+													unset($_level, $_time);
+												}
+										}
+									if($level_time)
+										{
+											$time = time();
+											if($time > ($level_time + (max(0, ($attr["from_day"] - 1)) * 86400)))
+												{
+													$drip = TRUE;
+													if(!empty($attr["to_day"]) && $attr["to_day"] > 1)
+														if($time > ($level_time + ($attr["to_day"] * 86400)))
+															$drip = FALSE;
+												}
 										}
 								}
 						}
-					return $drip ? $content : ""; // Looks good to me also.
+					return apply_filters("ws_plugin__s2member_pro_sc_drip_content", $drip ? $content : "", get_defined_vars());
 				}
 		}
 	}
