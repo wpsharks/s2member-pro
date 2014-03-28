@@ -63,7 +63,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 					shortcode_atts(array("level" => "0", "after_day" => "0", "until_day" => ""), $attr, $shortcode);
 					$attr["level"] = (integer)$attr["level"]; // Non-integers become `0` here.
 
-					if(is_super_admin()) $drip = TRUE; // Super admins have full access.
+					if(is_super_admin() || current_user_can("administrator")) $drip = TRUE;
 					// This is a bit confusing even still; we need to note this behavior in the docs.
 					// Particularly in the case of `until_day`; which is completely ignored here.
 
