@@ -708,7 +708,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-triggers-immediate-eot">' . "\n";
-						echo 'Refunds/Reversals (trigger Immediate EOT)?' . "\n";
+						echo 'Refunds/Partial Refunds/Reversals (trigger Immediate EOT)?'."\n";
 						echo '</label>' . "\n";
 						echo '</th>' . "\n";
 
@@ -717,7 +717,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 						echo '<td>' . "\n";
 						echo '<select name="ws_plugin__s2member_triggers_immediate_eot" id="ws-plugin--s2member-triggers-immediate-eot" disabled="disabled">' . "\n";
-						echo '<option value="none" selected="selected">Neither (I\'ll review these two events manually)</option>' . "\n";
+						echo '<option value="none" selected="selected">Neither (I\'ll review these three events manually)</option>' . "\n";
 						echo '</select><br />' . "\n";
 						echo '<em>N/A with Google Wallet. Google does NOT notify s2Member on refunds/chargebacks.</em>' . "\n";
 						echo '</td>' . "\n";
