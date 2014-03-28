@@ -60,24 +60,49 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 			public static function shortcode($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 				{
 					$drip = FALSE;
-					shortcode_atts(array("level" => "0", "after_day" => "0", "before_day" => NULL), $attr, $shortcode);
+					shortcode_atts(array("level" => "0", "after_day" => "0", "until_day" => ""), $attr, $shortcode);
 					$attr["level"] = (integer)$attr["level"]; // Non-integers become `0` here.
 
-					if(current_user_can("access_s2member_level".$attr["level"]))
-						{
-							$level_time = (!$attr["level"])
-								? c_ws_plugin__s2member_registration_times::registration_time()
-								: c_ws_plugin__s2member_registration_times::paid_registration_time("level".$attr["level"]);
+					if(is_super_admin()) $drip = TRUE; // Super admins have full access.
+					// This is a bit confusing even still; we need to note this behavior in the docs.
+					// Particularly in the case of `until_day`; which is completely ignored here.
 
-							$time = time(); // UTC time; including times given by s2Member (all UTC).
-							if($time > ($level_time + ((int)$attr["after_day"] * 86400)))
+					else if(current_user_can("access_s2member_level".$attr["level"]))
+						{
+							$level_time = 0; // Initialize as `0` (not paid).
+
+							if($attr["level"] === 0) // Zero indicates registration time (paid or not).
+								$level_time = c_ws_plugin__s2member_registration_times::registration_time();
+
+							// Here we"re looking at the paid registration time.
+							// We need to look at Levels >= the Level requirement passed to the shortcode.
+							else if(is_array($pr_times = get_user_option("s2member_paid_registration_times")))
+								foreach($pr_times as $_pr_level => $_pr_level_time)
+									{
+										if(is_numeric($_pr_level)) // Considers `level` index.
+											if($_pr_level >= $attr["level"] && (!$level_time || $_pr_level_time < $level_time))
+												// The oldest time; at a Level >= the Level requirement.
+												$level_time = $_pr_level_time;
+									}
+							unset($_pr_level, $_pr_level_time);
+
+							if($level_time) // If they have a paid registration time.
+								// Or, a registration time in the case of `$attr["level"] === 0`.
 								{
-									$drip = TRUE;
-									if(isset($attr["before_day"]) && $time > ($level_time + ((int)$attr["before_day"] * 86400)))
-										$drip = FALSE;
+									$time = time(); // Current UTC time.
+
+									if($time > ($level_time + ($attr["after_day"] * 86400)))
+										{
+											$drip = TRUE; // It is after the required day.
+
+											if(!empty($attr["until_day"]) && $attr["until_day"] > 1)
+												if($time > ($level_time + (($attr["until_day"] - 1) * 86400)))
+													// Do NOT drip, it is after the `until_day` requirement.
+													$drip = FALSE; // Looks good to me also.
+										}
 								}
 						}
-					return $drip ? $content : "";
+					return $drip ? $content : ""; // Looks good to me also.
 				}
 		}
 	}
