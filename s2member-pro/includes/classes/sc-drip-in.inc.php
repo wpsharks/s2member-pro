@@ -59,9 +59,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 			 */
 			public static function shortcode($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 				{
-					foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
+					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 					do_action("ws_plugin__s2member_pro_before_sc_drip", get_defined_vars());
-					unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+					unset /* Unset defined __refs, __v. */
+					($__refs, $__v);
 
 					if(current_user_can("administrator"))
 						$drip = TRUE;
@@ -79,12 +80,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 										$level_time = c_ws_plugin__s2member_registration_times::registration_time();
 									else
 										{
-											$paid_times = get_user_option("s2member_paid_registration_times");
+											$paid_times = // Index include a `level` prefix.
+												get_user_option("s2member_paid_registration_times");
+
 											if(is_array($paid_times))
 												{
 													foreach($paid_times as $_level => $_time)
-														if(is_integer($_level) && $_level >= $attr["level"] && (!$level_time || $_time < $level_time))
-															$level_time = $_time;
+														{
+															$_level = (integer)str_ireplace('level', '', $_level);
+															// The `level` index becomes `0` here ^; all others become integers >= 1.
+															if($_level && $_level >= $attr['level'] && (!$level_time || $_time < $level_time))
+																$level_time = $_time;
+														}
 													unset($_level, $_time);
 												}
 										}
