@@ -87,9 +87,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 												{
 													foreach($paid_times as $_level => $_time)
 														{
-															$_level = (integer)str_ireplace('level', '', $_level);
+															$_level = (integer)str_ireplace("level", "", $_level);
 															// The `level` index becomes `0` here ^; all others become integers >= 1.
-															if($_level && $_level >= $attr['level'] && (!$level_time || $_time < $level_time))
+															if($_level && $_level >= $attr["level"] && (!$level_time || $_time < $level_time))
 																$level_time = $_time;
 														}
 													unset($_level, $_time);
