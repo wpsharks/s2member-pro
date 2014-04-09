@@ -132,7 +132,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array ();
 						$attr["accept"] = (empty ($attr["accept"])) ? array_merge ($attr["accept"], array ("visa")) : $attr["accept"];
 
-						$attr["coupon"] = ($_GET["s2p-coupon"]) ? trim (strip_tags (stripslashes ($_GET["s2p-coupon"]))) : $attr["coupon"];
+						$attr["coupon"] = (!empty($_GET["s2p-coupon"])) ? trim (strip_tags (stripslashes ($_GET["s2p-coupon"]))) : $attr["coupon"];
 
 						$attr["singular"] = /* Collect the Singular ID for this Post/Page. */ get_the_ID ();
 
