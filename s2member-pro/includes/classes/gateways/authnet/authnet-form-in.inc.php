@@ -390,7 +390,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
@@ -528,7 +528,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
@@ -701,7 +701,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of country code options.
 								*/
-								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : $country_default_by_currency;
+								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
 								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
