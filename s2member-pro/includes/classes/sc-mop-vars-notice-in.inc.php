@@ -45,7 +45,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 					   || !c_ws_plugin__s2member_utils_urls::s2member_sig_ok($_SERVER["QUERY_STRING"])
 						// The query string is going to contain the new MOP Vars, whereas this works on the old ones.
 						//    Still, that's OK for now. The new query string vars use an s2Member signature too;
-						//       and the data we're looking at is derived from the new MOP Vars.
+						//       and the data we're looking at is derived from the query string vars.
 					) return "";
 
 					$valid_required_types    = array("level", "ccap", "sp");
