@@ -41,10 +41,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 				{
 					$_g = stripslashes_deep($_GET);
 
-					if(!isset($_g["_s2member_seeking"]) || !is_array($_g["_s2member_seeking"])
+					if(!isset($_g["_s2member_seeking"]) || !is_array($_g["_s2member_seeking"]) || empty($_SERVER["QUERY_STRING"])
 					   || !c_ws_plugin__s2member_utils_urls::s2member_sig_ok($_SERVER["QUERY_STRING"])
 						// The query string is going to contain the new MOP Vars, whereas this works on the old ones.
-						//    Still, that's OK for now. The new query string vars use an s2Member signature too.
+						//    Still, that's OK for now. The new query string vars use an s2Member signature too;
+						//       and the data we're looking at is derived from the new MOP Vars.
 					) return "";
 
 					$valid_required_types    = array("level", "ccap", "sp");
@@ -135,7 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					return apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_content", $content, get_defined_vars());
+					return apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_content", do_shortcode($content), get_defined_vars());
 				}
 		}
 	}
