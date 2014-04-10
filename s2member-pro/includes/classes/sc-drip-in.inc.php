@@ -108,7 +108,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 										}
 								}
 						}
-					return apply_filters("ws_plugin__s2member_pro_sc_drip_content", $drip ? $content : "", get_defined_vars());
+					return apply_filters("ws_plugin__s2member_pro_sc_drip_content", $drip ? do_shortcode($content) : "", get_defined_vars());
 				}
 		}
 	}
