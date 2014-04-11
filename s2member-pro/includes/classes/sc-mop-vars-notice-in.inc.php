@@ -75,8 +75,33 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 						}
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["type"]) /* One of: page|post|catg|ptag|file|ruri */)
-						$content = str_ireplace("%%SEEKING_TYPE%%", esc_html($_g["_s2member_seeking"]["type"]), $content);
+					if(!empty ($_g["_s2member_seeking"]["type"]) /* One of: page|post|catg|ptag|file|ruri */) {
+						$seeking_type_tag = '';
+
+						// Let's give the replacement tags a name that's useful for building messages
+						switch (strtolower($_g["_s2member_seeking"]["type"])) {
+							case 'page':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_page", 'Page', get_defined_vars());
+								break;
+							case 'post':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_post", 'Post', get_defined_vars());;
+								break;
+							case 'catg':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_catg", 'Category', get_defined_vars());;
+								break;
+							case 'ptag':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_ptag", 'Tag', get_defined_vars());;
+								break;
+							case 'file':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_file", 'File', get_defined_vars());;
+								break;
+							case 'ruri':
+								$seeking_type = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_seeking_type_ruri", 'URI', get_defined_vars());;
+								break;
+						}
+
+						$content = str_ireplace("%%SEEKING_TYPE%%", esc_html($seeking_type_tag), $content);
+					}
 
 					# ---------------------------------------------------------------------------------------------------
 
@@ -105,8 +130,24 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_req"]["type"]) /* One of: level|ccap|sp */)
-						$content = str_ireplace("%%REQUIRED_TYPE%%", esc_html($_g["_s2member_req"]["type"]), $content);
+					if(!empty ($_g["_s2member_req"]["type"]) /* One of: level|ccap|sp */) {
+						$required_type_tag = '';
+
+						// Let's give the replacement tags a name that's useful for building messages
+						switch (strtolower($_g["_s2member_req"]["type"])) {
+							case 'level':
+								$required_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_required_type_level", 'Level', get_defined_vars());
+								break;
+							case 'ccap':
+								$required_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_required_type_ccap", 'Capability', get_defined_vars());;
+								break;
+							case 'sp':
+								$required_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_required_type_sp", 'Specific Post/Page', get_defined_vars());;
+								break;
+						}
+
+						$content = str_ireplace("%%REQUIRED_TYPE%%", esc_html($required_type_tag), $content);
+					}
 
 					# ---------------------------------------------------------------------------------------------------
 
@@ -121,8 +162,42 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_res"]["type"]) /* One of: post|page|catg|ptag|file|ruri|ccap|sp|sys */)
-						$content = str_ireplace("%%RESTRICTION_TYPE%%", esc_html($_g["_s2member_res"]["type"]), $content);
+					if(!empty ($_g["_s2member_res"]["type"]) /* One of: post|page|catg|ptag|file|ruri|ccap|sp|sys */) {
+						$restriction_type_tag = '';
+
+						// Let's give the replacement tags a name that's useful for building messages
+						switch (strtolower($_g["_s2member_seeking"]["type"])) {
+							case 'page':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_page", 'Page', get_defined_vars());
+								break;
+							case 'post':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_post", 'Post', get_defined_vars());;
+								break;
+							case 'catg':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_catg", 'Category', get_defined_vars());;
+								break;
+							case 'ptag':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_ptag", 'Tag', get_defined_vars());;
+								break;
+							case 'file':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_file", 'File', get_defined_vars());;
+								break;
+							case 'ruri':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_ruri", 'URI', get_defined_vars());;
+								break;
+							case 'ccap':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_ccap", 'Custom Capability', get_defined_vars());;
+								break;
+							case 'sp':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_sp", 'Specific Post/Page', get_defined_vars());;
+								break;
+							case 'sys':
+								$restriction_type_tag = apply_filters("c_ws_plugin__s2member_pro_sc_mop_vars_notice_restriction_type_sys", 'Systematic', get_defined_vars());;
+								break;
+						}
+
+						$content = str_ireplace("%%RESTRICTION_TYPE%%", esc_html($restriction_type_tag), $content);
+					}
 
 					# ---------------------------------------------------------------------------------------------------
 
