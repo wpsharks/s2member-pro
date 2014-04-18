@@ -70,6 +70,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								$format = !empty($_POST["ws_plugin__s2member_pro_export_users_format"]) ? $_POST["ws_plugin__s2member_pro_export_users_format"] : "";
 								$utf8_bom = isset($_POST["ws_plugin__s2member_pro_export_users_utf8_bom"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_utf8_bom"] : 0;
 								$start = !empty($_POST["ws_plugin__s2member_pro_export_users_start"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_start"] : 1;
+								$limit = !empty($_POST["ws_plugin__s2member_pro_export_users_limit"]) ? (int)$_POST["ws_plugin__s2member_pro_export_users_limit"]
+									: apply_filters("ws_plugin__s2member_pro_export_users_limit", 1000); // Back compatibility; and for blog farms.
 
 								$start = /* Must be 1 or higher. */ ($start >= 1) ? $start : 1;
 								$sql_s = /* 1 should be 0. */ ($start === 1) ? 0 : $start;
@@ -85,7 +87,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								"paid_registration_times" => $wpdb->prefix."s2member_paid_registration_times",
 								"custom_fields" => $wpdb->prefix."s2member_custom_fields");
 
-								if(is_array($_users = $wpdb->get_results("SELECT `".$wpdb->users."`.`ID` FROM `".$wpdb->users."`, `".$wpdb->usermeta."` WHERE `".$wpdb->users."`.`ID` = `".$wpdb->usermeta."`.`user_id` AND `".$wpdb->usermeta."`.`meta_key` = '".esc_sql($wpdb->prefix."capabilities")."' ORDER BY `".$wpdb->users."`.`ID` ASC LIMIT ".$sql_s.", ".apply_filters("ws_plugin__s2member_pro_export_users_limit", 1000))))
+								if(is_array($_users = $wpdb->get_results("SELECT `".$wpdb->users."`.`ID` FROM `".$wpdb->users."`, `".$wpdb->usermeta."` WHERE `".$wpdb->users."`.`ID` = `".$wpdb->usermeta."`.`user_id` AND `".$wpdb->usermeta."`.`meta_key` = '".esc_sql($wpdb->prefix."capabilities")."' ORDER BY `".$wpdb->users."`.`ID` ASC LIMIT ".$sql_s.", ".$limit)))
 									{
 										if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 											$export .= '"ID","Username","First Name","Last Name","Display Name","Email","Website","Role","Custom Capabilities","Registration Date","First Payment Date","Last Payment Date","Auto-EOT Date","Custom Value","Paid Subscr. ID","Paid Subscr. Gateway"';

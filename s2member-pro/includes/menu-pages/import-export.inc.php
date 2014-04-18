@@ -60,7 +60,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 						if (is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ())
 							{
-								echo '<div class="ws-menu-page-group" title="User/Member CSV Importation"' . (($_POST["ws_plugin__s2member_pro_import_users"]) ? ' default-state="open"' : '') . '>' . "\n";
+								echo '<div class="ws-menu-page-group" title="User/Member CSV Importation"' . ((isset($_POST["ws_plugin__s2member_pro_import_users"])) ? ' default-state="open"' : '') . '>' . "\n";
 
 								echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-importation-section">' . "\n";
 								echo '<h3>User/Member Importation (upload file / or direct input)</h3>' . "\n";
@@ -224,8 +224,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 						echo '<td>' . "\n";
 						echo 'You have a total of ' . number_format (c_ws_plugin__s2member_utils_users::users_in_database ()) . ' User/Member rows in the database' . ((is_multisite ()) ? ' for this site' : '') . '.<br />' . "\n";
-						echo 'You can export up to 1000 database rows in each file; starting from a particular row that you specify.<br />' . "\n";
-						echo 'Export, starting with row#: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_start" id="ws-plugin--s2member-pro-export-users-start" style="width:100px;" value="1" /> <input type="submit" value="Export Now" style="font-size:120%; font-weight:normal;" />' . "\n";
+						if(is_multisite () && c_ws_plugin__s2member_utils_conds::is_multisite_farm () && !is_main_site ())
+							{
+								echo 'You can export up to 1000 database rows in each file; starting from a particular row that you specify.<br />' . "\n";
+								echo 'Export, starting with row#: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_start" id="ws-plugin--s2member-pro-export-users-start" style="width:100px;" value="1" /> <input type="submit" value="Export Now" style="font-size:120%; font-weight:normal;" />' . "\n";
+							}
+						else echo 'Export, starting with row#: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_start" id="ws-plugin--s2member-pro-export-users-start" style="width:100px;" value="1" /> limit to: <input type="text" autocomplete="off" name="ws_plugin__s2member_pro_export_users_limit" id="ws-plugin--s2member-pro-export-users-limit" style="width:100px;" value="1000" /> rows <input type="submit" value="Export Now" style="font-size:120%; font-weight:normal;" />' . "\n";
 
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
