@@ -58,13 +58,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-error s2member-pro-authnet-cancellation-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-info s2member-pro-authnet-cancellation-form-response-info">';
 								$response .= $_response["response"];
@@ -87,13 +87,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-error s2member-pro-authnet-update-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-info s2member-pro-authnet-update-form-response-info">';
 								$response .= $_response["response"];
@@ -116,13 +116,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-error s2member-pro-authnet-registration-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-info s2member-pro-authnet-registration-form-response-info">';
 								$response .= $_response["response"];
@@ -145,13 +145,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-error s2member-pro-authnet-sp-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-info s2member-pro-authnet-sp-checkout-form-response-info">';
 								$response .= $_response["response"];
@@ -174,13 +174,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_authnet_responses::authnet_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-error s2member-pro-authnet-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-authnet-form-response" class="s2member-pro-authnet-form-response-info s2member-pro-authnet-checkout-form-response-info">';
 								$response .= $_response["response"];
