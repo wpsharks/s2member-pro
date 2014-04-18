@@ -129,7 +129,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 														$paid_registration_times = (isset($user->$s2map["paid_registration_times"])) ? $user->$s2map["paid_registration_times"] : array();
 														$custom_fields = (isset($user->$s2map["custom_fields"]) && is_array($user->$s2map["custom_fields"])) ? $user->$s2map["custom_fields"] : array();
 
-														$paid_registration_date = ($paid_registration_times["level"]) ? date("m/d/Y", $paid_registration_times["level"]) : "";
+														$paid_registration_date = (!empty($paid_registration_times["level"])) ? date("m/d/Y", $paid_registration_times["level"]) : "";
 														$paid_registration_times = (!empty($paid_registration_times) && is_array($paid_registration_times)) ? serialize($paid_registration_times) : "";
 														$registration_date = ($user->user_registered) ? date("m/d/Y", strtotime($user->user_registered)) : "";
 														$last_payment_date = ($last_payment_time) ? date("m/d/Y", $last_payment_time) : "";
