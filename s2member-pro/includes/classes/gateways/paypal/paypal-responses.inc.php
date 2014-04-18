@@ -54,17 +54,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_cancellation_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_cancellation_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_cancellation_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-cancellation-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-cancellation-form-response-info">';
 								$response .= $_response["response"];
@@ -83,17 +83,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_update_response($attr = FALSE)
 					{
-						$_response = $GLOBALS["ws_plugin__s2member_pro_paypal_update_response"];
-
+						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"];
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-update-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-update-form-response-info">';
 								$response .= $_response["response"];
@@ -116,13 +116,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-registration-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-registration-form-response-info">';
 								$response .= $_response["response"];
@@ -145,13 +145,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-sp-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-sp-checkout-form-response-info">';
 								$response .= $_response["response"];
@@ -174,13 +174,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
 						$response = $error = NULL; // Initialize.
 
-						if /* Error reporting. */($_response && ($error = $_response["error"]))
+						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-error s2member-pro-paypal-checkout-form-response-error">';
 								$response .= $_response["response"];
 								$response .= '</div>';
 							}
-						else if /* Otherwise, we treat this as an informational response. */($_response)
+						else if($_response && !empty($_response["response"]))
 							{
 								$response = '<div id="s2member-pro-paypal-form-response" class="s2member-pro-paypal-form-response-info s2member-pro-paypal-checkout-form-response-info">';
 								$response .= $_response["response"];
@@ -243,26 +243,25 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 
-												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
+												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 
-												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
 										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
 											{
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]))
 													{
-														if($paypal && !empty($paypal["__error"]) &&  /* Subscription Profile? */$paypal["L_ERRORCODE0"] === "11592")
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"]))), "error" => true);
+														if($paypal && !empty($paypal["__error"]) && !empty($paypal["L_ERRORCODE0"]) && $paypal["L_ERRORCODE0"] === "11592")
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_merchant_id"]))), "error" => true);
 
-														else // Else there was no Recurring Profile on record.
-															$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
+														else $response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 													}
-												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
+												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 
-												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
 											}
 									}
@@ -279,32 +278,31 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 
-												else if(strtoupper($paypal["TENDER"]) === "P")
+												else if(!empty($paypal["TENDER"]) && strtoupper($paypal["TENDER"]) === "P")
 													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
-												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
+												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 
-												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
 										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
 											{
-												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]) || strlen($paypal["ACCT"]) !== 4)
+												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]) || empty($paypal["ACCT"]) || strlen($paypal["ACCT"]) !== 4)
 													{
-														if($paypal && empty($paypal["__error"]) && /* It's NOT associated with a credit card; they used PayPal. */ strlen($paypal["ACCT"]) !== 4)
+														if($paypal && empty($paypal["__error"]) && (empty($paypal["ACCT"]) || strlen($paypal["ACCT"]) !== 4))
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
-														else if($paypal && !empty($paypal["__error"]) && /* Subscription Profile? */ $paypal["L_ERRORCODE0"] === "11592")
+														else if($paypal && !empty($paypal["__error"]) && !empty($paypal["L_ERRORCODE0"]) && $paypal["L_ERRORCODE0"] === "11592")
 															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
 
-														else // Else there was no Recurring Profile on record.
-														$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
+														else $response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 													}
-												else if(preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
+												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 
-												else if(!preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
+												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
 									}
