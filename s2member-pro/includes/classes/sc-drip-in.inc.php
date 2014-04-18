@@ -69,7 +69,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 					else
 						{
 							$drip          = FALSE;
-							$attr          = shortcode_atts(array("level" => "0", "from_day" => "0", "to_day" => ""), $attr, $shortcode);
+							$attr          = shortcode_atts(array("level" => "0", "from_day" => "0", "to_day" => "0"), $attr, $shortcode);
 							$attr["level"] = abs((integer)$attr["level"]);
 
 							if(current_user_can("access_s2member_level".$attr["level"]))
@@ -98,10 +98,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
 									if($level_time)
 										{
 											$time = time();
+											/*
+											 * Subtracting 1 because we want to include the `from_day` also.
+											 */
 											if($time > ($level_time + (max(0, ($attr["from_day"] - 1)) * 86400)))
 												{
 													$drip = TRUE;
-													if(!empty($attr["to_day"]) && $attr["to_day"] > 1)
+													if($attr["to_day"] > 0)
 														if($time > ($level_time + ($attr["to_day"] * 86400)))
 															$drip = FALSE;
 												}
