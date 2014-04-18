@@ -166,12 +166,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 						$trial = (!empty($post_vars["x_trial_occurrences"])) ? true : false; // Indicates existence of trial.
 
-						if((int)$post_vars["x_length"] === 30 && $post_vars["x_unit"] === "days")
+						if(isset($post_vars["x_length"], $post_vars["x_unit"]))
+							if((int)$post_vars["x_length"] === 30 && $post_vars["x_unit"] === "days")
 							{
 								$post_vars["x_length"] = 1;
 								$post_vars["x_unit"] = "months";
 							}
-
 						if(!empty($post_vars["x_method"]) && $post_vars["x_method"] === "create")
 							{
 								$xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -233,7 +233,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								$xml .= '</ARBCreateSubscriptionRequest>';
 							}
-
 						else if(!empty($post_vars["x_method"]) && $post_vars["x_method"] === "update")
 							{
 								$xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -275,7 +274,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								$xml .= '</ARBUpdateSubscriptionRequest>';
 							}
-
 						else if(!empty($post_vars["x_method"]) && $post_vars["x_method"] === "status")
 							{
 								$xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -291,7 +289,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								$xml .= '</ARBGetSubscriptionStatusRequest>';
 							}
-
 						else if(!empty($post_vars["x_method"]) && $post_vars["x_method"] === "cancel")
 							{
 								$xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -307,7 +304,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								$xml .= '</ARBCancelSubscriptionRequest>';
 							}
-
 						$req["headers"]["Accept"] = "application/xml; charset=UTF-8";
 						$req["headers"]["Content-Type"] = "application/xml; charset=UTF-8";
 
@@ -339,7 +335,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
 						$log2 = (is_multisite() && !is_main_site()) ? "authnet-api-4-".trim(preg_replace("/[^a-z0-9]/i", "-", $_log4), "-").".log" : "authnet-api.log";
 
-						if(strlen($post_vars["x_card_num"]) > 4) // Only log last 4 digits for security.
+						if(!empty($post_vars["x_card_num"]) && strlen($post_vars["x_card_num"]) > 4) // Only log last 4 digits for security.
 							$post_vars["x_card_num"] = str_repeat("*", strlen($post_vars["x_card_num"]) - 4)
 							.substr($post_vars["x_card_num"], -4); // Then display last 4 digits.
 
