@@ -201,8 +201,28 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "post")
+					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "post") {
 						$content = str_ireplace(array("%%POST_TITLE%%", "%%PAGE_TITLE%%"), get_the_title((integer)$_g["_s2member_seeking"]["post"]), $content);
+
+						/*
+						 * I'm not sure if we're going to be able to make this work because get_the_excerpt() and the_excerpt()
+						 * both require The Loop and cannot be called with just the Post ID. Unless we want to recreate the
+						 * functionality provided by get_the_excerpt (i.e., generate an excerpt from the_content if an excerpt
+						 * is not set), the only thing we can do is make this replacement tag work when there's actually
+						 * an excerpt set.
+						 */
+						if($_the_post = get_post((integer)$_g["_s2member_seeking"]["post"], OBJECT)) {
+							if ( trim($_the_post->post_excerpt) !== '' ) // If there's a post excerpt defined
+								$content = str_ireplace("%%POST_EXCERPT%%", apply_filters('get_the_excerpt', $_the_post->post_excerpt), $content);
+							else // Otherwise, clean up the replacement tag by replacing it with ''. It would be ideal if we could generate a default excerpt here.
+								$content = str_ireplace("%%POST_EXCERPT%%", '', $content);
+						}
+					}
+
+					# ---------------------------------------------------------------------------------------------------
+
+					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "page")
+						$content = str_ireplace(array("%%POST_TITLE%%", "%%PAGE_TITLE%%"), get_the_title((integer)$_g["_s2member_seeking"]["page"]), $content);
 
 					# ---------------------------------------------------------------------------------------------------
 
