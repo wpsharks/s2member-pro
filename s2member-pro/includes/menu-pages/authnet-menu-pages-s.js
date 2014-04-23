@@ -164,24 +164,24 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 99999.00');
 								return false;
 							}
-						else if (trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 365. */ trialPeriod > 365)
+						else if (trialAmount !== '0' && trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 365. */ trialPeriod > 365)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Trial Days is: 365.\nIf you want to offer more than 365 days, please choose Weeks or Months from the drop-down.');
+								alert('— Oops, a slight problem: —\n\nMaximum paid Trial Days is: 365.\nIf you want to offer more than 365 days, please choose Weeks or Months from the drop-down.');
 								return false;
 							}
-						else if (trialTerm === 'W' && /* Some validation on the Trial Period. 52 max. */ trialPeriod > 52)
+						else if (trialAmount !== '0' && trialTerm === 'W' && /* Some validation on the Trial Period. 52 max. */ trialPeriod > 52)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Trial Weeks is: 52.\nIf you want to offer more than 52 weeks, please choose Months from the drop-down.');
+								alert('— Oops, a slight problem: —\n\nMaximum paid Trial Weeks is: 52.\nIf you want to offer more than 52 weeks, please choose Months from the drop-down.');
 								return false;
 							}
-						else if (trialTerm === 'M' && /* Some validation on the Trial Period. 12 max. */ trialPeriod > 12)
+						else if (trialAmount !== '0' && trialTerm === 'M' && /* Some validation on the Trial Period. 12 max. */ trialPeriod > 12)
 							{
-								alert('— Oops, a slight problem: —\n\nMaximum Trial Months is: 12.\nIf you want to offer more than 12 months, please choose Years from the drop-down.');
+								alert('— Oops, a slight problem: —\n\nMaximum paid Trial Months is: 12.\nIf you want to offer more than 12 months, please choose Years from the drop-down.');
 								return false;
 							}
-						else if (trialTerm === 'Y' && /* 1 year max for Authorize.Net. */ trialPeriod > 1)
+						else if (trialAmount !== '0' && trialTerm === 'Y' && /* 1 year max for Authorize.Net. */ trialPeriod > 1)
 							{
-								alert('— Oops, a slight problem: —\n\nMax Trial Period Years is: 1. *This is an Authorize.Net limitation.');
+								alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 1. *This is an Authorize.Net limitation.');
 								return false;
 							}
 						else if (regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
