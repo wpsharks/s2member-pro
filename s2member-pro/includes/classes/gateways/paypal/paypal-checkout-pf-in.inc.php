@@ -311,7 +311,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$paypal["PAYPERIOD"] = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_term($post_vars["attr"]["rt"], $post_vars["attr"]["rp"]);
 																$paypal["TERM"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "0") : "1";
 
-																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
+																if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
 
 																	&& ($paypal_xco_details = array("TRXTYPE" => "A", "ACTION" => "G", "TENDER" => "P", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_details))
@@ -459,7 +459,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																$paypal["PAYPERIOD"] = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_term($post_vars["attr"]["rt"], $post_vars["attr"]["rp"]);
 																$paypal["TERM"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "0") : "1";
 
-																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
+																if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
 
 																	&& ($paypal_xco_details = array("TRXTYPE" => "A", "ACTION" => "G", "TENDER" => "P", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_payflow_api_response($paypal_xco_details))
@@ -473,7 +473,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$paypal["PAYERID"] = $paypal_xco_details["PAYERID"];
 																		$paypal["BAID"] = $paypal_xco_bagree["BAID"];
 																	}
-																else if($_GET["s2member_paypal_xco"] !== "s2member_pro_paypal_checkout_return")
+																else if(empty($_GET["s2member_paypal_xco"]) || $_GET["s2member_paypal_xco"] !== "s2member_pro_paypal_checkout_return")
 																	{
 																		$paypal["TENDER"] = "C";
 																		$paypal["ACCT"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
@@ -633,7 +633,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 
 														if(!($paypal = array())) // Prepare a "Buy Now" transaction.
 															{
-																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
+																if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
 																	&& ($paypal_xco_details = array("METHOD" => "GetExpressCheckoutDetails", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_xco_details))
 																	&& empty($paypal_xco_details["__error"]))
@@ -758,7 +758,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 													{
 														if(!($paypal = array())) // Prepare a "Buy Now" transaction.
 															{
-																if($_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
+																if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return" && !empty($_GET["token"])
 																	&& ($paypal_xco_details = array("METHOD" => "GetExpressCheckoutDetails", "TOKEN" => $_GET["token"]))
 																	&& ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_xco_details))
 																	&& empty($paypal_xco_details["__error"]))
