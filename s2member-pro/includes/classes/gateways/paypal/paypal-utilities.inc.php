@@ -296,7 +296,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 						foreach(array("trial_sub_total" => $trial_sub_total, "sub_total" => $sub_total) as $this_key => $this_sub_total)
 							{
-								unset($_default, $this_tax, $this_tax_per, $this_total, $configured_rates, $configured_rate, $location, $rate, $m);
+								$_default = $this_tax = $this_tax_per = $this_total = $configured_rates = $configured_rate = $location = $rate = $m = NULL;
 
 								if(is_numeric($this_sub_total) && $this_sub_total > 0) // Must have a valid Sub-Total.
 									{

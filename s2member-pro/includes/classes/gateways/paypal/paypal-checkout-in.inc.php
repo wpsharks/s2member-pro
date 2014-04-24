@@ -468,7 +468,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = /* Fake this for registration configuration. */ $post_vars["password1"];
 																		$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = /* Fake this for registration configuration. */ $post_vars["first_name"];
 																		$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = /* Fake this for registration configuration. */ $post_vars["last_name"];
-																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = /* Fake this too. */ $post_vars["custom_fields"]["opt_in"];
+																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = /* Fake this too. */ @$post_vars["custom_fields"]["opt_in"];
 
 																		if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
 																			foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
@@ -784,7 +784,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = /* Fake this for registration configuration. */ $post_vars["password1"];
 																		$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = /* Fake this for registration configuration. */ $post_vars["first_name"];
 																		$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = /* Fake this for registration configuration. */ $post_vars["last_name"];
-																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] =  /* Fake this too. */$post_vars["custom_fields"]["opt_in"];
+																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] =  /* Fake this too. */@$post_vars["custom_fields"]["opt_in"];
 
 																		if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
 																			foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
