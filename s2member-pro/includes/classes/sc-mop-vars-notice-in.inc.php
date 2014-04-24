@@ -203,13 +203,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "post") {
 						$content = str_ireplace(array("%%POST_TITLE%%", "%%PAGE_TITLE%%"), get_the_title((integer)$_g["_s2member_seeking"]["post"]), $content);
-
-						if($_the_post = get_post((integer)$_g["_s2member_seeking"]["post"], OBJECT)) {
-							if ( trim($_the_post->post_excerpt) !== '' )
-								$content = str_ireplace("%%POST_EXCERPT%%",  apply_filters('the_excerpt', apply_filters('get_the_excerpt', $_the_post->post_excerpt)), $content);
-							else
-								$content = str_ireplace("%%POST_EXCERPT%%", c_ws_plugin__s2member_pro_sc_mop_vars_notice_in::get_excerpt((integer)$_g["_s2member_seeking"]["post"]), $content);
-						}
+						$content = str_ireplace("%%POST_EXCERPT%%",  c_ws_plugin__s2member_pro_sc_mop_vars_notice_in::get_excerpt((integer)$_g["_s2member_seeking"]["post"]), $content);
 					}
 
 					# ---------------------------------------------------------------------------------------------------
