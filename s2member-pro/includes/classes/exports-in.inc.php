@@ -260,7 +260,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_exports_in"))
 								header("Cache-Control: post-check=0, pre-check=0", false);
 								header("Pragma: no-cache");
 
-								header('Content-Disposition: attachment; filename="export-'.$start.'-'.($start + 999).'.csv"');
+								header('Content-Disposition: attachment; filename="export-'.$start.'-'.($start + $limit - 1).'.csv"');
 
 								exit($export); // Exportation file.
 							}
