@@ -130,10 +130,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 														$return_url = $cancel_url = ($return_url = $cancel_url).$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 														$return_url = $cancel_url = /* Ditch. */ remove_query_arg(array("token", "PayerID", "s2p-option"), ($return_url = $cancel_url));
 
-														$return_url = add_query_arg("s2p-option", urlencode((string)$_REQUEST["s2p-option"]), $return_url);
+														$return_url = add_query_arg("s2p-option", urlencode((string)@$_REQUEST["s2p-option"]), $return_url);
 														$return_url = add_query_arg("s2member_paypal_xco", urlencode("s2member_pro_paypal_checkout_return"), $return_url);
 
-														$cancel_url = add_query_arg("s2p-option", urlencode((string)$_REQUEST["s2p-option"]), $cancel_url);
+														$cancel_url = add_query_arg("s2p-option", urlencode((string)@$_REQUEST["s2p-option"]), $cancel_url);
 														$cancel_url = add_query_arg("s2member_paypal_xco", urlencode("s2member_pro_paypal_checkout_cancel"), $cancel_url);
 
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;

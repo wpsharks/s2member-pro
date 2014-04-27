@@ -183,7 +183,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_cancellation[nonce]" id="s2member-pro-paypal-cancellation-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-cancellation")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_cancellation[attr]" id="s2member-pro-paypal-cancellation-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
-								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
@@ -439,7 +439,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs = '<input type="hidden" name="s2member_pro_paypal_update[nonce]" id="s2member-pro-paypal-update-nonce" value="'.esc_attr(wp_create_nonce("s2member-pro-paypal-update")).'" />';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_update[attr]" id="s2member-pro-paypal-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
-								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)$_REQUEST['s2p-option']).'" />';
+								$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 								/*
 								Get the form template.
 								*/
