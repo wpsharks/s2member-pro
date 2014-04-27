@@ -40,7 +40,7 @@ jQuery(document).ready (function($)
 
 		if (($clForm = $('form#s2member-pro-authnet-cancellation-form')).length === 1)
 			{
-				var captchaSection = 'div#s2member-pro-authnet-cancellation-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-cancellation-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-authnet-cancellation-submit');
+				var captchaSection = 'div#s2member-pro-authnet-cancellation-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-cancellation-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-authnet-cancellation-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -83,7 +83,7 @@ jQuery(document).ready (function($)
 
 		else if (($upForm = $('form#s2member-pro-authnet-update-form')).length === 1)
 			{
-				var handleBillingMethod, billingMethodSection = 'div#s2member-pro-authnet-update-form-billing-method-section', billingAddressSection = 'div#s2member-pro-authnet-update-form-billing-address-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_update\[card_type\]"]', captchaSection = 'div#s2member-pro-authnet-update-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-update-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-authnet-update-submit');
+				var handleBillingMethod, billingMethodSection = 'div#s2member-pro-authnet-update-form-billing-method-section', billingAddressSection = 'div#s2member-pro-authnet-update-form-billing-address-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_update\[card_type\]"]', captchaSection = 'div#s2member-pro-authnet-update-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-update-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-authnet-update-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -125,7 +125,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-authnet-update-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-authnet-update-form-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-update-submit').focus () : null;
+								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' button#s2member-pro-authnet-update-submit').focus () : null;
 							}
 					}) ();
 
@@ -177,7 +177,7 @@ jQuery(document).ready (function($)
 
 		else if (($rgForm = $('form#s2member-pro-authnet-registration-form')).length === 1)
 			{
-				var handleNameIssues, handlePasswordIssues, registrationSection = 'div#s2member-pro-authnet-registration-form-registration-section', captchaSection = 'div#s2member-pro-authnet-registration-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-registration-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-authnet-registration-submit');
+				var handleNameIssues, handlePasswordIssues, registrationSection = 'div#s2member-pro-authnet-registration-form-registration-section', captchaSection = 'div#s2member-pro-authnet-registration-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-registration-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-authnet-registration-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -263,7 +263,7 @@ jQuery(document).ready (function($)
 
 		else if (($spForm = $('form#s2member-pro-authnet-sp-checkout-form')).length === 1)
 			{
-				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-authnet-sp-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-authnet-sp-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-sp-checkout-nonce', submissionButton = submissionSection + ' button#s2member-pro-authnet-sp-checkout-submit';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
 
@@ -405,7 +405,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' button#s2member-pro-authnet-sp-checkout-submit').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
 							{
@@ -453,7 +453,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-sp-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' button#s2member-pro-authnet-sp-checkout-submit').focus () : null;
 							}
 
 						handleTaxIssues /* Tax issues. */ ();
@@ -515,7 +515,7 @@ jQuery(document).ready (function($)
 
 		else if (($coForm = $('form#s2member-pro-authnet-checkout-form')).length === 1)
 			{
-				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-authnet-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-authnet-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-authnet-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-authnet-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-authnet-checkout-form-options-section', descSection = 'div#s2member-pro-authnet-checkout-form-description-section', couponSection = 'div#s2member-pro-authnet-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-authnet-checkout-coupon-apply', registrationSection = 'div#s2member-pro-authnet-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-authnet-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-authnet-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_authnet_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-authnet-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-authnet-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-authnet-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-checkout-nonce', submissionButton = submissionSection + ' button#s2member-pro-authnet-checkout-submit';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
 
@@ -671,7 +671,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' button#s2member-pro-authnet-checkout-submit').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
 							{
@@ -719,7 +719,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-authnet-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' button#s2member-pro-authnet-checkout-submit').focus () : null;
 							}
 					}) ();
 

@@ -40,7 +40,7 @@ jQuery(document).ready (function($)
 
 		if (($clForm = $('form#s2member-pro-paypal-cancellation-form')).length === 1)
 			{
-				var captchaSection = 'div#s2member-pro-paypal-cancellation-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-cancellation-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-paypal-cancellation-submit');
+				var captchaSection = 'div#s2member-pro-paypal-cancellation-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-cancellation-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-paypal-cancellation-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -83,7 +83,7 @@ jQuery(document).ready (function($)
 
 		else if (($upForm = $('form#s2member-pro-paypal-update-form')).length === 1)
 			{
-				var handleBillingMethod, billingMethodSection = 'div#s2member-pro-paypal-update-form-billing-method-section', billingAddressSection = 'div#s2member-pro-paypal-update-form-billing-address-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_update\[card_type\]"]', captchaSection = 'div#s2member-pro-paypal-update-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-update-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-paypal-update-submit');
+				var handleBillingMethod, billingMethodSection = 'div#s2member-pro-paypal-update-form-billing-method-section', billingAddressSection = 'div#s2member-pro-paypal-update-form-billing-address-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_update\[card_type\]"]', captchaSection = 'div#s2member-pro-paypal-update-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-update-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-paypal-update-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -125,7 +125,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-paypal-update-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-paypal-update-form-div :input').attr (ariaFalse);
 
-								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-update-submit').focus () : null;
+								$(billingAddressSection).hide (), (eventTrigger) ? $(submissionSection + ' button#s2member-pro-paypal-update-submit').focus () : null;
 							}
 					}) ();
 
@@ -177,7 +177,7 @@ jQuery(document).ready (function($)
 
 		else if (($rgForm = $('form#s2member-pro-paypal-registration-form')).length === 1)
 			{
-				var handleNameIssues, handlePasswordIssues, registrationSection = 'div#s2member-pro-paypal-registration-form-registration-section', captchaSection = 'div#s2member-pro-paypal-registration-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-registration-form-submission-section', $submissionButton = $(submissionSection + ' input#s2member-pro-paypal-registration-submit');
+				var handleNameIssues, handlePasswordIssues, registrationSection = 'div#s2member-pro-paypal-registration-form-registration-section', captchaSection = 'div#s2member-pro-paypal-registration-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-registration-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-paypal-registration-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
 
@@ -263,10 +263,10 @@ jQuery(document).ready (function($)
 
 		else if (($spForm = $('form#s2member-pro-paypal-sp-checkout-form')).length === 1)
 			{
-				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-paypal-sp-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-sp-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers, handleBillingMethod, optionsSection = 'div#s2member-pro-paypal-sp-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-sp-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-sp-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-sp-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-sp-checkout-form-registration-section', billingMethodSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_sp_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-sp-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-sp-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-sp-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-sp-checkout-nonce', submissionButton = submissionSection + ' #s2member-pro-paypal-sp-checkout-submit';
 
 				var paypalLangCode = $.trim($('input#s2member-pro-paypal-lang-attr').val());
-				var submitButton = '<input type="submit" id="s2member-pro-paypal-sp-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-sp-checkout-submit btn btn-primary" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="500" />';
+				var submitButton = '<button type="submit" id="s2member-pro-paypal-sp-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-sp-checkout-submit btn btn-primary" tabindex="500"><?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_html (_x ("Submit Form", "s2member-front", "s2member"))); ?></button>';
 				var submitExpressCheckoutButton = '<input type="image" src="https://www.paypal.com/'+((paypalLangCode) ? paypalLangCode : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("en_US", "s2member-front paypal-button-lang-code", "s2member"))); ?>')+'/i/btn/btn_xpressCheckout.gif" id="s2member-pro-paypal-sp-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-sp-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="500" />';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
@@ -409,9 +409,9 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
 							{
@@ -428,7 +428,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-sp-checkout-card-number').focus () : null;
 							}
@@ -444,7 +444,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-sp-checkout-card-number').focus () : null;
 							}
@@ -476,7 +476,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-city-div').hide ();
 								$(billingAddressSection + ' > div#s2member-pro-paypal-sp-checkout-form-city-div :input').attr (ariaFalse);
 
-								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(billingAddressSection + ' input#s2member-pro-paypal-sp-checkout-state').focus () : null;
 							}
@@ -493,9 +493,9 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-paypal-sp-checkout-form-div :input').attr (ariaFalse);
 
-								$(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-sp-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' #s2member-pro-paypal-sp-checkout-submit').focus () : null;
 							}
 
 						handleTaxIssues /* Tax issues. */ ();
@@ -555,10 +555,10 @@ jQuery(document).ready (function($)
 
 		else if (($coForm = $('form#s2member-pro-paypal-checkout-form')).length === 1)
 			{
-				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-paypal-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-paypal-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-paypal-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-checkout-nonce', submissionButton = submissionSection + ' input#s2member-pro-paypal-checkout-submit';
+				var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handlePasswordIssues, handleBillingMethod, handleExistingUsers, optionsSection = 'div#s2member-pro-paypal-checkout-form-options-section', descSection = 'div#s2member-pro-paypal-checkout-form-description-section', couponSection = 'div#s2member-pro-paypal-checkout-form-coupon-section', couponApplyButton = couponSection + ' input#s2member-pro-paypal-checkout-coupon-apply', registrationSection = 'div#s2member-pro-paypal-checkout-form-registration-section', customFieldsSection = 'div#s2member-pro-paypal-checkout-form-custom-fields-section', billingMethodSection = 'div#s2member-pro-paypal-checkout-form-billing-method-section', cardType = billingMethodSection + ' input[name="s2member_pro_paypal_checkout\[card_type\]"]', billingAddressSection = 'div#s2member-pro-paypal-checkout-form-billing-address-section', $ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-ajax-tax-div'), captchaSection = 'div#s2member-pro-paypal-checkout-form-captcha-section', submissionSection = 'div#s2member-pro-paypal-checkout-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-paypal-checkout-nonce', submissionButton = submissionSection + ' #s2member-pro-paypal-checkout-submit';
 
 				var paypalLangCode = $.trim($('input#s2member-pro-paypal-lang-attr').val());
-				var submitButton = '<input type="submit" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit btn btn-primary" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="600" />';
+				var submitButton = '<button type="submit" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit btn btn-primary" tabindex="600"><?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_html (_x ("Submit Form", "s2member-front", "s2member"))); ?></button>';
 				var submitExpressCheckoutButton = '<input type="image" src="https://www.paypal.com/'+((paypalLangCode) ? paypalLangCode : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("en_US", "s2member-front paypal-button-lang-code", "s2member"))); ?>')+'/i/btn/btn_xpressCheckout.gif" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit" value="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Submit Form", "s2member-front", "s2member"))); ?>" tabindex="600" />';
 
 				ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr ('disabled'), $(couponApplyButton).removeAttr ('disabled');
@@ -715,9 +715,9 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' #s2member-pro-paypal-checkout-submit').focus () : null;
 							}
 						else if ($.inArray (billingMethod, ['Visa', 'MasterCard', 'Amex', 'Discover']) !== -1)
 							{
@@ -734,7 +734,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-checkout-card-number').focus () : null;
 							}
@@ -750,7 +750,7 @@ jQuery(document).ready (function($)
 
 								(!taxMayApply) ? /* Tax does NOT even apply. */ $ajaxTaxDiv.hide () : null;
 
-								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
+								$(submissionSection + ' #s2member-pro-paypal-checkout-submit').replaceWith (submitButton);
 
 								(eventTrigger) ? $(billingMethodSection + ' input#s2member-pro-paypal-checkout-card-number').focus () : null;
 							}
@@ -786,7 +786,7 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-city-div').hide ();
 								$(billingAddressSection + ' > div#s2member-pro-paypal-checkout-form-city-div :input').attr (ariaFalse);
 
-								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' #s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
 								(eventTrigger) ? $(billingAddressSection + ' input#s2member-pro-paypal-checkout-state').focus () : null;
 							}
@@ -807,9 +807,9 @@ jQuery(document).ready (function($)
 								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div').hide ();
 								$(billingAddressSection + ' > div.s2member-pro-paypal-checkout-form-div :input').attr (ariaFalse);
 
-								$(submissionSection + ' input#s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
+								$(submissionSection + ' #s2member-pro-paypal-checkout-submit').replaceWith (submitExpressCheckoutButton);
 
-								(eventTrigger) ? $(submissionSection + ' input#s2member-pro-paypal-checkout-submit').focus () : null;
+								(eventTrigger) ? $(submissionSection + ' #s2member-pro-paypal-checkout-submit').focus () : null;
 							}
 					}) ();
 

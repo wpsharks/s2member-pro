@@ -33,7 +33,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-cancellation-form-submit-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-cancellation-form-div s2member-pro-authnet-form-submit-div s2member-pro-authnet-cancellation-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-authnet-cancellation-submit" class="s2member-pro-authnet-submit s2member-pro-authnet-cancellation-submit btn btn-warning" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="100" />
+			<button type="submit" id="s2member-pro-authnet-cancellation-submit" class="s2member-pro-authnet-submit s2member-pro-authnet-cancellation-submit btn btn-warning" tabindex="100"><?php echo esc_html (_x ("Submit Form", "s2member-front", "s2member")); ?></button>
 		</div>
 		<div style="clear:both;"></div>
 	</div>

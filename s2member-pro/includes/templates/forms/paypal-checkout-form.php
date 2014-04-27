@@ -195,7 +195,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		%%opt_in%% <!-- s2Member will fill this when/if there are list servers integrated, and the Opt-In Box is turned on. -->
 		<div id="s2member-pro-paypal-checkout-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-checkout-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->
-			<input type="submit" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit btn btn-primary" value="<?php echo esc_attr (_x ("Submit Form", "s2member-front", "s2member")); ?>" tabindex="600" />
+			<button type="submit" id="s2member-pro-paypal-checkout-submit" class="s2member-pro-paypal-submit s2member-pro-paypal-checkout-submit btn btn-primary" tabindex="600"><?php echo esc_html (_x ("Submit Form", "s2member-front", "s2member")); ?></button>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
