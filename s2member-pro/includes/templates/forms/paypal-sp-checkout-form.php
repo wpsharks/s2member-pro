@@ -1,8 +1,6 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-?>
-
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
 <form id="s2member-pro-paypal-sp-checkout-form" class="s2member-pro-paypal-form s2member-pro-paypal-sp-checkout-form" method="post" action="%%action%%">
@@ -18,7 +16,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Options Section (this is filled by Shortcode options; when/if specified). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-options-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-options-section s2member-pro-paypal-sp-checkout-form-options-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-options-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-options-section-title s2member-pro-paypal-sp-checkout-form-options-section-title">
-			<?php echo _x ("Checkout Options", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Checkout Options", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-options-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-options-div s2member-pro-paypal-sp-checkout-form-options-div">
 			<select name="s2p-option" id="s2member-pro-paypal-sp-checkout-options" class="s2member-pro-paypal-options s2member-pro-paypal-sp-checkout-options form-control" tabindex="-1">
@@ -39,7 +37,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Coupon Code ( this will ONLY be displayed if your Shortcode has this attribute: accept_coupons="1" ). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-coupon-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-coupon-section s2member-pro-paypal-sp-checkout-form-coupon-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-coupon-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-coupon-section-title s2member-pro-paypal-sp-checkout-form-coupon-section-title">
-			<?php echo _x ("Coupon Code", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Coupon Code", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-coupon-response-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-coupon-response-div s2member-pro-paypal-sp-checkout-form-coupon-response-div">
 			%%coupon_response%% <!-- A Coupon response (w/Discounts) will be displayed here; based on the Coupon Code that was entered. -->
@@ -59,7 +57,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Name fields will NOT be hidden automatically here; even if your Registration/Profile Field options dictate this behavior. -->
 	<div id="s2member-pro-paypal-sp-checkout-form-registration-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-registration-section s2member-pro-paypal-sp-checkout-form-registration-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-registration-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-registration-section-title s2member-pro-paypal-sp-checkout-form-registration-section-title">
-			<?php echo _x ("Contact Info", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Contact Info", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-first-name-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-first-name-div s2member-pro-paypal-sp-checkout-form-first-name-div">
 			<label for="s2member-pro-paypal-sp-checkout-first-name" id="s2member-pro-paypal-sp-checkout-form-first-name-label" class="s2member-pro-paypal-form-first-name-label s2member-pro-paypal-sp-checkout-form-first-name-label">
@@ -85,7 +83,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Method (Customers can use a Credit/Debit card, or PayPal w/Express Checkout). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-billing-method-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-billing-method-section s2member-pro-paypal-sp-checkout-form-billing-method-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-billing-method-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-billing-method-section-title s2member-pro-paypal-sp-checkout-form-billing-method-section-title">
-			<?php echo _x ("Billing Method", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Billing Method", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-card-type-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-card-type-div s2member-pro-paypal-sp-checkout-form-card-type-div">
 			%%card_type_options%%
@@ -126,7 +124,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Address (hidden dynamically when/if PayPal is selected as the Payment Method). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-billing-address-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-billing-address-section s2member-pro-paypal-sp-checkout-form-billing-address-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-billing-address-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-billing-address-section-title s2member-pro-paypal-sp-checkout-form-billing-address-section-title">
-			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Billing Address", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-street-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-street-div s2member-pro-paypal-sp-checkout-form-street-div">
 			<label for="s2member-pro-paypal-sp-checkout-street" id="s2member-pro-paypal-sp-checkout-form-street-label" class="s2member-pro-paypal-form-street-label s2member-pro-paypal-sp-checkout-form-street-label">
@@ -172,7 +170,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Checkout Now (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-submission-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-submission-section s2member-pro-paypal-sp-checkout-form-submission-section">
 		<div id="s2member-pro-paypal-sp-checkout-form-submission-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-submission-section-title s2member-pro-paypal-sp-checkout-form-submission-section-title">
-			<?php echo _x ("Checkout Now", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Checkout Now", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-sp-checkout-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->

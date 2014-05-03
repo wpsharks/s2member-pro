@@ -52,7 +52,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				* @attaches-to ``add_filter("plugin_row_meta");``
 				*
 				* @param array $plugin_meta Expects an array of meta details for the ``$plugin_file``.
-				* @param str $plugin_file Expects a string holding the basename of the plugin.
+				* @param string $plugin_file Expects a string holding the basename of the plugin.
 				* 	We need to look for a match to the s2Member Pro Module in this variable.
 				* @return array Array of meta details for the plugin.
 				*/
@@ -341,4 +341,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 					}
 			}
 	}
-?>

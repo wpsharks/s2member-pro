@@ -62,8 +62,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param str $value Existing value for this data column.
-				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param string $value Existing value for this data column.
+				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Tag ID to be passed through by the Filter.
 				* @return str If `(s2)` column, return status. Else, existing ``$value``.
 				*/
@@ -77,8 +77,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param str $value Existing value for this data column.
-				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param string $value Existing value for this data column.
+				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Category ID to be passed through by the Filter.
 				* @return str If `(s2)` column, return status. Else, existing ``$value``.
 				*/
@@ -92,7 +92,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Page ID to be passed by the Action Hook.
 				* @return null
 				*/
@@ -106,7 +106,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Post ID to be passed by the Action Hook.
 				* @return null
 				*/
@@ -158,4 +158,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 					}
 			}
 	}
-?>

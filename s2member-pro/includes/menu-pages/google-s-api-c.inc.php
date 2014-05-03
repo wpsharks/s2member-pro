@@ -53,4 +53,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_s_api_c"))
 	}
 
 new c_ws_plugin__s2member_pro_menu_page_google_s_api_c ();
-?>

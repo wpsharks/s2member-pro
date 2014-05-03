@@ -52,8 +52,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-AliPay-Button");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
 				* @return str The resulting AliPay Button Code, HTML markup.
 				*/
 				public static function sc_alipay_button ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
@@ -140,4 +140,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 					}
 			}
 	}
-?>

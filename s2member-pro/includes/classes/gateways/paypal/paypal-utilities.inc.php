@@ -49,8 +49,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @package s2Member\PayPal
 				* @since 1.5
 				*
-				* @param str $period1 Optional. A "Period Term" combination. Defaults to `0 D`.
-				* @param str $period3 Optional. A "Period Term" combination. Defaults to `0 D`.
+				* @param string $period1 Optional. A "Period Term" combination. Defaults to `0 D`.
+				* @param string $period3 Optional. A "Period Term" combination. Defaults to `0 D`.
 				* @return int The start time, a Unix timestamp.
 				*/
 				public static function paypal_start_time($period1 = FALSE, $period3 = FALSE)
@@ -206,7 +206,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @since 110531
 				*
 				* @param array $attr An array of PayPal Pro Form Attributes.
-				* @param str $card_type The Card Type *(i.e. Billing Method)* selected.
+				* @param string $card_type The Card Type *(i.e. Billing Method)* selected.
 				* @return array The same array of Pro Form Attributes, with possible currency conversions.
 				*/
 				public static function paypal_maestro_solo_2gbp($attr = FALSE, $card_type = FALSE)
@@ -278,11 +278,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				*
 				* @param int|str $trial_sub_total Optional. A numeric Amount/cost of a possible Initial/Trial being offered.
 				* @param int|str $sub_total Optional. A numeric Amount/cost of the purchase and/or Regular Period.
-				* @param str $state Optional. The State/Province where the Customer is billed.
-				* @param str $country Optional. The Country where the Customer is billed.
+				* @param string $state Optional. The State/Province where the Customer is billed.
+				* @param string $country Optional. The Country where the Customer is billed.
 				* @param int|str $zip Optional. The Postal/Zip Code where the Customer is billed.
-				* @param str $currency Optional. Expects a 3 character Currency Code.
-				* @param str $desc Optional. Description of the sale.
+				* @param string $currency Optional. Expects a 3 character Currency Code.
+				* @param string $desc Optional. Description of the sale.
 				* @return array Array of calculations.
 				*
 				* @todo Add support for `Zip + 4` syntax?
@@ -417,8 +417,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @since 1.5
 				*
 				* @param array $attr An array of Pro Form Attributes.
-				* @param str $coupon_code Optional. A possible Coupon Code supplied by the Customer.
-				* @param str $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
+				* @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
+				* @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
 				* @param array $process Optional. An array of additional processing routines to run here.
 				* 	One or more of these values: `affiliates-1px-response|affiliates-silent-post|notifications`.
 				* @return array|str Original array, with prices and description modified when/if a Coupon Code is accepted.
@@ -707,4 +707,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 					}
 			}
 	}
-?>

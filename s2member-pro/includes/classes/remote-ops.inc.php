@@ -87,7 +87,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				* @package s2Member\API_Remote_Ops
 				* @since 110713
 				*
-				* @param str $_op The Remote Operation to test this instance against.
+				* @param string $_op The Remote Operation to test this instance against.
 				* @return bool True if instance is the specified Operation, else false.
 				*/
 				public static function is_remote_op ($_op = FALSE)
@@ -122,4 +122,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 					}
 			}
 	}
-?>

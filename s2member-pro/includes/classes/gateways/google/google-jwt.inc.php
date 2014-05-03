@@ -51,7 +51,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt"))
 				*
 				* @attaches-to ``add_action("init");``
 				*
-				* @return null|inner Return-value of inner routine.
+				* @return null|mixed Return-value of inner routine.
 				*/
 				public static function google_jwt ()
 					{
@@ -60,4 +60,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt"))
 					}
 			}
 	}
-?>

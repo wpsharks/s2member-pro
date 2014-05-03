@@ -60,4 +60,3 @@ add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_duri
 add_action ("ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_scripting_page_api_constants");
 
 add_filter ("ws_plugin__s2member_check_force_ssl", "c_ws_plugin__s2member_pro_authnet_ssl::sc_authnet_form_auto_force_ssl", 10, 2);
-?>

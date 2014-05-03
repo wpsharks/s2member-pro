@@ -17,4 +17,3 @@ if (!empty ($result) && !preg_match ("/^Error\:/i", $result) && is_array ($user 
 	echo "Successfully authenticated (i.e. Username/Password is valid). User ID: " . $user["ID"];
 else
 	echo "API error reads: " . $result;
-?>

@@ -51,7 +51,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_return"))
 				*
 				* @attaches-to ``add_action("init");``
 				*
-				* @return null|inner Return-value of inner routine.
+				* @return null|mixed Return-value of inner routine.
 				*/
 				public static function clickbank_return ()
 					{
@@ -62,4 +62,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_return"))
 					}
 			}
 	}
-?>

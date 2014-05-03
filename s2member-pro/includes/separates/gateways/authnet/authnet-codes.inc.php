@@ -37,4 +37,3 @@ Add WordPress Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-AuthNet-Form", "c_ws_plugin__s2member_pro_authnet_form::sc_authnet_form");
 add_shortcode ("s2Member-Pro-AuthNet-xFormOption", "c_ws_plugin__s2member_pro_authnet_form::sc_authnet_form_option");
-?>

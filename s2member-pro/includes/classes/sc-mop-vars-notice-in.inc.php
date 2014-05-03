@@ -245,4 +245,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 				}
 		}
 	}
-?>

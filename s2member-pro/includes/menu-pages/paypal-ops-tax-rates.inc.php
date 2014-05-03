@@ -104,4 +104,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates"))
 	}
 
 new c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates ();
-?>

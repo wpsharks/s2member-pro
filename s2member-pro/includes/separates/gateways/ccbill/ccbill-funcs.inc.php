@@ -41,4 +41,3 @@ if (is_dir ($ws_plugin__s2member_pro_temp_dir = dirname (dirname (dirname (dirna
 			include_once $ws_plugin__s2member_pro_temp_dir . "/" . $ws_plugin__s2member_pro_temp_s;
 
 unset ($ws_plugin__s2member_pro_temp_dir, $ws_plugin__s2member_pro_temp_s);
-?>

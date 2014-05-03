@@ -1,8 +1,6 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-?>
-
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
 <form id="s2member-pro-authnet-update-form" class="s2member-pro-authnet-form s2member-pro-authnet-update-form" method="post" action="%%action%%">
@@ -26,7 +24,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Method (Customers can use a Credit/Debit card only). -->
 	<div id="s2member-pro-authnet-update-form-billing-method-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-billing-method-section s2member-pro-authnet-update-form-billing-method-section">
 		<div id="s2member-pro-authnet-update-form-billing-method-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-billing-method-section-title s2member-pro-authnet-update-form-billing-method-section-title">
-			<?php echo _x ("New Billing Method", "s2member-front", "s2member"); ?>
+			<?php echo _x ("New Billing Method", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-authnet-update-form-card-type-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-card-type-div s2member-pro-authnet-update-form-card-type-div">
 			%%card_type_options%%
@@ -67,7 +65,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Address (hidden dynamically when/if no Payment Method is selected yet). -->
 	<div id="s2member-pro-authnet-update-form-billing-address-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-billing-address-section s2member-pro-authnet-update-form-billing-address-section">
 		<div id="s2member-pro-authnet-update-form-billing-address-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-billing-address-section-title s2member-pro-authnet-update-form-billing-address-section-title">
-			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Billing Address", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-authnet-update-form-street-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-street-div s2member-pro-authnet-update-form-street-div">
 			<label for="s2member-pro-authnet-update-street" id="s2member-pro-authnet-update-form-street-label" class="s2member-pro-authnet-form-street-label s2member-pro-authnet-update-form-street-label">
@@ -110,7 +108,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Checkout Now (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-update-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-update-form-submission-section">
 		<div id="s2member-pro-authnet-update-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-update-form-submission-section-title">
-			<?php echo _x ("Update Billing Information", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Update Billing Information", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-authnet-update-form-submit-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-submit-div s2member-pro-authnet-update-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->

@@ -1,8 +1,6 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-?>
-
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
 <form id="s2member-pro-paypal-cancellation-form" class="s2member-pro-paypal-form s2member-pro-paypal-cancellation-form" method="post" action="%%action%%">
@@ -29,7 +27,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Confirm Cancellation (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-paypal-cancellation-form-submission-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-cancellation-form-section s2member-pro-paypal-form-submission-section s2member-pro-paypal-cancellation-form-submission-section">
 		<div id="s2member-pro-paypal-cancellation-form-submission-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-cancellation-form-section-title s2member-pro-paypal-form-submission-section-title s2member-pro-paypal-cancellation-form-submission-section-title">
-			<?php echo _x ("Confirm Cancellation", "s2member-front", "s2member"); ?>
+			<?php echo _x ("Confirm Cancellation", "s2member-front", "s2member");
 		</div>
 		<div id="s2member-pro-paypal-cancellation-form-submit-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-cancellation-form-div s2member-pro-paypal-form-submit-div s2member-pro-paypal-cancellation-form-submit-div">
 			%%hidden_inputs%% <!-- Auto-filled by the s2Member software. Do NOT remove this under any circumstance. -->

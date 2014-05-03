@@ -1,8 +1,6 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-?>
-
 <optgroup label="<?php echo esc_attr (_x ("Expires In Days", "s2member-admin", "s2member")); ?>">
 <option value="48"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 2 days)", "s2member-admin", "s2member")); ?></option>
 <option value="72" selected="selected"><?php echo esc_html (_x ("Buy Now (Specific Post/Page, link valid for 3 days)", "s2member-admin", "s2member")); ?></option>

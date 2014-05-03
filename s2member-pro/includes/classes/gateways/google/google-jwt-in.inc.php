@@ -50,8 +50,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 				* @since 131123
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
 				* @return str The resulting Google Button Code, HTML markup.
 				*/
 				public static function google_jwt ()
@@ -230,4 +230,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 					}
 			}
 	}
-?>

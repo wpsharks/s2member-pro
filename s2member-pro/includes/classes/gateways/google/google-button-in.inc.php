@@ -52,8 +52,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-Google-Button");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
 				* @return str The resulting Google Button Code; HTML markup.
 				*/
 				public static function sc_google_button ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
@@ -130,4 +130,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 					}
 			}
 	}
-?>

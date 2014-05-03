@@ -41,7 +41,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_VERSION", "140423" /* !#distro-version#! */);
@@ -51,7 +51,7 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_VERSION"))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION", "5.2" /* !#php-requires-at-least-version#! */);
@@ -61,7 +61,7 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION"))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION", "3.3" /* !#wp-requires-at-least-version#! */);
@@ -71,7 +71,7 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION"))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION", "140423" /* !#distro-version#! */);
@@ -135,4 +135,3 @@ else if(is_admin()) //  Admin compatibility errors.
 				add_action("admin_init", "c_ws_plugin__s2member_pro_upgrader::upgrade").add_action("all_admin_notices", create_function('', 'echo c_ws_plugin__s2member_pro_upgrader::wizard ();'));
 			}
 	}
-?>

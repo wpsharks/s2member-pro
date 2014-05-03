@@ -1,8 +1,6 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
-?>
-
 <optgroup label="<?php echo esc_attr (_x ("ClickBank (Fixed Terms)", "s2member-admin", "s2member")); ?>">
 <option value="1-D"><?php echo esc_html (_x ("One Time (for 1 day access)", "s2member-admin", "s2member")); ?></option>
 <option value="2-D"><?php echo esc_html (_x ("One Time (for 2 day access)", "s2member-admin", "s2member")); ?></option>

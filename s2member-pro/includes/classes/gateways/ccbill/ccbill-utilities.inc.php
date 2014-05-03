@@ -73,7 +73,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param str $currency_code Expects a 3 character Currency Code.
+				* @param string $currency_code Expects a 3 character Currency Code.
 				* @return int|str A numeric string with a ccBill Currency Number. Defaults to `840` *( i.e. `USD` )*.
 				*/
 				public static function ccbill_currency_numr ($currency_code = FALSE)
@@ -106,7 +106,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param int|str $period Optional. A numeric Period that coincides with ``$term``.
-				* @param str $term Optional. A Term that coincides with ``$period``.
+				* @param string $term Optional. A Term that coincides with ``$period``.
 				* @return int A "Period Term", in days. Defaults to `0`.
 				*/
 				public static function ccbill_per_term_2_days ($period = FALSE, $term = FALSE)
@@ -163,4 +163,3 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 					}
 			}
 	}
-?>

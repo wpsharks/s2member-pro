@@ -70,4 +70,3 @@ if (!empty ($result) && !preg_match ("/^Error\:/i", $result) && is_array ($user 
 	echo "Success. Modified User with ID: " . $user["ID"];
 else
 	echo "API error reads: " . $result;
-?>

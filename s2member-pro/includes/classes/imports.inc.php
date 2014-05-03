@@ -49,7 +49,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports"))
 				* @package s2Member\Imports
 				* @since 1.5
 				*
-				* @return null|inner Return-value of inner routine.
+				* @return null|mixed Return-value of inner routine.
 				*/
 				public static function import()
 					{
@@ -64,4 +64,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_imports"))
 					}
 			}
 	}
-?>
