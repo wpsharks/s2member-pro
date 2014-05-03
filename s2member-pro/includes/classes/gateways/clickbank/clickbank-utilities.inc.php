@@ -159,7 +159,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 				*
 				* @param string $support The current value for the `%%support%%` Replacement Code, passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
-				* @return str The ``$support`` value, after possible modification.
+				* @return string The ``$support`` value, after possible modification.
 				*/
 				public static function clickbank_cc_reminder($support = FALSE, $vars = FALSE)
 					{

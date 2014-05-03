@@ -88,7 +88,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*
 				* @param string $success_return_url The current Return URL, passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
-				* @return str The ``$success_return_url``, after possible modification.
+				* @return string The ``$success_return_url``, after possible modification.
 				*/
 				public static function paypal_button_success_return_url ($success_return_url = FALSE, $vars = FALSE)
 					{

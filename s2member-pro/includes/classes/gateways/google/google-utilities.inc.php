@@ -50,7 +50,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				* @since 1.5
 				*
 				* @param string $period_term A "Period Term" combination.
-				* @return str The Google Wallet equivalent for ``$period_term``.
+				* @return string The Google Wallet equivalent for ``$period_term``.
 				* 	One of `daily`, `weekly`, `semi_monthly`, `monthly`, `every_two_months`, `quarterly`, or `yearly`.
 				* 	Defaults to `monthly` if ``$period_term`` is not configured properly.
 				*/

@@ -50,7 +50,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 				* @since 1.5
 				*
 				* @param array $vars An array of variables to place in the link.
-				* @return str Full URL to AliPay checkout.
+				* @return string Full URL to AliPay checkout.
 				*/
 				public static function alipay_link_gen ($vars = FALSE)
 					{

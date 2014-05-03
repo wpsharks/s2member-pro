@@ -53,7 +53,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_return_templates"))
 				*
 				* @param string $default_header The default header *(i.e. HTML code)*, passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
-				* @return str A custom Return Template Header, if configured, else the ``$default_header``.
+				* @return string A custom Return Template Header, if configured, else the ``$default_header``.
 				*/
 				public static function return_template_header ($default_header = FALSE, $vars = FALSE)
 					{

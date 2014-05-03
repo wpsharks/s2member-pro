@@ -530,7 +530,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				* @since 1.5
 				*
 				* @param string $exp Expects a credit card expiration date in `mm/yyyy` format.
-				* @return str A credit card expiration date in `yyyy-mm` format for Authorize.Net.
+				* @return string A credit card expiration date in `yyyy-mm` format for Authorize.Net.
 				*/
 				public static function authnet_exp_date($exp = FALSE)
 					{

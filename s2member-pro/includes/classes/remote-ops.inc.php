@@ -106,7 +106,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				* @package s2Member\API_Remote_Ops
 				* @since 110713
 				*
-				* @return str An API Key. It's an MD5 Hash, 32 chars, URL-safe.
+				* @return string An API Key. It's an MD5 Hash, 32 chars, URL-safe.
 				*/
 				public static function remote_ops_key_gen ()
 					{

@@ -50,7 +50,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param array $vars An array of variables to include in the ccBill link.
-				* @return str A full URL to the ccBill Payment Gateway.
+				* @return string A full URL to the ccBill Payment Gateway.
 				*
 				* @todo Optimize this routine with ``empty()`` and ``isset()``.
 				* @todo Candidate for the use of ``ifsetor()``?
@@ -91,7 +91,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param int|str $currency_numr Expects a valid ccBill Currency Number, numeric.
-				* @return str A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
+				* @return string A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
 				*/
 				public static function ccbill_currency_code ($currency_numr = FALSE)
 					{

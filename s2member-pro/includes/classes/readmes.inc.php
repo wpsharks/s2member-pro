@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 				* @param bool $_blank_targets Optional. Defaults to true. If false, no target attribute is used.
 				* @param bool $process_wp_syntax Optional. Defaults to false.
 				* 	If true, and WP Syntax is installed; it will be used to parse code samples.
-				* @return str Parsed readme file, or a parsed readme file section; based on parameter configuration.
+				* @return string Parsed readme file, or a parsed readme file section; based on parameter configuration.
 				*/
 				public static function parse_readme ($specific_path = FALSE, $specific_section = FALSE, $_blank_targets = TRUE, $process_wp_syntax = FALSE)
 					{

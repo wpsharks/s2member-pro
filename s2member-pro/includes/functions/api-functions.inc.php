@@ -97,7 +97,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 *
 * @param array $options Optional. See function description for details.
 * @param array $args Optional. See function description for details.
-* @return str The Pro Login Widget, HTML markup.
+* @return string The Pro Login Widget, HTML markup.
 */
 if (!function_exists ("s2member_pro_login_widget"))
 	{

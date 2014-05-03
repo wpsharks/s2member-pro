@@ -54,7 +54,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 				* @param array $attr An array of Attributes.
 				* @param string $content Content inside the Shortcode.
 				* @param string $shortcode The actual Shortcode name itself.
-				* @return str The resulting Form Code, HTML markup.
+				* @return string The resulting Form Code, HTML markup.
 				*/
 				public static function sc_paypal_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
@@ -75,7 +75,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 				* @param array $attr An array of Attributes.
 				* @param string $content Content inside the Shortcode.
 				* @param string $shortcode The actual Shortcode name itself.
-				* @return str The resulting Form Code, HTML markup.
+				* @return string The resulting Form Code, HTML markup.
 				*/
 				public static function sc_paypal_form($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
