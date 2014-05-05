@@ -34,7 +34,7 @@ $pagination = $member_list_query["pagination"];
 								</div>
 							<?php endif; ?>
 
-							<?php if(($_fields = preg_split('/[;,\s]+/', $attr["show_fields"], NULL, PREG_SPLIT_NO_EMPTY))): ?>
+							<?php if(($_fields = preg_split('/,+/', $attr["show_fields"], NULL, PREG_SPLIT_NO_EMPTY))): ?>
 								<table class="ws-plugin--s2member-list-user-fields">
 									<tbody>
 									<?php foreach($_fields as $_field): ?>
