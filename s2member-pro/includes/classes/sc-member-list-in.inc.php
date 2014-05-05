@@ -63,24 +63,24 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					/** @var $wpdb \wpdb For IDEs. */
 
 					$defaults        = array(
-						"args"               => "",
+						"args"              => "",
 
-						"blog"               => $GLOBALS["blog_id"],
+						"blog"              => $GLOBALS["blog_id"],
 
-						"satisfy"            => "ALL", // `ALL` or `ANY`
-						"role"               => "", "level" => "", "ccaps" => "",
-						"search"             => "", "search_columns" => "",
-						"include"            => "", "exclude" => "",
+						"satisfy"           => "ALL", // `ALL` or `ANY`
+						"role"              => "", "level" => "", "ccaps" => "",
+						"search"            => "", "search_columns" => "",
+						"include"           => "", "exclude" => "",
 
-						"order"              => "DESC",
-						"orderby"            => "registered",
-						"limit"              => 25,
+						"order"             => "DESC",
+						"orderby"           => "registered",
+						"limit"             => 25,
 
-						"template"           => "",
-						"show_avatar"        => "yes",
-						"show_display_name"  => "yes",
-						"show_email"         => "no",
-						"show_custom_fields" => ""
+						"template"          => "",
+						"avatar_size"       => 96,
+						"show_avatar"       => "yes",
+						"show_display_name" => "yes",
+						"show_fields"       => ""
 					);
 					$attr            = shortcode_atts($defaults, $attr);
 					$attr["satisfy"] = strtoupper($attr["satisfy"]);
