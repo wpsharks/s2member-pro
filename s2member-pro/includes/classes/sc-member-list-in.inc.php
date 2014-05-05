@@ -62,12 +62,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$wpdb = $GLOBALS["wpdb"];
 					/** @var $wpdb \wpdb For IDEs. */
 
-					$defaults        = array(
+					$defaults            = array(
 						"args"              => "",
 
 						"blog"              => $GLOBALS["blog_id"],
 
-						"satisfy"           => "ALL", // `ALL` or `ANY`
+						"rlc_satisfy"       => "ALL", // `ALL` or `ANY`
 						"role"              => "", "level" => "", "ccaps" => "",
 						"search"            => "", "search_columns" => "",
 						"include"           => "", "exclude" => "",
@@ -87,9 +87,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"show_fields"       => ""
 					);
-					$attr            = shortcode_atts($defaults, $attr);
-					$attr["satisfy"] = strtoupper($attr["satisfy"]);
-					$attr["order"]   = strtoupper($attr["order"]);
+					$attr                = shortcode_atts($defaults, $attr);
+					$attr["rlc_satisfy"] = strtoupper($attr["rlc_satisfy"]);
+					$attr["order"]       = strtoupper($attr["order"]);
 
 					if($attr["args"]) // Custom args?
 						$args = wp_parse_args($attr["args"]);
@@ -117,7 +117,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 										"value"   => '"s2member_level'.(integer)$attr['level'].'"',
 										"compare" => "LIKE"
 									);
-									if($attr["satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
+									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
 										$args["meta_query"]["relation"] = "OR";
 								}
 							if($attr["ccaps"]) // Must satisfy all CCAPs in the list...
@@ -128,7 +128,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 											"value"   => '"access_s2member_ccap_'.$_ccap.'"',
 											"compare" => "LIKE"
 										);
-									if($attr["satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
+									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
 										$args["meta_query"]["relation"] = "OR";
 
 									unset($_ccap); // Housekeeping.
