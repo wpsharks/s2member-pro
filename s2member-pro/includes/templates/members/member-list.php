@@ -13,47 +13,43 @@ $pagination = $member_list_query['pagination'];
 	<div class="ws-plugin--s2member-list-container">
 		<div class="ws-plugin--s2member-list">
 
-			<ul class="ws-plugin--s2member-list-users">
+			<?php if($query->get_total()): ?>
+				<ul class="ws-plugin--s2member-list-users">
+					<?php foreach($query->get_results() as $_user): /** @var $_user WP_User */ ?>
+						<li class="ws-plugin--s2member-list-user">
 
-				<?php foreach($query->get_results() as $_user): /** @var $_user WP_User */ ?>
+							<?php if($attr['avatar_size'] && $attr['show_avatar']): ?>
+								<div class="ws-plugin--s2member-list-user-avatar">
+									<?php echo get_avatar($_user->ID, $attr['avatar_size']); ?>
+								</div>
+							<?php endif; ?>
 
-					<li class="ws-plugin--s2member-list-user">
+							<?php if($attr['show_display_name'] && $_user->display_name): ?>
+								<div class="ws-plugin--s2member-list-user-display-name">
+									<?php echo esc_html($_user->display_name); ?>
+								</div>
+							<?php endif; ?>
 
-						<?php if($attr['avatar_size'] && $attr['show_avatar']): ?>
-							<div class="ws-plugin--s2member-list-user-avatar">
-								<?php echo get_avatar($_user->ID, $attr['avatar_size']); ?>
-							</div>
-						<?php endif; ?>
+							<?php foreach(preg_split('/[;,\s]+/', $attr["show_fields"], NULL, PREG_SPLIT_NO_EMPTY) as $_field): ?>
+								<?php
+								$_field_value = get_user_field($_field, $_user->ID);
+								?>
+							<?php endforeach;
+							unset($_field, $_field_value); ?>
 
-						<?php if($attr['show_display_name'] && $_user->display_name): ?>
-							<div class="ws-plugin--s2member-list-user-display-name">
-								<?php echo esc_html($_user->display_name); ?>
-							</div>
-						<?php endif; ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
 
-						<?php foreach(preg_split('/[;,\s]+/', $attr["show_fields"], NULL, PREG_SPLIT_NO_EMPTY) as $_field): ?>
-							<?php
-							$_field_value = get_user_field($_field, $_user->ID);
-							?>
-						<?php endforeach;
-						unset($_field, $_field_value); ?>
-
-					</li>
-
-				<?php endforeach; ?>
-
-			</ul>
-
-			<ul class="ws-plugin--s2member-list-pagination">
-
-				<?php if(count($pagination) > 1): ?>
+			<?php if(count($pagination) > 1): ?>
+				<ul class="ws-plugin--s2member-list-pagination">
 					<?php foreach($pagination as $_page): ?>
 						<li><?php echo $_page['link']; ?></li>
 					<?php endforeach;
 					unset($_page); ?>
-				<?php endif; ?>
-
-			</ul>
+				</ul>
+			<?php endif; ?>
 
 		</div>
 	</div>
