@@ -227,6 +227,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 						if (c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors ()) // Report error if PayPal Options are not yet configured.
 							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro Form(s).<br /><br />*NOTE: If you\'re ONLY planning to use Free Registration Forms (e.g. you\'re NOT going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.', true);
 
+						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_merchant_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_username"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_password"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_signature"])
+							c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <code>s2Member -› PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, Merchant ID, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro Form(s).', true);
+
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-forms.inc.php";
 
 						return /* Return for uniformity. */;
