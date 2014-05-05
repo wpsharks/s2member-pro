@@ -38,4 +38,5 @@ Add WordPress Editor Shortcodes.
 add_shortcode("s2Drip", "c_ws_plugin__s2member_pro_sc_drip::shortcode");
 add_shortcode("s2MOP", "c_ws_plugin__s2member_pro_sc_mop_vars_notice::shortcode");
 add_shortcode("s2MOPNotice", "c_ws_plugin__s2member_pro_sc_mop_vars_notice::shortcode");
+add_shortcode("s2Member-List", "c_ws_plugin__s2member_pro_sc_member_list::shortcode");
 ?>
