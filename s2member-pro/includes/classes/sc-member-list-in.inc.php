@@ -77,9 +77,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 						"limit"             => 25,
 
 						"template"          => "",
+
 						"avatar_size"       => 96,
 						"show_avatar"       => "yes",
+						"link_avatar"       => "http://www.gravatar.com/%%md5.email%%",
+
 						"show_display_name" => "yes",
+						"link_display_name" => "",
+
 						"show_fields"       => ""
 					);
 					$attr            = shortcode_atts($defaults, $attr);
@@ -139,6 +144,55 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
 					return apply_filters("ws_plugin__s2member_pro_sc_member_list", $code, get_defined_vars());
+				}
+
+			/**
+			 * Parses user replacement codes.
+			 *
+			 * @package s2Member\Shortcodes
+			 * @since 140504
+			 *
+			 * @param string  $string The string to parse.
+			 * @param WP_User $user A WordPress `WP_User` object instance.
+			 *
+			 * @return string Parsed `$string` value.
+			 *
+			 * @note This is used by shortcode template files.
+			 */
+			public static function parse_replacement_codes($string, $user)
+				{
+					if(($string = (string)$string) && $user instanceof WP_User && $user->exists())
+						{
+							$string = str_ireplace("%%ID%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->ID), $string);
+							$string = str_ireplace("%%username%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_login), $string);
+							$string = str_ireplace("%%nicename%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_nicename), $string);
+							$string = str_ireplace("%%display_name%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->display_name), $string);
+							$string = str_ireplace("%%email%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_email), $string);
+							$string = str_ireplace("%%md5.email%%", md5(trim(strtolower($user->user_email))), $string);
+						}
+					return preg_replace("/%%(.+?)%%/", "", $string);
+				}
+
+			/**
+			 * Construct `<a>` tag attributes for a given `$link`.
+			 *
+			 * @package s2Member\Shortcodes
+			 * @since 140504
+			 *
+			 * @param string $link Input link to check.
+			 *
+			 * @return string Link `<a>` tag attributes, if applicable.
+			 *
+			 * @note This is used by shortcode template files.
+			 */
+			public static function link_attributes($link)
+				{
+					if(($link = (string)$link))
+						{
+							if(stripos($link, $_SERVER["HTTP_HOST"]) === FALSE)
+								$attr = ' target="_blank" rel="external nofollow"';
+						}
+					return !empty($attr) ? $attr : "";
 				}
 		}
 	}
