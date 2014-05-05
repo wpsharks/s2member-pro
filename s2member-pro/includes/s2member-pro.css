@@ -31,7 +31,6 @@
 */
 /*
 Structural styles for s2Member Pro Login Widget.
-
 These are basic CSS rules. You can override any of these
 through the `/style.css` file for your WordPress theme.
 */
@@ -77,4 +76,121 @@ div.ws-plugin--s2member-pro-login-widget-profile-summary-name
 {
 	font-size   : 120%;
 	font-weight : bold;
+}
+
+/*
+Structural styles for the `[s2Member-List /]` shortcode.
+These are basic CSS rules. You can override any of these
+through the `/style.css` file for your WordPress theme.
+*/
+div.ws-plugin--s2member-list,
+div.ws-plugin--s2member-list *
+{
+	margin  : 0;
+	padding : 0;
+	border  : 0;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-users,
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-users li
+{
+	list-style : none;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-users li:not(:first-child)
+{
+	margin-top : 25px;
+}
+div.ws-plugin--s2member-list div.ws-plugin--s2member-list-user-avatar
+{
+	float  : left;
+	margin : 0 25px 0 5px;
+}
+div.ws-plugin--s2member-list div.ws-plugin--s2member-list-user-avatar a
+{
+	opacity : 0.8;
+}
+div.ws-plugin--s2member-list div.ws-plugin--s2member-list-user-avatar a:hover
+{
+	opacity : 1;
+}
+div.ws-plugin--s2member-list div.ws-plugin--s2member-list-user-avatar img
+{
+	border-radius : 5px 5px 0 0;
+}
+div.ws-plugin--s2member-list div.ws-plugin--s2member-list-user-display-name
+{
+	padding : 10px 0 0 0;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields,
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr > td
+{
+	box-sizing : border-box;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields
+{
+	width           : 100%;
+	table-layout    : fixed;
+	border          : 1px solid rgba(0, 0, 0, 0.1);
+	border-width    : 1px 0 0 1px;
+	border-radius   : 5px 5px 0 0;
+	border-collapse : separate;
+	border-spacing  : 1px;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr:first-child > td:first-child
+{
+	border-radius : 5px 0 0 0;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr:first-child > td:last-child
+{
+	border-radius : 0 5px 0 0;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr > td,
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr > td:hover
+{
+	width         : 50%;
+	max-width     : 50%;
+	text-overflow : ellipsis;
+	overflow      : hidden;
+	white-space   : nowrap;
+	padding       : 8px;
+
+	color         : #222222;
+	background    : #EEEEEE;
+
+	border        : 1px solid rgba(0, 0, 0, 0.1);
+	border-width  : 0 1px 1px 0;
+}
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr:nth-child(even) > td,
+div.ws-plugin--s2member-list table.ws-plugin--s2member-list-user-fields > tbody > tr:nth-child(even) > td:hover
+{
+	color      : #2F2F2F;
+	background : #DFDFDF;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination
+{
+	margin-top : 25px;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination,
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination li
+{
+	list-style : none;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination li
+{
+	display : inline-block;
+	margin  : 0 5px 0 5px;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination li a
+{
+	line-height     : 1;
+	opacity         : 0.5;
+	text-decoration : none;
+	border-radius   : .25em;
+	border          : 1px solid;
+	padding         : .25em .5em;
+	display         : inline-block;
+}
+div.ws-plugin--s2member-list ul.ws-plugin--s2member-list-pagination li a:hover
+{
+	opacity : 1;
 }

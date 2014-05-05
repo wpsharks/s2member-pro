@@ -36,6 +36,7 @@ $pagination = $member_list_query["pagination"];
 
 							<?php if(($_fields = preg_split('/[;,\s]+/', $attr["show_fields"], NULL, PREG_SPLIT_NO_EMPTY))): ?>
 								<table class="ws-plugin--s2member-list-user-fields">
+									<tbody>
 									<?php foreach($_fields as $_field): ?>
 										<?php
 										if(strpos($_field, ":") !== FALSE)
@@ -55,14 +56,15 @@ $pagination = $member_list_query["pagination"];
 										<?php if($_field_label && $_field_value): ?>
 											<tr>
 												<td>
-													<?php echo $_field_label; ?>
+													<span title="<?php echo esc_attr(strip_tags($_field_label)); ?>"><?php echo $_field_label; ?></span>
 												</td>
 												<td>
-													<?php echo $_field_value; ?>
+													<span title="<?php echo esc_attr(strip_tags($_field_value)); ?>"><?php echo $_field_value; ?></span>
 												</td>
 											</tr>
 										<?php endif; ?>
 									<?php endforeach; ?>
+									</tbody>
 								</table>
 							<?php endif; ?>
 
@@ -73,6 +75,7 @@ $pagination = $member_list_query["pagination"];
 
 			<?php if(count($pagination) > 1): ?>
 				<ul class="ws-plugin--s2member-list-pagination">
+					<li><?php echo _x("Pages:", "s2member-front", "s2member"); ?></li>
 					<?php foreach($pagination as $_page): ?>
 						<li><?php echo $_page["link"]; ?></li>
 					<?php endforeach; ?>
