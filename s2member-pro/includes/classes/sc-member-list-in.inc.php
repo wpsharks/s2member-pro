@@ -165,12 +165,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 				{
 					if(($string = (string)$string) && $user instanceof WP_User && $user->exists())
 						{
-							$string = str_ireplace("%%ID%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->ID), $string);
-							$string = str_ireplace("%%username%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_login), $string);
-							$string = str_ireplace("%%nicename%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_nicename), $string);
-							$string = str_ireplace("%%display_name%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->display_name), $string);
-							$string = str_ireplace("%%email%%", c_ws_plugin__s2member_utils_strings::esc_refs($user->user_email), $string);
-							$string = str_ireplace("%%md5.email%%", md5(trim(strtolower($user->user_email))), $string);
+							$string = str_ireplace("%%ID%%", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->ID)), $string);
+							$string = str_ireplace("%%username%%", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_login)), $string);
+							$string = str_ireplace("%%nicename%%", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_nicename)), $string);
+							$string = str_ireplace("%%display_name%%", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->display_name)), $string);
+							$string = str_ireplace("%%email%%", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_email)), $string);
+							$string = str_ireplace("%%md5.email%%", urlencode(md5(trim(strtolower($user->user_email)))), $string);
 						}
 					return preg_replace("/%%(.+?)%%/", "", $string);
 				}
