@@ -129,7 +129,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 									unset($_ccap); // Housekeeping.
 								}
 						}
-					$members_list = c_ws_plugin__s2member_pro_member_list::query($args);
+					$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
 					$custom_template = (file_exists(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : FALSE;
 					$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
