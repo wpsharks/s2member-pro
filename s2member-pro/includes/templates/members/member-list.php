@@ -50,6 +50,9 @@ $pagination = $member_list_query["pagination"];
 
 										$_field_label = esc_html($_field_label);
 										$_field_value = wp_rel_nofollow(make_clickable(esc_html($_field_value)));
+										if(is_numeric($_field_value) && strlen($_field_value) === 10) // Convert timestamps to a date string.
+											$_field_value = date_i18n(get_option("date_format")." ".get_option("time_format"), (integer)$_field_value, TRUE);
+
 										$_field_label = apply_filters("ws_plugin__s2member_pro_sc_member_list_field_label", $_field_label, get_defined_vars());
 										$_field_value = apply_filters("ws_plugin__s2member_pro_sc_member_list_field_value", $_field_value, get_defined_vars());
 										?>
