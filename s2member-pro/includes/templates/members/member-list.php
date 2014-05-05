@@ -82,6 +82,3 @@ $pagination = $member_list_query['pagination'];
 		</div>
 	</div>
 </div>
-
-<?php unset($_user, $_avatar, $_avatar_link, $_display_name_link, $_fields, $_field, $_field_label, $_field_value, $_page); ?>
-
