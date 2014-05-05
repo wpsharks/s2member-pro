@@ -9,3 +9,4 @@ if (file_get_contents ("https://www.paypal.com/"))
 
 else // Otherwise, the test failed.
 	echo '<div>Sorry, this test failed!</div>';
+?>

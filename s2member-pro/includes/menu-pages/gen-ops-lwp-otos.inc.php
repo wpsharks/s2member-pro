@@ -91,3 +91,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos"))
 	}
 
 new c_ws_plugin__s2member_pro_menu_page_gen_ops_lwp_otos ();
+?>

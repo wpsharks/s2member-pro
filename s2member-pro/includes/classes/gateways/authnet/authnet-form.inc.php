@@ -52,9 +52,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-AuthNet-Form");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param string $content Content inside the Shortcode.
-				* @param string $shortcode The actual Shortcode name itself.
-				* @return mixed Return-value of inner routine.
+				* @param str $content Content inside the Shortcode.
+				* @param str $shortcode The actual Shortcode name itself.
+				* @return inner Return-value of inner routine.
 				*/
 				public static function sc_authnet_form ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
@@ -69,9 +69,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-AuthNet-Form-Option");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param string $content Content inside the Shortcode.
-				* @param string $shortcode The actual Shortcode name itself.
-				* @return mixed Return-value of inner routine.
+				* @param str $content Content inside the Shortcode.
+				* @param str $shortcode The actual Shortcode name itself.
+				* @return inner Return-value of inner routine.
 				*/
 				public static function sc_authnet_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
@@ -79,3 +79,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form"))
 					}
 			}
 	}
+?>

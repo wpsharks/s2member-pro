@@ -1,6 +1,8 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
+?>
+
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
 <form id="s2member-pro-authnet-checkout-form" class="s2member-pro-authnet-form s2member-pro-authnet-checkout-form" method="post" action="%%action%%">
@@ -16,7 +18,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Options Section (this is filled by Shortcode options; when/if specified). -->
 	<div id="s2member-pro-authnet-checkout-form-options-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-options-section s2member-pro-authnet-checkout-form-options-section">
 		<div id="s2member-pro-authnet-checkout-form-options-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-options-section-title s2member-pro-authnet-checkout-form-options-section-title">
-			<?php echo _x ("Checkout Options", "s2member-front", "s2member");
+			<?php echo _x ("Checkout Options", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-options-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-options-div s2member-pro-authnet-checkout-form-options-div">
 			<select name="s2p-option" id="s2member-pro-authnet-checkout-options" class="s2member-pro-authnet-options s2member-pro-authnet-checkout-options form-control" tabindex="-1">
@@ -37,7 +39,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Coupon Code ( this will ONLY be displayed if your Shortcode has this attribute: accept_coupons="1" ). -->
 	<div id="s2member-pro-authnet-checkout-form-coupon-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-coupon-section s2member-pro-authnet-checkout-form-coupon-section">
 		<div id="s2member-pro-authnet-checkout-form-coupon-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-coupon-section-title s2member-pro-authnet-checkout-form-coupon-section-title">
-			<?php echo _x ("Coupon Code", "s2member-front", "s2member");
+			<?php echo _x ("Coupon Code", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-coupon-response-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-coupon-response-div s2member-pro-authnet-checkout-form-coupon-response-div">
 			%%coupon_response%% <!-- A Coupon response (w/Discounts) will be displayed here; based on the Coupon Code that was entered. -->
@@ -57,7 +59,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Name fields will NOT be hidden automatically here; even if your Registration/Profile Field options dictate this behavior. -->
 	<div id="s2member-pro-authnet-checkout-form-registration-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-registration-section s2member-pro-authnet-checkout-form-registration-section">
 		<div id="s2member-pro-authnet-checkout-form-registration-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-registration-section-title s2member-pro-authnet-checkout-form-registration-section-title">
-			<?php echo _x ("Create Profile", "s2member-front", "s2member");
+			<?php echo _x ("Create Profile", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-first-name-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-first-name-div s2member-pro-authnet-checkout-form-first-name-div">
 			<label for="s2member-pro-authnet-checkout-first-name" id="s2member-pro-authnet-checkout-form-first-name-label" class="s2member-pro-authnet-form-first-name-label s2member-pro-authnet-checkout-form-first-name-label">
@@ -101,7 +103,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Method (Customers can use a Credit/Debit card only). -->
 	<div id="s2member-pro-authnet-checkout-form-billing-method-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-billing-method-section s2member-pro-authnet-checkout-form-billing-method-section">
 		<div id="s2member-pro-authnet-checkout-form-billing-method-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-billing-method-section-title s2member-pro-authnet-checkout-form-billing-method-section-title">
-			<?php echo _x ("Billing Method", "s2member-front", "s2member");
+			<?php echo _x ("Billing Method", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-card-type-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-card-type-div s2member-pro-authnet-checkout-form-card-type-div">
 			%%card_type_options%%
@@ -142,7 +144,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Address (hidden dynamically when/if no Payment Method is selected yet). -->
 	<div id="s2member-pro-authnet-checkout-form-billing-address-section" class="s2member-pro-authnet-form-section  s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-billing-address-section s2member-pro-authnet-checkout-form-billing-address-section">
 		<div id="s2member-pro-authnet-checkout-form-billing-address-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-billing-address-section-title s2member-pro-authnet-checkout-form-billing-address-section-title">
-			<?php echo _x ("Billing Address", "s2member-front", "s2member");
+			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-street-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-street-div s2member-pro-authnet-checkout-form-street-div">
 			<label for="s2member-pro-authnet-checkout-street" id="s2member-pro-authnet-checkout-form-street-label" class="s2member-pro-authnet-form-street-label s2member-pro-authnet-checkout-form-street-label">
@@ -188,7 +190,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Checkout Now (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-checkout-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-checkout-form-submission-section">
 		<div id="s2member-pro-authnet-checkout-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-checkout-form-submission-section-title">
-			<?php echo _x ("Checkout Now", "s2member-front", "s2member");
+			<?php echo _x ("Checkout Now", "s2member-front", "s2member"); ?>
 		</div>
 		%%opt_in%% <!-- s2Member will fill this when/if there are list servers integrated, and the Opt-In Box is turned on. -->
 		<div id="s2member-pro-authnet-checkout-form-submit-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-submit-div s2member-pro-authnet-checkout-form-submit-div">

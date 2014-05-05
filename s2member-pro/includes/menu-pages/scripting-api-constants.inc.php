@@ -63,3 +63,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_scripting_api_constants"
 	}
 
 new c_ws_plugin__s2member_pro_menu_page_scripting_api_constants ();
+?>

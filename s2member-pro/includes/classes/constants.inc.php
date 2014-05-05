@@ -43,22 +43,21 @@ if (!class_exists ("c_ws_plugin__s2member_pro_constants"))
 		*/
 		class c_ws_plugin__s2member_pro_constants
 			{
-			/**
-			 * Defines several API Constants for s2Member Pro.
-			 *
-			 * These are also duplicated into the JavaScript API for s2Member.
-			 * Except for a few that would pose a security issue.
-			 *
-			 * @package s2Member\API_Constants
-			 * @since 1.5
-			 *
-			 * @attaches-to ``add_filter("ws_plugin__s2member_during_constants_c");``
-			 *
-			 * @param array|bool $c Checksum array should be passed through by the Filter.
-			 * @param array|bool $vars Array of defined variables, passed through by the Filter.
-			 *
-			 * @return array Checksum array with new indexes for Pro Constant values.
-			 */
+				/**
+				* Defines several API Constants for s2Member Pro.
+				*
+				* These are also duplicated into the JavaScript API for s2Member.
+				* Except for a few that would pose a security issue.
+				*
+				* @package s2Member\API_Constants
+				* @since 1.5
+				*
+				* @attaches-to ``add_filter("ws_plugin__s2member_during_constants_c");``
+				*
+				* @param array $c Checksum array should be passed through by the Filter.
+				* @param array $vars Array of defined variables, passed through by the Filter.
+				* @return array Checksum array with new indexes for Pro Constant values.
+				*/
 				public static function constants ($c = FALSE, $vars = FALSE)
 					{
 						/**
@@ -67,7 +66,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_constants"))
 						* @package s2Member\API_Constants
 						* @since 1.0
 						*
-						* @var string
+						* @var str
 						*/
 						if (!defined ("S2MEMBER_PRO_VERSION"))
 							define ("S2MEMBER_PRO_VERSION", ($c[] = WS_PLUGIN__S2MEMBER_PRO_VERSION));
@@ -76,3 +75,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_constants"))
 					}
 			}
 	}
+?>

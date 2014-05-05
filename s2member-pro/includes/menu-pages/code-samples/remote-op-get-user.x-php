@@ -18,3 +18,4 @@ if (!empty ($result) && !preg_match ("/^Error\:/i", $result) && is_array ($user 
 	print_r($user); // Print full unserialized array with all User data properties.
 else
 	echo "API error reads: " . $result;
+?>

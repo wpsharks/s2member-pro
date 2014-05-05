@@ -49,8 +49,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				* @package s2Member\Utilities
 				* @since 1.5
 				*
-				* @param string $currency Expects a 3 character Currency Code.
-				* @return string A Currency Symbol. Defaults to the `$` sign.
+				* @param str $currency Expects a 3 character Currency Code.
+				* @return str A Currency Symbol. Defaults to the `$` sign.
 				*
 				* @deprecated Starting with v110531, please use:
 				* 	``c_ws_plugin__s2member_utils_cur::symbol()``
@@ -67,9 +67,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				* @package s2Member\Utilities
 				* @since 1.5
 				*
-				* @param string $state A state/province abbreviation.
-				* @param string $country A country code. One of `US|CA`.
-				* @return string The full state/province name.
+				* @param str $state A state/province abbreviation.
+				* @param str $country A country code. One of `US|CA`.
+				* @return str The full state/province name.
 				*/
 				public static function full_state ($state = FALSE, $country = FALSE)
 					{
@@ -104,3 +104,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 					}
 			}
 	}
+?>

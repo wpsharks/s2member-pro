@@ -128,8 +128,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 				* @package s2Member\ClickBank
 				* @since 111205
 				*
-				* @param string $cvendthru Expects the URL-encoded query string of s2Vars, including `_s2member_sig`.
-				* @param string $type Optional. The type of ClickBank transaction. This deals with backward compatibility.
+				* @param str $cvendthru Expects the URL-encoded query string of s2Vars, including `_s2member_sig`.
+				* @param str $type Optional. The type of ClickBank transaction. This deals with backward compatibility.
 				* 	For SALE transactions, do NOT accept the older format. For others, remain backward compatible.
 				* @return array Array of s2Vars. Possibly an empty array.
 				*/
@@ -157,9 +157,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 				*
 				* @attaches-to ``add_filter("ws_plugin__s2member_return_template_support");``
 				*
-				* @param string $support The current value for the `%%support%%` Replacement Code, passed through by the Filter.
+				* @param str $support The current value for the `%%support%%` Replacement Code, passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
-				* @return string The ``$support`` value, after possible modification.
+				* @return str The ``$support`` value, after possible modification.
 				*/
 				public static function clickbank_cc_reminder($support = FALSE, $vars = FALSE)
 					{
@@ -171,3 +171,4 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_utilities"))
 					}
 			}
 	}
+?>

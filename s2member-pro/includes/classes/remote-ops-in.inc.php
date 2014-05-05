@@ -50,7 +50,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				* @since 140103
 				*
 				* @param array An input array of Remote Operation parameters.
-				* @return string Returns a serialized array with an `ID` element object on success (among other array elements);
+				* @return str Returns a serialized array with an `ID` element object on success (among other array elements);
 				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
 				*/
 				public static function get_user ($op = NULL)
@@ -107,7 +107,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				* @since 140103
 				*
 				* @param array An input array of Remote Operation parameters.
-				* @return string Returns a serialized array with an `ID` element object on success;
+				* @return str Returns a serialized array with an `ID` element object on success;
 				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
 				*/
 				public static function auth_check_user ($op = NULL)
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				* @since 110713
 				*
 				* @param array An input array of Remote Operation parameters.
-				* @return string Returns a serialized array with an `ID` element object on success,
+				* @return str Returns a serialized array with an `ID` element object on success,
 				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
 				*/
 				public static function create_user ($op = NULL)
@@ -208,7 +208,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				* @since 110713
 				*
 				* @param array An input array of Remote Operation parameters.
-				* @return string Returns a serialized array with an `ID` element object on success,
+				* @return str Returns a serialized array with an `ID` element object on success,
 				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
 				*/
 				public static function modify_user ($op = NULL)
@@ -356,7 +356,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				* @since 110713
 				*
 				* @param array An input array of Remote Operation parameters.
-				* @return string Returns a serialized array with an `ID` element object on success,
+				* @return str Returns a serialized array with an `ID` element object on success,
 				* 	else returns a string beginning with `Error:` on failure; which will include details regarding the error.
 				*/
 				public static function delete_user ($op = NULL)
@@ -383,3 +383,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 					}
 			}
 	}
+?>

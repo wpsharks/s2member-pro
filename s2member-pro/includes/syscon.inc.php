@@ -214,3 +214,4 @@ if(!function_exists("ws_plugin__s2member_pro_options_before_checksum"))
 				return $options; // $GLOBALS["WS_PLUGIN__"]["s2member"]["o"] by reference.
 			}
 	}
+?>

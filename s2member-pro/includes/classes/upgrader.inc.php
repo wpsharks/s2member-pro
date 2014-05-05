@@ -49,7 +49,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 				* @package s2Member\Upgrader
 				* @since 111027
 				*
-				* @var string
+				* @var str
 				*/
 				public static $error = "";
 				/**
@@ -67,7 +67,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 				* @package s2Member\Upgrader
 				* @since 1.5
 				*
-				* @return string Upgrade wizard, HTML markup.
+				* @return str Upgrade wizard, HTML markup.
 				*/
 				public static function wizard()
 					{
@@ -302,3 +302,4 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 					}
 			}
 	}
+?>

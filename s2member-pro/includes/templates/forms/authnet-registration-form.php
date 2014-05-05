@@ -1,6 +1,8 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
+?>
+
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
 <form id="s2member-pro-authnet-registration-form" class="s2member-pro-authnet-form s2member-pro-authnet-registration-form" method="post" action="%%action%%">
@@ -25,7 +27,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Name fields will be hidden automatically when/if your Registration/Profile Field options dictate this behavior. -->
 	<div id="s2member-pro-authnet-registration-form-registration-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-registration-section s2member-pro-authnet-registration-form-registration-section">
 		<div id="s2member-pro-authnet-registration-form-registration-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-registration-section-title s2member-pro-authnet-registration-form-registration-section-title">
-			<?php echo _x ("Create Profile", "s2member-front", "s2member");
+			<?php echo _x ("Create Profile", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-authnet-registration-form-first-name-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-first-name-div s2member-pro-authnet-registration-form-first-name-div">
 			<label for="s2member-pro-authnet-registration-first-name" id="s2member-pro-authnet-registration-form-first-name-label" class="s2member-pro-authnet-form-first-name-label s2member-pro-authnet-registration-form-first-name-label">
@@ -71,7 +73,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Complete Registration (this holds the submit button, and also some dynamic hidden input variables). -->
 	<div id="s2member-pro-authnet-registration-form-submission-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-submission-section s2member-pro-authnet-registration-form-submission-section">
 		<div id="s2member-pro-authnet-registration-form-submission-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-submission-section-title s2member-pro-authnet-registration-form-submission-section-title">
-			<?php echo _x ("Complete Registration", "s2member-front", "s2member");
+			<?php echo _x ("Complete Registration", "s2member-front", "s2member"); ?>
 		</div>
 		%%opt_in%% <!-- s2Member will fill this when/if there are list servers integrated, and the Opt-In Box is turned on. -->
 		<div id="s2member-pro-authnet-registration-form-submit-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-submit-div s2member-pro-authnet-registration-form-submit-div">

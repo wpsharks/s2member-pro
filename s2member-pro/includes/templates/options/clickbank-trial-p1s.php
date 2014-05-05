@@ -1,6 +1,8 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
+?>
+
 <option value="0-D" selected="selected"><?php echo esc_html (_x ("No Trial", "s2member-admin", "s2member")); ?></option>
 <option value="3-D"><?php echo esc_html (_x ("3 Days", "s2member-admin", "s2member")); ?></option>
 <option value="4-D"><?php echo esc_html (_x ("4 Days", "s2member-admin", "s2member")); ?></option>

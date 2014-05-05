@@ -51,7 +51,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_return"))
 				*
 				* @attaches-to ``add_action("init");``
 				*
-				* @return null|mixed Return-value of inner routine.
+				* @return null|inner Return-value of inner routine.
 				*/
 				public static function google_return ()
 					{
@@ -62,3 +62,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_return"))
 					}
 			}
 	}
+?>

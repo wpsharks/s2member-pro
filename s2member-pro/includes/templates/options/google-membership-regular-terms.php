@@ -1,6 +1,8 @@
 <?php
 if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
+?>
+
 <optgroup label="<?php echo esc_attr (_x ("Google (Subscriptions)", "s2member-admin", "s2member")); ?>">
 <option value="1-M-1" selected="selected"><?php echo esc_html (_x ("Monthly (recurring charge, for ongoing access)", "s2member-admin", "s2member")); ?></option>
 </optgroup>

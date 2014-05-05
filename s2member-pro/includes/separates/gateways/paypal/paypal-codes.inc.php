@@ -37,3 +37,4 @@ Add WordPress Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-PayPal-Form", "c_ws_plugin__s2member_pro_paypal_form::sc_paypal_form");
 add_shortcode ("s2Member-Pro-PayPal-xFormOption", "c_ws_plugin__s2member_pro_paypal_form::sc_paypal_form_option");
+?>

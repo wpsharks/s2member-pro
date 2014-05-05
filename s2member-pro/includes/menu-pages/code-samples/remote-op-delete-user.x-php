@@ -18,3 +18,4 @@ if (!empty ($result) && !preg_match ("/^Error\:/i", $result) && is_array ($user 
 	echo "Success. Deleted User with ID: " . $user["ID"];
 else
 	echo "API error reads: " . $result;
+?>

@@ -62,10 +62,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param string $value Existing value for this data column.
-				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param str $value Existing value for this data column.
+				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Tag ID to be passed through by the Filter.
-				* @return string If `(s2)` column, return status. Else, existing ``$value``.
+				* @return str If `(s2)` column, return status. Else, existing ``$value``.
 				*/
 				public static function _lock_icons_return_value_tags ($value = FALSE, $column_name = FALSE, $id = FALSE)
 					{
@@ -77,10 +77,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param string $value Existing value for this data column.
-				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param str $value Existing value for this data column.
+				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Category ID to be passed through by the Filter.
-				* @return string If `(s2)` column, return status. Else, existing ``$value``.
+				* @return str If `(s2)` column, return status. Else, existing ``$value``.
 				*/
 				public static function _lock_icons_return_value_categories ($value = FALSE, $column_name = FALSE, $id = FALSE)
 					{
@@ -92,7 +92,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Page ID to be passed by the Action Hook.
 				* @return null
 				*/
@@ -106,7 +106,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @package s2Member\Lock_Icons
 				* @since 1.5
 				*
-				* @param string $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
+				* @param str $column_name Column ID/Name. We need to look at this to fill the `(s2)` column.
 				* @param int|str $id Expecting a numeric Post ID to be passed by the Action Hook.
 				* @return null
 				*/
@@ -137,7 +137,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				* @since 1.5
 				*
 				* @param array $array Expects an array returned by one of s2Member's security routines.
-				* @return string A verbose string representation of the return array details.
+				* @return str A verbose string representation of the return array details.
 				*/
 				public static function _return_lock_icons_description ($array = FALSE)
 					{
@@ -158,3 +158,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 					}
 			}
 	}
+?>

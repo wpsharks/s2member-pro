@@ -87,7 +87,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				* @package s2Member\API_Remote_Ops
 				* @since 110713
 				*
-				* @param string $_op The Remote Operation to test this instance against.
+				* @param str $_op The Remote Operation to test this instance against.
 				* @return bool True if instance is the specified Operation, else false.
 				*/
 				public static function is_remote_op ($_op = FALSE)
@@ -106,7 +106,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				* @package s2Member\API_Remote_Ops
 				* @since 110713
 				*
-				* @return string An API Key. It's an MD5 Hash, 32 chars, URL-safe.
+				* @return str An API Key. It's an MD5 Hash, 32 chars, URL-safe.
 				*/
 				public static function remote_ops_key_gen ()
 					{
@@ -122,3 +122,4 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 					}
 			}
 	}
+?>

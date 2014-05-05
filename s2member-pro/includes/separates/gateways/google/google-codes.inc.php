@@ -36,3 +36,4 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 Add WordPress Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-Google-Button", "c_ws_plugin__s2member_pro_google_button::sc_google_button");
+?>
