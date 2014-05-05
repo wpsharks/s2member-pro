@@ -191,8 +191,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 				{
 					if(($link = (string)$link))
 						{
-							if(stripos($link, $_SERVER["HTTP_HOST"]) === FALSE)
-								$attr = ' target="_blank" rel="external nofollow"';
+							if(strpos($link, "//") !== FALSE)
+								if(stripos($link, $_SERVER["HTTP_HOST"]) === FALSE)
+									$attr = ' target="_blank" rel="external nofollow"';
 						}
 					return !empty($attr) ? $attr : "";
 				}
