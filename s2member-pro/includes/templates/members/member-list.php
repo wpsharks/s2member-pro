@@ -75,7 +75,7 @@ $pagination = $member_list_query["pagination"];
 
 			<?php if(count($pagination) > 1): ?>
 				<ul class="ws-plugin--s2member-list-pagination">
-					<li><?php echo _x("Pages:", "s2member-front", "s2member"); ?></li>
+					<li><?php echo _x("Page:", "s2member-front", "s2member"); ?></li>
 					<?php foreach($pagination as $_page): ?>
 						<li><?php echo $_page["link"]; ?></li>
 					<?php endforeach; ?>
