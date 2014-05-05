@@ -62,7 +62,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$wpdb = $GLOBALS["wpdb"];
 					/** @var $wpdb \wpdb For IDEs. */
 
-					$defaults            = array(
+					$defaults                  = array(
 						"args"              => "",
 
 						"blog"              => $GLOBALS["blog_id"],
@@ -87,9 +87,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"show_fields"       => ""
 					);
-					$attr                = shortcode_atts($defaults, $attr);
-					$attr["rlc_satisfy"] = strtoupper($attr["rlc_satisfy"]);
-					$attr["order"]       = strtoupper($attr["order"]);
+					$attr                      = shortcode_atts($defaults, $attr);
+					$attr["rlc_satisfy"]       = strtoupper($attr["rlc_satisfy"]);
+					$attr["order"]             = strtoupper($attr["order"]);
+					$attr["show_avatar"]       = filter_var($attr["show_avatar"], FILTER_VALIDATE_BOOLEAN);
+					$attr["show_display_name"] = filter_var($attr["show_display_name"], FILTER_VALIDATE_BOOLEAN);
 
 					if($attr["args"]) // Custom args?
 						$args = wp_parse_args($attr["args"]);
