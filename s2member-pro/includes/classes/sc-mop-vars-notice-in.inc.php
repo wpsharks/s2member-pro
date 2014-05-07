@@ -151,14 +151,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(isset ($_g["_s2member_req"]["level"]))
+					if(isset ($_g["_s2member_req"]["level"])) {
 						$content = str_ireplace("%%REQUIRED_LEVEL%%", esc_html($_g["_s2member_req"]["level"]), $content);
+						if(!empty ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $_g["_s2member_req"]["level"] . "_label"]))
+							$content = str_ireplace("%%REQUIRED_LEVEL_LABEL%%", esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $_g["_s2member_req"]["level"] . "_label"]), $content);
+					}
 
-					else if(!empty ($_g["_s2member_req"]["ccap"]))
+					else if(!empty ($_g["_s2member_req"]["ccap"])) {
 						$content = str_ireplace("%%REQUIRED_CCAP%%", esc_html($_g["_s2member_req"]["ccap"]), $content);
-
-					else if(!empty ($_g["_s2member_req"]["sp"]))
+					}
+					else if(!empty ($_g["_s2member_req"]["sp"])) {
 						$content = str_ireplace("%%REQUIRED_SP%%", esc_html($_g["_s2member_req"]["sp"]), $content);
+					}
 
 					# ---------------------------------------------------------------------------------------------------
 
