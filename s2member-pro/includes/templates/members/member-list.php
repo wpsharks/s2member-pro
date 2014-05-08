@@ -16,7 +16,7 @@ $pagination = $member_list_query["pagination"];
 			<?php if($query->get_total()): ?>
 				<ul class="ws-plugin--s2member-list-users">
 					<?php foreach($query->get_results() as $_user): /** @var $_user WP_User */ ?>
-						<li class="ws-plugin--s2member-list-user">
+						<li class="ws-plugin--s2member-list-user ws-plugin--s2member-clearfix">
 
 							<?php if($attr["avatar_size"] && $attr["show_avatar"] && ($_avatar = get_avatar($_user->ID, $attr["avatar_size"]))): ?>
 								<div class="ws-plugin--s2member-list-user-avatar">
