@@ -39,12 +39,15 @@ $pagination = $member_list_query["pagination"];
 									<tbody>
 									<?php foreach($_fields as $_field): ?>
 										<?php
-										if(!($_field = trim($_field)))
-											continue; // Empty.
-
 										if(strpos($_field, ":") !== FALSE)
 											list($_field_label, $_field) = explode(":", $_field, 2);
 										else $_field_label = ucwords(preg_replace('/[^a-z0-9]+/i', " ", $_field));
+
+										if(!($_field_label = trim($_field_label)))
+											continue; // Empty.
+
+										if(!($_field = trim($_field)))
+											continue; // Empty.
 
 										$_field_value = get_user_field($_field, $_user->ID);
 										if($_field_value && is_array($_field_value))
