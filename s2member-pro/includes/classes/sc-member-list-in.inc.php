@@ -62,13 +62,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$wpdb = $GLOBALS["wpdb"];
 					/** @var $wpdb \wpdb For IDEs. */
 
-					$defaults                  = array(
+					$defaults = array(
 						"args"              => "",
 
 						"blog"              => $GLOBALS["blog_id"],
 
 						"rlc_satisfy"       => "ALL", // `ALL` or `ANY`
-						"role"              => "", "level" => "", "ccaps" => "",
+						"role"              => "", "level" => "", "ccap" => "",
+						"roles"             => "", "levels" => "", "ccaps" => "",
 						"search"            => "", "search_columns" => "",
 						"include"           => "", "exclude" => "",
 
@@ -80,14 +81,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"avatar_size"       => 48,
 						"show_avatar"       => "yes",
-						"link_avatar"       => "http://www.gravatar.com/%%md5.email%%",
+						"link_avatar"       => "", // http://www.gravatar.com/%%md5.email%%
 
 						"show_display_name" => "yes",
-						"link_display_name" => "",
+						"link_display_name" => "", // /members/%%nicename%%/
 
 						"show_fields"       => ""
 					);
-					$attr                      = shortcode_atts($defaults, $attr);
+					if(!empty($attr["orderby"]) && in_array($attr["orderby"], array("login", "nicename", "email", "url", "display_name"), TRUE))
+						$defaults["order"] = "ASC"; // A more logical default when dealing with alphabetic ordering.
+
+					$attr = shortcode_atts($defaults, $attr);
+
+					if(!$attr["roles"] && $attr["role"]) $attr["roles"] = $attr["role"];
+					if(!isset($attr["levels"][0]) && isset($attr["level"][0])) $attr["levels"] = $attr["level"];
+					if(!$attr["ccaps"] && $attr["ccap"]) $attr["ccaps"] = $attr["ccap"];
+
 					$attr["rlc_satisfy"]       = strtoupper($attr["rlc_satisfy"]);
 					$attr["order"]             = strtoupper($attr["order"]);
 					$attr["show_avatar"]       = filter_var($attr["show_avatar"], FILTER_VALIDATE_BOOLEAN);
@@ -102,7 +111,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 								"blog_id"        => (integer)$attr["blog"],
 
 								"meta_query"     => array(),
-								"role"           => $attr["role"],
 								"search"         => $attr["search"],
 								"search_columns" => preg_split('/[;,\s]+/', $attr["search_columns"], NULL, PREG_SPLIT_NO_EMPTY),
 								"include"        => preg_split('/[;,\s]+/', $attr["include"], NULL, PREG_SPLIT_NO_EMPTY),
@@ -112,17 +120,33 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 								"orderby"        => $attr["orderby"],
 								"number"         => (integer)$attr["limit"],
 							);
-							if(is_numeric($attr["level"]))
+							if($attr["roles"]) // Must satisfy all Roles in the list (default behavior).
 								{
-									$args["meta_query"][] = array(
-										"key"     => $wpdb->get_blog_prefix()."capabilities",
-										"value"   => '"s2member_level'.(integer)$attr['level'].'"',
-										"compare" => "LIKE"
-									);
+									foreach(preg_split('/[;,\s]+/', $attr["roles"], NULL, PREG_SPLIT_NO_EMPTY) as $_role)
+										$args["meta_query"][] = array(
+											"key"     => $wpdb->get_blog_prefix()."capabilities",
+											"value"   => '"'.$_role.'"',
+											"compare" => "LIKE"
+										);
 									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
 										$args["meta_query"]["relation"] = "OR";
+
+									unset($_role); // Housekeeping.
 								}
-							if($attr["ccaps"]) // Must satisfy all CCAPs in the list...
+							if($attr["levels"]) // Must satisfy all Levels in the list (default behavior).
+								{
+									foreach(preg_split('/[;,\s]+/', $attr["levels"], NULL, PREG_SPLIT_NO_EMPTY) as $_level)
+										$args["meta_query"][] = array(
+											"key"     => $wpdb->get_blog_prefix()."capabilities",
+											"value"   => '"s2member_level'.$_level.'"',
+											"compare" => "LIKE"
+										);
+									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
+										$args["meta_query"]["relation"] = "OR";
+
+									unset($_level); // Housekeeping.
+								}
+							if($attr["ccaps"]) // Must satisfy all CCAPs in the list (default behavior).
 								{
 									foreach(preg_split('/[;,\s]+/', $attr["ccaps"], NULL, PREG_SPLIT_NO_EMPTY) as $_ccap)
 										$args["meta_query"][] = array(
@@ -136,11 +160,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 									unset($_ccap); // Housekeeping.
 								}
 						}
+					if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
+						$args["blog_id"] = $GLOBALS["blog_id"]; // Disallow for security reasons.
+
 					$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
-					$custom_template = (file_exists(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : FALSE;
-					$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-					$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+					$custom_template = (is_file(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : "";
+					$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+					$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+
+					if($attr["template"] && !$custom_template) // Unable to locate the template file?
+						trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr["template"])), E_USER_ERROR);
 
 					$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__))."/templates/members/member-list.php")));
 					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
