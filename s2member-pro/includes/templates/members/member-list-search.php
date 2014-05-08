@@ -13,7 +13,7 @@ else $s_val = ""; // No query yet.
 	<div class="ws-plugin--s2member-list-search-container">
 		<div class="ws-plugin--s2member-list-search">
 
-			<form action="" method="get">
+			<form action="<?php echo esc_attr($attr["action"]); ?>" method="get">
 				<table>
 					<tbody>
 					<tr>

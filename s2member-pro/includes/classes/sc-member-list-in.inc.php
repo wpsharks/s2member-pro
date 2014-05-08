@@ -201,6 +201,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 				{
 					$defaults = array(
 						"template"    => "",
+						"action"      => "",
 						"placeholder" => _x("Search users...", "s2member-front", "s2member"),
 					);
 					$attr     = shortcode_atts($defaults, $attr);
