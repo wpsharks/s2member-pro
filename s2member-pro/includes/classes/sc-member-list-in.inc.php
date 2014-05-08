@@ -62,12 +62,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$wpdb = $GLOBALS["wpdb"];
 					/** @var $wpdb \wpdb For IDEs. */
 
-					$defaults                  = array(
+					$defaults = array(
 						"args"              => "",
 
 						"blog"              => $GLOBALS["blog_id"],
 
 						"rlc_satisfy"       => "ALL", // `ALL` or `ANY`
+						"role"              => "", "level" => "", "ccap" => "",
 						"roles"             => "", "levels" => "", "ccaps" => "",
 						"search"            => "", "search_columns" => "",
 						"include"           => "", "exclude" => "",
@@ -87,7 +88,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"show_fields"       => ""
 					);
-					$attr                      = shortcode_atts($defaults, $attr);
+					$attr     = shortcode_atts($defaults, $attr);
+
+					if(!$attr["roles"] && $attr["role"]) $attr["roles"] = $attr["role"];
+					if(!isset($attr["levels"][0]) && isset($attr["level"][0])) $attr["levels"] = $attr["level"];
+					if(!$attr["ccaps"] && $attr["ccap"]) $attr["ccaps"] = $attr["ccap"];
+
 					$attr["rlc_satisfy"]       = strtoupper($attr["rlc_satisfy"]);
 					$attr["order"]             = strtoupper($attr["order"]);
 					$attr["show_avatar"]       = filter_var($attr["show_avatar"], FILTER_VALIDATE_BOOLEAN);
