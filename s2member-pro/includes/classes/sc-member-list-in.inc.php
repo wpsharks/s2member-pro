@@ -165,9 +165,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 					$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
-					$custom_template = (file_exists(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : FALSE;
-					$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-					$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+					$custom_template = (is_file(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : "";
+					$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+					$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+
+					if($attr["template"] && !$custom_template) // Unable to locate the template file?
+						trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr["template"])), E_USER_ERROR);
 
 					$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__))."/templates/members/member-list.php")));
 					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
