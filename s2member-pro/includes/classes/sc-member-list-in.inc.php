@@ -68,7 +68,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 						"blog"              => $GLOBALS["blog_id"],
 
 						"rlc_satisfy"       => "ALL", // `ALL` or `ANY`
-						"role"              => "", "level" => "", "ccaps" => "",
+						"roles"             => "", "levels" => "", "ccaps" => "",
 						"search"            => "", "search_columns" => "",
 						"include"           => "", "exclude" => "",
 
@@ -102,7 +102,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 								"blog_id"        => (integer)$attr["blog"],
 
 								"meta_query"     => array(),
-								"role"           => $attr["role"],
 								"search"         => $attr["search"],
 								"search_columns" => preg_split('/[;,\s]+/', $attr["search_columns"], NULL, PREG_SPLIT_NO_EMPTY),
 								"include"        => preg_split('/[;,\s]+/', $attr["include"], NULL, PREG_SPLIT_NO_EMPTY),
@@ -112,15 +111,31 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 								"orderby"        => $attr["orderby"],
 								"number"         => (integer)$attr["limit"],
 							);
-							if(is_numeric($attr["level"]))
+							if($attr["roles"]) // Must satisfy all CCAPs in the list...
 								{
-									$args["meta_query"][] = array(
-										"key"     => $wpdb->get_blog_prefix()."capabilities",
-										"value"   => '"s2member_level'.(integer)$attr['level'].'"',
-										"compare" => "LIKE"
-									);
+									foreach(preg_split('/[;,\s]+/', $attr["roles"], NULL, PREG_SPLIT_NO_EMPTY) as $_role)
+										$args["meta_query"][] = array(
+											"key"     => $wpdb->get_blog_prefix()."capabilities",
+											"value"   => '"'.$_role.'"',
+											"compare" => "LIKE"
+										);
 									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
 										$args["meta_query"]["relation"] = "OR";
+
+									unset($_role); // Housekeeping.
+								}
+							if($attr["levels"])
+								{
+									foreach(preg_split('/[;,\s]+/', $attr["levels"], NULL, PREG_SPLIT_NO_EMPTY) as $_level)
+										$args["meta_query"][] = array(
+											"key"     => $wpdb->get_blog_prefix()."capabilities",
+											"value"   => '"s2member_level'.$_level.'"',
+											"compare" => "LIKE"
+										);
+									if($attr["rlc_satisfy"] === "ANY") // Default is `ALL` (i.e. `AND`).
+										$args["meta_query"]["relation"] = "OR";
+
+									unset($_level); // Housekeeping.
 								}
 							if($attr["ccaps"]) // Must satisfy all CCAPs in the list...
 								{
