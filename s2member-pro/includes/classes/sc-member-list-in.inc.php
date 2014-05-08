@@ -84,7 +84,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 						"link_avatar"       => "", // http://www.gravatar.com/%%md5.email%%
 
 						"show_display_name" => "yes",
-						"link_display_name" => "",
+						"link_display_name" => "", // /members/%%nicename%%/
 
 						"show_fields"       => ""
 					);
@@ -157,6 +157,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 									unset($_ccap); // Housekeeping.
 								}
 						}
+					if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
+						$args["blog_id"] = $GLOBALS["blog_id"]; // Disallow for security reasons.
+
 					$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
 					$custom_template = (file_exists(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : FALSE;
