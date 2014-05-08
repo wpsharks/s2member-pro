@@ -88,7 +88,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"show_fields"       => ""
 					);
-					$attr     = shortcode_atts($defaults, $attr);
+					if(!empty($attr["orderby"]) && in_array($attr["orderby"], array("login", "nicename", "email", "url", "display_name"), TRUE))
+						$defaults["order"] = "ASC"; // A more logical default when dealing with alphabetic ordering.
+
+					$attr = shortcode_atts($defaults, $attr);
 
 					if(!$attr["roles"] && $attr["role"]) $attr["roles"] = $attr["role"];
 					if(!isset($attr["levels"][0]) && isset($attr["level"][0])) $attr["levels"] = $attr["level"];
