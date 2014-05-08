@@ -111,7 +111,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 								"orderby"        => $attr["orderby"],
 								"number"         => (integer)$attr["limit"],
 							);
-							if($attr["roles"]) // Must satisfy all CCAPs in the list...
+							if($attr["roles"]) // Must satisfy all Roles in the list (default behavior).
 								{
 									foreach(preg_split('/[;,\s]+/', $attr["roles"], NULL, PREG_SPLIT_NO_EMPTY) as $_role)
 										$args["meta_query"][] = array(
@@ -124,7 +124,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 									unset($_role); // Housekeeping.
 								}
-							if($attr["levels"])
+							if($attr["levels"]) // Must satisfy all Levels in the list (default behavior).
 								{
 									foreach(preg_split('/[;,\s]+/', $attr["levels"], NULL, PREG_SPLIT_NO_EMPTY) as $_level)
 										$args["meta_query"][] = array(
@@ -137,7 +137,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 									unset($_level); // Housekeeping.
 								}
-							if($attr["ccaps"]) // Must satisfy all CCAPs in the list...
+							if($attr["ccaps"]) // Must satisfy all CCAPs in the list (default behavior).
 								{
 									foreach(preg_split('/[;,\s]+/', $attr["ccaps"], NULL, PREG_SPLIT_NO_EMPTY) as $_ccap)
 										$args["meta_query"][] = array(
