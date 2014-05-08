@@ -200,36 +200,36 @@ Structural styles for the `[s2Member-List-Search /]` shortcode.
 These are basic CSS rules. You can override any of these
 through the `/style.css` file for your WordPress theme.
 */
-div.ws-plugin--s2member-list-search,
-div.ws-plugin--s2member-list-search *
+div.ws-plugin--s2member-list-search-box,
+div.ws-plugin--s2member-list-search-box *
 {
 	margin     : 0;
 	box-sizing : border-box;
 }
-div.ws-plugin--s2member-list-search table,
-div.ws-plugin--s2member-list-search table > tbody,
-div.ws-plugin--s2member-list-search table > tbody > tr,
-div.ws-plugin--s2member-list-search table > tbody > tr > td
+div.ws-plugin--s2member-list-search-box table,
+div.ws-plugin--s2member-list-search-box table > tbody,
+div.ws-plugin--s2member-list-search-box table > tbody > tr,
+div.ws-plugin--s2member-list-search-box table > tbody > tr > td
 {
 	padding : 0;
 	border  : 0;
 	width   : 100%;
 }
-div.ws-plugin--s2member-list-search table > tbody > tr > td:first-child
+div.ws-plugin--s2member-list-search-box table > tbody > tr > td:first-child
 {
 	width          : 78%;
 	padding-right  : 2%;
 	text-align     : left;
 	vertical-align : middle;
 }
-div.ws-plugin--s2member-list-search table > tbody > tr > td:last-child
+div.ws-plugin--s2member-list-search-box table > tbody > tr > td:last-child
 {
 	width          : 20%;
 	text-align     : right;
 	vertical-align : middle;
 }
-div.ws-plugin--s2member-list-search table > tbody > tr > td:first-child > input,
-div.ws-plugin--s2member-list-search table > tbody > tr > td:last-child > button
+div.ws-plugin--s2member-list-search-box table > tbody > tr > td:first-child > input,
+div.ws-plugin--s2member-list-search-box table > tbody > tr > td:last-child > button
 {
 	width : 100%;
 }

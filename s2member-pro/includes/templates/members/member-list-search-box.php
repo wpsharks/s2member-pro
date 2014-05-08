@@ -9,9 +9,9 @@ if(!empty($_REQUEST[$s_var]))
 	$s_val = trim(stripslashes($_REQUEST[$s_var]));
 else $s_val = ""; // No query yet.
 ?>
-<div class="ws-plugin--s2member-list-search-wrapper">
-	<div class="ws-plugin--s2member-list-search-container">
-		<div class="ws-plugin--s2member-list-search">
+<div class="ws-plugin--s2member-list-search-box-wrapper">
+	<div class="ws-plugin--s2member-list-search-box-container">
+		<div class="ws-plugin--s2member-list-search-box">
 
 			<form action="<?php echo esc_attr($attr["action"]); ?>" method="get">
 				<table>

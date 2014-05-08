@@ -184,12 +184,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 				}
 
 			/**
-			 * `[s2Member-List-Search /]` Shortcode.
+			 * `[s2Member-List-Search-Box /]` Shortcode.
 			 *
 			 * @package s2Member\Shortcodes
 			 * @since 140504
 			 *
-			 * @attaches-to ``add_shortcode("s2Member-List-Search");``
+			 * @attaches-to ``add_shortcode("s2Member-List-Search-Box");``
 			 *
 			 * @param array  $attr An array of Attributes.
 			 * @param string $content Content inside the Shortcode.
@@ -197,7 +197,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 			 *
 			 * @return mixed Template file output for this shortcode.
 			 */
-			public static function s_shortcode($attr = array(), $content = "", $shortcode = "")
+			public static function s_box_shortcode($attr = array(), $content = "", $shortcode = "")
 				{
 					$defaults = array(
 						"template"    => "",
@@ -207,17 +207,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$attr     = shortcode_atts($defaults, $attr);
 					$s_var    = self::s_var();
 
-					$custom_template = (is_file(TEMPLATEPATH."/member-list-search.php")) ? TEMPLATEPATH."/member-list-search.php" : "";
+					$custom_template = (is_file(TEMPLATEPATH."/member-list-search-box.php")) ? TEMPLATEPATH."/member-list-search-box.php" : "";
 					$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
 					$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 					if($attr["template"] && !$custom_template) // Unable to locate the template file?
 						trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr["template"])), E_USER_ERROR);
 
-					$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__))."/templates/members/member-list-search.php")));
+					$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__))."/templates/members/member-list-search-box.php")));
 					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
-					return apply_filters("ws_plugin__s2member_pro_sc_member_list_search", $code, get_defined_vars());
+					return apply_filters("ws_plugin__s2member_pro_sc_member_list_search_box", $code, get_defined_vars());
 				}
 
 			/**
