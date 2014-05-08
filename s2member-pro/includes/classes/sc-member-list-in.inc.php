@@ -80,7 +80,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 
 						"avatar_size"       => 48,
 						"show_avatar"       => "yes",
-						"link_avatar"       => "http://www.gravatar.com/%%md5.email%%",
+						"link_avatar"       => "", // http://www.gravatar.com/%%md5.email%%
 
 						"show_display_name" => "yes",
 						"link_display_name" => "",
