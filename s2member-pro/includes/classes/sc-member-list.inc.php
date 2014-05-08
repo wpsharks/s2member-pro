@@ -61,5 +61,24 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list"))
 				{
 					return c_ws_plugin__s2member_pro_sc_member_list_in::shortcode($attr, $content, $shortcode);
 				}
+
+			/**
+			 * `[s2Member-List-Search-Box /]` Shortcode.
+			 *
+			 * @package s2Member\Shortcodes
+			 * @since 140504
+			 *
+			 * @attaches-to ``add_shortcode("s2Member-List-Search-Box");``
+			 *
+			 * @param array  $attr An array of Attributes.
+			 * @param string $content Content inside the Shortcode.
+			 * @param string $shortcode The actual Shortcode name itself.
+			 *
+			 * @return mixed Return-value of inner routine.
+			 */
+			public static function s_box_shortcode($attr = array(), $content = "", $shortcode = "")
+				{
+					return c_ws_plugin__s2member_pro_sc_member_list_in::s_box_shortcode($attr, $content, $shortcode);
+				}
 		}
 	}

@@ -3,6 +3,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	exit("Do not access this file directly.");
 
 /** @var $attr array */
+/** @var $s_var string */
 /** @var $member_list_query array */
 /** @var $query WP_User_Query */
 /** @var $pagination array */
@@ -14,6 +15,7 @@ $pagination = $member_list_query["pagination"];
 		<div class="ws-plugin--s2member-list">
 
 			<?php if($query->get_total()): ?>
+
 				<ul class="ws-plugin--s2member-list-users">
 					<?php foreach($query->get_results() as $_user): /** @var $_user WP_User */ ?>
 						<li class="ws-plugin--s2member-list-user ws-plugin--s2member-clearfix">
@@ -80,15 +82,20 @@ $pagination = $member_list_query["pagination"];
 						</li>
 					<?php endforeach; ?>
 				</ul>
-			<?php endif; ?>
 
-			<?php if(count($pagination) > 1): ?>
-				<ul class="ws-plugin--s2member-list-pagination">
-					<li><?php echo _x("Page:", "s2member-front", "s2member"); ?></li>
-					<?php foreach($pagination as $_page): ?>
-						<li><?php echo $_page["link"]; ?></li>
-					<?php endforeach; ?>
-				</ul>
+				<?php if(count($pagination) > 1): ?>
+					<ul class="ws-plugin--s2member-list-pagination">
+						<li><?php echo _x("Page:", "s2member-front", "s2member"); ?></li>
+						<?php foreach($pagination as $_page): ?>
+							<li><?php echo $_page["link"]; ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+
+			<?php elseif($attr["enable_list_search"] && !empty($_REQUEST[$s_var])): ?>
+				<p><?php echo _x('Sorry, your search returned 0 results.', "s2member-front", "s2member"); ?></p>
+			<?php else: /* Generic message in this case. */ ?>
+				<p><?php echo _x('Sorry, there are no users to list at this time.', "s2member-front", "s2member"); ?></p>
 			<?php endif; ?>
 
 		</div>

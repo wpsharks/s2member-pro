@@ -70,7 +70,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 						"rlc_satisfy"       => "ALL", // `ALL` or `ANY`
 						"role"              => "", "level" => "", "ccap" => "",
 						"roles"             => "", "levels" => "", "ccaps" => "",
-						"search"            => "", "search_columns" => "",
+						"search"            => "", "search_columns" => "", "enable_list_search" => "",
 						"include"           => "", "exclude" => "",
 
 						"order"             => "DESC",
@@ -97,10 +97,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					if(!isset($attr["levels"][0]) && isset($attr["level"][0])) $attr["levels"] = $attr["level"];
 					if(!$attr["ccaps"] && $attr["ccap"]) $attr["ccaps"] = $attr["ccap"];
 
-					$attr["rlc_satisfy"]       = strtoupper($attr["rlc_satisfy"]);
-					$attr["order"]             = strtoupper($attr["order"]);
-					$attr["show_avatar"]       = filter_var($attr["show_avatar"], FILTER_VALIDATE_BOOLEAN);
-					$attr["show_display_name"] = filter_var($attr["show_display_name"], FILTER_VALIDATE_BOOLEAN);
+					$attr["order"]              = strtoupper($attr["order"]);
+					$attr["rlc_satisfy"]        = strtoupper($attr["rlc_satisfy"]);
+					$attr["show_avatar"]        = filter_var($attr["show_avatar"], FILTER_VALIDATE_BOOLEAN);
+					$attr["show_display_name"]  = filter_var($attr["show_display_name"], FILTER_VALIDATE_BOOLEAN);
+					$attr["enable_list_search"] = filter_var($attr["enable_list_search"], FILTER_VALIDATE_BOOLEAN);
 
 					if($attr["args"]) // Custom args?
 						$args = wp_parse_args($attr["args"]);
@@ -163,6 +164,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 						$args["blog_id"] = $GLOBALS["blog_id"]; // Disallow for security reasons.
 
+					$s_var = self::s_var();
+					if($attr["enable_list_search"] && !empty($_REQUEST[$s_var]))
+						$args["search"] = trim(stripslashes($_REQUEST[$s_var]));
+
 					$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
 					$custom_template = (is_file(TEMPLATEPATH."/member-list.php")) ? TEMPLATEPATH."/member-list.php" : "";
@@ -176,6 +181,53 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_member_list_in"))
 					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
 					return apply_filters("ws_plugin__s2member_pro_sc_member_list", $code, get_defined_vars());
+				}
+
+			/**
+			 * `[s2Member-List-Search-Box /]` Shortcode.
+			 *
+			 * @package s2Member\Shortcodes
+			 * @since 140504
+			 *
+			 * @attaches-to ``add_shortcode("s2Member-List-Search-Box");``
+			 *
+			 * @param array  $attr An array of Attributes.
+			 * @param string $content Content inside the Shortcode.
+			 * @param string $shortcode The actual Shortcode name itself.
+			 *
+			 * @return mixed Template file output for this shortcode.
+			 */
+			public static function s_box_shortcode($attr = array(), $content = "", $shortcode = "")
+				{
+					$defaults = array(
+						"template"    => "",
+						"action"      => "",
+						"placeholder" => _x("Search users...", "s2member-front", "s2member"),
+					);
+					$attr     = shortcode_atts($defaults, $attr);
+					$s_var    = self::s_var();
+
+					$custom_template = (is_file(TEMPLATEPATH."/member-list-search-box.php")) ? TEMPLATEPATH."/member-list-search-box.php" : "";
+					$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+					$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+
+					if($attr["template"] && !$custom_template) // Unable to locate the template file?
+						trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr["template"])), E_USER_ERROR);
+
+					$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__))."/templates/members/member-list-search-box.php")));
+					$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
+
+					return apply_filters("ws_plugin__s2member_pro_sc_member_list_search_box", $code, get_defined_vars());
+				}
+
+			/**
+			 * Allows for customization over the search variable.
+			 *
+			 * @return string Search variable name; e.g. `s2-s` (default value).
+			 */
+			public static function s_var()
+				{
+					return apply_filters("ws_plugin__s2member_pro_sc_member_list_search_var", "s2-s");
 				}
 
 			/**
