@@ -35,8 +35,8 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 /*
 Add the plugin Actions/Filters here.
 */
-add_action ("init", "c_ws_plugin__s2member_pro_alipay_return::alipay_return", 1);
-add_action ("init", "c_ws_plugin__s2member_pro_alipay_notify::alipay_notify", 1);
+add_action ("init", "c_ws_plugin__s2member_pro_alipay_return::alipay_return", 4);
+add_action ("init", "c_ws_plugin__s2member_pro_alipay_notify::alipay_notify", 4);
 
 add_filter ("ws_plugin__s2member_during_constants_c", "c_ws_plugin__s2member_pro_alipay_constants::alipay_constants", 10, 2);
 
