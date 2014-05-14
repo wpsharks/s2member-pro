@@ -30,89 +30,50 @@
  * @package s2Member\Shortcodes
  * @since 140328
  */
-if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
-	exit("Do not access this file directly.");
+if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
+	exit('Do not access this file directly.');
 
-if(!class_exists("c_ws_plugin__s2member_pro_sc_drip_in"))
+if(!class_exists('c_ws_plugin__s2member_pro_sc_drip_in'))
+{
+	/**
+	 * [s2Drip] Shortcode.
+	 *
+	 * @package s2Member\Shortcodes
+	 * @since 140328
+	 */
+	class c_ws_plugin__s2member_pro_sc_drip_in
 	{
 		/**
 		 * [s2Drip] Shortcode.
 		 *
 		 * @package s2Member\Shortcodes
 		 * @since 140328
+		 *
+		 * @attaches-to ``add_shortcode('s2Drip');``
+		 *
+		 * @param array  $attr An array of Attributes.
+		 * @param string $content Content inside the Shortcode.
+		 * @param string $shortcode The actual Shortcode name itself.
+		 *
+		 * @return string Content if dripping is allowable, else an empty string.
 		 */
-		class c_ws_plugin__s2member_pro_sc_drip_in
+		public static function shortcode($attr = array(), $content = '', $shortcode = '')
 		{
-			/**
-			 * [s2Drip] Shortcode.
-			 *
-			 * @package s2Member\Shortcodes
-			 * @since 140328
-			 *
-			 * @attaches-to ``add_shortcode("s2Drip");``
-			 *
-			 * @param array $attr An array of Attributes.
-			 * @param str   $content Content inside the Shortcode.
-			 * @param str   $shortcode The actual Shortcode name itself.
-			 *
-			 * @return inner Return-value of inner routine.
-			 */
-			public static function shortcode($attr = FALSE, $content = FALSE, $shortcode = FALSE)
-				{
-					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
-					do_action("ws_plugin__s2member_pro_before_sc_drip", get_defined_vars());
-					unset /* Unset defined __refs, __v. */
-					($__refs, $__v);
+			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
+			do_action('ws_plugin__s2member_pro_before_sc_drip', get_defined_vars());
+			unset /* Unset defined __refs, __v. */
+			($__refs, $__v);
 
-					if(current_user_can("administrator"))
-						$drip = TRUE;
-					else
-						{
-							$drip          = FALSE;
-							$attr          = shortcode_atts(array("level" => "0", "from_day" => "0", "to_day" => "0"), $attr, $shortcode);
-							$attr["level"] = abs((integer)$attr["level"]);
+			$attr = shortcode_atts(array('level'    => '0', 'access' => '',
+			                             'from_day' => '0', 'to_day' => '0'),
+			                       $attr, $shortcode);
 
-							if(current_user_can("access_s2member_level".$attr["level"]))
-								{
-									$level_time = 0;
+			if(!$attr['access'])
+				$attr['access'] = 'level'.$attr['level'];
 
-									if($attr["level"] === 0)
-										$level_time = c_ws_plugin__s2member_registration_times::registration_time();
-									else
-										{
-											$paid_times = // Index include a `level` prefix.
-												get_user_option("s2member_paid_registration_times");
+			$drip = c_ws_plugin__s2member_user_drip_access::user_can_access_drip($attr['access'], $attr['from_day'], $attr['to_day']);
 
-											if(is_array($paid_times))
-												{
-													foreach($paid_times as $_level => $_time)
-														{
-															$_level = (integer)str_ireplace("level", "", $_level);
-															// The `level` index becomes `0` here ^; all others become integers >= 1.
-															if($_level && $_level >= $attr["level"] && (!$level_time || $_time < $level_time))
-																$level_time = $_time;
-														}
-													unset($_level, $_time);
-												}
-										}
-									if($level_time)
-										{
-											$time = time();
-											/*
-											 * Subtracting 1 because we want to include the `from_day` also.
-											 */
-											if($time > ($level_time + (max(0, ($attr["from_day"] - 1)) * 86400)))
-												{
-													$drip = TRUE;
-													if($attr["to_day"] > 0)
-														if($time > ($level_time + ($attr["to_day"] * 86400)))
-															$drip = FALSE;
-												}
-										}
-								}
-						}
-					return apply_filters("ws_plugin__s2member_pro_sc_drip_content", $drip ? do_shortcode($content) : "", get_defined_vars());
-				}
+			return apply_filters('ws_plugin__s2member_pro_sc_drip_content', $drip ? do_shortcode($content) : '', get_defined_vars());
 		}
 	}
-?>
+}
