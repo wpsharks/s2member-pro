@@ -687,6 +687,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if((empty($s["password2"]) || $s["password2"] !== $s["password1"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
+
+										else if(($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s["custom_fields"]) ? $s["custom_fields"] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s["attr"]["level"], "registration"))))
+											$response = array("response" => array_shift($custom_field_validation_errors), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
 										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
 											$response = array("response" => _x('Missing or invalid Security Code. Please try again.', "s2member-front", "s2member"), "error" => true);
@@ -796,6 +799,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(!is_user_logged_in() && (empty($s["password2"]) || $s["password2"] !== $s["password1"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
+
+										else if(($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s["custom_fields"]) ? $s["custom_fields"] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s["attr"]["level"] === "*" ? "auto-detection" : $s["attr"]["level"], "registration"))))
+											$response = array("response" => array_shift($custom_field_validation_errors), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
 										else if(empty($s["card_type"]) || !is_string($s["card_type"]))
 											$response = array("response" => _x('Missing Card Type (Billing Method). Please try again.', "s2member-front", "s2member"), "error" => true);
