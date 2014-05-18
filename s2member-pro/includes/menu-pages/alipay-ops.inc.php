@@ -207,7 +207,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 						echo '<h3>Signup Confirmation Email (required, but the default works fine)</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they return from a successful signup at AliPay. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to register a Username for their Membership. You may also customize this further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -309,7 +309,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 						echo '<h3>Modification Confirmation Email (required, but the default works fine)</h3>'."\n";
 						echo '<p>This email is sent to existing Users after they complete an upgrade/downgrade (if and when you make this possible). For instance, if a Free Subscriber upgrades to a paid Membership Level, s2Member considers this a Modification (NOT a Signup; a Signup is associated only with someone completely new). The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+						echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -424,7 +424,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 						echo '<h3>Capability Confirmation Email (required, but the default works fine)</h3>'."\n";
 						echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <code>Dashboard -› s2Member -› AliPay Buttons -› Capability (Buy Now)</code>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+						echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 						echo '<table class="form-table">'."\n";
 						echo '<tbody>'."\n";
@@ -532,7 +532,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 						echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)</h3>' . "\n";
 						echo '<p>This email is sent to new Customers after they return from a successful purchase at AliPay, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -631,7 +631,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 
 						echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"' . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"] == 2 && (!function_exists ("wp_cron") || !wp_get_schedule ("ws_plugin__s2member_auto_eot_system__schedule"))) ? '' : ' style="display:none;"') . '>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>' . esc_html (site_url ("/?s2member_auto_eot_system_via_cron=1")) . '</code></p>' . "\n";
 
-						echo '<p><em class="ws-menu-page-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -› PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
+						echo '<p><em class="ws-menu-page-bright-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member -› PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e. they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
