@@ -4,6 +4,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 
 /** @var $attr array */
 /** @var $s_var string */
+/** @var $p_var string */
 /** @var $member_list_query array */
 /** @var $query WP_User_Query */
 /** @var $pagination array */

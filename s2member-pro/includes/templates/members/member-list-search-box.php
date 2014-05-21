@@ -4,6 +4,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 
 /** @var $attr array */
 /** @var $s_var string */
+/** @var $p_var string */
 
 if(!empty($_REQUEST[$s_var]))
 	$s_val = trim(stripslashes($_REQUEST[$s_var]));
