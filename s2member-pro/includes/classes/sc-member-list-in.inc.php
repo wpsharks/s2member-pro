@@ -220,7 +220,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
 			$hidden_inputs = ''; // Initialize.
-			foreach(stripslashes_deep($_GET) as $_key => $_value) if(is_scalar($_value) && $_key !== $s_var && $_key !== $p_var)
+			foreach(stripslashes_deep($_GET) as $_key => $_value) if($_key !== $s_var && $_key !== $p_var && is_scalar($_value))
 				$hidden_inputs .= '<input type="hidden" name="'.esc_attr((string)$_key).'" value="'.esc_attr((string)$_value).'" />';
 			$code = str_ireplace('%%hidden_inputs%%', $hidden_inputs, $code);
 			unset($_key, $_value); // Housekeeping.
