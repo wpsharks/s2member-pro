@@ -10,6 +10,10 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 /** @var $pagination array */
 $query      = $member_list_query["query"];
 $pagination = $member_list_query["pagination"];
+
+if(!empty($_REQUEST[$s_var]))
+	$s_val = trim(stripslashes($_REQUEST[$s_var]));
+else $s_val = ""; // No query yet.
 ?>
 <div class="ws-plugin--s2member-list-wrapper">
 	<div class="ws-plugin--s2member-list-container">
@@ -93,8 +97,12 @@ $pagination = $member_list_query["pagination"];
 					</ul>
 				<?php endif; ?>
 
-			<?php elseif($attr["enable_list_search"] && !empty($_REQUEST[$s_var])): ?>
+			<?php elseif($attr["enable_list_search"] && $s_val): ?>
 				<p><?php echo _x('Sorry, your search returned 0 results.', "s2member-front", "s2member"); ?></p>
+
+			<?php elseif(!$attr["enable_list_search"] && $s_val): ?>
+				<p><?php echo _x('Sorry, search is not allowed here. The shortcode attribute `enable_list_search` is not enabled by the site owner.', "s2member-front", "s2member"); ?></p>
+
 			<?php else: /* Generic message in this case. */ ?>
 				<p><?php echo _x('Sorry, there are no users to list at this time.', "s2member-front", "s2member"); ?></p>
 			<?php endif; ?>
