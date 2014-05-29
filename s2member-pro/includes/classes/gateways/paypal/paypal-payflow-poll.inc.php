@@ -76,10 +76,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 				{
 					foreach($objs as $obj /* Run through all of the Paid Member IDs that originated their Subscription through the PayPal gateway. */)
 					{
-						if(($user_id = $obj->ID) && ($counter = (int)$counter + 1))
+						if(($user_id = $obj->ID) && ($counter = (int)$counter + 1)) // Update counter. Only run through X records; given by $per_process.
 						{
-							$processed = FALSE; // Initialize.
-
+							$processed = FALSE; // Initialize and/or reset all of these variables.
 							unset($paypal, $subscr_id, $processing, $ipn, $log4, $_log4, $log2, $logs_dir);
 
 							if(($subscr_id = get_user_option('s2member_subscr_id', $user_id)) && !get_user_option('s2member_auto_eot_time', $user_id))
