@@ -71,7 +71,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_drip_in'))
 			if(!$attr['access'])
 				$attr['access'] = 'level'.$attr['level'];
 
-			$drip = c_ws_plugin__s2member_user_drip_access::user_can_access_drip($attr['access'], $attr['from_day'], $attr['to_day']);
+			$drip = c_ws_plugin__s2member_pro_user_drip_access::user_can_access_drip($attr['access'], $attr['from_day'], $attr['to_day']);
 
 			return apply_filters('ws_plugin__s2member_pro_sc_drip_content', $drip ? do_shortcode($content) : '', get_defined_vars());
 		}
