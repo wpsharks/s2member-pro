@@ -80,15 +80,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 						{
 							$processed = FALSE; // Initialize.
 
-							unset($paypal, $subscr_id, $ipn_sv, $processing, $ipn, $log4, $_log4, $log2, $logs_dir);
+							unset($paypal, $subscr_id, $processing, $ipn, $log4, $_log4, $log2, $logs_dir);
 
 							if(($subscr_id = get_user_option('s2member_subscr_id', $user_id)) && !get_user_option('s2member_auto_eot_time', $user_id))
 							{
-								if(is_array($ipn_sv = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(FALSE, $subscr_id)) #
-								   && ($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)) && is_array($paypal['ipn_signup_vars'] = $ipn_sv)
-								)
+								if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 								{
-									if(preg_match('/expired|too many failures/i', $paypal['STATUS']))
+									$paypal['ipn_signup_vars'] = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(FALSE, $subscr_id);
+
+									if($paypal['ipn_signup_vars'] && preg_match('/expired|too many failures/i', $paypal['STATUS']))
 									{
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
 
@@ -126,7 +126,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 									}
-									else if(preg_match('/(suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
+									else if($paypal['ipn_signup_vars'] && preg_match('/(suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
 									{
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
 
@@ -164,8 +164,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 									}
-									else if(!$processed) // If nothing was processed, here we add a message to the logs indicating the status; which is being ignored.
-										$paypal['s2member_log'][] = 'Ignoring this status ( `'.$paypal['STATUS'].'` ). It does NOT require any action on the part of s2Member.';
+									else if(!$processed && !$paypal['ipn_signup_vars'])
+										$paypal['s2member_log'][] = 'Ignoring status (`'.$paypal['STATUS'].'`).'.
+										                            ' The user has no IPN Signup Vars recorded on-site by s2Member.';
+
+									else if(!$processed) $paypal['s2member_log'][] = 'Ignoring status (`'.$paypal['STATUS'].'`).'.
+									                                                 ' It does NOT require any action on the part of s2Member.';
 
 									$logt = c_ws_plugin__s2member_utilities::time_details();
 									$logv = c_ws_plugin__s2member_utilities::ver_details();
