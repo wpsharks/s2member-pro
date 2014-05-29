@@ -126,7 +126,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 									}
-
 									else if(preg_match('/(suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
 									{
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
@@ -165,7 +164,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 									}
-
 									else if(!$processed) // If nothing was processed, here we add a message to the logs indicating the status; which is being ignored.
 										$paypal['s2member_log'][] = 'Ignoring this status ( `'.$paypal['STATUS'].'` ). It does NOT require any action on the part of s2Member.';
 
@@ -185,7 +183,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 												                  FILE_APPEND);
 								}
 							}
-
 							update_user_option($user_id, 's2member_last_status_scan', time());
 
 							if($counter >= $per_process) // Only this many.
