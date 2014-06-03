@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration"))
 				*/
 				public static function authnet_registration ()
 					{
-						if (!empty ($_POST["s2member_pro_authnet_registration"]))
+						if (!empty($_POST["s2member_pro_authnet_registration"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_registration_in::authnet_registration ();
 							}

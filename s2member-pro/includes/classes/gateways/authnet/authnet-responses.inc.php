@@ -503,7 +503,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param str $form The type of Pro Form being submitted.
+				* @param string $form The type of Pro Form being submitted.
 				* @param array $s An array of data submitted through the Pro Form.
 				* @return null|array Null if there are no errors, else a response array.
 				*/

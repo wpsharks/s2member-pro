@@ -57,9 +57,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_alipay_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"])
+						if (!empty($_GET["s2member_pro_alipay_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"])
 							{
-								if (is_array ($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
+								if (is_array($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
 									{
 										$alipay["s2member_log"][] = "Return-Data received on: " . date ("D M j, Y g:i:s a T");
 										$alipay["s2member_log"][] = "s2Member POST vars verified through a POST back to AliPay.";
@@ -73,7 +73,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 												list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 												list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
 
-												$rtn = /* Reset. */ array ();
+												$rtn = /* Reset. */ array();
 
 												$rtn["txn_type"] = "web_accept";
 												$rtn["txn_id"] = $alipay["trade_no"];

@@ -85,7 +85,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 								echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
-								echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty (i.e. <code>""</code>).<br /><br />'."\n";
+								echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e. <code>""</code>).<br /><br />'."\n";
 
 								echo 'Example: <code>"","Username","First Name","Last Name","Display Name","Email"</code><br /><br />' . "\n";
 
@@ -142,7 +142,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_import_export"))
 								echo 'One User/Member per line please. Here is a quick example:<br />' . "\n";
 								echo '<code>"ID","Username","Password","First Name","Last Name","Display Name","Email"</code><br /><br />' . "\n";
 
-								echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty (i.e. <code>""</code>).<br /><br />'."\n";
+								echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e. <code>""</code>).<br /><br />'."\n";
 
 								echo 'Example: <code>"","Username","Password","First Name","Last Name","Display Name","Email"</code>' . "\n";
 

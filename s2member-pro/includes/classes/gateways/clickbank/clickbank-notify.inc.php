@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify"))
 				*/
 				public static function clickbank_notify ()
 					{
-						if (!empty ($_GET["s2member_pro_clickbank_notify"]))
+						if (!empty($_GET["s2member_pro_clickbank_notify"]))
 							{
 								return c_ws_plugin__s2member_pro_clickbank_notify_in::clickbank_notify ();
 							}

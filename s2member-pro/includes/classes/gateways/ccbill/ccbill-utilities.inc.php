@@ -50,7 +50,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param array $vars An array of variables to include in the ccBill link.
-				* @return str A full URL to the ccBill Payment Gateway.
+				* @return string A full URL to the ccBill Payment Gateway.
 				*
 				* @todo Optimize this routine with ``empty()`` and ``isset()``.
 				* @todo Candidate for the use of ``ifsetor()``?
@@ -73,16 +73,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param str $currency_code Expects a 3 character Currency Code.
+				* @param string $currency_code Expects a 3 character Currency Code.
 				* @return int|str A numeric string with a ccBill Currency Number. Defaults to `840` *( i.e. `USD` )*.
 				*/
 				public static function ccbill_currency_numr ($currency_code = FALSE)
 					{
 						$currency_code = strtoupper ($currency_code); // Force uppercase.
 
-						$currencies = array ("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
+						$currencies = array("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
 
-						return (!empty ($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
+						return (!empty($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
 					}
 				/**
 				* Converts Currency Number for ccBill forms into a valid Currency Code.
@@ -90,14 +90,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param int|str $currency_numr Expects a valid ccBill Currency Number, numeric.
-				* @return str A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
+				* @param int|string $currency_numr Expects a valid ccBill Currency Number, numeric.
+				* @return string A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
 				*/
 				public static function ccbill_currency_code ($currency_numr = FALSE)
 					{
-						$currencies = array ("840" => "USD", "978" => "EUR", "036" => "AUD", "124" => "CAD", "826" => "GBP", "392" => "JPY");
+						$currencies = array("840" => "USD", "978" => "EUR", "036" => "AUD", "124" => "CAD", "826" => "GBP", "392" => "JPY");
 
-						return (!empty ($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
+						return (!empty($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
 					}
 				/**
 				* Calculates period in days for ccBill forms.
@@ -105,8 +105,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @package s2Member\ccBill
 				* @since 1.5
 				*
-				* @param int|str $period Optional. A numeric Period that coincides with ``$term``.
-				* @param str $term Optional. A Term that coincides with ``$period``.
+				* @param int|string $period Optional. A numeric Period that coincides with ``$term``.
+				* @param string $term Optional. A Term that coincides with ``$period``.
 				* @return int A "Period Term", in days. Defaults to `0`.
 				*/
 				public static function ccbill_per_term_2_days ($period = FALSE, $term = FALSE)
@@ -144,7 +144,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 
 								foreach ($postvars as $var => $value)
 									if (preg_match ("/^s2member_/", $var))
-										unset ($postvars[$var]);
+										unset($postvars[$var]);
 
 								$denial_digest_vars = $postvars["denialId"] . "0";
 								$approval_digest_vars = $postvars["subscription_id"] . "1";

@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify"))
 				*/
 				public static function authnet_notify ()
 					{
-						if (!empty ($_GET["s2member_pro_authnet_notify"]))
+						if (!empty($_GET["s2member_pro_authnet_notify"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_notify_in::authnet_notify ();
 							}

@@ -61,7 +61,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_construction", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 
 						$this->WP_Widget($control_ops["id_base"], "s2Member Pro (Login Widget)", $widget_ops, $control_ops);
 
@@ -85,7 +85,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_display", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 
 						echo $args["before_widget"]; // OK, here we go into this widget.
 
@@ -94,7 +94,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_during_display_before", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 
 						if(!is_user_logged_in()) // The User/Member is NOT logged in.
 							{
@@ -203,7 +203,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_during_display_after", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 
 						echo $args["after_widget"];
 
@@ -226,7 +226,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_form", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 						/*
 						Ok, here is where we need to handle the widget control form. This allows a user to further customize the widget.
 						*/
@@ -294,7 +294,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_login_widget_before_update", get_defined_vars(), $this);
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						unset($__refs, $__v);
 
 						$instance = (array)c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($instance));
 

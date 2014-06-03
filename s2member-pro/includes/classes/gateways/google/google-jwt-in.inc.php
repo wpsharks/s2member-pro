@@ -50,9 +50,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 				* @since 131123
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting Google Button Code, HTML markup.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
+				* @return string The resulting Google Button Code, HTML markup.
 				*/
 				public static function google_jwt ()
 					{
@@ -89,7 +89,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 						$attr = stripslashes((string)$_REQUEST["s2member_pro_google_jwt_vars"]["attr"]);
 						$attr = (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($attr));
 
-						$attr = array_merge(array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor", "success" => "", "failure" => ""), $attr);
+						$attr = array_merge(array("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor", "success" => "", "failure" => ""), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);

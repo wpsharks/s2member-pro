@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_return"))
 				*/
 				public static function google_return ()
 					{
-						if (!empty ($_GET["s2member_pro_google_return"]))
+						if (!empty($_GET["s2member_pro_google_return"]))
 							{
 								return c_ws_plugin__s2member_pro_google_return_in::google_return ();
 							}

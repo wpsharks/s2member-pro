@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return"))
 				*/
 				public static function alipay_return ()
 					{
-						if (!empty ($_GET["s2member_pro_alipay_return"]))
+						if (!empty($_GET["s2member_pro_alipay_return"]))
 							{
 								return c_ws_plugin__s2member_pro_alipay_return_in::alipay_return ();
 							}

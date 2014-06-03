@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*/
 				public static function paypal_button_default_attrs ($default_attrs = FALSE, $vars = FALSE)
 					{
-						return array_merge ((array)$default_attrs, array ("success" => ""));
+						return array_merge ((array)$default_attrs, array("success" => ""));
 					}
 				/**
 				* Cleans up extra Attributes in PayPal Button Shortcodes.
@@ -74,7 +74,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 					{
 						$attr = &$vars["__refs"]["attr"]; // By reference.
 
-						$attr["success"] = str_ireplace (array ("&#038;", "&amp;"), "&", $attr["success"]);
+						$attr["success"] = str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]);
 
 						return /* Return for uniformity. */;
 					}
@@ -86,9 +86,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*
 				* @attaches-to ``add_filter("ws_plugin__s2member_during_sc_paypal_button_success_return_url");``
 				*
-				* @param str $success_return_url The current Return URL, passed through by the Filter.
+				* @param string $success_return_url The current Return URL, passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
-				* @return str The ``$success_return_url``, after possible modification.
+				* @return string The ``$success_return_url``, after possible modification.
 				*/
 				public static function paypal_button_success_return_url ($success_return_url = FALSE, $vars = FALSE)
 					{

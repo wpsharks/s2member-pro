@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify"))
 				*/
 				public static function alipay_notify ()
 					{
-						if (!empty ($_POST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_POST["notify_type"]))
+						if (!empty($_POST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_POST["notify_type"]))
 							{
 								return c_ws_plugin__s2member_pro_alipay_notify_in::alipay_notify ();
 							}

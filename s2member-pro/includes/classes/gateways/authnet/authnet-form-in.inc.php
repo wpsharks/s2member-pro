@@ -52,15 +52,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-AuthNet-xFormOption");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting Form Code, HTML markup.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
+				* @return string The resulting Form Code, HTML markup.
 				*/
 				public static function sc_authnet_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
+						unset($__refs, $__v);
 
 						return serialize(c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr)).'|::|';
 					}
@@ -73,15 +73,15 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-AuthNet-Form");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting Form Code, HTML markup.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
+				* @return string The resulting Form Code, HTML markup.
 				*/
 				public static function sc_authnet_form ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
+						unset($__refs, $__v);
 
 						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */ (true);
 
@@ -116,7 +116,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 									$option_selections .= '<option value="'.esc_attr($_option_id).'"'.((!empty($_option['selected'])) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
 								unset($_option_id, $_option); // Housekeeping.
 							}
-						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => ((@$attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => ""), $attr);
+						$attr = shortcode_atts (array("ids" => "0", "exp" => "72", "level" => ((@$attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => ""), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
@@ -129,16 +129,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						$attr["default_country_code"] = /* This MUST be in uppercase format. */ strtoupper ($attr["default_country_code"]);
 						$attr["success"] = /* Normalize ampersands. */ c_ws_plugin__s2member_utils_urls::n_amps ($attr["success"]);
 
-						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array ();
-						$attr["accept"] = (empty ($attr["accept"])) ? array_merge ($attr["accept"], array ("visa")) : $attr["accept"];
+						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array();
+						$attr["accept"] = (empty($attr["accept"])) ? array_merge ($attr["accept"], array("visa")) : $attr["accept"];
 
 						$attr["coupon"] = (!empty($_GET["s2p-coupon"])) ? trim (strip_tags (stripslashes ($_GET["s2p-coupon"]))) : $attr["coupon"];
 
 						$attr["singular"] = /* Collect the Singular ID for this Post/Page. */ get_the_ID ();
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
+						unset($__refs, $__v);
 
 						if /* Cancellations. */ ($attr["cancel"])
 							{
@@ -150,7 +150,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Empty post vars on successful response.
 								*/
-								$_p = ($response["response"] && !$response["error"]) ? array (): $_p;
+								$_p = ($response["response"] && !$response["error"]) ? array(): $_p;
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
@@ -210,8 +210,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_cancellation_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_cancellation_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Free registrations. */ ($attr["register"])
 							{
@@ -223,7 +223,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Empty post vars on successful response.
 								*/
-								$_p = ($response["response"] && !$response["error"]) ? array (): $_p;
+								$_p = ($response["response"] && !$response["error"]) ? array(): $_p;
 								/*
 								Build all of the custom fields.
 								*/
@@ -240,13 +240,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 											foreach (json_decode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if (in_array ($field["id"], $fields_applicable)) // Field is applicable to Level 0?
+													if (in_array($field["id"], $fields_applicable)) // Field is applicable to Level 0?
 														{
 															$field_var = preg_replace ("/[^a-z0-9]/i", "_", strtolower ($field["id"]));
 															$field_id_class = preg_replace ("/_/", "-", $field_var);
 
-															if (!empty ($field["section"]) && $field["section"] === "yes") // Starts a new section?
-																$custom_fields .= '<div id="s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . '">' . ((!empty ($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
+															if (!empty($field["section"]) && $field["section"] === "yes") // Starts a new section?
+																$custom_fields .= '<div id="s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . '">' . ((!empty($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
 
 															$custom_fields .= '<div id="s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-div s2member-pro-authnet-registration-form-custom-reg-field-' . $field_id_class . '-div">' . "\n";
 
@@ -289,7 +289,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$opt_in = '<div id="s2member-pro-authnet-registration-form-custom-reg-field-opt-in-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-custom-reg-field-opt-in-div s2member-pro-authnet-registration-form-custom-reg-field-opt-in-div">' . "\n";
 
 										$opt_in .= '<label for="s2member-pro-authnet-registration-form-custom-reg-field-opt-in" id="s2member-pro-authnet-registration-form-custom-reg-field-opt-in-label" class="s2member-pro-authnet-form-custom-reg-field-opt-in-label s2member-pro-authnet-registration-form-custom-reg-field-opt-in-label">' . "\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_registration[custom_fields][opt_in]" id="s2member-pro-authnet-registration-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-registration-form-custom-reg-field-opt-in" value="1"' . (((empty ($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="300" />' . "\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_registration[custom_fields][opt_in]" id="s2member-pro-authnet-registration-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-registration-form-custom-reg-field-opt-in" value="1"' . (((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="300" />' . "\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"] . "\n";
 										$opt_in .= '</label>' . "\n";
 
@@ -352,8 +352,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_registration_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_registration_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Billing information updates. */ ($attr["update"])
 							{
@@ -365,13 +365,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Empty post vars on successful response.
 								*/
-								$_p = ($response["response"] && !$response["error"]) ? array (): $_p;
+								$_p = ($response["response"] && !$response["error"]) ? array(): $_p;
 								/*
 								Build the list of card type options.
 								*/
-								foreach (array ("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
-									$card_type_options .= '<label for="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-update-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
-									'<input type="radio" aria-required="true" name="s2member_pro_authnet_update[card_type]" id="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_update"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_update"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_update"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="10" />' . "\n" .
+								$card_type_options = ''; // Initialize.
+								foreach (array("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
+									$card_type_options .= '<label for="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-update-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
+									'<input type="radio" aria-required="true" name="s2member_pro_authnet_update[card_type]" id="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty($_p["s2member_pro_authnet_update"]["card_type"]) && in_array(strtolower ($_p["s2member_pro_authnet_update"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_update"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="10" />' . "\n" .
 										'</label>';
 								/*
 								Build the list of expiration date options.
@@ -393,7 +394,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_update"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
-								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
+								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
@@ -484,8 +485,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_update_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_update_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Specific Post/Page Access. */ ($attr["sp"])
 							{
@@ -502,14 +503,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Empty post vars on successful response.
 								*/
-								$_p = ($response["response"] && !$response["error"]) ? array (): $_p;
+								$_p = ($response["response"] && !$response["error"]) ? array(): $_p;
 								/*
 								Build the list of card type options.
 								*/
 								$card_type_options = '<input type="radio" name="s2member_pro_authnet_sp_checkout[card_type]" id="s2member-pro-authnet-sp-checkout-card-type-free" class="s2member-pro-authnet-card-type-free s2member-pro-authnet-sp-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
-								foreach (array ("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
-									$card_type_options .= '<label for="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-sp-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
-									'<input type="radio" aria-required="true" name="s2member_pro_authnet_sp_checkout[card_type]" id="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_sp_checkout"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_sp_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_sp_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="100" />' . "\n" .
+								foreach (array("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
+									$card_type_options .= '<label for="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-sp-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-sp-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
+									'<input type="radio" aria-required="true" name="s2member_pro_authnet_sp_checkout[card_type]" id="s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-sp-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty($_p["s2member_pro_authnet_sp_checkout"]["card_type"]) && in_array(strtolower ($_p["s2member_pro_authnet_sp_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_sp_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="100" />' . "\n" .
 										'</label>';
 								/*
 								Build the list of expiration date options.
@@ -531,7 +532,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_sp_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
-								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
+								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
@@ -573,7 +574,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$opt_in = '<div id="s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-custom-reg-field-opt-in-div s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in-div">' . "\n";
 
 										$opt_in .= '<label for="s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in" id="s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-authnet-form-custom-reg-field-opt-in-label s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in-label">' . "\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_sp_checkout[custom_fields][opt_in]" id="s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in" value="1"' . (((empty ($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="400" />' . "\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_sp_checkout[custom_fields][opt_in]" id="s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-sp-checkout-form-custom-reg-field-opt-in" value="1"' . (((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="400" />' . "\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"] . "\n";
 										$opt_in .= '</label>' . "\n";
 
@@ -616,7 +617,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Fill in the coupon value.
 								*/
-								$code = preg_replace ("/%%coupon_response%%/", c_ws_plugin__s2member_utils_strings::esc_ds (c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($attr, $attr["coupon"], "response", array ("affiliates-1px-response"))), $code);
+								$code = preg_replace ("/%%coupon_response%%/", c_ws_plugin__s2member_utils_strings::esc_ds (c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($attr, $attr["coupon"], "response", array("affiliates-1px-response"))), $code);
 								$code = preg_replace ("/%%coupon_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds (format_to_edit ($attr["coupon"])), $code);
 								/*
 								Fill in the registration section.
@@ -656,8 +657,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else // Signups and Modifications.
 							{
@@ -675,14 +676,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Empty post vars on successful response.
 								*/
-								$_p = ($response["response"] && !$response["error"]) ? array (): $_p;
+								$_p = ($response["response"] && !$response["error"]) ? array(): $_p;
 								/*
 								Build the list of card type options.
 								*/
 								$card_type_options = '<input type="radio" name="s2member_pro_authnet_checkout[card_type]" id="s2member-pro-authnet-checkout-card-type-free" class="s2member-pro-authnet-card-type-free s2member-pro-authnet-checkout-card-type-free" value="Free" tabindex="-1" style="display:none;" />'."\n";
-								foreach (array ("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
-									$card_type_options .= '<label for="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
-									'<input type="radio" aria-required="true" name="s2member_pro_authnet_checkout[card_type]" id="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_checkout"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="200" />' . "\n" .
+								foreach (array("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
+									$card_type_options .= '<label for="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-checkout-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-checkout-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
+									'<input type="radio" aria-required="true" name="s2member_pro_authnet_checkout[card_type]" id="s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-checkout-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty($_p["s2member_pro_authnet_checkout"]["card_type"]) && in_array(strtolower ($_p["s2member_pro_authnet_checkout"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_checkout"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array(strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="200" />' . "\n" .
 										'</label>';
 								/*
 								Build the list of expiration date options.
@@ -704,7 +705,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "USD") ? "US" : "";
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "CAD") ? "CA" : $country_default_by_currency;
 								$country_default_by_currency = (!@$_p["s2member_pro_authnet_checkout"]["country"] && $attr["cc"] === "GBP") ? "GB" : $country_default_by_currency;
-								$country_default_by_currency = apply_filters ("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
+								$country_default_by_currency = apply_filters("ws_plugin__s2member_pro_authnet_default_country", $country_default_by_currency, get_defined_vars ());
 
 								$default_country_v = ($attr["default_country_code"]) ? $attr["default_country_code"] : $country_default_by_currency;
 
@@ -733,13 +734,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 											foreach (json_decode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], true) as $field)
 												{
-													if (in_array ($field["id"], $fields_applicable)) // Field is applicable to this Level?
+													if (in_array($field["id"], $fields_applicable)) // Field is applicable to this Level?
 														{
 															$field_var = preg_replace ("/[^a-z0-9]/i", "_", strtolower ($field["id"]));
 															$field_id_class = preg_replace ("/_/", "-", $field_var);
 
-															if (!empty ($field["section"]) && $field["section"] === "yes") // Starts a new section?
-																$custom_fields .= '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty ($field["sectitle"])) ? '-title' : '') . '">' . ((!empty ($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
+															if (!empty($field["section"]) && $field["section"] === "yes") // Starts a new section?
+																$custom_fields .= '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . ' s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-divider-section' . ((!empty($field["sectitle"])) ? '-title' : '') . '">' . ((!empty($field["sectitle"])) ? $field["sectitle"] : '') . '</div>';
 
 															$custom_fields .= '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-' . $field_id_class . '-div s2member-pro-authnet-checkout-form-custom-reg-field-' . $field_id_class . '-div">' . "\n";
 
@@ -782,7 +783,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$opt_in = '<div id="s2member-pro-authnet-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-custom-reg-field-opt-in-div s2member-pro-authnet-checkout-form-custom-reg-field-opt-in-div">' . "\n";
 
 										$opt_in .= '<label for="s2member-pro-authnet-checkout-form-custom-reg-field-opt-in" id="s2member-pro-authnet-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-authnet-form-custom-reg-field-opt-in-label s2member-pro-authnet-checkout-form-custom-reg-field-opt-in-label">' . "\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_checkout[custom_fields][opt_in]" id="s2member-pro-authnet-checkout-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-checkout-form-custom-reg-field-opt-in" value="1"' . (((empty ($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="500" />' . "\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_authnet_checkout[custom_fields][opt_in]" id="s2member-pro-authnet-checkout-form-custom-reg-field-opt-in" class="s2member-pro-authnet-form-custom-reg-field-opt-in s2member-pro-authnet-checkout-form-custom-reg-field-opt-in" value="1"' . (((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_authnet_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '') . ' tabindex="500" />' . "\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"] . "\n";
 										$opt_in .= '</label>' . "\n";
 
@@ -826,7 +827,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Fill in the coupon value.
 								*/
-								$code = preg_replace ("/%%coupon_response%%/", c_ws_plugin__s2member_utils_strings::esc_ds (c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($attr, $attr["coupon"], "response", array ("affiliates-1px-response"))), $code);
+								$code = preg_replace ("/%%coupon_response%%/", c_ws_plugin__s2member_utils_strings::esc_ds (c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($attr, $attr["coupon"], "response", array("affiliates-1px-response"))), $code);
 								$code = preg_replace ("/%%coupon_value%%/", c_ws_plugin__s2member_utils_strings::esc_ds (format_to_edit ($attr["coupon"])), $code);
 								/*
 								Fill in the registration section.
@@ -873,10 +874,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								($attr["modify"]) ? do_action ("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action ("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								($attr["modify"]) ? do_action("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
-						return apply_filters ("ws_plugin__s2member_pro_sc_authnet_form", $code, get_defined_vars ());
+						return apply_filters("ws_plugin__s2member_pro_sc_authnet_form", $code, get_defined_vars ());
 					}
 			}
 	}

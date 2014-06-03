@@ -55,11 +55,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_widgets"))
 				*/
 				public static function login_widget_register ()
 					{
-						do_action ("ws_plugin__s2member_pro_login_widget_before_register", get_defined_vars ());
+						do_action("ws_plugin__s2member_pro_login_widget_before_register", get_defined_vars ());
 
 						register_widget("c_ws_plugin__s2member_pro_login_widget");
 
-						do_action ("ws_plugin__s2member_pro_login_widget_after_register", get_defined_vars ());
+						do_action("ws_plugin__s2member_pro_login_widget_after_register", get_defined_vars ());
 
 						return /* Return for uniformity. */;
 					}

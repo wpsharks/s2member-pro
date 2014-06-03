@@ -57,17 +57,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_google_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"])
+						if (!empty($_GET["s2member_pro_google_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"])
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (is_array ($google = c_ws_plugin__s2member_pro_google_utilities::google_postvars ()) && ($_google = $google))
+								if (is_array($google = c_ws_plugin__s2member_pro_google_utilities::google_postvars ()) && ($_google = $google))
 									{
 										$google["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$google["s2member_log"][] = "s2Member POST vars verified with Google.";
 
 										if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/item\/v[0-9]+\/postback\/buy$/i', $google["typ"])
-										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
+										&& is_array($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
 										 && !empty($google["response"]["orderId"]))
 											{
 												$google["s2member_log"][] = "Google transaction identified as ( `SALE/BUY-NOW` ).";
@@ -75,7 +75,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
 												$ipn["txn_id"] = $google["response"]["orderId"];
@@ -102,11 +102,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/subscription\/v[0-9]+\/postback\/buy$/i', $google["typ"])
-										&& is_array ($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
+										&& is_array($s2vars = c_ws_plugin__s2member_pro_google_utilities::google_parse_s2vars ($google))
 										 && !empty($google["response"]["orderId"]))
 											{
 												$google["s2member_log"][] = "Google transaction identified as ( `SALE/SUBSCRIPTION` ).";
@@ -114,7 +114,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $google["response"]["orderId"];
@@ -148,7 +148,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!empty($google["typ"]) && preg_match ('/^google\/payments\/inapp\/subscription\/v[0-9]+\/canceled$/i', $google["typ"])
@@ -160,7 +160,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$google["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_cancel";
 												$ipn["subscr_id"] = $google["response"]["orderId"];
@@ -187,7 +187,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.

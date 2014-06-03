@@ -52,16 +52,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_button_in"))
 				* @attaches-to ``add_shortcode("s2Member-Pro-Google-Button");``
 				*
 				* @param array $attr An array of Attributes.
-				* @param str $content Content inside the Shortcode.
-				* @param str $shortcode The actual Shortcode name itself.
-				* @return str The resulting Google Button Code; HTML markup.
+				* @param string $content Content inside the Shortcode.
+				* @param string $shortcode The actual Shortcode name itself.
+				* @return string The resulting Google Button Code; HTML markup.
 				*/
 				public static function sc_google_button ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
 						c_ws_plugin__s2member_no_cache::no_cache_constants(true);
 
 						$attr = c_ws_plugin__s2member_utils_strings::trim_qts_deep ((array)$attr); $jwt_attr = c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr));
-						$attr = shortcode_atts(array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor", "success" => "", "failure" => ""), $attr);
+						$attr = shortcode_atts(array("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor", "success" => "", "failure" => ""), $attr);
 
 						if /* Modifications/Cancellations. */ ($attr["modify"] || $attr["cancel"])
 							{

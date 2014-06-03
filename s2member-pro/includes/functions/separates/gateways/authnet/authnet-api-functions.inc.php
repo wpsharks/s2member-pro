@@ -41,9 +41,9 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 * @package s2Member\API_Functions
 * @since 1.5
 *
-* @param str $url_uri_query A full URL, a partial URI, or just the query string.
+* @param string $url_uri_query A full URL, a partial URI, or just the query string.
 * @param bool $ignore_time Optional. Defaults to false. If true, timestamp is ignored.
-* @param str|int $exp_secs Optional. Defaults to (int)10. If ``$ignore_time`` is false, s2Member will check the signature timestamp.
+* @param string|int $exp_secs Optional. Defaults to (int)10. If ``$ignore_time`` is false, s2Member will check the signature timestamp.
 * 	By default, the signature timestamp cannot be older than 10 seconds, but you can modify this if you prefer.
 * @return bool True if the query string is OK/verified, else false.
 */

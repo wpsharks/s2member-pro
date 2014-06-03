@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_sp_checkout"))
 				*/
 				public static function paypal_sp_checkout ()
 					{
-						if (!empty ($_POST["s2member_pro_paypal_sp_checkout"]) || (!empty ($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return"))
+						if (!empty($_POST["s2member_pro_paypal_sp_checkout"]) || (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return"))
 							{
 								return c_ws_plugin__s2member_pro_paypal_sp_checkout_in::sp_checkout ();
 							}

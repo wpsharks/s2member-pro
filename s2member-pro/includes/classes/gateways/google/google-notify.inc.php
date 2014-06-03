@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_notify"))
 				*/
 				public static function google_notify ()
 					{
-						if (!empty ($_GET["s2member_pro_google_notify"]))
+						if (!empty($_GET["s2member_pro_google_notify"]))
 							{
 								return c_ws_plugin__s2member_pro_google_notify_in::google_notify ();
 							}
