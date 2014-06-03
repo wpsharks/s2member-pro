@@ -4,7 +4,7 @@ $op["op"] = "create_user"; // The Remote Operation.
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
 	// See: `s2Member -› API / Scripting -› Remote Operations API -› API Key`
 
-$op["data"] = array (
+$op["data"] = array(
 	"user_login" => "johndoe22", // Required. A unique Username. Lowercase alphanumerics/underscores.
 	"user_email" => "johndoe22@example.com", // Required. A valid/unique Email Address for the new User.
 
@@ -30,7 +30,7 @@ $op["data"] = array (
 
 	"s2member_auto_eot_time" => "2030-12-25", // Optional. Can be any value that PHP's ``strtotime()`` function will understand (i.e. YYYY-MM-DD).
 
-	"custom_fields" => array ("my_field_id" => "Some value."), // Optional. An array of Custom Registration/Profile Field ID's, with associative values.
+	"custom_fields" => array("my_field_id" => "Some value."), // Optional. An array of Custom Registration/Profile Field ID's, with associative values.
 
 	"s2member_notes" => "Administrative notation. Created this User via API call.", // Optional. Administrative notations.
 
@@ -41,11 +41,11 @@ $op["data"] = array (
 		// The "notification" parameter also tells s2Member to notify the site Administrator about this new account.
 );
 
-$post_data = stream_context_create (array ("http" => array ("method" => "POST", "header" => "Content-type: application/x-www-form-urlencoded", "content" => "s2member_pro_remote_op=" . urlencode (serialize ($op)))));
+$post_data = stream_context_create (array("http" => array("method" => "POST", "header" => "Content-type: application/x-www-form-urlencoded", "content" => "s2member_pro_remote_op=" . urlencode (serialize ($op)))));
 
 $result = trim (file_get_contents ("http://www.example.com/?s2member_pro_remote_op=1", false, $post_data));
 
-if (!empty ($result) && !preg_match ("/^Error\:/i", $result) && is_array ($user = @unserialize ($result)))
+if (!empty($result) && !preg_match ("/^Error\:/i", $result) && is_array($user = @unserialize ($result)))
 	echo "Success. New User created with ID: " . $user["ID"];
 else
 	echo "API error reads: " . $result;

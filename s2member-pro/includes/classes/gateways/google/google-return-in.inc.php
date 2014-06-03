@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_return_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_google_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"])
+						if (!empty($_GET["s2member_pro_google_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"])
 							{
 								$google["s2member_log"][] = "Return URL processed on: " . date ("D M j, Y g:i:s a T");
 								$google["s2member_log"][] = "Piping through s2Member's core/standard PayPal processor with `proxy_use` ( `ty-email` ).";

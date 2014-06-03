@@ -81,7 +81,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 				*/
 				public static function alipay_postvars ()
 					{
-						if (!empty ($_REQUEST["notify_id"]) && !empty ($_REQUEST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_REQUEST["notify_type"]) && !empty ($_REQUEST["sign"]))
+						if (!empty($_REQUEST["notify_id"]) && !empty($_REQUEST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_REQUEST["notify_type"]) && !empty($_REQUEST["sign"]))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_REQUEST));
 
@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_utilities"))
 										$_q .= (($_q) ? "&" : "") . $var . "=" . $value;
 
 								if ($postvars["sign"] === md5 ($_q . $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])
-								&& preg_match ("/true$/i", trim (c_ws_plugin__s2member_utils_urls::remote ($gateway . "?service=notify_verify&partner=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"]) . "&notify_id=" . urlencode ($postvars["notify_id"]), "", array ("timeout" => 20)))))
+								&& preg_match ("/true$/i", trim (c_ws_plugin__s2member_utils_urls::remote ($gateway . "?service=notify_verify&partner=" . urlencode ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"]) . "&notify_id=" . urlencode ($postvars["notify_id"]), "", array("timeout" => 20)))))
 									return $postvars;
 
 								else // Nope.

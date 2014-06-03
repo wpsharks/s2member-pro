@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				*/
 				public static function remote_ops ()
 					{
-						if (!empty ($_GET["s2member_pro_remote_op"]) && !empty ($_POST["s2member_pro_remote_op"]))
+						if (!empty($_GET["s2member_pro_remote_op"]) && !empty($_POST["s2member_pro_remote_op"]))
 							{
 								c_ws_plugin__s2member_no_cache::no_cache_constants (true);
 
@@ -63,13 +63,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 								header("Content-Type: text/plain; charset=UTF-8");
 								while (@ob_end_clean ()); // Clean any existing output buffers.
 
-								if (is_array ($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
+								if (is_array($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
 									{
-										if (is_array ($op =  /* Now trim again, in case of serialized array. */c_ws_plugin__s2member_utils_strings::trim_deep ($op)))
+										if (is_array($op =  /* Now trim again, in case of serialized array. */c_ws_plugin__s2member_utils_strings::trim_deep ($op)))
 											{
-												if (!empty ($op["api_key"]) && $op["api_key"] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen ())
+												if (!empty($op["api_key"]) && $op["api_key"] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen ())
 													{
-														if (!empty ($op["op"]) && is_callable ("c_ws_plugin__s2member_pro_remote_ops_in::" . $op["op"]))
+														if (!empty($op["op"]) && is_callable ("c_ws_plugin__s2member_pro_remote_ops_in::" . $op["op"]))
 																exit(call_user_func ("c_ws_plugin__s2member_pro_remote_ops_in::" . $op["op"], $op));
 
 														exit('Error: $_POST["s2member_pro_remote_op"]["op"] is empty or invalid.');
@@ -92,11 +92,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 				*/
 				public static function is_remote_op ($_op = FALSE)
 					{
-						if (!empty ($_GET["s2member_pro_remote_op"]) && !empty ($_POST["s2member_pro_remote_op"]))
-							if (is_array ($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
-								if (is_array ($op =  /* Now trim again, in case of serialized array. */c_ws_plugin__s2member_utils_strings::trim_deep ($op)))
-									if (!empty ($op["api_key"]) && $op["api_key"] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen ())
-										if (!empty ($op["op"]) && $op["op"] === $_op)
+						if (!empty($_GET["s2member_pro_remote_op"]) && !empty($_POST["s2member_pro_remote_op"]))
+							if (is_array($op = maybe_unserialize (c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_remote_op"])))))
+								if (is_array($op =  /* Now trim again, in case of serialized array. */c_ws_plugin__s2member_utils_strings::trim_deep ($op)))
+									if (!empty($op["api_key"]) && $op["api_key"] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen ())
+										if (!empty($op["op"]) && $op["op"] === $_op)
 											return true;
 						return false;
 					}
@@ -118,7 +118,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops"))
 						else // Else it's a standard API Key; not on a Multisite Network, or not on the Main Site anyway.
 							$key = md5 (c_ws_plugin__s2member_utils_encryption::xencrypt (preg_replace ("/\:[0-9]+$/", "", $_SERVER["HTTP_HOST"]), false, false));
 
-						return apply_filters("ws_plugin__s2member_pro_remote_ops_key", (!empty ($key)) ? $key : "");
+						return apply_filters("ws_plugin__s2member_pro_remote_ops_key", (!empty($key)) ? $key : "");
 					}
 			}
 	}

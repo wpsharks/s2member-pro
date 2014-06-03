@@ -57,18 +57,18 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_POST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_POST["notify_type"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"])
+						if (!empty($_POST["notify_type"]) && preg_match ("/^trade_status_sync$/i", $_POST["notify_type"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"])
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (is_array ($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
+								if (is_array($alipay = c_ws_plugin__s2member_pro_alipay_utilities::alipay_postvars ()) && ($_alipay = $alipay))
 									{
 										$alipay["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$alipay["s2member_log"][] = "s2Member POST vars verified through a POST back to AliPay.";
 
-										if (!is_array ($alipay_already_p = get_transient ("s2m_" . md5 ("s2member_pro_alipay_notify_ids"))) || !in_array ($alipay["notify_id"], $alipay_already_p))
+										if (!is_array($alipay_already_p = get_transient ("s2m_" . md5 ("s2member_pro_alipay_notify_ids"))) || !in_array($alipay["notify_id"], $alipay_already_p))
 											{
-												$alipay_already_p = (is_array ($alipay_already_p)) ? array_push ($alipay_already_p, $alipay["notify_id"]) : array ($alipay["notify_id"]);
+												$alipay_already_p = (is_array($alipay_already_p)) ? array_push ($alipay_already_p, $alipay["notify_id"]) : array($alipay["notify_id"]);
 												set_transient ("s2m_" . md5 ("s2member_pro_alipay_notify_ids"), array_slice (array_unique ($alipay_already_p), 0, 1000), 31556926);
 
 												if (preg_match ("/^(TRADE_FINISHED|TRADE_SUCCESS)$/i", $alipay["trade_status"]) && !$alipay["refund_status"])
@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
 
-														$ipn = array (); // Reset.
+														$ipn = array(); // Reset.
 
 														$ipn["txn_type"] = "web_accept";
 
@@ -109,7 +109,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 													}
 												else if (preg_match ("/^(TRADE_CLOSED|TRADE_SUCCESS)$/i", $alipay["trade_status"]) && $alipay["refund_status"])
 													{
@@ -120,7 +120,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														list ($alipay["invoice"], $alipay["item_number"], $alipay["referencing"], $alipay["customer_ip"]) = preg_split ("/~/", $alipay["out_trade_no"]);
 														list ($alipay["first_name"], $alipay["last_name"]) = preg_split ("/@/", $alipay["buyer_email"], 2);
 
-														$ipn = array (); // Reset.
+														$ipn = array(); // Reset.
 
 														$ipn["payment_status"] = "refunded";
 
@@ -150,7 +150,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_notify_in"))
 														$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 													}
 												else
 													$alipay["s2member_log"][] = "Ignoring this IPN request. The status does NOT require any action on the part of s2Member.";

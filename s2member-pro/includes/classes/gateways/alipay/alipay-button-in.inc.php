@@ -62,12 +62,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep ((array)$attr);
 
-						$attr = shortcode_atts (array ("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "ra" => "0.01", "rp" => "1", "rt" => "M", "sp" => "0", "success" => "", "image" => "default", "output" => "anchor"), $attr);
+						$attr = shortcode_atts (array("ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "ra" => "0.01", "rp" => "1", "rt" => "M", "sp" => "0", "success" => "", "image" => "default", "output" => "anchor"), $attr);
 
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
 						$attr["ccaps"] = /* Custom Capabilities must be typed in lower-case format. Only after running shortcode_atts(). */ strtolower ($attr["ccaps"]);
 						$attr["ccaps"] = /* Custom Capabilities should not have spaces. */ str_replace(" ", "", $attr["ccaps"]);
-						$attr["success"] = /* Convert ampersands. */ str_ireplace (array ("&#038;", "&amp;"), "&", $attr["success"]);
+						$attr["success"] = /* Convert ampersands. */ str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]);
 
 						if /* Specific Post/Page Buttons. */ ($attr["sp"])
 							{
@@ -79,7 +79,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
 								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
 
-								$vars = array ("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["sp_ids_exp"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"]) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
+								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["sp_ids_exp"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"]) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
 								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 
@@ -101,7 +101,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
 								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
 
-								$vars = array ("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
+								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
 								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 
@@ -125,7 +125,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
 								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
 
-								$vars = array ("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
+								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
 								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 

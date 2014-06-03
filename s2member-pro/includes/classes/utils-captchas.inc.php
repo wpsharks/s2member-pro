@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_captchas"))
 				public static function recaptcha_keys ($keys = FALSE, $vars = FALSE)
 					{
 						if (($public = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_public_key"]) && ($private = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_private_key"]))
-							$keys = array_merge ((array)$keys, array ("public" => $public, "private" => $private));
+							$keys = array_merge ((array)$keys, array("public" => $public, "private" => $private));
 
 						return /* Array of ``$keys``, after possible modification. */ $keys;
 					}

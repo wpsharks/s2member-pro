@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_cancellation"))
 				*/
 				public static function authnet_cancellation ()
 					{
-						if (!empty ($_POST["s2member_pro_authnet_cancellation"]))
+						if (!empty($_POST["s2member_pro_authnet_cancellation"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_cancellation_in::authnet_cancellation ();
 							}

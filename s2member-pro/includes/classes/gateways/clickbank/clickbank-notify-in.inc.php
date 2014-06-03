@@ -57,11 +57,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_clickbank_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])
+						if (!empty($_GET["s2member_pro_clickbank_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (is_array ($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars ()) && ($_clickbank = $clickbank))
+								if (is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars ()) && ($_clickbank = $clickbank))
 									{
 										$clickbank["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$clickbank["s2member_log"][] = "s2Member POST vars verified with ClickBank.";
@@ -83,7 +83,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
 
@@ -112,7 +112,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?SALE$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
@@ -122,7 +122,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -161,7 +161,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?BILL$/i", $clickbank["ctransaction"]) && preg_match ("/^RECURRING$/i", $clickbank["cprodtype"]))
@@ -171,7 +171,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_payment";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -201,7 +201,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (preg_match ("/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i", $clickbank["ctransaction"])) // Product Type irrelevant here; checked below.
@@ -211,7 +211,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["payment_status"] = (preg_match ("/^(?:TEST_)?RFND$/", $clickbank["ctransaction"])) ? "refunded" : "reversed";
 
@@ -241,7 +241,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										if ( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank["crebillstatus"].
@@ -253,7 +253,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$clickbank["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_cancel";
 												$ipn["subscr_id"] = $s2vars["s2_subscr_id"];
@@ -280,7 +280,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.

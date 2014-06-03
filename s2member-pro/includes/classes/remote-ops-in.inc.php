@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				*/
 				public static function get_user ($op = NULL)
 					{
-						if (!empty ($op["op"]) && $op["op"] === "get_user" && !empty ($op["data"]) && is_array ($op["data"]))
+						if (!empty($op["op"]) && $op["op"] === "get_user" && !empty($op["data"]) && is_array($op["data"]))
 							{
 								if(!empty($op["data"]["user_id"]) && ($_user = new WP_User((integer)$op["data"]["user_id"])) && !empty($_user->ID))
 									$user = $_user;
@@ -86,7 +86,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 								$s2member_paid_registration_times = get_user_option("s2member_paid_registration_times", $user->ID);
 								$s2member_file_download_access_log = get_user_option("s2member_file_download_access_log", $user->ID);
 
-								return serialize (array ("ID" => $user->ID, "role" => $role, "level" => $level, "ccaps" => $ccaps, "data" => $data,
+								return serialize (array("ID" => $user->ID, "role" => $role, "level" => $level, "ccaps" => $ccaps, "data" => $data,
 								                           "s2member_originating_blog" => $s2member_originating_blog,
 								                           "s2member_subscr_gateway" => $s2member_subscr_gateway,
 								                           "s2member_subscr_id" => $s2member_subscr_id,
@@ -112,7 +112,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				*/
 				public static function auth_check_user ($op = NULL)
 					{
-						if (!empty ($op["op"]) && $op["op"] === "auth_check_user" && !empty ($op["data"]) && is_array ($op["data"]))
+						if (!empty($op["op"]) && $op["op"] === "auth_check_user" && !empty($op["data"]) && is_array($op["data"]))
 							{
 								if(!empty($op["data"]["user_login"]) && !empty($op["data"]["user_pass"]) && ($_user = wp_authenticate($op["data"]["user_login"], $op["data"]["user_pass"])) && !empty($_user->ID))
 									$user = $_user;
@@ -122,7 +122,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 								if (is_multisite () && !is_user_member_of_blog ($user->ID))
 									return "Error: Failed to authenticate this User (i.e. the supplied Username is not a part of this Blog).";
 
-								return serialize (array ("ID" => $user->ID));
+								return serialize (array("ID" => $user->ID));
 							}
 						return "Error: Empty or invalid request ( `auth_check_user` ). Please try again.";
 					}
@@ -138,19 +138,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				*/
 				public static function create_user ($op = NULL)
 					{
-						if (!empty ($op["op"]) && $op["op"] === "create_user" && !empty ($op["data"]) && is_array ($op["data"]))
+						if (!empty($op["op"]) && $op["op"] === "create_user" && !empty($op["data"]) && is_array($op["data"]))
 							{
 								if(!empty($op["data"]["modify_if_login_exists"]))
 									if(!empty($op["data"]["user_login"]) && ($_user = new WP_User((string)$op["data"]["user_login"])) && !empty($_user->ID))
 										return c_ws_plugin__s2member_pro_remote_ops_in::modify_user(array_merge($op, array("op" => "modify_user")));
 
-								$GLOBALS["ws_plugin__s2member_registration_vars"] = array ();
+								$GLOBALS["ws_plugin__s2member_registration_vars"] = array();
 								$v = &$GLOBALS["ws_plugin__s2member_registration_vars"];
 
 								$v["ws_plugin__s2member_custom_reg_field_user_login"] = (string)@$op["data"]["user_login"];
 								$v["ws_plugin__s2member_custom_reg_field_user_email"] = (string)@$op["data"]["user_email"];
 
-								if (empty ($op["data"]["user_pass"]) || !is_string ($op["data"]["user_pass"]))
+								if (empty($op["data"]["user_pass"]) || !is_string ($op["data"]["user_pass"]))
 									$op["data"]["user_pass"] = /* Auto-generate. */ wp_generate_password ();
 								$GLOBALS["ws_plugin__s2member_generate_password_return"] = $op["data"]["user_pass"];
 
@@ -181,16 +181,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 											if (isset($op["data"]["custom_fields"][$field_var]))
 												$v["ws_plugin__s2member_custom_reg_field_" . $field_var] = $op["data"]["custom_fields"][$field_var];
 										}
-								$create = array ("user_login" => (string)@$op["data"]["user_login"], "user_pass" => (string)@$op["data"]["user_pass"], "user_email" => (string)@$op["data"]["user_email"]);
+								$create = array("user_login" => (string)@$op["data"]["user_login"], "user_pass" => (string)@$op["data"]["user_pass"], "user_email" => (string)@$op["data"]["user_email"]);
 
 								if (((is_multisite () && ($new = $user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user ($create["user_login"], $create["user_email"], $create["user_pass"]))) || ($new = $user_id = wp_create_user ($create["user_login"], $create["user_pass"], $create["user_email"]))) && !is_wp_error ($new))
 									{
-										if (is_object ($user = new WP_User ($user_id)) && !empty ($user->ID) && ($user_id = $user->ID))
+										if (is_object ($user = new WP_User ($user_id)) && !empty($user->ID) && ($user_id = $user->ID))
 											{
-												if (!empty ($op["data"]["notification"]))
+												if (!empty($op["data"]["notification"]))
 													wp_new_user_notification ($user_id, $op["data"]["user_pass"]);
 
-												return serialize (array ("ID" => $user_id));
+												return serialize (array("ID" => $user_id));
 											}
 										return "Error: Creation may have failed. Unable to obtain WP_User ID.";
 									}
@@ -213,7 +213,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				*/
 				public static function modify_user ($op = NULL)
 					{
-						if (!empty ($op["op"]) && $op["op"] === "modify_user" && !empty ($op["data"]) && is_array ($op["data"]))
+						if (!empty($op["op"]) && $op["op"] === "modify_user" && !empty($op["data"]) && is_array($op["data"]))
 							{
 								if(!empty($op["data"]["user_id"]) && ($_user = new WP_User((integer)$op["data"]["user_id"])) && !empty($_user->ID))
 									$user = $_user;
@@ -231,21 +231,21 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 
 								$userdata["ID"] = /* Needed for database update. */ $user->ID;
 
-								if (!empty ($op["data"]["user_email"]))
+								if (!empty($op["data"]["user_email"]))
 									if (is_email ((string)$op["data"]["user_email"]) && !email_exists ((string)$op["data"]["user_email"]))
 											$userdata["user_email"] = (string)$op["data"]["user_email"];
 
-								if (!empty ($op["data"]["user_pass"]))
+								if (!empty($op["data"]["user_pass"]))
 									if /* No pass change on demo! */ ($user->user_login !== "demo")
 										$userdata["user_pass"] = (string)$op["data"]["user_pass"];
 
-								if (!empty ($op["data"]["first_name"]))
+								if (!empty($op["data"]["first_name"]))
 									$userdata["first_name"] = (string)$op["data"]["first_name"];
 
-								if (!empty ($op["data"]["display_name"]))
+								if (!empty($op["data"]["display_name"]))
 									$userdata["display_name"] = (string)$op["data"]["display_name"];
 
-								if (!empty ($op["data"]["last_name"]))
+								if (!empty($op["data"]["last_name"]))
 									$userdata["last_name"] = (string)$op["data"]["last_name"];
 
 								if (isset ($op["data"]["s2member_level"]) && (integer)$op["data"]["s2member_level"] === 0)
@@ -253,7 +253,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 									if /* Not the same? */ (c_ws_plugin__s2member_user_access::user_access_role ($user) !== get_option("default_role"))
 										$userdata["role"] = get_option ("default_role");
 								}
-								else if (!empty ($op["data"]["s2member_level"]) && (integer)$op["data"]["s2member_level"] > 0)
+								else if (!empty($op["data"]["s2member_level"]) && (integer)$op["data"]["s2member_level"] > 0)
 								{
 									if /* Not the same? */ (c_ws_plugin__s2member_user_access::user_access_role ($user) !== "s2member_level".(integer)$op["data"]["s2member_level"])
 										$userdata["role"] = "s2member_level".(integer)$op["data"]["s2member_level"];
@@ -345,7 +345,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 								if /* Delete/reset File Downloads log? */ (!empty($op["data"]["reset_file_download_access_log"]))
 									delete_user_option ($user->ID, "s2member_file_download_access_log");
 
-								return serialize (array ("ID" => $user->ID));
+								return serialize (array("ID" => $user->ID));
 							}
 						return "Error: Empty or invalid request ( `modify_user` ). Please try again.";
 					}
@@ -361,7 +361,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 				*/
 				public static function delete_user ($op = NULL)
 					{
-						if (!empty ($op["op"]) && $op["op"] === "delete_user" && !empty ($op["data"]) && is_array ($op["data"]))
+						if (!empty($op["op"]) && $op["op"] === "delete_user" && !empty($op["data"]) && is_array($op["data"]))
 							{
 								if(!empty($op["data"]["user_id"]) && ($_user = new WP_User((integer)$op["data"]["user_id"])) && !empty($_user->ID))
 									$user = $_user;
@@ -377,7 +377,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_remote_ops_in"))
 								include_once ABSPATH . "wp-admin/includes/admin.php";
 								wp_delete_user($user->ID);
 
-								return serialize (array ("ID" => $user->ID));
+								return serialize (array("ID" => $user->ID));
 							}
 						return "Error: Empty or invalid request (`delete_user`). Please try again.";
 					}

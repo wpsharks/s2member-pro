@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_css_js"))
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images";
 
-						if (!apply_filters ("ws_plugin__s2member_pro_css_affects_gateways", true) // Does it affect this?
+						if (!apply_filters("ws_plugin__s2member_pro_css_affects_gateways", true) // Does it affect this?
 						|| has_action ("ws_plugin__s2member_during_css", "c_ws_plugin__s2member_pro_css_js::css")) // Only if CSS loads.
 							// This check allows a site owner to disable all CSS by removing the main CSS Hook in one shot.
 							{

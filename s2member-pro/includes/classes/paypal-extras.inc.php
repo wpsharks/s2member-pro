@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*/
 				public static function paypal_button_default_attrs ($default_attrs = FALSE, $vars = FALSE)
 					{
-						return array_merge ((array)$default_attrs, array ("success" => ""));
+						return array_merge ((array)$default_attrs, array("success" => ""));
 					}
 				/**
 				* Cleans up extra Attributes in PayPal Button Shortcodes.
@@ -74,7 +74,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 					{
 						$attr = &$vars["__refs"]["attr"]; // By reference.
 
-						$attr["success"] = str_ireplace (array ("&#038;", "&amp;"), "&", $attr["success"]);
+						$attr["success"] = str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]);
 
 						return /* Return for uniformity. */;
 					}

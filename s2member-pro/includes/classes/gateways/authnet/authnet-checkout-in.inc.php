@@ -165,7 +165,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$_authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$_authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.
@@ -203,7 +203,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.
@@ -347,7 +347,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$_authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$_authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.
@@ -385,7 +385,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.
@@ -564,7 +564,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.
@@ -659,7 +659,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
-																#if (in_array ($post_vars["card_type"], array ("Maestro", "Solo")))
+																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
 																#	if (preg_match ("/^[0-9]{2}\/[0-9]{4}$/", $post_vars["card_start_date_issue_number"]))
 																#		$authnet["x_card_start_date"] = preg_replace ("/[^0-9]/", "", $post_vars["card_start_date_issue_number"]);
 																#	else // Otherwise, we assume they provided an issue number instead.

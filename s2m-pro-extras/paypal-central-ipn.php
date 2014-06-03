@@ -67,7 +67,7 @@ function trim_deep ($value = FALSE) { return is_array($value) ? array_map("trim_
 
 function stripslashes_deep ($value = FALSE) { return is_array($value) ? array_map("stripslashes_deep", $value) : stripslashes((string)$value); }
 
-function curlpsr ($url = FALSE, $post_vars = array (), $max_con_secs = 20, $max_stream_secs = 20, $headers = array ())
+function curlpsr ($url = FALSE, $post_vars = array(), $max_con_secs = 20, $max_stream_secs = 20, $headers = array())
 	{
 		if (($url = trim($url)) && ($curl = curl_init()))
 			{

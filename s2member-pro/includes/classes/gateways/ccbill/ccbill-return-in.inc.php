@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_return_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_ccbill_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
+						if (!empty($_GET["s2member_pro_ccbill_return"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"])
 							{
 								$ccbill["s2member_log"][] = "Return URL processed on: " . date ("D M j, Y g:i:s a T");
 								$ccbill["s2member_log"][] = "Piping through s2Member's core/standard PayPal processor with `proxy_use` ( `ty-email` ).";

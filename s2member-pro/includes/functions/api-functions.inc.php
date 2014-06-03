@@ -103,7 +103,7 @@ if (!function_exists ("s2member_pro_login_widget"))
 	{
 		function s2member_pro_login_widget ($options = FALSE, $args = FALSE)
 			{
-				$args = (is_array ($args)) ? $args : array ("before_widget" => "", "before_title" => "<h3>", "after_title" => "</h3>", "after_widget" => "");
+				$args = (is_array($args)) ? $args : array("before_widget" => "", "before_title" => "<h3>", "after_title" => "</h3>", "after_widget" => "");
 
 				ob_start(); // Begin output buffering.
 

@@ -61,7 +61,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (is_array ($ccbill = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_postvars ()) && ($_ccbill = $ccbill))
+								if (is_array($ccbill = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_postvars ()) && ($_ccbill = $ccbill))
 									{
 										$ccbill["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$ccbill["s2member_log"][] = "s2Member POST vars verified with ccBill.";
@@ -73,7 +73,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "web_accept";
 
@@ -102,7 +102,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!$ccbill["denialId"] && $ccbill["subscription_id"] && $ccbill["recurringPeriod"])
@@ -112,7 +112,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ccbill["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 												$processing = $processed = true;
-												$ipn = array (); // Reset.
+												$ipn = array(); // Reset.
 
 												$ipn["txn_type"] = "subscr_signup";
 												$ipn["subscr_id"] = $ccbill["subscription_id"];
@@ -151,7 +151,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.

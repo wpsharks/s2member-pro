@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_return_templates"))
 				*/
 				public static function return_template_header ($default_header = FALSE, $vars = FALSE)
 					{
-						if (!empty ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_" . $vars["template"] . "_return_template_header"]))
+						if (!empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_" . $vars["template"] . "_return_template_header"]))
 							{
 								$code = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_" . $vars["template"] . "_return_template_header"];
 								$code = (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code;

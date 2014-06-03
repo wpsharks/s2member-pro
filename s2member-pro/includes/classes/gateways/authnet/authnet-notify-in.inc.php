@@ -57,11 +57,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify_in"))
 					{
 						global /* For Multisite support. */ $current_site, $current_blog;
 
-						if (!empty ($_GET["s2member_pro_authnet_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"])
+						if (!empty($_GET["s2member_pro_authnet_notify"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"])
 							{
 								@ignore_user_abort (true); // Continue processing even if/when connection is broken by the sender.
 
-								if (is_array ($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_postvars ()) && ($_authnet = $authnet))
+								if (is_array($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_postvars ()) && ($_authnet = $authnet))
 									{
 										$authnet["s2member_log"][] = "IPN received on: " . date ("D M j, Y g:i:s a T");
 										$authnet["s2member_log"][] = "s2Member POST vars verified with Authorize.Net.";
@@ -75,7 +75,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify_in"))
 														$authnet["s2member_log"][] = "Please check PayPal IPN logs for further processing details.";
 
 														$processing = $processed = true;
-														$ipn = array (); // Reset.
+														$ipn = array(); // Reset.
 
 														$ipn["txn_type"] = "subscr_payment";
 														$ipn["subscr_id"] = $authnet["x_subscription_id"];
@@ -104,7 +104,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_notify_in"))
 														$ipn["s2member_paypal_proxy_use"] = "pro-emails";
 														$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array ("timeout" => 20));
+														c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 													}
 												else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 													{

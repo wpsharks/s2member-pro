@@ -54,7 +54,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 				*/
 				public static function _lock_icons_return_column ($cols = FALSE)
 					{
-						return array_merge ($cols, array ("ws_plugin__s2member_pro_lock_icons" => "(s2)"));
+						return array_merge ($cols, array("ws_plugin__s2member_pro_lock_icons" => "(s2)"));
 					}
 				/**
 				* Status for Tags.
@@ -128,7 +128,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 						$css .= 'th.column-ws_plugin__s2member_pro_lock_icons, td.column-ws_plugin__s2member_pro_lock_icons { width: 45px; text-align:center; }';
 						$css .= '</style>';
 
-						echo apply_filters ("_ws_plugin__s2member_pro_lock_icons_echo_css", $css, get_defined_vars ());
+						echo apply_filters("_ws_plugin__s2member_pro_lock_icons_echo_css", $css, get_defined_vars ());
 					}
 				/**
 				* Translates a return array into a string description.
@@ -154,7 +154,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons_in"))
 
 						$desc = (!empty($req)) ? '<img src="' . esc_attr ($dir_url) . '/images/lock-icon.png" style="cursor:help; width:16px; border:0;" title="' . esc_attr ($req) . '" />' : '<span style="cursor:help;" title="Publicly Available">&mdash;</span>';
 
-						return apply_filters ("_ws_plugin__s2member_pro_return_lock_icons_description", $desc, get_defined_vars ());
+						return apply_filters("_ws_plugin__s2member_pro_return_lock_icons_description", $desc, get_defined_vars ());
 					}
 			}
 	}

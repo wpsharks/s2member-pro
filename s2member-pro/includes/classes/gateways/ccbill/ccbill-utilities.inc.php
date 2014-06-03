@@ -80,9 +80,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 					{
 						$currency_code = strtoupper ($currency_code); // Force uppercase.
 
-						$currencies = array ("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
+						$currencies = array("USD" => "840", "EUR" => "978", "AUD" => "036", "CAD" => "124", "GBP" => "826", "JPY" => "392");
 
-						return (!empty ($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
+						return (!empty($currencies[$currency_code])) ? $currencies[$currency_code] : $currencies["USD"];
 					}
 				/**
 				* Converts Currency Number for ccBill forms into a valid Currency Code.
@@ -95,9 +95,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				*/
 				public static function ccbill_currency_code ($currency_numr = FALSE)
 					{
-						$currencies = array ("840" => "USD", "978" => "EUR", "036" => "AUD", "124" => "CAD", "826" => "GBP", "392" => "JPY");
+						$currencies = array("840" => "USD", "978" => "EUR", "036" => "AUD", "124" => "CAD", "826" => "GBP", "392" => "JPY");
 
-						return (!empty ($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
+						return (!empty($currencies[$currency_numr])) ? $currencies[$currency_numr] : $currencies["840"];
 					}
 				/**
 				* Calculates period in days for ccBill forms.

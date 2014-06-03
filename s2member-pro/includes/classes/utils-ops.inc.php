@@ -57,11 +57,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_ops"))
 					{
 						global /* Multisite. */ $current_site, $current_blog;
 
-						if (is_array ($ops) && !empty ($ops)) // Only if array.
+						if (is_array($ops) && !empty($ops)) // Only if array.
 							{
 								foreach ($ops as &$op) // Begin looping sequence.
 									{
-										if (is_array ($op) && !empty ($op)) // Array?
+										if (is_array($op) && !empty($op)) // Array?
 											$op = c_ws_plugin__s2member_pro_utils_ops::op_replace ($op, $fill);
 
 										else if (is_string ($op) && !$fill) // Handle Replacement Codes.

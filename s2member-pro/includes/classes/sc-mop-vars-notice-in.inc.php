@@ -75,7 +75,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 						}
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["type"]) /* One of: page|post|catg|ptag|file|ruri */) {
+					if(!empty($_g["_s2member_seeking"]["type"]) /* One of: page|post|catg|ptag|file|ruri */) {
 						$seeking_type_tag = '';
 
 						// Let's give the replacement tags a name that's useful for building messages
@@ -105,32 +105,32 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["page"]))
+					if(!empty($_g["_s2member_seeking"]["page"]))
 						$content = str_ireplace("%%SEEKING_PAGE_ID%%", esc_html($_g["_s2member_seeking"]["page"]), $content);
 
-					else if(!empty ($_g["_s2member_seeking"]["post"]))
+					else if(!empty($_g["_s2member_seeking"]["post"]))
 						$content = str_ireplace("%%SEEKING_POST_ID%%", esc_html($_g["_s2member_seeking"]["post"]), $content);
 
-					else if(!empty ($_g["_s2member_seeking"]["catg"]))
+					else if(!empty($_g["_s2member_seeking"]["catg"]))
 						$content = str_ireplace("%%SEEKING_CAT_ID%%", esc_html($_g["_s2member_seeking"]["catg"]), $content);
 
-					else if(!empty ($_g["_s2member_seeking"]["ptag"]))
+					else if(!empty($_g["_s2member_seeking"]["ptag"]))
 						$content = str_ireplace("%%SEEKING_TAG_ID%%", esc_html($_g["_s2member_seeking"]["ptag"]), $content);
 
-					else if(!empty ($_g["_s2member_seeking"]["file"]))
+					else if(!empty($_g["_s2member_seeking"]["file"]))
 						$content = str_ireplace("%%SEEKING_FILE%%", esc_html($_g["_s2member_seeking"]["file"]), $content);
 
-					else if(!empty ($_g["_s2member_seeking"]["ruri"]) /* Full URI they were trying to access. */)
+					else if(!empty($_g["_s2member_seeking"]["ruri"]) /* Full URI they were trying to access. */)
 						$content = str_ireplace("%%SEEKING_RURI%%", esc_html(base64_decode($_g["_s2member_seeking"]["ruri"])), $content);
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["_uri"]) /* Full URI they were trying to access. */)
+					if(!empty($_g["_s2member_seeking"]["_uri"]) /* Full URI they were trying to access. */)
 						$content = str_ireplace("%%SEEKING_URI%%", esc_html(site_url(base64_decode($_g["_s2member_seeking"]["_uri"]))), $content);
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_req"]["type"]) /* One of: level|ccap|sp */) {
+					if(!empty($_g["_s2member_req"]["type"]) /* One of: level|ccap|sp */) {
 						$required_type_tag = '';
 
 						// Let's give the replacement tags a name that's useful for building messages
@@ -153,20 +153,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					if(isset ($_g["_s2member_req"]["level"])) {
 						$content = str_ireplace("%%REQUIRED_LEVEL%%", esc_html($_g["_s2member_req"]["level"]), $content);
-						if(!empty ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $_g["_s2member_req"]["level"] . "_label"]))
+						if(!empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $_g["_s2member_req"]["level"] . "_label"]))
 							$content = str_ireplace("%%REQUIRED_LEVEL_LABEL%%", esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $_g["_s2member_req"]["level"] . "_label"]), $content);
 					}
 
-					else if(!empty ($_g["_s2member_req"]["ccap"])) {
+					else if(!empty($_g["_s2member_req"]["ccap"])) {
 						$content = str_ireplace("%%REQUIRED_CCAP%%", esc_html($_g["_s2member_req"]["ccap"]), $content);
 					}
-					else if(!empty ($_g["_s2member_req"]["sp"])) {
+					else if(!empty($_g["_s2member_req"]["sp"])) {
 						$content = str_ireplace("%%REQUIRED_SP%%", esc_html($_g["_s2member_req"]["sp"]), $content);
 					}
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_res"]["type"]) /* One of: post|page|catg|ptag|file|ruri|ccap|sp|sys */) {
+					if(!empty($_g["_s2member_res"]["type"]) /* One of: post|page|catg|ptag|file|ruri|ccap|sp|sys */) {
 						$restriction_type_tag = '';
 
 						// Let's give the replacement tags a name that's useful for building messages
@@ -205,14 +205,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "post") {
+					if(!empty($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "post") {
 						$content = str_ireplace(array("%%POST_TITLE%%", "%%PAGE_TITLE%%"), get_the_title((integer)$_g["_s2member_seeking"]["post"]), $content);
 						$content = str_ireplace("%%POST_EXCERPT%%",  c_ws_plugin__s2member_pro_sc_mop_vars_notice_in::get_excerpt((integer)$_g["_s2member_seeking"]["post"]), $content);
 					}
 
 					# ---------------------------------------------------------------------------------------------------
 
-					if(!empty ($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "page")
+					if(!empty($_g["_s2member_seeking"]["type"]) && $_g["_s2member_seeking"]["type"] == "page")
 						$content = str_ireplace(array("%%POST_TITLE%%", "%%PAGE_TITLE%%"), get_the_title((integer)$_g["_s2member_seeking"]["page"]), $content);
 
 					# ---------------------------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_checkout"))
 				*/
 				public static function authnet_checkout ()
 					{
-						if (!empty ($_POST["s2member_pro_authnet_checkout"]))
+						if (!empty($_POST["s2member_pro_authnet_checkout"]))
 							{
 								return c_ws_plugin__s2member_pro_authnet_checkout_in::authnet_checkout ();
 							}

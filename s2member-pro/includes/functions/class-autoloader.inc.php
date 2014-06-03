@@ -58,7 +58,7 @@ if (!function_exists ("ws_plugin__s2member_pro_classes"))
 				if (strpos ($class, "c_ws_plugin__s2member_pro_") === 0) //  Make sure this is an s2Member Pro class.
 					{
 						$c = (!isset ($c)) ? dirname (dirname (__FILE__)) . "/classes" : $c; //  Configures location of classes.
-						$c_class_dirs = (!isset ($c_class_dirs)) ? array_merge (array ($c), _ws_plugin__s2member_pro_classes_scan_dirs_r ($c)) : $c_class_dirs;
+						$c_class_dirs = (!isset ($c_class_dirs)) ? array_merge (array($c), _ws_plugin__s2member_pro_classes_scan_dirs_r ($c)) : $c_class_dirs;
 
 						$class = str_replace ("_", "-", str_replace ("c_ws_plugin__s2member_pro_", "", $class));
 
@@ -87,13 +87,13 @@ if (!function_exists ("ws_plugin__s2member_pro_classes"))
 		*/
 		function _ws_plugin__s2member_pro_classes_scan_dirs_r ($starting_dir = FALSE)
 			{
-				$dirs = array (); //  Initialize dirs array.
+				$dirs = array(); //  Initialize dirs array.
 
 				foreach (func_get_args () as $starting_dir)
 					if (is_dir ($starting_dir)) //  Does this directory exist?
 						foreach (scandir ($starting_dir) as $dir) //  Scan this directory.
 							if ($dir !== "." && $dir !== ".." && is_dir ($dir = $starting_dir . "/" . $dir))
-								$dirs = array_merge ($dirs, array ($dir), _ws_plugin__s2member_pro_classes_scan_dirs_r ($dir));
+								$dirs = array_merge ($dirs, array($dir), _ws_plugin__s2member_pro_classes_scan_dirs_r ($dir));
 
 				return $dirs; //  Return array of all directories.
 			}
