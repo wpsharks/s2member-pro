@@ -144,7 +144,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 
 								foreach ($postvars as $var => $value)
 									if (preg_match ("/^s2member_/", $var))
-										unset ($postvars[$var]);
+										unset($postvars[$var]);
 
 								$denial_digest_vars = $postvars["denialId"] . "0";
 								$approval_digest_vars = $postvars["subscription_id"] . "1";

@@ -59,8 +59,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 				public static function sc_authnet_form_option($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
+						unset($__refs, $__v);
 
 						return serialize(c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr)).'|::|';
 					}
@@ -80,8 +80,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 				public static function sc_authnet_form ($attr = FALSE, $content = FALSE, $shortcode = FALSE)
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
+						unset($__refs, $__v);
 
 						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */ (true);
 
@@ -137,8 +137,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						$attr["singular"] = /* Collect the Singular ID for this Post/Page. */ get_the_ID ();
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-						do_action ("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
-						unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+						do_action("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
+						unset($__refs, $__v);
 
 						if /* Cancellations. */ ($attr["cancel"])
 							{
@@ -210,8 +210,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_cancellation_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_cancellation_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Free registrations. */ ($attr["register"])
 							{
@@ -352,8 +352,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_registration_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_registration_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Billing information updates. */ ($attr["update"])
 							{
@@ -369,6 +369,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = ''; // Initialize.
 								foreach (array ("Visa" => _x ("Visa", "s2member-front", "s2member"), "MasterCard" => _x ("MasterCard", "s2member-front", "s2member"), "Discover" => _x ("Discover", "s2member-front", "s2member"), "Amex" => _x ("American Express", "s2member-front", "s2member") /* , "Maestro" => _x ("Maestro", "s2member-front", "s2member"), "Solo" => _x ("Solo", "s2member-front", "s2member") */) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" id="s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label" class="s2member-pro-authnet-form-card-type-label s2member-pro-authnet-update-form-card-type-label s2member-pro-authnet-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label s2member-pro-authnet-update-form-card-type-' . esc_attr (strtolower ($card_type_v)) . '-label' . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled' : '') . '">' . "\n" .
 									'<input type="radio" aria-required="true" name="s2member_pro_authnet_update[card_type]" id="s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" class="s2member-pro-authnet-card-type-' . esc_attr (strtolower ($card_type_v)) . ' s2member-pro-authnet-update-card-type-' . esc_attr (strtolower ($card_type_v)) . '" value="' . esc_attr ($card_type_v) . '"' . ((!empty ($_p["s2member_pro_authnet_update"]["card_type"]) && in_array (strtolower ($_p["s2member_pro_authnet_update"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_authnet_update"]["card_type"] === $card_type_v) ? ' checked="checked"' : '') . ((!in_array (strtolower ($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '') . ' tabindex="10" />' . "\n" .
@@ -484,8 +485,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_update_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_update_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else if /* Specific Post/Page Access. */ ($attr["sp"])
 							{
@@ -656,8 +657,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								do_action ("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								do_action("ws_plugin__s2member_pro_during_sc_authnet_sp_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						else // Signups and Modifications.
 							{
@@ -873,8 +874,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$code = preg_replace ("/%%hidden_inputs%%/", c_ws_plugin__s2member_utils_strings::esc_ds ($hidden_inputs), $code);
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
-								($attr["modify"]) ? do_action ("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action ("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
-								unset /* Unset defined __refs, __v. */ ($__refs, $__v);
+								($attr["modify"]) ? do_action("ws_plugin__s2member_pro_during_sc_authnet_modification_form", get_defined_vars ()) : do_action("ws_plugin__s2member_pro_during_sc_authnet_form", get_defined_vars ());
+								unset($__refs, $__v);
 							}
 						return apply_filters ("ws_plugin__s2member_pro_sc_authnet_form", $code, get_defined_vars ());
 					}

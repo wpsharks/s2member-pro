@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons"))
 					{
 						global $wp_post_types, $wp_taxonomies; // Global references.
 
-						do_action ("ws_plugin__s2member_pro_before_configure_lock_icons", get_defined_vars ());
+						do_action("ws_plugin__s2member_pro_before_configure_lock_icons", get_defined_vars ());
 
 						add_action ("admin_head", "c_ws_plugin__s2member_pro_lock_icons_in::_lock_icons_echo_css");
 
@@ -80,7 +80,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_lock_icons"))
 										}
 								}
 
-						do_action ("ws_plugin__s2member_pro_after_configure_lock_icons", get_defined_vars ());
+						do_action("ws_plugin__s2member_pro_after_configure_lock_icons", get_defined_vars ());
 
 						return /* Return for uniformity. */;
 					}

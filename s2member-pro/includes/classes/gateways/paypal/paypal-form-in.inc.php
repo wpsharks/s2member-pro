@@ -60,7 +60,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form", get_defined_vars());
-						unset /* Unset defined __refs, __v. */($__refs, $__v);
+						unset($__refs, $__v);
 
 						return serialize(c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr)).'|::|';
 					}
@@ -81,7 +81,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 					{
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form", get_defined_vars());
-						unset /* Unset defined __refs, __v. */($__refs, $__v);
+						unset($__refs, $__v);
 
 						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */(true);
 
@@ -143,7 +143,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form_after_shortcode_atts", get_defined_vars());
-						unset /* Unset defined __refs, __v. */($__refs, $__v);
+						unset($__refs, $__v);
 
 						if /* Cancellations. */($attr["cancel"])
 							{
@@ -217,7 +217,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_cancellation_form", get_defined_vars());
-								unset /* Unset defined __refs, __v. */($__refs, $__v);
+								unset($__refs, $__v);
 							}
 						else if /* Free registrations. */($attr["register"])
 							{
@@ -359,7 +359,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_registration_form", get_defined_vars());
-								unset /* Unset defined __refs, __v. */($__refs, $__v);
+								unset($__refs, $__v);
 							}
 						else if /* Billing information updates. */($attr["update"])
 							{
@@ -375,6 +375,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the list of card type options.
 								*/
+								$card_type_options = ''; // Initialize.
 								foreach(array("Visa" => _x("Visa", "s2member-front", "s2member"), "MasterCard" => _x("MasterCard", "s2member-front", "s2member"), "Discover" => _x("Discover", "s2member-front", "s2member"), "Amex" => _x("American Express", "s2member-front", "s2member"), "Maestro" => _x("Maestro", "s2member-front", "s2member"), "Solo" => _x("Solo", "s2member-front", "s2member")) as $card_type_v => $card_type_l)
 									$card_type_options .= '<label for="s2member-pro-paypal-update-card-type-'.esc_attr(strtolower($card_type_v)).'" id="s2member-pro-paypal-update-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label" class="s2member-pro-paypal-form-card-type-label s2member-pro-paypal-update-form-card-type-label s2member-pro-paypal-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label s2member-pro-paypal-update-form-card-type-'.esc_attr(strtolower($card_type_v)).'-label'.((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled' : '').'">'."\n".
 									'<input type="radio" aria-required="true" name="s2member_pro_paypal_update[card_type]" id="s2member-pro-paypal-update-card-type-'.esc_attr(strtolower($card_type_v)).'" class="s2member-pro-paypal-card-type-'.esc_attr(strtolower($card_type_v)).' s2member-pro-paypal-update-card-type-'.esc_attr(strtolower($card_type_v)).'" value="'.esc_attr($card_type_v).'"'.((!empty($_p["s2member_pro_paypal_update"]["card_type"]) && in_array(strtolower($_p["s2member_pro_paypal_update"]["card_type"]), $attr["accept"]) && $_p["s2member_pro_paypal_update"]["card_type"] === $card_type_v) ? ' checked="checked"' : '').((!in_array(strtolower($card_type_v), $attr["accept"])) ? ' disabled="disabled"' : '').' tabindex="10" />'."\n".
@@ -491,7 +492,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_update_form", get_defined_vars());
-								unset /* Unset defined __refs, __v. */($__refs, $__v);
+								unset($__refs, $__v);
 							}
 						else if /* Specific Post/Page Access. */($attr["sp"])
 							{
@@ -666,7 +667,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								do_action("ws_plugin__s2member_pro_during_sc_paypal_sp_form", get_defined_vars());
-								unset /* Unset defined __refs, __v. */($__refs, $__v);
+								unset($__refs, $__v);
 							}
 						else // Signups and Modifications.
 							{
@@ -885,7 +886,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 								foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 								($attr["modify"]) ? do_action("ws_plugin__s2member_pro_during_sc_paypal_modification_form", get_defined_vars()) : do_action("ws_plugin__s2member_pro_during_sc_paypal_form", get_defined_vars());
-								unset /* Unset defined __refs, __v. */($__refs, $__v);
+								unset($__refs, $__v);
 							}
 						return apply_filters("ws_plugin__s2member_pro_sc_paypal_form", $code, get_defined_vars());
 					}

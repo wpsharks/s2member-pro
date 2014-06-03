@@ -40,5 +40,5 @@ if (is_dir ($ws_plugin__s2member_pro_temp_dir = dirname (dirname (dirname (dirna
 		if (preg_match ("/\.php$/", $ws_plugin__s2member_pro_temp_s) && preg_match ("/^authnet-/i", $ws_plugin__s2member_pro_temp_s))
 			include_once $ws_plugin__s2member_pro_temp_dir . "/" . $ws_plugin__s2member_pro_temp_s;
 
-unset ($ws_plugin__s2member_pro_temp_dir, $ws_plugin__s2member_pro_temp_s);
+unset($ws_plugin__s2member_pro_temp_dir, $ws_plugin__s2member_pro_temp_s);
 ?>
