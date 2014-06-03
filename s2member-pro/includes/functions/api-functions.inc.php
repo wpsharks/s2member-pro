@@ -97,7 +97,7 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 *
 * @param array $options Optional. See function description for details.
 * @param array $args Optional. See function description for details.
-* @return str The Pro Login Widget, HTML markup.
+* @return string The Pro Login Widget, HTML markup.
 */
 if (!function_exists ("s2member_pro_login_widget"))
 	{
@@ -139,16 +139,16 @@ if (!function_exists ("s2member_pro_paypal_rbp_for_user"))
 				$user_id = (integer)$user_id;
 				$user_id = ($user_id) ? $user_id : get_current_user_id();
 				if(!$user_id) return array();
-				
+
 				$user_subscr_id = get_user_option ("s2member_subscr_id", $user_id);
 				if(!$user_subscr_id) return array();
-				
+
 				$paypal["METHOD"] = "GetRecurringPaymentsProfileDetails";
 				$paypal["PROFILEID"] = $user_subscr_id;
-				
+
 				if (is_array($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($paypal)) && empty($paypal["__error"]))
 					return $paypal;
-				
+
 				return array();
 			}
 	}
@@ -178,12 +178,12 @@ if (!function_exists ("s2member_pro_paypal_rbp_times_for_user"))
 			{
 				if(!($paypal = s2member_pro_paypal_rbp_for_user($user_id)))
 					return array();
-					
+
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
-				
+
 				if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/", $paypal["LASTPAYMENTDATE"]))
 					$array["last_billing_time"] = strtotime($paypal["LASTPAYMENTDATE"]);
-				
+
 				if(($paypal["TOTALBILLINGCYCLES"] === "0" || $paypal["NUMCYCLESREMAINING"] > 0) && preg_match ("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
 					if(preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/", $paypal["NEXTBILLINGDATE"]))
 						$array["next_billing_time"] = strtotime($paypal["NEXTBILLINGDATE"]);
@@ -216,16 +216,16 @@ if (!function_exists ("s2member_pro_payflow_rbp_for_user"))
 				$user_id = (integer)$user_id;
 				$user_id = ($user_id) ? $user_id : get_current_user_id();
 				if(!$user_id) return array();
-				
+
 				$user_subscr_id = get_user_option ("s2member_subscr_id", $user_id);
 				if(!$user_subscr_id) return array();
-				
+
 				if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 					return array();
-				
+
 				if (is_array($payflow = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile ($user_subscr_id)))
 					return $payflow;
-				
+
 				return array();
 			}
 	}
@@ -253,12 +253,12 @@ if (!function_exists ("s2member_pro_payflow_rbp_times_for_user"))
 			{
 				if(!($payflow = s2member_pro_payflow_rbp_for_user($user_id)))
 					return array();
-					
+
 				$array = array("last_billing_time" => 0, "next_billing_time" => 0);
-				
+
 				if(($last_billing_time = get_user_option("s2member_last_payment_time", $user_id)))
 					$array["last_billing_time"] = $last_billing_time; // Must use this because the PayFlow API does not offer it up.
-				
+
 				if(($payflow["TERM"] === "0" || $payflow["PAYMENTSLEFT"] > 0) && preg_match ("/^(Active|ActiveProfile)$/i", $payflow["STATUS"]))
 					if(preg_match("/^[0-9]{8}/", $payflow["NEXTPAYMENT"]))
 						$array["next_billing_time"] = strtotime($payflow["NEXTPAYMENT"]);

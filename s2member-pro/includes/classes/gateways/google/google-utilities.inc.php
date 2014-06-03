@@ -49,8 +49,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				* @package s2Member\Google
 				* @since 1.5
 				*
-				* @param str $period_term A "Period Term" combination.
-				* @return str The Google Wallet equivalent for ``$period_term``.
+				* @param string $period_term A "Period Term" combination.
+				* @return string The Google Wallet equivalent for ``$period_term``.
 				* 	One of `daily`, `weekly`, `semi_monthly`, `monthly`, `every_two_months`, `quarterly`, or `yearly`.
 				* 	Defaults to `monthly` if ``$period_term`` is not configured properly.
 				*/
@@ -139,8 +139,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_utilities"))
 				* @package s2Member\Google
 				* @since 1.5
 				*
-				* @param str $period1 Optional. A "Period Term" combination. Defaults to `0 D`.
-				* @param str $period3 Optional. A "Period Term" combination. Defaults to `0 D`.
+				* @param string $period1 Optional. A "Period Term" combination. Defaults to `0 D`.
+				* @param string $period3 Optional. A "Period Term" combination. Defaults to `0 D`.
 				* @return int The start time, a Unix timestamp.
 				*/
 				public static function google_start_time ($period1 = FALSE, $period3 = FALSE)

@@ -49,13 +49,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 				* @package s2Member\Readmes
 				* @since 1.5
 				*
-				* @param str $specific_path Optional. Path to a specific readme file to parse. Defaults to that of the software itself.
+				* @param string $specific_path Optional. Path to a specific readme file to parse. Defaults to that of the software itself.
 				* 	When/if a readme-dev.txt file is available, that will be used instead of the default readme.txt.
-				* @param str $specific_section Optional. The title of a specific section to parse, instead of the entire file.
+				* @param string $specific_section Optional. The title of a specific section to parse, instead of the entire file.
 				* @param bool $_blank_targets Optional. Defaults to true. If false, no target attribute is used.
 				* @param bool $process_wp_syntax Optional. Defaults to false.
 				* 	If true, and WP Syntax is installed; it will be used to parse code samples.
-				* @return str Parsed readme file, or a parsed readme file section; based on parameter configuration.
+				* @return string Parsed readme file, or a parsed readme file section; based on parameter configuration.
 				*/
 				public static function parse_readme ($specific_path = FALSE, $specific_section = FALSE, $_blank_targets = TRUE, $process_wp_syntax = FALSE)
 					{
@@ -74,8 +74,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_readmes"))
 				* @package s2Member\Readmes
 				* @since 1.5
 				*
-				* @param str $key A key *(within the specs section)*.
-				* @param str $specific_path Optional. Path to a specific readme file to parse. Defaults to that of the software itself.
+				* @param string $key A key *(within the specs section)*.
+				* @param string $specific_path Optional. Path to a specific readme file to parse. Defaults to that of the software itself.
 				* 	When/if a readme-dev.txt file is available, that will be used instead of the default readme.txt.
 				* @return str|bool The value of the key, else false if not found.
 				*/
