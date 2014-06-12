@@ -70,6 +70,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 
 										if(is_array($order = json_decode(c_ws_plugin__s2member_utils_urls::remote("https://api.clickbank.com/rest/1.3/orders/".$clickbank["cbreceipt"], false, array_merge(c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_headers(), array("timeout" => 20))), true)) && ($order = $order["orderData"]))
 											{
+												if(isset($order[0]) && is_array($order[0]))
+													$order = $order[0]; // If there is more than one, we only want the first one.
+
 												$clickbank["s2member_log"][] = "Order API variables have been obtained from ClickBank.";
 
 												$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars(http_build_query($clickbank, null, "&"), $order["txnType"]);
