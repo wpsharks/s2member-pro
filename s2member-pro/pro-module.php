@@ -41,17 +41,17 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_VERSION"))
-	define("WS_PLUGIN__S2MEMBER_PRO_VERSION", "140603" /* !#distro-version#! */);
+	define("WS_PLUGIN__S2MEMBER_PRO_VERSION", "140614" /* !#distro-version#! */);
 /**
 * Minimum PHP version required to run s2Member Pro.
 *
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION", "5.2" /* !#php-requires-at-least-version#! */);
@@ -61,7 +61,7 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION"))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION"))
 	define("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION", "3.3" /* !#wp-requires-at-least-version#! */);
@@ -71,10 +71,10 @@ if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION"))
 * @package s2Member
 * @since 1.0
 *
-* @var str
+* @var string
 */
 if(!defined("WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION"))
-	define("WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION", "140603" /* !#distro-version#! */);
+	define("WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION", "140614" /* !#distro-version#! */);
 /*
 Several compatibility checks.
 If all pass, load the s2Member plugin.
