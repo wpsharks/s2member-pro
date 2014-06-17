@@ -30,13 +30,14 @@
  * @package s2Member\API_Functions
  * @since 140617
  */
-if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
-	exit("Do not access this file directly.");
+if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
+	exit('Do not access this file directly.');
+
 /**
  * Verifies `s2p-v` in a given query string argument; from a custom URL for success.
  *
  * This can be used to verify the integrity of variables in a success query string.
- * Example usage: ``if(s2member_pro_stripe_s2p_v_query_ok($_SERVER["QUERY_STRING"])){ }``
+ * Example usage: ``if(s2member_pro_stripe_s2p_v_query_ok($_SERVER['QUERY_STRING'])){ }``
  *
  * @package s2Member\API_Functions
  * @since 140617
@@ -48,12 +49,12 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
  *
  * @return bool True if the query string is OK/verified, else false.
  */
-if(!function_exists("s2member_pro_stripe_s2p_v_query_ok"))
+if(!function_exists('s2member_pro_stripe_s2p_v_query_ok'))
 {
 	function s2member_pro_stripe_s2p_v_query_ok($url_uri_query = FALSE, $ignore_time = FALSE, $exp_secs = FALSE)
 	{
 		$check_time = ($ignore_time) ? FALSE : TRUE;
 
-		return c_ws_plugin__s2member_utils_urls::s2member_sig_ok($url_uri_query, $check_time, $exp_secs, "s2p-v");
+		return c_ws_plugin__s2member_utils_urls::s2member_sig_ok($url_uri_query, $check_time, $exp_secs, 's2p-v');
 	}
 }
