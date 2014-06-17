@@ -266,4 +266,3 @@ if (!function_exists ("s2member_pro_payflow_rbp_times_for_user"))
 				return $array;
 			}
 	}
-?>
