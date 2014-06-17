@@ -108,7 +108,7 @@ if(!function_exists('s2member_pro_login_widget'))
 
 		ob_start(); // Begin output buffering.
 
-		c_ws_plugin__s2member_pro_login_widget::widget($args, $options);
+		c_ws_plugin__s2member_pro_login_widget::widget($args, $options); // @TODO should not be called statically.
 
 		return ob_get_clean();
 	}
