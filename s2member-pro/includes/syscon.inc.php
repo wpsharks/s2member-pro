@@ -108,7 +108,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 		                              'pro_gateways_enabled'                    => array('paypal'), // Defaults to PayPal Pro.
 		                              'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 		                              'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',
-		                              'pro_stripe_api_login_id'                 => '', 'pro_stripe_api_trans_key' => '', 'pro_stripe_api_salt_key' => '', 'pro_stripe_sandbox' => '0',
+		                              'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_login_id' => '', 'pro_stripe_api_trans_key' => '', 'pro_stripe_api_salt_key' => '', 'pro_stripe_sandbox' => '0',
 		                              'pro_authnet_api_login_id'                => '', 'pro_authnet_api_trans_key' => '', 'pro_authnet_api_salt_key' => '', 'pro_authnet_sandbox' => '0',
 		                              'pro_ccbill_client_id'                    => '', 'pro_ccbill_client_sid' => '0000', 'pro_ccbill_form_name' => '', 'pro_ccbill_dl_user' => '', 'pro_ccbill_dl_pass' => '', 'pro_ccbill_dl_cancellations' => '0', 'pro_ccbill_salt_key' => '', 'pro_ccbill_return_template_header' => '',
 		                              'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => '',
@@ -196,7 +196,7 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if(preg_match('/^pro_alipay_(?:seller_email|partner_id|security_code|return_template_header)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
-				else if(preg_match('/^pro_stripe_(?:api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))
+				else if(preg_match('/^pro_stripe_(?:api_publishable_key|api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_authnet_(?:api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))

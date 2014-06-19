@@ -29,6 +29,9 @@
 * @package s2Member\Stripe
 * @since 140617
 */
+document.write('<scr'+'ipt type="text/javascript" src="https://js.stripe.com/v2/"><\/scr'+'ipt>');
+Stripe.setPublishableKey('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>');
+
 jQuery(document).ready (function($)
 	{
 		var $clForm, $upForm, $rgForm, $spForm, $coForm, jumpToResponses, preloadAjaxLoader, ariaTrue = {'aria-required': 'true'}, ariaFalse = {'aria-required': 'false'}, disabled = {'disabled': 'disabled'}, ariaFalseDis = {'aria-required': 'false', 'disabled': 'disabled'};
