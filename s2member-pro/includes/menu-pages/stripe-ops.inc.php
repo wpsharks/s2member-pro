@@ -170,10 +170,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe SP / IPN Integration">'."\n";
+			echo '<div class="ws-menu-page-group" title="Stripe Webhooks (aka: IPN) Integration">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
-			echo '<h3>Stripe Silent Post Integration (required)<br />aka: Stripe IPN (Instant Payment Notifications)</h3>'."\n";
+			echo '<h3>Stripe Webhooks (aka: IPN) Integration (required)</h3>'."\n";
 			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account -› Settings -› Silent Post URL</code></p>'."\n";
 			echo '<p>Your Stripe Silent Post URL is:<br /><code>'.esc_html(site_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
 			echo '</div>'."\n";
