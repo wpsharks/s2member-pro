@@ -39,26 +39,34 @@ jQuery(document).ready(
 			ariaTrue = {'aria-required': 'true'}, ariaFalse = {'aria-required': 'false'},
 			disabled = {'disabled': 'disabled'}, ariaFalseDis = {'aria-required': 'false', 'disabled': 'disabled'};
 
+		var handleNameIssues, handlePasswordIssues, handleExistingUsers,
+			handleBillingMethod, handleOptions, handleCouponIssues, handleTaxIssues,
+			taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, $ajaxTaxDiv,
+			optionsSection, descSection, couponSection, couponApplyButton, registrationSection, customFieldsSection,
+			billingMethodSection, cardType, billingAddressSection, captchaSection, submissionSection,
+			submissionButton, $submissionButton, submissionNonceVerification;
+
 		preloadAjaxLoader = new Image(), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
 
-		if($('form.s2member-pro-stripe-registration-form').length > 1
-		   || $('form.s2member-pro-stripe-checkout-form').length > 1
-		   || $('form.s2member-pro-stripe-sp-checkout-form').length > 1)
-			return alert('Detected more than one s2Member Pro Form.\n\nPlease use only ONE s2Member Pro Form Shortcode on each Post/Page. Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
-
+		if($('form.s2member-pro-stripe-registration-form').length > 1 // No more than one form on a page please.
+		   || $('form.s2member-pro-stripe-checkout-form').length > 1 || $('form.s2member-pro-stripe-sp-checkout-form').length > 1)
+		{
+			return alert('Detected more than one s2Member Pro Form.\n\nPlease use only ONE s2Member Pro Form Shortcode on each Post/Page.' +
+			             ' Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
+		}
 		if(($clForm = $('form#s2member-pro-stripe-cancellation-form')).length === 1)
 		{
-			var captchaSection = 'div#s2member-pro-stripe-cancellation-form-captcha-section',
+			captchaSection = 'div#s2member-pro-stripe-cancellation-form-captcha-section',
 				submissionSection = 'div#s2member-pro-stripe-cancellation-form-submission-section',
 				$submissionButton = $(submissionSection + ' button#s2member-pro-stripe-cancellation-submit');
 
-			ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr('disabled');
+			ws_plugin__s2member_animateProcessing($submissionButton, 'reset'),
+				$submissionButton.removeAttr('disabled');
 
 			$clForm.submit(function(/* Form validation. */)
 			               {
-				               var context = this, label = '', error = '', errors = '';
-
-				               var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+				               var context = this, label = '', error = '', errors = '',
+					               $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
 
 				               $(':input', context)
 					               .each(function(/* Go through them all together. */)
@@ -73,12 +81,12 @@ jQuery(document).ready(
 					                     });
 				               if(errors = $.trim(errors))
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 					               return false;
 				               }
 				               else if($recaptchaResponse.length && !$recaptchaResponse.val())
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               $submissionButton.attr(disabled),
@@ -88,14 +96,15 @@ jQuery(document).ready(
 		}
 		else if(($upForm = $('form#s2member-pro-stripe-update-form')).length === 1)
 		{
-			var handleBillingMethod, billingMethodSection = 'div#s2member-pro-stripe-update-form-billing-method-section',
+			billingMethodSection = 'div#s2member-pro-stripe-update-form-billing-method-section',
+				cardType = billingMethodSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_update[card_type]') + '"]',
 				billingAddressSection = 'div#s2member-pro-stripe-update-form-billing-address-section',
-				cardType = billingMethodSection + ' input[name="s2member_pro_stripe_update\[card_type\]"]',
 				captchaSection = 'div#s2member-pro-stripe-update-form-captcha-section',
 				submissionSection = 'div#s2member-pro-stripe-update-form-submission-section',
 				$submissionButton = $(submissionSection + ' button#s2member-pro-stripe-update-submit');
 
-			ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr('disabled');
+			ws_plugin__s2member_animateProcessing($submissionButton, 'reset'),
+				$submissionButton.removeAttr('disabled');
 
 			(handleBillingMethod = function(eventTrigger/* eventTrigger is passed by jQuery for DOM events. */)
 			{
@@ -142,13 +151,12 @@ jQuery(document).ready(
 
 			$upForm.submit(function(/* Form validation. */)
 			               {
-				               var context = this, label = '', error = '', errors = '';
-
-				               var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+				               var context = this, label = '', error = '', errors = '',
+					               $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
 
 				               if(!$(cardType + ':checked').val())
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               $(':input', context)
@@ -164,12 +172,12 @@ jQuery(document).ready(
 					                     });
 				               if(errors = $.trim(errors))
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 					               return false;
 				               }
 				               else if($recaptchaResponse.length && !$recaptchaResponse.val())
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               $submissionButton.attr(disabled),
@@ -179,8 +187,7 @@ jQuery(document).ready(
 		}
 		else if(($rgForm = $('form#s2member-pro-stripe-registration-form')).length === 1)
 		{
-			var handleNameIssues, handlePasswordIssues,
-				registrationSection = 'div#s2member-pro-stripe-registration-form-registration-section',
+			registrationSection = 'div#s2member-pro-stripe-registration-form-registration-section',
 				captchaSection = 'div#s2member-pro-stripe-registration-form-captcha-section',
 				submissionSection = 'div#s2member-pro-stripe-registration-form-submission-section',
 				$submissionButton = $(submissionSection + ' button#s2member-pro-stripe-registration-submit');
@@ -209,16 +216,19 @@ jQuery(document).ready(
 			$(registrationSection + ' > div#s2member-pro-stripe-registration-form-password-div :input')
 				.keyup(function()
 				       {
-					       ws_plugin__s2member_passwordStrength($(registrationSection + ' input#s2member-pro-stripe-registration-username'), $(registrationSection + ' input#s2member-pro-stripe-registration-password1'), $(registrationSection + ' input#s2member-pro-stripe-registration-password2'), $(registrationSection + ' div#s2member-pro-stripe-registration-form-password-strength'));
+					       ws_plugin__s2member_passwordStrength(
+						       $(registrationSection + ' input#s2member-pro-stripe-registration-username'),
+						       $(registrationSection + ' input#s2member-pro-stripe-registration-password1'),
+						       $(registrationSection + ' input#s2member-pro-stripe-registration-password2'),
+						       $(registrationSection + ' div#s2member-pro-stripe-registration-form-password-strength')
+					       );
 				       });
 			$rgForm.submit(function(/* Form validation. */)
 			               {
-				               var context = this, label = '', error = '', errors = '';
-
-				               var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
-
-				               var $password1 = $(registrationSection + ' input#s2member-pro-stripe-registration-password1[aria-required="true"]');
-				               var $password2 = $(registrationSection + ' input#s2member-pro-stripe-registration-password2');
+				               var context = this, label = '', error = '', errors = '',
+					               $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
+					               $password1 = $(registrationSection + ' input#s2member-pro-stripe-registration-password1[aria-required="true"]'),
+					               $password2 = $(registrationSection + ' input#s2member-pro-stripe-registration-password2');
 
 				               $(':input', context)
 					               .each(function(/* Go through them all together. */)
@@ -233,22 +243,22 @@ jQuery(document).ready(
 					                     });
 				               if(errors = $.trim(errors))
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 					               return false;
 				               }
 				               else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               else if($recaptchaResponse.length && !$recaptchaResponse.val())
 				               {
-					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+					               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 					               return false;
 				               }
 				               $submissionButton.attr(disabled),
@@ -258,15 +268,13 @@ jQuery(document).ready(
 		}
 		else if(($spForm = $('form#s2member-pro-stripe-sp-checkout-form')).length === 1)
 		{
-			var handleOptions, handleCouponIssues, handleTaxIssues, taxMayApply = true,
-				calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, handleExistingUsers,
-				handleBillingMethod, optionsSection = 'div#s2member-pro-stripe-sp-checkout-form-options-section',
+			optionsSection = 'div#s2member-pro-stripe-sp-checkout-form-options-section',
 				descSection = 'div#s2member-pro-stripe-sp-checkout-form-description-section',
 				couponSection = 'div#s2member-pro-stripe-sp-checkout-form-coupon-section',
 				couponApplyButton = couponSection + ' input#s2member-pro-stripe-sp-checkout-coupon-apply',
 				registrationSection = 'div#s2member-pro-stripe-sp-checkout-form-registration-section',
 				billingMethodSection = 'div#s2member-pro-stripe-sp-checkout-form-billing-method-section',
-				cardType = billingMethodSection + ' input[name="s2member_pro_stripe_sp_checkout\[card_type\]"]',
+				cardType = billingMethodSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_sp_checkout[card_type]') + '"]',
 				billingAddressSection = 'div#s2member-pro-stripe-sp-checkout-form-billing-address-section',
 				$ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-stripe-sp-checkout-form-ajax-tax-div'),
 				captchaSection = 'div#s2member-pro-stripe-sp-checkout-form-captcha-section',
@@ -275,8 +283,7 @@ jQuery(document).ready(
 				submissionButton = submissionSection + ' button#s2member-pro-stripe-sp-checkout-submit';
 
 			ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'),
-				$(submissionButton).removeAttr('disabled'),
-				$(couponApplyButton).removeAttr('disabled');
+				$(submissionButton).removeAttr('disabled'), $(couponApplyButton).removeAttr('disabled');
 
 			(handleOptions = function(eventTrigger /* eventTrigger is passed by jQuery for DOM events. */)
 			{
@@ -318,31 +325,31 @@ jQuery(document).ready(
 			{
 				if(taxMayApply && !(eventTrigger && eventTrigger.interval && document.activeElement.id === 's2member-pro-stripe-sp-checkout-country'))
 				{
-					var attr = $(submissionSection + ' input#s2member-pro-stripe-sp-checkout-attr').val();
-					var state = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-sp-checkout-state').val());
-					var country = $(billingAddressSection + ' select#s2member-pro-stripe-sp-checkout-country').val();
-					var zip = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-sp-checkout-zip').val());
-					var thisTaxLocation = state + '|' + country + '|' + zip/* Three part location. */;
+					var attr = $(submissionSection + ' input#s2member-pro-stripe-sp-checkout-attr').val(),
+						state = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-sp-checkout-state').val()),
+						country = $(billingAddressSection + ' select#s2member-pro-stripe-sp-checkout-country').val(),
+						zip = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-sp-checkout-zip').val()),
+						thisTaxLocation = state + '|' + country + '|' + zip/* Three part location. */;
 
 					if(state && country && zip && thisTaxLocation && (!cTaxLocation || cTaxLocation !== thisTaxLocation) && (cTaxLocation = thisTaxLocation))
 					{
-						(cTaxReq) ? /* Abort. */ cTaxReq.abort() : null, clearTimeout(cTaxTimeout/* Clear. */), cTaxTimeout = null;
+						(cTaxReq) ? cTaxReq.abort() : null, clearTimeout(cTaxTimeout/* Clear. */), cTaxTimeout = 0;
 
-						$ajaxTaxDiv.html('<div><img src="<?php echo $vars["i"]; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
+						$ajaxTaxDiv.html('<div><img src="' + ws_plugin__s2member_escAttr(preloadAjaxLoader.src) + '" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr(_x("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
 
 						cTaxTimeout = setTimeout(function(/* Create a new cTaxTimeout with a one second delay. */)
 						                         {
-							                         cTaxReq = $.post('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (admin_url ("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_stripe_ajax_tax', 'ws_plugin__s2member_pro_stripe_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-stripe-ajax-tax")); ?>', 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[zip]': zip}, function(response)
+							                         cTaxReq = $.post('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(admin_url("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_stripe_ajax_tax', 'ws_plugin__s2member_pro_stripe_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(c_ws_plugin__s2member_utils_encryption::encrypt("ws-plugin--s2member-pro-stripe-ajax-tax")); ?>', 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[zip]': zip}, function(response)
 							                         {
-								                         clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = null;
+								                         clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = 0;
 
-								                         try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
+								                         try // Try/catch here. jQuery will sometimes return a successful response in IE whenever the connection is aborted with a null response.
 								                         {
 									                         /* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
-									                         $ajaxTaxDiv.html('<div>' + $.sprintf('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
+									                         $ajaxTaxDiv.html('<div>' + $.sprintf('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
 								                         }
 								                         catch(e)
-								                         {}
+								                         {console.log(e);}
 							                         }, 'json');
 						                         }, ((eventTrigger && eventTrigger.keyCode) ? 1000 : 100));
 					}
@@ -463,21 +470,21 @@ jQuery(document).ready(
 			})();
 			$(cardType).click(handleBillingMethod).change(handleBillingMethod);
 
-			$(couponApplyButton).click(function(/* Only applying coupon. */)
-			                           {
-				                           $(submissionNonceVerification).val('apply-coupon'), $spForm.submit();
-			                           });
+			$(couponApplyButton)
+				.click(function(/* Only applying coupon. */)
+				       {
+					       $(submissionNonceVerification).val('apply-coupon'), $spForm.submit();
+				       });
 			$spForm.submit(function(/* Form validation. */)
 			               {
 				               if($.inArray($(submissionNonceVerification).val(), ['option', 'apply-coupon']) === -1)
 				               {
-					               var context = this, label = '', error = '', errors = '';
-
-					               var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+					               var context = this, label = '', error = '', errors = '',
+						               $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
 
 					               if(!$(cardType + ':checked').val())
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 					               $(':input', context)
@@ -493,12 +500,12 @@ jQuery(document).ready(
 						                     });
 					               if(errors = $.trim(errors))
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 						               return false;
 					               }
 					               else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 				               }
@@ -510,18 +517,14 @@ jQuery(document).ready(
 		}
 		else if(($coForm = $('form#s2member-pro-stripe-checkout-form')).length === 1)
 		{
-			var handleOptions, handleCouponIssues,
-				handleTaxIssues, taxMayApply = true,
-				calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation,
-				handlePasswordIssues, handleBillingMethod, handleExistingUsers,
-				optionsSection = 'div#s2member-pro-stripe-checkout-form-options-section',
+			optionsSection = 'div#s2member-pro-stripe-checkout-form-options-section',
 				descSection = 'div#s2member-pro-stripe-checkout-form-description-section',
 				couponSection = 'div#s2member-pro-stripe-checkout-form-coupon-section',
 				couponApplyButton = couponSection + ' input#s2member-pro-stripe-checkout-coupon-apply',
 				registrationSection = 'div#s2member-pro-stripe-checkout-form-registration-section',
 				customFieldsSection = 'div#s2member-pro-stripe-checkout-form-custom-fields-section',
 				billingMethodSection = 'div#s2member-pro-stripe-checkout-form-billing-method-section',
-				cardType = billingMethodSection + ' input[name="s2member_pro_stripe_checkout\[card_type\]"]',
+				cardType = billingMethodSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_checkout[card_type]') + '"]',
 				billingAddressSection = 'div#s2member-pro-stripe-checkout-form-billing-address-section',
 				$ajaxTaxDiv = $(billingAddressSection + ' > div#s2member-pro-stripe-checkout-form-ajax-tax-div'),
 				captchaSection = 'div#s2member-pro-stripe-checkout-form-captcha-section',
@@ -529,7 +532,8 @@ jQuery(document).ready(
 				submissionNonceVerification = submissionSection + ' input#s2member-pro-stripe-checkout-nonce',
 				submissionButton = submissionSection + ' button#s2member-pro-stripe-checkout-submit';
 
-			ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'), $(submissionButton).removeAttr('disabled'), $(couponApplyButton).removeAttr('disabled');
+			ws_plugin__s2member_animateProcessing($(submissionButton), 'reset'),
+				$(submissionButton).removeAttr('disabled'), $(couponApplyButton).removeAttr('disabled');
 
 			(handleOptions = function(eventTrigger/* eventTrigger is passed by jQuery for DOM events. */)
 			{
@@ -579,23 +583,23 @@ jQuery(document).ready(
 
 					if(state && country && zip && thisTaxLocation && (!cTaxLocation || cTaxLocation !== thisTaxLocation) && (cTaxLocation = thisTaxLocation))
 					{
-						(cTaxReq) ? cTaxReq.abort(/* Abort. */) : null, clearTimeout(cTaxTimeout/* Clear. */), cTaxTimeout = null;
+						(cTaxReq) ? cTaxReq.abort(/* Abort. */) : null, clearTimeout(cTaxTimeout/* Clear. */), cTaxTimeout = 0;
 
-						$ajaxTaxDiv.html('<div><img src="<?php echo $vars["i"]; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
+						$ajaxTaxDiv.html('<div><img src="' + ws_plugin__s2member_escAttr(preloadAjaxLoader.src) + '" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr(_x("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
 
 						cTaxTimeout = setTimeout(function(/* Create a new cTaxTimeout with a one second delay. */)
 						                         {
-							                         cTaxReq = $.post('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (admin_url ("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_stripe_ajax_tax', 'ws_plugin__s2member_pro_stripe_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-stripe-ajax-tax")); ?>', 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[zip]': zip}, function(response, textStatus)
+							                         cTaxReq = $.post('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(admin_url("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_stripe_ajax_tax', 'ws_plugin__s2member_pro_stripe_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(c_ws_plugin__s2member_utils_encryption::encrypt("ws-plugin--s2member-pro-stripe-ajax-tax")); ?>', 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_stripe_ajax_tax_vars[zip]': zip}, function(response, textStatus)
 							                         {
-								                         clearTimeout(cTaxTimeout/* Clear cTaxTimeout. */), cTaxTimeout = null;
+								                         clearTimeout(cTaxTimeout/* Clear cTaxTimeout. */), cTaxTimeout = 0;
 
-								                         try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
+								                         try // Try/catch here. jQuery will sometimes return a successful response in IE whenever the connection is aborted with a null response.
 								                         {
 									                         /* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
-									                         $ajaxTaxDiv.html('<div>' + $.sprintf('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
+									                         $ajaxTaxDiv.html('<div>' + $.sprintf('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
 								                         }
 								                         catch(e)
-								                         {}
+								                         {console.log(e);}
 							                         }, 'json');
 						                         }, ((eventTrigger && eventTrigger.keyCode) ? 1000 : 100));
 					}
@@ -649,8 +653,8 @@ jQuery(document).ready(
 					$(registrationSection + ' > div#s2member-pro-stripe-checkout-form-password-div').hide();
 					$(registrationSection + ' > div#s2member-pro-stripe-checkout-form-password-div :input').attr(ariaFalseDis);
 
-					if($.trim($(registrationSection + ' > div#s2member-pro-stripe-checkout-form-registration-section-title').html()) === '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Create Profile", "s2member-front", "s2member")); ?>')
-						$(registrationSection + ' > div#s2member-pro-stripe-checkout-form-registration-section-title').html('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Your Profile", "s2member-front", "s2member")); ?>');
+					if($.trim($(registrationSection + ' > div#s2member-pro-stripe-checkout-form-registration-section-title').html()) === '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Create Profile", "s2member-front", "s2member")); ?>')
+						$(registrationSection + ' > div#s2member-pro-stripe-checkout-form-registration-section-title').html('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Your Profile", "s2member-front", "s2member")); ?>');
 
 					$(customFieldsSection).hide(), $(customFieldsSection + ' :input').attr(ariaFalseDis);
 				}
@@ -727,29 +731,33 @@ jQuery(document).ready(
 			})();
 			$(cardType).click(handleBillingMethod).change(handleBillingMethod);
 
-			$(couponApplyButton).click(function(/* Only applying coupon. */)
-			                           {
-				                           $(submissionNonceVerification).val('apply-coupon'), $coForm.submit();
-			                           });
+			$(couponApplyButton)
+				.click(function(/* Only applying coupon. */)
+				       {
+					       $(submissionNonceVerification).val('apply-coupon'), $coForm.submit();
+				       });
 			$(registrationSection + ' > div#s2member-pro-stripe-checkout-form-password-div :input')
 				.keyup(function()
 				       {
-					       ws_plugin__s2member_passwordStrength($(registrationSection + ' input#s2member-pro-stripe-checkout-username'), $(registrationSection + ' input#s2member-pro-stripe-checkout-password1'), $(registrationSection + ' input#s2member-pro-stripe-checkout-password2'), $(registrationSection + ' div#s2member-pro-stripe-checkout-form-password-strength'));
+					       ws_plugin__s2member_passwordStrength(
+						       $(registrationSection + ' input#s2member-pro-stripe-checkout-username'),
+						       $(registrationSection + ' input#s2member-pro-stripe-checkout-password1'),
+						       $(registrationSection + ' input#s2member-pro-stripe-checkout-password2'),
+						       $(registrationSection + ' div#s2member-pro-stripe-checkout-form-password-strength')
+					       );
 				       });
 			$coForm.submit(function(/* Form validation. */)
 			               {
 				               if($.inArray($(submissionNonceVerification).val(), ['option', 'apply-coupon']) === -1)
 				               {
-					               var context = this, label = '', error = '', errors = '';
-
-					               var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
-
-					               var $password1 = $(registrationSection + ' input#s2member-pro-stripe-checkout-password1[aria-required="true"]');
-					               var $password2 = $(registrationSection + ' input#s2member-pro-stripe-checkout-password2');
+					               var context = this, label = '', error = '', errors = '',
+						               $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
+						               $password1 = $(registrationSection + ' input#s2member-pro-stripe-checkout-password1[aria-required="true"]'),
+						               $password2 = $(registrationSection + ' input#s2member-pro-stripe-checkout-password2');
 
 					               if(!$(cardType + ':checked').val())
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 					               $(':input', context)
@@ -765,22 +773,22 @@ jQuery(document).ready(
 						                     });
 					               if(errors = $.trim(errors))
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 						               return false;
 					               }
 					               else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 					               else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 					               else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					               {
-						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+						               alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 						               return false;
 					               }
 				               }
