@@ -77,8 +77,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-login-id">'."\n";
-			echo 'Stripe API Login ID:'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-publishable-key">'."\n";
+			echo 'Stripe Publishable API Key:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -86,16 +86,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_login_id" id="ws-plugin--s2member-pro-stripe-api-login-id" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_login_id']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account -› Settings</code>.'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-trans-key">'."\n";
-			echo 'Stripe API Transaction Key:'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-secret-key">'."\n";
+			echo 'Stripe Secret API Key:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -103,25 +103,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_trans_key" id="ws-plugin--s2member-pro-stripe-api-trans-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_trans_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account -› Settings</code>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-salt-key">'."\n";
-			echo 'Stripe Secret MD5 Hash:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_salt_key" id="ws-plugin--s2member-pro-stripe-api-salt-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_salt_key']).'" /><br />'."\n";
-			echo 'You\'ll set this in your Stripe Merchant account, under: <code>Account -› Settings</code>.'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -145,7 +128,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
-			echo '<em>Only enable this if you\'ve provided Developer credentials above.<br />This puts s2Member\'s Stripe integration into Sandbox/Test mode.<br />See: <a href="http://www.s2member.com/authorize.net-test-accounts" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
+			echo '<em>Only enable this if you\'ve provided test credentials above.<br />This puts s2Member\'s Stripe integration into Sandbox/Test mode.<br />See: <a href="http://www.s2member.com/r/stripe-test-accounts/" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
