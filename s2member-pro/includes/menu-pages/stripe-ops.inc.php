@@ -75,23 +75,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-publishable-key">'."\n";
-			echo 'Stripe Publishable API Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-api-secret-key">'."\n";
 			echo 'Stripe Secret API Key:'."\n";
 			echo '</label>'."\n";
@@ -102,6 +85,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-publishable-key">'."\n";
+			echo 'Stripe Publishable API Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
 			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
 			echo '</td>'."\n";
 
@@ -174,7 +174,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
 			echo '<h3>Stripe Webhooks (aka: IPN) Integration (required)</h3>'."\n";
-			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account -› Settings -› Silent Post URL</code></p>'."\n";
+			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account Settings -› Webhooks</code></p>'."\n";
 			echo '<p>Your Stripe Silent Post URL is:<br /><code>'.esc_html(site_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
 			echo '</div>'."\n";
 
