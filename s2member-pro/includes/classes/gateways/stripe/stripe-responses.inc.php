@@ -212,14 +212,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 */
 		public static function stripe_form_api_validation_errors($attr = array())
 		{
-			if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_login_id'])
-				$response = array('response' => _x('Stripe configuration error. Please configure your Stripe API Login ID.', 's2member-admin', 's2member'), 'error' => TRUE);
+			if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key'])
+				$response = array('response' => _x('Stripe configuration error. Please configure your Publishable Stripe API Key.', 's2member-admin', 's2member'), 'error' => TRUE);
 
-			else if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_trans_key'])
-				$response = array('response' => _x('Stripe configuration error. Your Stripe API Transaction Key is not yet configured.', 's2member-admin', 's2member'), 'error' => TRUE);
-
-			else if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_salt_key'])
-				$response = array('response' => _x('Stripe configuration error. Your Stripe Secret MD5 Hash is not yet configured.', 's2member-admin', 's2member'), 'error' => TRUE);
+			else if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key'])
+				$response = array('response' => _x('Stripe configuration error. Your Secret Stripe API Key is not yet configured.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 			return (empty($response) || !empty($attr['register'])) ? NULL : $response;
 		}
