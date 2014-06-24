@@ -64,10 +64,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-group" title="Stripe Account Details">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-account-details-section">'."\n";
+			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:241px; height:122px; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Account Details (required)</h3>'."\n";
-			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:241px; height:122px; border-radius:5px; border:0;" alt="." /></a>'."\n";
 			echo '<p><a href="http://www.s2member.com/authorize.net" target="_blank" rel="external">Stripe</a> absolutely rocks! It\'s a developer-friendly way to accept payments online and in mobile apps. They process billions of dollars a year for thousands of companies of all sizes. Easy to integrate; and easy for customers to use.</p>'."\n";
-			echo '<p>s2Member has been integrated with Stripe for Direct Payments and also for Subscriptions (Automated Recurring Billing). In order to take advantage of this integration, you will need to have an Stripe Merchant Account. Once you have an account, all of the details below can be obtained from inside of your Stripe account. If you need assistance, please check their <a href="http://www.s2member.com/r/stripe-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
+			echo '<p>s2Member Pro has been integrated with Stripe for Direct Payments and also for Subscriptions (Automated Recurring Billing). In order to take advantage of this integration, you will need to have an Stripe Merchant Account. Once you have an account, all of the details below can be obtained from inside of your Stripe account. If you need assistance, please check their <a href="http://www.s2member.com/r/stripe-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*Secure Server*</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Stripe Pro Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>*Secure Server*</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro Forms on an SSL enabled page. When you create Stripe Pro Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*SSL Compatibility*</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
 
@@ -127,13 +127,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
-			echo '<em>Only enable this if you\'ve provided test credentials above.<br />This puts s2Member\'s Stripe integration into Sandbox/Test mode.<br />See: <a href="http://www.s2member.com/r/stripe-test-accounts/" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
+			echo '<em>Only enable this if you\'ve provided test credentials above. This puts s2Member\'s Stripe integration into Sandbox/Test mode. See: <a href="http://www.s2member.com/r/stripe-test-accounts/" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
 
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
+				echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+				echo '<table class="form-table">'."\n";
+				echo '<tbody>'."\n";
 				echo '<tr>'."\n";
 
 				echo '<th>'."\n";
@@ -163,17 +169,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
+				echo '</tbody>'."\n";
+				echo '</table>'."\n";
 			}
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Webhooks (aka: IPN) Integration">'."\n";
+			echo '<div class="ws-menu-page-group" title="Stripe Webhook (aka: IPN Integration)">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
-			echo '<h3>Stripe Webhooks (aka: IPN) Integration (required)</h3>'."\n";
+			echo '<h3>Stripe Webhook (aka: IPN Integration) [required]</h3>'."\n";
 			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account Settings -› Webhooks</code></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(site_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
 			echo '</div>'."\n";
