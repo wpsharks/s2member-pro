@@ -179,6 +179,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-group" title="Stripe Webhook (aka: IPN Integration)">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
+			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Webhook (aka: IPN Integration) [required]</h3>'."\n";
 			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account Settings -› Webhooks</code></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(site_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
@@ -190,7 +191,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-signup-confirmation-email-section">'."\n";
 			echo '<h3>Signup Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro Form integrations</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they successfully complete an Stripe "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because s2Member\'s Stripe Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because s2Member\'s Stripe Pro Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member Pro Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
@@ -227,7 +228,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_signup_email_subject" id="ws-plugin--s2member-pro-signup-email-subject" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_signup_email_subject']).'" /><br />'."\n";
-			echo 'Subject Line used in the email sent to a Customer after a successful signup has occurred through an Stripe Pro Form.'."\n";
+			echo 'Subject Line used in the email sent to a Customer after a successful signup has occurred through a Stripe Pro Form.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -244,7 +245,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<textarea name="ws_plugin__s2member_pro_signup_email_message" id="ws-plugin--s2member-pro-signup-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_signup_email_message']).'</textarea><br />'."\n";
-			echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through an Stripe Pro Form.<br /><br />'."\n";
+			echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through a Stripe Pro Form.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul>'."\n";
 			echo '<li><code>%%registration_url%%</code> = Not needed with Stripe Pro Form integration. Pro Forms handle this automatically.</li>'."\n";
@@ -515,7 +516,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-confirmation-email-section">'."\n";
 			echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro Form integrations</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they successfully complete an Stripe "Pro Form" submission on your site, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro Form" submission on your site, for Specific Post/Page Access. (see: <code>s2Member -› Restriction Options -› Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member Pro Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
@@ -552,7 +553,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_sp_email_subject" id="ws-plugin--s2member-pro-sp-email-subject" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_sp_email_subject']).'" /><br />'."\n";
-			echo 'Subject Line used in the email sent to a Customer after a successful purchase has occurred through an Stripe Pro Form, for Specific Post/Page Access.'."\n";
+			echo 'Subject Line used in the email sent to a Customer after a successful purchase has occurred through a Stripe Pro Form, for Specific Post/Page Access.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -569,7 +570,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<textarea name="ws_plugin__s2member_pro_sp_email_message" id="ws-plugin--s2member-pro-sp-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_sp_email_message']).'</textarea><br />'."\n";
-			echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through an Stripe Pro Form, for Specific Post/Page Access.<br /><br />'."\n";
+			echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through a Stripe Pro Form, for Specific Post/Page Access.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul>'."\n";
 			echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>'."\n";
@@ -611,7 +612,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-tax-rates-section">'."\n";
 			echo '<h3>Tax Rate Calculations for Stripe Pro Forms (optional)<br />— specifically for s2Member Pro Form integrations</h3>'."\n";
 			echo '<p>With Stripe, your software (s2Member Pro) is solely responsible for calculating Tax Rates. In the fields below, you can set a Global Default Tax Rate, and/or a "Custom Tax Configuration File"; which can be applied to specific countries, specific states, provinces, and even to specific zip code ranges. * Tax Rate calculations are fully compatible with international currencies and locations.</p>'."\n";
-			echo '<p>When you create an Stripe Pro Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your Stripe Pro Form Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create an Stripe Pro Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>'."\n";
+			echo '<p>When you create a Stripe Pro Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your Stripe Pro Form Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create a Stripe Pro Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>'."\n";
 			echo '<p><em><strong>*Quick Tip*</strong> If you configure Tax, it\'s good to include a note somewhere in the <code>desc=""</code> attribute of your Shortcode. Something like <code>desc="$x.xx (plus tax)"</code>.</em></p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* This tax configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member -› PayPal Options). Feel free to configure taxes here; but please remember that this configuration is applied universally (i.e. SHARED) among all Payment Gateways integrated with s2Member Pro Forms.\'); return false;">?</a> ]</em></p>'."\n";

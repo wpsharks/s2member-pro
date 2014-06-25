@@ -543,15 +543,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Parses an Stripe Silent Post.
+		 * Parses a Stripe Silent Post.
 		 *
 		 * Parses `s2_reference`, `s2_domain`, `s2_invoice`, `s2_start_time`, `s2_p1`, `s2_p3`, `s2_custom`
-		 * from an Stripe Silent Post *(aka: IPN)* response.
+		 * from a Stripe Silent Post *(aka: IPN)* response.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $array Expects an array of details returned by an Stripe Silent Post.
+		 * @param array $array Expects an array of details returned by a Stripe Silent Post.
 		 *
 		 * @return array|bool The same ``$array``, but with additional details filled by this routine; else false.
 		 */

@@ -187,7 +187,7 @@ jQuery(document).ready(
 				}
 				else if(trialAmount !== '0' && trialTerm === 'Y' && /* 1 year max for Stripe. */ trialPeriod > 1)
 				{
-					alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 1. *This is an Stripe limitation.');
+					alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 1. *This is a Stripe limitation.');
 					return false;
 				}
 				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
