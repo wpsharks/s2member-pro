@@ -728,7 +728,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-form-options-section">' . "\n";
 						echo '<h3>Wrapping Multiple Shortcodes as "Checkout Options"</h3>' . "\n";
-						echo '<p>If you would like to offer a single Pro Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro Form Shortcodes the same as you normally would (using some of the Pro Form Generators on this page). Then, you can simply wrap them all inside another Pro Form Shortcode (as seen below). For instance, if you generate two Pro Form Shortcodes (or you have multiple Pro Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro Form Shortcode and it consolidates all the Pro Form Shortcodes into a single Pro Form with multiple "Checkout Options" (e.g. it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>' . "\n";
+						echo '<p>If you would like to offer a single Pro Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro Form Shortcodes the same as you normally would (using some of the Pro Form Generators on this page). Then, you can simply wrap them all inside another Pro Form Shortcode (as seen below). For instance, if you generate two Pro Form Shortcodes (or you have multiple Pro Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro Form Shortcode and it consolidates all the Pro Form Shortcodes into a single Pro Form with multiple "Checkout Options" (i.e. it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -752,7 +752,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
 						echo '<h3>Behind-The-Scene — How do "Checkout Options" work?</h3>' . "\n";
-						echo '<p>Given this simple example (as seen below); s2Member will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (e.g. a child). The one s2Member merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
+						echo '<p>Given this simple example (as seen below); s2Member will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (i.e. a child). The one s2Member merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
