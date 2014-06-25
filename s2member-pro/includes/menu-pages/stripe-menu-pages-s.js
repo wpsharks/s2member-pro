@@ -32,9 +32,12 @@
 jQuery(document).ready(
 	function($)
 	{
-		var esc_attr = esc_html = function(str/* Convert special characters. */)
+		var esc_attr = esc_html = function(string/* Convert special characters. */)
 		{
-			return String(str).replace(/"/g, '&quot;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+			if(/[&\<\>"']/.test(string = String(string)))
+				string = string.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+					string = string.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+			return string;
 		};
 		if(location.href.match(/page\=ws-plugin--s2member-pro-stripe-ops/))
 		{
@@ -165,9 +168,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nWhen provided, Trial Amount must be >= 0.00');
 					return false;
 				}
-				else if(trialAmount !== '0' && trialAmount > /* $99,999.00 maximum. */ 99999.00)
+				else if(trialAmount !== '0' && trialAmount > /* $999,999.99 maximum. */ 999999.99)
 				{
-					alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 99999.00');
+					alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 999999.99');
 					return false;
 				}
 				else if(trialAmount !== '0' && trialTerm === 'D' && /* Some validation on the Trial Period. Max days: 365. */ trialPeriod > 365)
@@ -185,9 +188,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nMaximum paid Trial Months is: 12.\nIf you want to offer more than 12 months, please choose Years from the drop-down.');
 					return false;
 				}
-				else if(trialAmount !== '0' && trialTerm === 'Y' && /* 1 year max for Stripe. */ trialPeriod > 1)
+				else if(trialAmount !== '0' && trialTerm === 'Y' && /* 2 year max for Stripe. */ trialPeriod > 2)
 				{
-					alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 1. *This is a Stripe limitation.');
+					alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 2. *This is a Stripe limitation.');
 					return false;
 				}
 				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
@@ -195,9 +198,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $99,999.00 maximum. */ 99999.00)
+				else if(regAmount > /* $999,999.99 maximum. */ 999999.99)
 				{
-					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
+					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
 				}
 				else if /* Each Form should have a Description. */ (!desc)
@@ -253,9 +256,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $99,999.00 maximum. */ 99999.00)
+				else if(regAmount > /* $999,999.99 maximum. */ 999999.99)
 				{
-					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
+					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
 				}
 				else if /* Each Form should have a Description. */ (!desc)
@@ -302,9 +305,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $99,999.00 maximum. */ 99999.00)
+				else if(regAmount > /* $99,9999.99 maximum. */ 999999.99)
 				{
-					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 99999.00');
+					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
 				}
 				else if /* Each Form should have a Description. */ (!desc)
