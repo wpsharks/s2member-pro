@@ -350,8 +350,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['ra'] < 0.00)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
-					else if($attr['ra'] > 99999.00)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 99999.00.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['ra'] > 999999.99)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
 				}
 				else // Validation routines for Member Level checkout forms. This is the default functionality.
 				{
@@ -412,8 +412,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['tp'] && $attr['tt'] === 'M' && $attr['tp'] > 12 && $attr['ta'] > 0)
 						$response = array('response' => _x('Invalid form configuration. Invalid "tt, tp" attributes. There is an Intial/Trial amount, and "tt" (Trial Term) attribute is "M", and "tp" (Trial Period) > 12.', 's2member-admin', 's2member'), 'error' => TRUE);
 
-					else if($attr['tp'] && $attr['tt'] === 'Y' && $attr['tp'] > 1 && $attr['ta'] > 0)
-						$response = array('response' => _x('Invalid form configuration. Invalid "tt, tp" attributes. There is an Intial/Trial amount, and "tt" (Trial Term) attribute is "Y", and "tp" (Trial Period) > 1.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['tp'] && $attr['tt'] === 'Y' && $attr['tp'] > 2 && $attr['ta'] > 0)
+						$response = array('response' => _x('Invalid form configuration. Invalid "tt, tp" attributes. There is an Intial/Trial amount, and "tt" (Trial Term) attribute is "Y", and "tp" (Trial Period) > 2.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['tp'] && $attr['ta'] && !is_numeric($attr['ta']))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be numeric.', "s2member-admin", 's2member'), 'error' => TRUE);
@@ -421,8 +421,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['tp'] && $attr['ta'] && $attr['ta'] < 0.00)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
-					else if($attr['tp'] && $attr['ta'] && $attr['ta'] > 99999.00)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 99999.00.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['tp'] && $attr['ta'] && $attr['ta'] > 999999.99)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if(!$attr['rp'] || !is_string($attr['rp']))
 						$response = array('response' => _x('Invalid form configuration. Missing "rp" attribute. The Regular Period. Must be >= 1.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -438,9 +438,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 
 					else if(!preg_match('/[DWMYL]/', $attr['rt']))
 						$response = array('response' => _x('Invalid form configuration. Invalid "rt" attribute. The Regular Term. Must be one of D,W,M,Y,L.', 's2member-admin', 's2member'), 'error' => TRUE);
-
-					else if($attr['rt'] === 'D' && $attr['rp'] < 7 && $attr['rr'] !== 'BN')
-						$response = array('response' => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "D", "rp" (Regular Period) is < 7, and "rr" is not "BN" (Buy Now).', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['rt'] === 'D' && $attr['rp'] > 365 && $attr['rr'] !== 'BN')
 						$response = array('response' => _x('Invalid form configuration. Invalid "rt, rp, rr" attributes. The "rt" (Regular Term) attribute is "D", "rp" (Regular Period) > 365, and "rr" is not "BN" (Buy Now).', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -478,8 +475,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['ra'] < 0.00)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
-					else if($attr['ra'] > 99999.00)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 99999.00.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['ra'] > 999999.99)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['rr'] && (!is_string($attr['rr']) || !preg_match('/^([0-1]|BN)$/', $attr['rr'])))
 						$response = array('response' => _x('Invalid form configuration. Invalid "rr" attribute. Regular Recurring. When provided, must be 0, 1, or BN.', 's2member-admin', 's2member'), 'error' => TRUE);
