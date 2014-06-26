@@ -66,7 +66,6 @@ jQuery(document).ready(
 				var currencyCode = $('select#ws-plugin--s2member-pro-' + form + '-currency').val().replace(/[^A-Z]/g, '');
 				$('input#ws-plugin--s2member-pro-' + form + '-desc').val(((trialPeriod > 0) ? trialPeriod + ' ' + ((trialPeriod == 1) ? trialTermLabel.replace(/s$/, '') : trialTermLabel) + ' ' + ((trialAmount > 0) ? '@ $' + trialAmount : 'free') + ' / then ' : '') + '$' + regAmount + ' ' + currencyCode + '' + ((taxMayApply) ? ' + tax' : '') + ' / ' + regTermLabel);
 			};
-
 			$('div.ws-menu-page select[id]')
 				.filter(function(/* Filter all select elements with an id. */)
 				        {
@@ -80,7 +79,6 @@ jQuery(document).ready(
 					                  (trialDisabled) ? $('input#ws-plugin--s2member-pro-' + form + '-trial-period').val(0) : null;
 					                  (trialDisabled) ? $('input#ws-plugin--s2member-pro-' + form + '-trial-amount').val('0.00') : null;
 				                  });
-
 			$('div.ws-menu-page input[id]')
 				.filter(function(/* Filter all input elements with an id. */)
 				        {
@@ -208,11 +206,10 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nPlease type a Description for this Form.');
 					return false;
 				}
-
 				shortCodeTemplateAttrs += /* For Modification Forms. */ (form === 'modification') ? 'modify="1" ' : '';
 				shortCodeTemplateAttrs += 'level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" cc="' + esc_attr(currencyCode) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
-				shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
-				/* rrt="' + esc_attr(regRecurTimes) + '"'; */
+				shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"'; // rrt="' + esc_attr(regRecurTimes) + '"';
+
 				shortCode.val(shortCodeTemplate.replace(/%%attrs%%/, shortCodeTemplateAttrs));
 
 				alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
@@ -221,7 +218,6 @@ jQuery(document).ready(
 				               {
 					               this.focus(), this.select();
 				               });
-
 				return false;
 			};
 			ws_plugin__s2member_pro_stripeCcapFormGenerate = function(form/* Handles Stripe Form Generation. */)
@@ -267,7 +263,6 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nPlease type a Description for this Form.');
 					return false;
 				}
-
 				shortCodeTemplateAttrs += 'level="*" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" cc="' + esc_attr(currencyCode) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 				shortCodeTemplateAttrs += ' ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 				shortCode.val(shortCodeTemplate.replace(/%%attrs%%/, shortCodeTemplateAttrs));
@@ -278,7 +273,6 @@ jQuery(document).ready(
 				               {
 					               this.focus(), this.select();
 				               });
-
 				return false;
 			};
 			ws_plugin__s2member_pro_stripeSpFormGenerate = /* Handles Stripe Form Generation. */ function()
@@ -316,7 +310,6 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nPlease type a Description for this Form.');
 					return false;
 				}
-
 				for(var i = 0, ids = leading; i < additionals.length; i++)
 					if(additionals[i] && additionals[i] !== leading)
 						ids += ',' + additionals[i];
@@ -333,7 +326,6 @@ jQuery(document).ready(
 				                                                    {
 					                                                    this.focus(), this.select();
 				                                                    });
-
 				return false;
 			};
 			ws_plugin__s2member_pro_stripeRegLinkGenerate = /* Handles Stripe Link Generation. */ function()
@@ -363,12 +355,10 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nThe Fixed Term Length is not formatted properly.');
 					return false;
 				}
-
 				$link.hide(), $loading.show(), $.post(ajaxurl, {action: 'ws_plugin__s2member_reg_access_link_via_ajax', ws_plugin__s2member_reg_access_link_via_ajax: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (wp_create_nonce ("ws-plugin--s2member-reg-access-link-via-ajax")); ?>', s2member_reg_access_link_subscr_gateway: 'stripe', s2member_reg_access_link_subscr_id: subscrID, s2member_reg_access_link_custom: custom, s2member_reg_access_link_item_number: levelCcapsPer}, function(response)
 				{
 					$link.show().html('<a href="' + esc_attr(response) + '" target="_blank" rel="external">' + esc_html(response) + '</a>'), $loading.hide();
 				});
-
 				return false;
 			};
 			ws_plugin__s2member_pro_stripeSpLinkGenerate = /* Handles Stripe Link Generation. */ function()
@@ -383,7 +373,6 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nPlease select a Leading Post/Page.\n\n*Tip* If there are no Posts/Pages in the menu, it\'s because you\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -› Restriction Options -› Specific Post/Page Access.');
 					return false;
 				}
-
 				for(var i = 0, ids = leading; i < additionals.length; i++)
 					if(additionals[i] && additionals[i] !== leading)
 						ids += ',' + additionals[i];
@@ -392,7 +381,6 @@ jQuery(document).ready(
 				{
 					$link.show().html('<a href="' + esc_attr(response) + '" target="_blank" rel="external">' + esc_html(response) + '</a>'), $loading.hide();
 				});
-
 				return false;
 			};
 		}
