@@ -200,6 +200,7 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-year
 {
 	width   : 50%;
+	float   : left;
 	display : inline-block;
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-div select.s2member-pro-authnet-card-expiration-year
@@ -274,8 +275,4 @@ div.s2member-pro-authnet-form-submission-section > div.s2member-pro-authnet-form
 div.s2member-pro-authnet-form-submission-section > div.s2member-pro-authnet-form-submit-div
 {
 	float : right;
-}
-div.s2member-pro-authnet-form-submission-section > div.s2member-pro-authnet-form-submit-div > input[type="image"]
-{
-	border : 0;
 }
