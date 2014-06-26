@@ -130,7 +130,7 @@ jQuery(document).ready(
 
 			ws_plugin__s2member_pro_stripeFormGenerate = function(form/* Handles Stripe Form Generation. */)
 			{
-				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '', labels = {};
+				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '', labels = {};
 
 				eval("<?php echo c_ws_plugin__s2member_utils_strings::esc_dq($vars['labels']); ?>");
 
@@ -225,7 +225,7 @@ jQuery(document).ready(
 			};
 			ws_plugin__s2member_pro_stripeCcapFormGenerate = function(form/* Handles Stripe Form Generation. */)
 			{
-				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
+				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
 
 				var shortCode = $('input#ws-plugin--s2member-pro-ccap-shortcode');
 
@@ -282,7 +282,7 @@ jQuery(document).ready(
 			};
 			ws_plugin__s2member_pro_stripeSpFormGenerate = /* Handles Stripe Form Generation. */ function()
 			{
-				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% accept="visa,mastercard,amex,discover" coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
+				var shortCodeTemplate = '[s2Member-Pro-Stripe-Form %%attrs%% coupon="" accept_coupons="0" default_country_code="US" captcha="0" /]', shortCodeTemplateAttrs = '';
 
 				var shortCode = $('input#ws-plugin--s2member-pro-sp-shortcode');
 
