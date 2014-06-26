@@ -481,6 +481,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['rr'] && (!is_string($attr['rr']) || !preg_match('/^([0-1]|BN)$/', $attr['rr'])))
 						$response = array('response' => _x('Invalid form configuration. Invalid "rr" attribute. Regular Recurring. When provided, must be 0, 1, or BN.', 's2member-admin', 's2member'), 'error' => TRUE);
 
+					else if($attr['rr'] === '0' && $attr['tp'])
+						$response = array('response' => _x('Invalid form configuration. Invalid "rr, tp" attributes. The "rr" (Regular Recurring) attribute is "0" (Not Recurring), and "tp" (Trial Period) is not "0". Trial Periods are only possible when there is a recurring subscription.', 's2member-admin', 's2member'), 'error' => TRUE);
+
 					else if($attr['rr'] === 'BN' && $attr['tp'])
 						$response = array('response' => _x('Invalid form configuration. Invalid "rr, tp" attributes. The "rr" (Regular Recurring) attribute is "BN" (Buy Now), and "tp" (Trial Period) is not "0".', 's2member-admin', 's2member'), 'error' => TRUE);
 
