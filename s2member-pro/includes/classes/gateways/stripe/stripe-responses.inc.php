@@ -542,41 +542,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap('administrator') /* NOT for Administrators. */)
 						$response = array('response' => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', 's2member-admin', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_type']) || !is_string($s['card_type']))
-						$response = array('response' => _x('Missing Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(!in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) || !is_array($s['attr']['accept']) || !in_array(strtolower($s['card_type']), $s['attr']['accept']))
-						$response = array('response' => _x('Invalid Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_number']) || !is_string($s['card_number'])))
-						$response = array('response' => _x('Missing Card Number. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_expiration']) || !is_string($s['card_expiration'])))
-						$response = array('response' => _x('Missing Card Expiration Date (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && !preg_match('/^[0-9]{2}\/[0-9]{4}$/', $s['card_expiration']))
-						$response = array('response' => _x('Invalid Card Expiration Date. Must be in this format (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_verification']) || !is_string($s['card_verification'])))
-						$response = array('response' => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Maestro', 'Solo')) && (empty($s['card_start_date_issue_number']) || !is_string($s['card_start_date_issue_number'])))
-						$response = array('response' => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-					// -----------------------------------------------------------------------------------------------------------------
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['street']) || !is_string($s['street'])))
-						$response = array('response' => _x('Missing Street Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['city']) || !is_string($s['city'])))
-						$response = array('response' => _x('Missing City/Town. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['state']) || !is_string($s['state'])))
-						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['country']) || !is_string($s['country'])))
-						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['zip']) || !is_string($s['zip'])))
-						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(empty($s['card_token']) || !is_string($s['card_token']))
+						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
 						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
@@ -644,43 +611,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_type']) || !is_string($s['card_type']))
-						$response = array('response' => _x('Missing Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(empty($s['card_token']) || !is_string($s['card_token']))
+						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo', 'Free')))
-						$response = array('response' => _x('Invalid Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (!is_array($s['attr']['accept']) || !in_array(strtolower($s['card_type']), $s['attr']['accept'])))
-						$response = array('response' => _x('Invalid Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_number']) || !is_string($s['card_number'])))
-						$response = array('response' => _x('Missing Card Number. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_expiration']) || !is_string($s['card_expiration'])))
-						$response = array('response' => _x('Missing Card Expiration Date (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && !preg_match('/^[0-9]{2}\/[0-9]{4}$/', $s['card_expiration']))
-						$response = array('response' => _x('Invalid Card Expiration Date. Must be in this format (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_verification']) || !is_string($s['card_verification'])))
-						$response = array('response' => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Maestro', 'Solo')) && (empty($s['card_start_date_issue_number']) || !is_string($s['card_start_date_issue_number'])))
-						$response = array('response' => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-					// -----------------------------------------------------------------------------------------------------------------
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['street']) || !is_string($s['street'])))
-						$response = array('response' => _x('Missing Street Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['city']) || !is_string($s['city'])))
-						$response = array('response' => _x('Missing City/Town. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['state']) || !is_string($s['state'])))
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['country']) || !is_string($s['country'])))
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['zip']) || !is_string($s['zip'])))
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -741,43 +681,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s['custom_fields']) ? $s['custom_fields'] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s['attr']['level'] === '*' ? 'auto-detection' : $s['attr']['level'], 'registration', TRUE))))
 						$response = array('response' => array_shift($custom_field_validation_errors), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_type']) || !is_string($s['card_type']))
-						$response = array('response' => _x('Missing Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(empty($s['card_token']) || !is_string($s['card_token']))
+						$response = array('response' => _x('Missing Billing Method. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo', 'Free')))
-						$response = array('response' => _x('Invalid Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (!is_array($s['attr']['accept']) || !in_array(strtolower($s['card_type']), $s['attr']['accept'])))
-						$response = array('response' => _x('Invalid Card Type (Billing Method). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_number']) || !is_string($s['card_number'])))
-						$response = array('response' => _x('Missing Card Number. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_expiration']) || !is_string($s['card_expiration'])))
-						$response = array('response' => _x('Missing Card Expiration Date (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && !preg_match('/^[0-9]{2}\/[0-9]{4}$/', $s['card_expiration']))
-						$response = array('response' => _x('Invalid Card Expiration Date. Must be in this format (mm/yyyy). Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['card_verification']) || !is_string($s['card_verification'])))
-						$response = array('response' => _x('Missing Card Verification Code. It\'s on the back of your Card. 3-4 digits. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Maestro', 'Solo')) && (empty($s['card_start_date_issue_number']) || !is_string($s['card_start_date_issue_number'])))
-						$response = array('response' => _x('Missing Card Start Date, or Issue #. Required for Maestro/Solo. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-					// -----------------------------------------------------------------------------------------------------------------
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['street']) || !is_string($s['street'])))
-						$response = array('response' => _x('Missing Street Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['city']) || !is_string($s['city'])))
-						$response = array('response' => _x('Missing City/Town. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
-
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['state']) || !is_string($s['state'])))
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['country']) || !is_string($s['country'])))
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(in_array($s['card_type'], array('Visa', 'MasterCard', 'Discover', 'Amex', 'Maestro', 'Solo')) && (empty($s['zip']) || !is_string($s['zip'])))
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))

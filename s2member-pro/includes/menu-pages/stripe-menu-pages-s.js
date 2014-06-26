@@ -211,7 +211,8 @@ jQuery(document).ready(
 
 				shortCodeTemplateAttrs += /* For Modification Forms. */ (form === 'modification') ? 'modify="1" ' : '';
 				shortCodeTemplateAttrs += 'level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" cc="' + esc_attr(currencyCode) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
-				shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"'; /* rrt="' + esc_attr(regRecurTimes) + '"'; */
+				shortCodeTemplateAttrs += ' ta="' + esc_attr(trialAmount) + '" tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" ra="' + esc_attr(regAmount) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
+				/* rrt="' + esc_attr(regRecurTimes) + '"'; */
 				shortCode.val(shortCodeTemplate.replace(/%%attrs%%/, shortCodeTemplateAttrs));
 
 				alert('Your Form has been generated.\nPlease copy/paste the Shortcode into your WordPress Editor.');
