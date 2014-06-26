@@ -168,7 +168,7 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nWhen provided, Trial Amount must be >= 0.00');
 					return false;
 				}
-				else if(trialAmount !== '0' && trialAmount > /* $999,999.99 maximum. */ 999999.99)
+				else if(trialAmount !== '0' && trialAmount > /* $999999.99 maximum. */ 999999.99)
 				{
 					alert('— Oops, a slight problem: —\n\nMaximum Trial Amount is: 999999.99');
 					return false;
@@ -198,7 +198,7 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $999,999.99 maximum. */ 999999.99)
+				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
 				{
 					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
@@ -256,7 +256,7 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $999,999.99 maximum. */ 999999.99)
+				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
 				{
 					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
