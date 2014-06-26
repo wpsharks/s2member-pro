@@ -82,63 +82,21 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div style="clear:both;"></div>
 	</div>
 
-	<!-- Billing Method (Customers can use a Credit/Debit card only). -->
+	<!-- Billing Method (powered by Stripe). -->
 	<div id="s2member-pro-stripe-sp-checkout-form-billing-method-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-sp-checkout-form-section s2member-pro-stripe-form-billing-method-section s2member-pro-stripe-sp-checkout-form-billing-method-section">
 		<div id="s2member-pro-stripe-sp-checkout-form-billing-method-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-sp-checkout-form-section-title s2member-pro-stripe-form-billing-method-section-title s2member-pro-stripe-sp-checkout-form-billing-method-section-title">
 			<?php echo _x ("Billing Method", "s2member-front", "s2member"); ?>
 		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-card-type-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-type-div s2member-pro-stripe-sp-checkout-form-card-type-div">
-			%%card_type_options%%
-		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-card-number-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-number-div s2member-pro-stripe-sp-checkout-form-card-number-div">
-			<label for="s2member-pro-stripe-sp-checkout-card-number" id="s2member-pro-stripe-sp-checkout-form-card-number-label" class="s2member-pro-stripe-form-card-number-label s2member-pro-stripe-sp-checkout-form-card-number-label">
-				<span><?php echo _x ("Card Number (no dashes or spaces)", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_stripe_sp_checkout[card_number]" id="s2member-pro-stripe-sp-checkout-card-number" class="s2member-pro-stripe-card-number s2member-pro-stripe-sp-checkout-card-number form-control" value="%%card_number_value%%" tabindex="110" />
-			</label>
-		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-card-expiration-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-expiration-div s2member-pro-stripe-sp-checkout-form-card-expiration-div">
-			<label for="s2member-pro-stripe-sp-checkout-card-expiration" id="s2member-pro-stripe-sp-checkout-form-card-expiration-label" class="s2member-pro-stripe-form-card-expiration-label s2member-pro-stripe-sp-checkout-form-card-expiration-label">
-				<span><?php echo _x ("Card Expiration Date (mm/yyyy)", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" autocomplete="off" name="s2member_pro_stripe_sp_checkout[card_expiration_month]" id="s2member-pro-stripe-sp-checkout-card-expiration-month" class="s2member-pro-stripe-card-expiration-month s2member-pro-stripe-sp-checkout-card-expiration-month form-control" tabindex="120">
-					%%card_expiration_month_options%%
-				</select>
-				<select aria-required="true" autocomplete="off" name="s2member_pro_stripe_sp_checkout[card_expiration_year]" id="s2member-pro-stripe-sp-checkout-card-expiration-year" class="s2member-pro-stripe-card-expiration-year s2member-pro-stripe-sp-checkout-card-expiration-year form-control" tabindex="121">
-					%%card_expiration_year_options%%
-				</select>
-			</label>
-		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-card-verification-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-verification-div s2member-pro-stripe-sp-checkout-form-card-verification-div">
-			<label for="s2member-pro-stripe-sp-checkout-card-verification" id="s2member-pro-stripe-sp-checkout-form-card-verification-label" class="s2member-pro-stripe-form-card-verification-label s2member-pro-stripe-sp-checkout-form-card-verification-label">
-				<span><?php echo _x ("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x ("need help?", "s2member-front", "s2member"); ?></a></span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_stripe_sp_checkout[card_verification]" id="s2member-pro-stripe-sp-checkout-card-verification" class="s2member-pro-stripe-card-verification s2member-pro-stripe-sp-checkout-card-verification form-control" value="%%card_verification_value%%" tabindex="130" />
-			</label>
-		</div>
-		<!-- This is displayed only when Maestro/Solo cards are selected as the Payment Method. -->
-		<div id="s2member-pro-stripe-sp-checkout-form-card-start-date-issue-number-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-start-date-issue-number-div s2member-pro-stripe-sp-checkout-form-card-start-date-issue-number-div">
-			<label for="s2member-pro-stripe-sp-checkout-card-start-date-issue-number" id="s2member-pro-stripe-sp-checkout-form-card-start-date-issue-number-label" class="s2member-pro-stripe-form-card-start-date-issue-number-label s2member-pro-stripe-sp-checkout-form-card-start-date-issue-number-label">
-				<span><?php echo _x ("Card Start Date (mm/yyyy), or Issue Number", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_stripe_sp_checkout[card_start_date_issue_number]" id="s2member-pro-stripe-sp-checkout-card-start-date-issue-number" class="s2member-pro-stripe-card-start-date-issue-number s2member-pro-stripe-sp-checkout-card-start-date-issue-number form-control" value="%%card_start_date_issue_number_value%%" tabindex="140" />
-			</label>
+		<div id="s2member-pro-stripe-sp-checkout-form-card-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-token-div s2member-pro-stripe-sp-checkout-form-card-token-div">
+			%%card_token_button%%
 		</div>
 		<div style="clear:both;"></div>
 	</div>
 
-	<!-- Billing Address (hidden dynamically when/if no Payment Method is selected yet). -->
+	<!-- Billing Address (hidden dynamically when/if no tax details are necessary; and/or when no billing info has been provided yet). -->
 	<div id="s2member-pro-stripe-sp-checkout-form-billing-address-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-sp-checkout-form-section s2member-pro-stripe-form-billing-address-section s2member-pro-stripe-sp-checkout-form-billing-address-section">
 		<div id="s2member-pro-stripe-sp-checkout-form-billing-address-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-sp-checkout-form-section-title s2member-pro-stripe-form-billing-address-section-title s2member-pro-stripe-sp-checkout-form-billing-address-section-title">
 			<?php echo _x ("Billing Address", "s2member-front", "s2member"); ?>
-		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-street-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-street-div s2member-pro-stripe-sp-checkout-form-street-div">
-			<label for="s2member-pro-stripe-sp-checkout-street" id="s2member-pro-stripe-sp-checkout-form-street-label" class="s2member-pro-stripe-form-street-label s2member-pro-stripe-sp-checkout-form-street-label">
-				<span><?php echo _x ("Street Address", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_stripe_sp_checkout[street]" id="s2member-pro-stripe-sp-checkout-street" class="s2member-pro-stripe-street s2member-pro-stripe-sp-checkout-street form-control" value="%%street_value%%" tabindex="200" />
-			</label>
-		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-city-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-city-div s2member-pro-stripe-sp-checkout-form-city-div">
-			<label for="s2member-pro-stripe-sp-checkout-city" id="s2member-pro-stripe-sp-checkout-form-city-label" class="s2member-pro-stripe-form-city-label s2member-pro-stripe-sp-checkout-form-city-label">
-				<span><?php echo _x ("City / Town", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="40" autocomplete="off" name="s2member_pro_stripe_sp_checkout[city]" id="s2member-pro-stripe-sp-checkout-city" class="s2member-pro-stripe-city s2member-pro-stripe-sp-checkout-city form-control" value="%%city_value%%" tabindex="210" />
-			</label>
 		</div>
 		<div id="s2member-pro-stripe-sp-checkout-form-state-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-state-div s2member-pro-stripe-sp-checkout-form-state-div">
 			<label for="s2member-pro-stripe-sp-checkout-state" id="s2member-pro-stripe-sp-checkout-form-state-label" class="s2member-pro-stripe-form-state-label s2member-pro-stripe-sp-checkout-form-state-label">
