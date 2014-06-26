@@ -29,7 +29,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 			<?php echo _x("New Billing Method", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-stripe-update-form-card-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-update-form-div s2member-pro-stripe-form-card-token-div s2member-pro-stripe-update-form-card-token-div">
-			<button><?php echo _x("New Billing Info", "s2member-front", "s2member"); ?></button>
+			<button type="button"><?php echo _x("New Billing Info", "s2member-front", "s2member"); ?></button>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
