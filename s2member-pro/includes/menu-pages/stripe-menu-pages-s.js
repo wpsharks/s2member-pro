@@ -305,7 +305,7 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
 					return false;
 				}
-				else if(regAmount > /* $99,9999.99 maximum. */ 999999.99)
+				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
 				{
 					alert('— Oops, a slight problem: —\n\nMaximum Amount is: 999999.99');
 					return false;
