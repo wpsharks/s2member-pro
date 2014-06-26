@@ -88,7 +88,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 			<?php echo _x("Billing Method", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-stripe-sp-checkout-form-card-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-token-div s2member-pro-stripe-sp-checkout-form-card-token-div">
-			<button type="button"><?php echo _x("Attach Billing Info", "s2member-front", "s2member"); ?></button>
+			<button type="button"><i><?php echo _x("[+]", "s2member-front", "s2member"); ?></i> <span><?php echo _x("Add Credit Card", "s2member-front", "s2member"); ?></span></button>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
@@ -96,7 +96,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 	<!-- Billing Address (hidden dynamically when/if no tax details are necessary; and/or when no billing info has been provided yet). -->
 	<div id="s2member-pro-stripe-sp-checkout-form-billing-address-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-sp-checkout-form-section s2member-pro-stripe-form-billing-address-section s2member-pro-stripe-sp-checkout-form-billing-address-section">
 		<div id="s2member-pro-stripe-sp-checkout-form-billing-address-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-sp-checkout-form-section-title s2member-pro-stripe-form-billing-address-section-title s2member-pro-stripe-sp-checkout-form-billing-address-section-title">
-			<?php echo _x("Billing Address", "s2member-front", "s2member"); ?>
+			<?php echo _x("Tax Location", "s2member-front", "s2member"); ?>
 		</div>
 		<div id="s2member-pro-stripe-sp-checkout-form-state-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-state-div s2member-pro-stripe-sp-checkout-form-state-div">
 			<label for="s2member-pro-stripe-sp-checkout-state" id="s2member-pro-stripe-sp-checkout-form-state-label" class="s2member-pro-stripe-form-state-label s2member-pro-stripe-sp-checkout-form-state-label">
