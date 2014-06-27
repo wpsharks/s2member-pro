@@ -774,8 +774,8 @@ jQuery(document).ready( // DOM ready.
 							allowRememberMe: true, // Allow Stripe to remember the customer.
 							token          : function(token)
 							{
-								$(cardTokenInput).val(token.id), $(cardTokenSummaryInput).val(buildCardTokenSummary(token)),
-									$(cardTokenSummary).html(ws_plugin__s2member_escHtml(buildCardTokenSummary(token))),
+								$(cardTokenInput).val(token.id), $(cardTokenSummaryInput).val(buildCardTokenTextSummary(token)),
+									$(cardTokenSummary).html(ws_plugin__s2member_escHtml(buildCardTokenTextSummary(token))),
 									handleBillingMethod(); // Adjust billing methods fields now also.
 							}
 						});
@@ -831,7 +831,7 @@ jQuery(document).ready( // DOM ready.
 					return true;
 				});
 			}
-			var buildCardTokenSummary = function(token)
+			var buildCardTokenTextSummary = function(token)
 			{
 				if(typeof token !== 'object') return '';
 
