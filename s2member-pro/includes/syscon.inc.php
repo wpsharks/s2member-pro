@@ -107,7 +107,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 		                              'pro_gateways_enabled'                    => array('paypal'), // Defaults to PayPal Pro.
 		                              'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
-		                              'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_secret_key' => '', 'pro_stripe_api_image' => '', 'pro_stripe_api_validate_zipcode' => '0', 'pro_stripe_sandbox' => '0',
+		                              'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_secret_key' => '', 'pro_stripe_api_validate_zipcode' => '0', 'pro_stripe_sandbox' => '0',
+		                              'pro_stripe_api_image'                    => str_ireplace(array('http:', 'https:'), '', $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url']).'/images/stripe-square.png',
 		                              'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',
 		                              'pro_authnet_api_login_id'                => '', 'pro_authnet_api_trans_key' => '', 'pro_authnet_api_salt_key' => '', 'pro_authnet_sandbox' => '0',
 		                              'pro_ccbill_client_id'                    => '', 'pro_ccbill_client_sid' => '0000', 'pro_ccbill_form_name' => '', 'pro_ccbill_dl_user' => '', 'pro_ccbill_dl_pass' => '', 'pro_ccbill_dl_cancellations' => '0', 'pro_ccbill_salt_key' => '', 'pro_ccbill_return_template_header' => '',
