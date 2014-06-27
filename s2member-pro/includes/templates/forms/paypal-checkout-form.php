@@ -46,7 +46,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-paypal-checkout-form-coupon-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-coupon-div s2member-pro-paypal-checkout-form-coupon-div">
 			<label for="s2member-pro-paypal-checkout-coupon" id="s2member-pro-paypal-checkout-form-coupon-label" class="s2member-pro-paypal-form-coupon-label s2member-pro-paypal-checkout-form-coupon-label">
-				<span><?php echo _x("Have a Coupon Code? (please enter it here)", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x("Have a Coupon Code?", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_paypal_checkout[coupon]" id="s2member-pro-paypal-checkout-coupon" class="s2member-pro-paypal-coupon s2member-pro-paypal-checkout-coupon form-control" value="%%coupon_value%%" tabindex="1" />
 			</label>
 			<input type="button" id="s2member-pro-paypal-checkout-coupon-apply" class="s2member-pro-paypal-coupon-apply s2member-pro-paypal-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply Coupon", "s2member-front", "s2member")); ?>" tabindex="-1" />

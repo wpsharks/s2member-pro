@@ -46,7 +46,7 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-coupon-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-coupon-div s2member-pro-authnet-checkout-form-coupon-div">
 			<label for="s2member-pro-authnet-checkout-coupon" id="s2member-pro-authnet-checkout-form-coupon-label" class="s2member-pro-authnet-form-coupon-label s2member-pro-authnet-checkout-form-coupon-label">
-				<span><?php echo _x("Have a Coupon Code? (please enter it here)", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x("Have a Coupon Code?", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_authnet_checkout[coupon]" id="s2member-pro-authnet-checkout-coupon" class="s2member-pro-authnet-coupon s2member-pro-authnet-checkout-coupon form-control" value="%%coupon_value%%" tabindex="1" />
 			</label>
 			<input type="button" id="s2member-pro-authnet-checkout-coupon-apply" class="s2member-pro-authnet-coupon-apply s2member-pro-authnet-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply Coupon", "s2member-front", "s2member")); ?>" tabindex="-1" />
