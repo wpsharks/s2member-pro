@@ -160,7 +160,7 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div label
 	cursor      : pointer;
 	font-weight : normal;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-div > button
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button
 {
 	margin         : 0;
 	width          : 100%;
@@ -179,21 +179,21 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-d
 	cursor         : pointer;
 	background     : rgba(0, 0, 0, 0.1);
 }
-div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > i
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > i
 {
 	font-style : normal;
 }
-div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > span
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
 {
 	opacity         : 0.8;
 	text-decoration : none;
 	border-bottom   : 1px dotted;
 }
-div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > span:hover
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span:hover
 {
 	opacity : 1;
 }
-div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button:before
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:before
 {
 	content    : '';
 	float      : right;
@@ -201,7 +201,7 @@ div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-toke
 	height     : 26px;
 	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-summary
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div div.s2member-pro-stripe-form-card-token-summary
 {
 	opacity    : 0.9;
 	text-align : center;

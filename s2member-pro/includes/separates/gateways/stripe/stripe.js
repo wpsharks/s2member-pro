@@ -559,7 +559,7 @@ jQuery(document).ready( // DOM ready.
 					customFieldsSection = 'div#s2member-pro-stripe-checkout-form-custom-fields-section',
 
 					billingMethodSection = 'div#s2member-pro-stripe-checkout-form-billing-method-section',
-					cardTokenButton = billingMethodSection + ' div#s2member-pro-stripe-checkout-form-card-token-button',
+					cardTokenButton = billingMethodSection + ' button#s2member-pro-stripe-checkout-form-card-token-button',
 					cardTokenSummary = billingMethodSection + ' div#s2member-pro-stripe-checkout-form-card-token-summary',
 
 					billingAddressSection = 'div#s2member-pro-stripe-checkout-form-billing-address-section',
