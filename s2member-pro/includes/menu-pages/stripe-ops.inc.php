@@ -64,6 +64,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-group" title="Stripe Account Details">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-account-details-section">'."\n";
+			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
 			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Account Details (required)</h3>'."\n";
 			echo '<p><a href="http://www.s2member.com/r/stripe/" target="_blank" rel="external">Stripe</a> absolutely rocks! It\'s a developer-friendly way to accept payments online and in mobile apps. They process billions of dollars a year for thousands of companies of all sizes. Easy to integrate; and easy for customers to use.</p>'."\n";
@@ -116,6 +117,49 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
+			echo 'Stripe Image Branding: (Optional)'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
+			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
+			echo 'Stripe Should Verify Zipcodes?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_validate_zipcode" id="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do NOT validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
 			echo '<th style="padding-top:0;">'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-sandbox">'."\n";
 			echo 'Developer/Sandbox Testing?'."\n";
@@ -153,7 +197,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, IPN &amp; Return Page logging.</label><br />'."\n";
+				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, Webhook/IPN &amp; Return Page logging.</label><br />'."\n";
 				echo '<em>This enables API, Webhook/IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir'])).'</code></em><br />'."\n";
 				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url('/admin.php?page=ws-plugin--s2member-logs')).'">Log Viewer</a></em>'."\n";
 				echo '</td>'."\n";
@@ -669,7 +713,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-eot-behavior-section">'."\n";
 			echo '<h3>Stripe EOT Behavior (required, please choose)</h3>'."\n";
 			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to a Free Subscriber whenever their Subscription term has ended (i.e. expired) or is cancelled. s2Member demotes them to a Free Subscriber, so they will no longer have Member Level Access to your site. However, in some cases, you may prefer to have Customer accounts deleted completely, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
-			echo '<p>The Stripe ARB (Automated Recurring Billing) service will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Stripe, s2Member will eventually be notified (with a 24-48 hour delay), and the account for that Customer will either be demoted to a Free Subscriber, or deleted automatically (based on your configuration). ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
+			echo '<p>Stripe Webhooks (aka: IPN Integration) will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Stripe, s2Member will eventually be notified. The account for that Customer will either be demoted to a Free Subscriber, or deleted automatically (based on your configuration). ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
 
 			echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['auto_eot_system_enabled'] == 2 && (!function_exists('wp_cron') || !wp_get_schedule('ws_plugin__s2member_auto_eot_system__schedule'))) ? '' : ' style="display:none;"').'>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>'.esc_html(site_url('/?s2member_auto_eot_system_via_cron=1')).'</code></p>'."\n";
 
@@ -700,6 +744,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
@@ -738,6 +789,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
@@ -755,6 +813,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
@@ -778,6 +843,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";

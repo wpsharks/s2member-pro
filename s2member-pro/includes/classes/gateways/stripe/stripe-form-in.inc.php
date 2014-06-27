@@ -326,6 +326,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_update[nonce]" id="s2member-pro-stripe-update-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-update')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[card_token]" id="s2member-pro-stripe-update-card-token" value="'.esc_attr(@$_p['s2member_pro_stripe_update']['card_token']).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[card_token_summary]" id="s2member-pro-stripe-update-card-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_update']['card_token_summary']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[attr]" id="s2member-pro-stripe-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
@@ -340,6 +341,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
 				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%card_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_update']['card_token'])), $code);
+				$code = preg_replace('/%%card_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_update']['card_token_summary'])), $code);
 				$code = preg_replace('/%%captcha%%/', c_ws_plugin__s2member_utils_strings::esc_refs($captcha), $code);
 				$code = preg_replace('/%%hidden_inputs%%/', c_ws_plugin__s2member_utils_strings::esc_refs($hidden_inputs), $code);
 
@@ -405,6 +408,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_sp_checkout[nonce]" id="s2member-pro-stripe-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-sp-checkout')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[card_token]" id="s2member-pro-stripe-sp-checkout-card-token" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['card_token']).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[card_token_summary]" id="s2member-pro-stripe-sp-checkout-card-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['card_token_summary']).'" />';
 				$hidden_inputs .= (!$attr['accept_coupons']) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= (!c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::stripe_apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
@@ -427,6 +431,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%first_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['first_name'])), $code);
 				$code = preg_replace('/%%last_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['last_name'])), $code);
 				$code = preg_replace('/%%email_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['email'])), $code);
+				$code = preg_replace('/%%card_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_sp_checkout']['card_token'])), $code);
+				$code = preg_replace('/%%card_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_sp_checkout']['card_token_summary'])), $code);
 				$code = preg_replace('/%%state_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['state'])), $code);
 				$code = preg_replace('/%%country_options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($country_options), $code);
 				$code = preg_replace('/%%zip_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['zip'])), $code);
@@ -526,6 +532,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[card_token]" id="s2member-pro-stripe-checkout-card-token" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['card_token']).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[card_token_summary]" id="s2member-pro-stripe-checkout-card-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['card_token_summary']).'" />';
 				$hidden_inputs .= (!$attr['accept_coupons']) ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password']) ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= (!c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply()) ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
@@ -553,6 +560,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%password1_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['password1'])), $code);
 				$code = preg_replace('/%%password2_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['password2'])), $code);
 				$code = preg_replace('/%%custom_fields%%/', c_ws_plugin__s2member_utils_strings::esc_refs($custom_fields), $code);
+				$code = preg_replace('/%%card_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_checkout']['card_token'])), $code);
+				$code = preg_replace('/%%card_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_checkout']['card_token_summary'])), $code);
 				$code = preg_replace('/%%state_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['state'])), $code);
 				$code = preg_replace('/%%country_options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($country_options), $code);
 				$code = preg_replace('/%%zip_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['zip'])), $code);

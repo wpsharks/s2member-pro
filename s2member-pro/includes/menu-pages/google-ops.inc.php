@@ -649,6 +649,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
+						echo '</tbody>'."\n";
+						echo '</table>'."\n";
+
+						echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+						echo '<table class="form-table">'."\n";
+						echo '<tbody>'."\n";
 						echo '<tr>' . "\n";
 
 						echo '<th>' . "\n";
@@ -687,6 +694,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";
+						echo '</tbody>'."\n";
+						echo '</table>'."\n";
+
+						echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+						echo '<table class="form-table">'."\n";
+						echo '<tbody>'."\n";
 						echo '<tr>'."\n";
 
 						echo '<th>'."\n";
@@ -704,6 +718,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '</td>'."\n";
 
 						echo '</tr>'."\n";
+						echo '</tbody>'."\n";
+						echo '</table>'."\n";
+
+						echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+						echo '<table class="form-table">'."\n";
+						echo '<tbody>'."\n";
 						echo '<tr>' . "\n";
 
 						echo '<th>' . "\n";
@@ -723,6 +744,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 						echo '</td>' . "\n";
 
 						echo '</tr>' . "\n";
+						echo '</tbody>'."\n";
+						echo '</table>'."\n";
+
+						echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+						echo '<table class="form-table">'."\n";
+						echo '<tbody>'."\n";
 						echo '<tr>' . "\n";
 
 						echo '<th>' . "\n";

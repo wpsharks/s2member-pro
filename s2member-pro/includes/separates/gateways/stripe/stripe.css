@@ -172,33 +172,40 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-d
 	vertical-align : middle;
 	box-sizing     : border-box;
 
-	background     : none;
 	border         : none;
 	box-shadow     : none;
-	color          : inherit;
 	outline        : none;
+	color          : inherit;
+	cursor         : pointer;
+	background     : rgba(0, 0, 0, 0.1);
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-div > button > i
+div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > i
 {
 	font-style : normal;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-div > button > span
+div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > span
 {
-	opacity         : 0.9;
+	opacity         : 0.8;
 	text-decoration : none;
 	border-bottom   : 1px dotted;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-div > button > span:hover
+div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button > span:hover
 {
 	opacity : 1;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-div > button:before
+div.s2member-pro-stripe-form-section > button.s2member-pro-stripe-form-card-token-button:before
 {
 	content    : '';
 	float      : right;
 	width      : 119px;
 	height     : 26px;
 	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
+}
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-card-token-summary
+{
+	opacity    : 0.9;
+	text-align : center;
+	font-style : italic;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 {
@@ -266,4 +273,8 @@ div.s2member-pro-stripe-form-submission-section > div.s2member-pro-stripe-form-c
 div.s2member-pro-stripe-form-submission-section > div.s2member-pro-stripe-form-submit-div
 {
 	float : right;
+}
+iframe.stripe_checkout_app
+{
+	z-index : 999999 !important;
 }
