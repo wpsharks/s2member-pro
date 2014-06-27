@@ -836,10 +836,10 @@ jQuery(document).ready( // DOM ready.
 				if(typeof token !== 'object') return '';
 
 				if(token.type === 'bank_account' && token.bank_account)
-					return token.bank_account.bank_name + ' ' + token.bank_account.last4;
+					return token.bank_account.bank_name + ': xxxx...' + token.bank_account.last4;
 
 				if(token.type === 'card' && token.card)
-					return token.card.brand + ' ' + token.card.last4;
+					return token.card.brand + ': xxxx...' + token.card.last4;
 
 				return 'token ' + token.id;
 			};
