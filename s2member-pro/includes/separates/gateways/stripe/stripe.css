@@ -179,20 +179,6 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	cursor         : pointer;
 	background     : rgba(0, 0, 0, 0.1);
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > i
-{
-	font-style : normal;
-}
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
-{
-	opacity         : 0.8;
-	text-decoration : none;
-	border-bottom   : 1px dotted;
-}
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span:hover
-{
-	opacity : 1;
-}
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:before
 {
 	content    : '';
@@ -201,11 +187,27 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	height     : 26px;
 	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
 }
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > i,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
+{
+	opacity    : 0.8;
+	font-style : normal;
+}
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover > i,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover > span
+{
+	opacity : 1;
+}
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
+{
+	text-decoration : none;
+	border-bottom   : 1px dotted;
+}
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div div.s2member-pro-stripe-form-card-token-summary
 {
-	opacity    : 0.9;
-	text-align : center;
-	font-style : italic;
+	font-weight    : bold;
+	text-align     : center;
+	text-transform : uppercase;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 {
