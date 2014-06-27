@@ -44,103 +44,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 	class c_ws_plugin__s2member_pro_stripe_utilities
 	{
 		/**
-		 * Calls upon Stripe AIM, and returns the response.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param array $post_vars An array of variables to send through the Stripe API call.
-		 *
-		 * @return array An array of variables returned from the API call.
-		 */
-		public static function stripe_aim_response($post_vars)
-		{
-			global $current_site, $current_blog;
-
-			$url = 'https://'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? 'test.authorize.net' : 'secure.authorize.net').'/gateway/transact.dll';
-
-			$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
-
-			$post_vars['x_version']  = '3.1'; // Configure the Stripe transaction version.
-			$post_vars['x_login']    = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_login_id'];
-			$post_vars['x_tran_key'] = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_trans_key'];
-
-			$post_vars['x_delim_data']     = 'true'; // Yes, return a delimited string.
-			$post_vars['x_delim_char']     = ','; // Fields delimitation character.
-			$post_vars['x_encap_char']     = '"'; // Field encapsulation character.
-			$post_vars['x_relay_response'] = 'false'; // Always off for AIM.
-
-			$post_vars['x_invoice_num'] = (!empty($post_vars['x_invoice_num'])) ? substr($post_vars['x_invoice_num'], 0, 20) : '';
-			$post_vars['x_description'] = (!empty($post_vars['x_description'])) ? substr($post_vars['x_description'], 0, 255) : '';
-			$post_vars['x_description'] = c_ws_plugin__s2member_utils_strings::strip_2_kb_chars($post_vars['x_description']);
-
-			$input_time = date('D M j, Y g:i:s a T'); // Record input time for logging.
-
-			$csv = trim(c_ws_plugin__s2member_utils_urls::remote($url, $post_vars, array('timeout' => 20)));
-
-			$output_time = date('D M j, Y g:i:s a T'); // Now record after output time.
-
-			$response = ($csv) ? c_ws_plugin__s2member_utils_strings::trim_dq_deep(preg_split('/","/', $csv)) : array();
-			$response = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($response));
-
-			foreach(array('response_code', 'response_subcode', 'response_reason_code', 'response_reason_text', 'authorization_code', 'avs_response', 'transaction_id', 'invoice_number', 'description', 'amount', 'method', 'transaction_type', 'customer_id', 'first_name', 'last_name', 'company', 'address', 'city', 'state', 'zipcode', 'country', 'phone', 'fax', 'email', 'ship_to_first_name', 'ship_to_last_name', 'ship_to_company', 'ship_to_address', 'ship_to_city', 'ship_to_state', 'ship_to_zipcode', 'ship_to_country', 'tax', 'duty', 'freight', 'tax_exempt', 'po_number', 'md5_hash', 'card_code_response', 'cavv_response', 'card_number', 'card_type', 'split_tender_id', 'requested_amount', 'balance_on_card') as $order => $field_name)
-				$response[$field_name] = (isset($response[$order])) ? $response[$order] : NULL;
-
-			if(empty($response['response_code']) || $response['response_code'] !== '1') // A value of 1 indicates success.
-			{
-				if(strlen($response['response_reason_code']) || $response['response_reason_text'])
-					// translators: Exclude `%2$s`. This is an English error returned by Stripe. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response['__error']`` with `ws_plugin__s2member_pro_stripe_aim_response`.
-					$response['__error'] = sprintf(_x('Error #%1$s. %2$s.', 's2member-front', 's2member'), $response['response_reason_code'], rtrim($response['response_reason_text'], '.'));
-
-				else // Else, generate an error messsage - so something is reported back to the Customer.
-					$response['__error'] = _x('Error. Please contact Support for assistance.', 's2member-front', 's2member');
-			}
-			/*
-			If debugging is enabled; we need to maintain a comprehensive log file.
-				Logging now supports Multisite Networking as well.
-			*/
-			$logt = c_ws_plugin__s2member_utilities::time_details();
-			$logv = c_ws_plugin__s2member_utilities::ver_details();
-			$logm = c_ws_plugin__s2member_utilities::mem_details();
-			$log4 = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."\n".'User-Agent: '.$_SERVER['HTTP_USER_AGENT'];
-			$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
-			$log2 = (is_multisite() && !is_main_site()) ? 'stripe-api-4-'.trim(preg_replace('/[^a-z0-9]/i', '-', (!empty($_log4) ? $_log4 : '')), '-').'.log' : 'stripe-api.log';
-
-			if(strlen($post_vars['x_card_num']) > 4) // Only log last 4 digits for security.
-				$post_vars['x_card_num'] = str_repeat('*', strlen($post_vars['x_card_num']) - 4)
-				                           .substr($post_vars['x_card_num'], -4); // Then display last 4 digits.
-
-			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs'])
-				if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
-					if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-						if(($log = '-------- Input vars: ( '.$input_time.' ) --------'."\n".var_export($post_vars, TRUE)."\n"))
-							if(($log .= '-------- Output string/vars: ( '.$output_time.' ) --------'."\n".$csv."\n".var_export($response, TRUE)))
-								file_put_contents($logs_dir.'/'.$log2,
-								                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
-								                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
-								                  FILE_APPEND);
-
-			return apply_filters('ws_plugin__s2member_pro_stripe_aim_response', c_ws_plugin__s2member_pro_stripe_utilities::_stripe_aim_response_filters($response), get_defined_vars());
-		}
-
-		/**
-		 * A sort of callback function that Filters Stripe AIM responses.
-		 *
-		 * Provides alternative explanations in some cases that require special attention.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param array $response An array of response variables.
-		 *
-		 * @return array An array of response variables; possibly modified by this routine.
-		 */
-		public static function _stripe_aim_response_filters($response)
-		{
-			return $response; // Nothing here yet.
-		}
-
-		/**
 		 * Calls upon Stripe ARB, and returns the response.
 		 *
 		 * @package s2Member\Stripe
@@ -152,8 +55,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 */
 		public static function stripe_arb_response($post_vars)
 		{
-			global /* For Multisite support. */
-			$current_site, $current_blog;
+			global $current_site, $current_blog; // For Multisite support.
 
 			$url = 'https://'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? 'apitest.authorize.net' : 'api.authorize.net').'/xml/v1/request.api';
 
@@ -356,60 +258,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * A sort of callback function that parses Stripe ARB responses.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param string $xml XML markup returned by the ARB call.
-		 *
-		 * @return array An array of response variables, parsed by s2Member.
-		 */
-		public static function _stripe_parse_arb_response($xml)
-		{
-			if($xml && preg_match('/\<(ErrorResponse).*?\>.*?\<code\>(.+?)\<\/code\>.*?\<\/\\1\>/is', $xml, $m))
-			{
-				$response['response_code'] = $response['response_reason_code'] = trim($m[2]);
-
-				if(preg_match('/\<(ErrorResponse).*?\>.*?\<text\>(.+?)\<\/text\>.*?\<\/\\1\>/is', $xml, $m))
-					$response['response_text'] = $response['response_reason_text'] = trim($m[2]);
-			}
-			else if($xml && preg_match('/\<(ARBCreateSubscriptionResponse|ARBUpdateSubscriptionResponse|ARBGetSubscriptionStatusResponse|ARBCancelSubscriptionResponse).*?\>.*?\<code\>(.+?)\<\/code\>.*?\<\/\\1\>/is', $xml, $m))
-			{
-				$response['response_code'] = $response['response_reason_code'] = trim($m[2]);
-
-				if(preg_match('/\<(ARBCreateSubscriptionResponse|ARBUpdateSubscriptionResponse|ARBGetSubscriptionStatusResponse|ARBCancelSubscriptionResponse).*?\>.*?\<text\>(.+?)\<\/text\>.*?\<\/\\1\>/is', $xml, $m))
-					$response['response_text'] = $response['response_reason_text'] = trim($m[2]);
-
-				if(preg_match('/\<(subscriptionId)\>(.+?)\<\/\\1\>/is', $xml, $m))
-					$response['subscription_id'] = trim($m[2]);
-
-				if(preg_match('/\<(status)\>(.+?)\<\/\\1\>/is', $xml, $m))
-					$response['subscription_status'] = trim($m[2]);
-			}
-			$response = (!empty($response) && is_array($response)) ? $response : array();
-
-			return c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($response));
-		}
-
-		/**
-		 * A sort of callback function that Filters Stripe ARB responses.
-		 *
-		 * Provides alternative explanations in some cases that require special attention.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param array $response An array of response variables.
-		 *
-		 * @return array An array of response variables; possibly modified by this routine.
-		 */
-		public static function _stripe_arb_response_filters($response)
-		{
-			return $response; // Nothing here yet.
-		}
-
-		/**
 		 * Get ``$_POST`` or ``$_REQUEST`` vars from Stripe.
 		 *
 		 * Stripe returns `x_MD5_Hash` in uppercase format for some reason.
@@ -439,6 +287,33 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					return $postvars;
 			}
 			return FALSE;
+		}
+
+		/**
+		 * Calculates period in days for Stripe ARB integration.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 140617
+		 *
+		 * @param int|string $period Optional. A numeric Period that coincides with ``$term``.
+		 * @param string     $term Optional. A Term that coincides with ``$period``.
+		 *
+		 * @return int A 'Period Term', in days. Defaults to `0`.
+		 */
+		public static function stripe_per_term_2_days($period = '', $term = '')
+		{
+			if(is_numeric($period) && !is_numeric($term) && ($term = strtoupper($term)))
+			{
+				$days = 0; // Days start at 0.
+
+				$days = ($term === 'D') ? 1 : $days;
+				$days = ($term === 'W') ? 7 : $days;
+				$days = ($term === 'M') ? 30 : $days;
+				$days = ($term === 'Y') ? 365 : $days;
+
+				return (int)$period * (int)$days;
+			}
+			return 0;
 		}
 
 		/**
@@ -495,81 +370,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$start_time = $start_time + 43200; // + 12 hours.
 
 			return $start_time;
-		}
-
-		/**
-		 * Calculates period in days for Stripe ARB integration.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param int|string $period Optional. A numeric Period that coincides with ``$term``.
-		 * @param string     $term Optional. A Term that coincides with ``$period``.
-		 *
-		 * @return int A 'Period Term', in days. Defaults to `0`.
-		 */
-		public static function stripe_per_term_2_days($period = '', $term = '')
-		{
-			if(is_numeric($period) && !is_numeric($term) && ($term = strtoupper($term)))
-			{
-				$days = 0; // Days start at 0.
-
-				$days = ($term === 'D') ? 1 : $days;
-				$days = ($term === 'W') ? 7 : $days;
-				$days = ($term === 'M') ? 30 : $days;
-				$days = ($term === 'Y') ? 365 : $days;
-
-				return (int)$period * (int)$days;
-			}
-			else
-				return 0;
-		}
-
-		/**
-		 * Re-formats credit card expiration dates for Stripe.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param string $exp Expects a credit card expiration date in `mm/yyyy` format.
-		 *
-		 * @return string A credit card expiration date in `yyyy-mm` format for Stripe.
-		 */
-		public static function stripe_exp_date($exp)
-		{
-			list($mm, $yyyy) = preg_split('/\//', $exp, 2);
-
-			return trim($yyyy.'-'.$mm, '- '."\t\n\r\0\x0B");
-		}
-
-		/**
-		 * Parses a Stripe Silent Post.
-		 *
-		 * Parses `s2_reference`, `s2_domain`, `s2_invoice`, `s2_start_time`, `s2_p1`, `s2_p3`, `s2_custom`
-		 * from a Stripe Silent Post *(aka: IPN)* response.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @param array $array Expects an array of details returned by a Stripe Silent Post.
-		 *
-		 * @return array|bool The same ``$array``, but with additional details filled by this routine; else false.
-		 */
-		public static function stripe_parse_arb_desc($array)
-		{
-			if(is_array($array) && !empty($array['x_description']) && preg_match('/\(\((.+?)\)\)/i', $array['x_description'], $m))
-			{
-				list($array['s2_reference'], $array['s2_domain'], $array['s2_invoice'], $array['s2_currency']) = preg_split('/~/', $m[1], 4);
-				list($array['s2_start_time'], $array['s2_p1'], $array['s2_p3']) = preg_split('/\:/', $array['s2_reference'], 3);
-
-				$array['x_description'] = preg_replace('/\(\((.+?)\)\)/i', '', $array['x_description']);
-
-				$array['s2_custom'] = (!empty($array['x_subscription_id'])) ? c_ws_plugin__s2member_utils_users::get_user_custom_with($array['x_subscription_id']) : '';
-				$array['s2_custom'] = ($array['s2_custom']) ? $array['s2_custom'] : $array['s2_domain'];
-
-				return c_ws_plugin__s2member_utils_strings::trim_deep($array);
-			}
-			return FALSE;
 		}
 
 		/**
