@@ -44,7 +44,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 	class c_ws_plugin__s2member_pro_stripe_utilities
 	{
 		/**
-		 * Calls upon Stripe ARB, and returns the response.
+		 * Calls upon `Stripe_Charge` and returns the response.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
@@ -53,173 +53,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return array An array of variables returned from the API call.
 		 */
-		public static function stripe_arb_response($post_vars)
+		public static function stripe_customer_charge_response($post_vars)
 		{
 			global $current_site, $current_blog; // For Multisite support.
 
-			$url = 'https://'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? 'apitest.authorize.net' : 'api.authorize.net').'/xml/v1/request.api';
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 
-			$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
-			$post_vars['x_login']    = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_login_id'];
-			$post_vars['x_tran_key'] = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_trans_key'];
-
-			$post_vars['x_invoice_num'] = (!empty($post_vars['x_invoice_num'])) ? substr($post_vars['x_invoice_num'], 0, 20) : '';
-			$post_vars['x_description'] = (!empty($post_vars['x_description'])) ? substr($post_vars['x_description'], 0, 255) : '';
-			$post_vars['x_description'] = c_ws_plugin__s2member_utils_strings::strip_2_kb_chars($post_vars['x_description']);
-
-			$trial = (!empty($post_vars['x_trial_occurrences'])) ? TRUE : FALSE; // Indicates existence of trial.
-
-			if(isset($post_vars['x_length'], $post_vars['x_unit']))
-				if((int)$post_vars['x_length'] === 30 && $post_vars['x_unit'] === 'days')
-				{
-					$post_vars['x_length'] = 1;
-					$post_vars['x_unit']   = 'months';
-				}
-			$xml = ''; // Initialize XML input vars.
-			if(!empty($post_vars['x_method']) && $post_vars['x_method'] === 'create')
+			try
 			{
-				$xml = '<?xml version="1.0" encoding="utf-8"?>';
-
-				$xml .= '<ARBCreateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">';
-
-				$xml .= '<merchantAuthentication>';
-				$xml .= '<name>'.esc_html($post_vars['x_login']).'</name>';
-				$xml .= '<transactionKey>'.esc_html($post_vars['x_tran_key']).'</transactionKey>';
-				$xml .= '</merchantAuthentication>';
-
-				$xml .= '<refId>'.esc_html($post_vars['x_invoice_num']).'</refId>';
-
-				$xml .= '<subscription>';
-
-				$xml .= '<name>'.esc_html($_SERVER['HTTP_HOST']).'</name>';
-
-				$xml .= '<paymentSchedule>';
-				$xml .= '<interval>';
-				$xml .= '<length>'.esc_html($post_vars['x_length']).'</length>';
-				$xml .= '<unit>'.esc_html($post_vars['x_unit']).'</unit>';
-				$xml .= '</interval>';
-				$xml .= '<startDate>'.esc_html($post_vars['x_start_date']).'</startDate>';
-				$xml .= '<totalOccurrences>'.esc_html($post_vars['x_total_occurrences']).'</totalOccurrences>';
-				$xml .= ($trial) ? '<trialOccurrences>'.esc_html($post_vars['x_trial_occurrences']).'</trialOccurrences>' : '';
-				$xml .= '</paymentSchedule>';
-
-				$xml .= '<amount>'.esc_html($post_vars['x_amount']).'</amount>';
-				$xml .= ($trial) ? '<trialAmount>'.esc_html($post_vars['x_trial_amount']).'</trialAmount>' : '';
-
-				$xml .= '<payment>';
-				$xml .= '<creditCard>';
-				$xml .= '<cardNumber>'.esc_html($post_vars['x_card_num']).'</cardNumber>';
-				$xml .= '<expirationDate>'.esc_html($post_vars['x_exp_date']).'</expirationDate>';
-				$xml .= '<cardCode>'.esc_html($post_vars['x_card_code']).'</cardCode>';
-				$xml .= '</creditCard>';
-				$xml .= '</payment>';
-
-				$xml .= '<order>';
-				$xml .= '<invoiceNumber>'.esc_html($post_vars['x_invoice_num']).'</invoiceNumber>';
-				$xml .= '<description>'.esc_html($post_vars['x_description']).'</description>';
-				$xml .= '</order>';
-
-				$xml .= '<customer>';
-				$xml .= '<email>'.esc_html($post_vars['x_email']).'</email>';
-				$xml .= '</customer>';
-
-				$xml .= '<billTo>';
-				$xml .= '<firstName>'.esc_html(substr($post_vars['x_first_name'], 0, 50)).'</firstName>';
-				$xml .= '<lastName>'.esc_html(substr($post_vars['x_last_name'], 0, 50)).'</lastName>';
-				$xml .= '<address>'.esc_html(substr($post_vars['x_address'], 0, 60)).'</address>';
-				$xml .= '<city>'.esc_html(substr($post_vars['x_city'], 0, 40)).'</city>';
-				$xml .= '<state>'.esc_html(substr($post_vars['x_state'], 0, 2)).'</state>';
-				$xml .= '<zip>'.esc_html(substr($post_vars['x_zip'], 0, 20)).'</zip>';
-				$xml .= '<country>'.esc_html(substr($post_vars['x_country'], 0, 60)).'</country>';
-				$xml .= '</billTo>';
-
-				$xml .= '</subscription>';
-
-				$xml .= '</ARBCreateSubscriptionRequest>';
+				$customer = Stripe_Customer::create($post_vars);
+				Stripe_Charge::create($post_vars);
 			}
-			else if(!empty($post_vars['x_method']) && $post_vars['x_method'] === 'update')
+			catch(Stripe_CardError $e)
 			{
-				$xml = '<?xml version="1.0" encoding="utf-8"?>';
-
-				$xml .= '<ARBUpdateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">';
-
-				$xml .= '<merchantAuthentication>';
-				$xml .= '<name>'.esc_html($post_vars['x_login']).'</name>';
-				$xml .= '<transactionKey>'.esc_html($post_vars['x_tran_key']).'</transactionKey>';
-				$xml .= '</merchantAuthentication>';
-
-				$xml .= '<subscriptionId>'.esc_html($post_vars['x_subscription_id']).'</subscriptionId>';
-
-				$xml .= '<subscription>';
-
-				$xml .= '<payment>';
-				$xml .= '<creditCard>';
-				$xml .= '<cardNumber>'.esc_html($post_vars['x_card_num']).'</cardNumber>';
-				$xml .= '<expirationDate>'.esc_html($post_vars['x_exp_date']).'</expirationDate>';
-				$xml .= '<cardCode>'.esc_html($post_vars['x_card_code']).'</cardCode>';
-				$xml .= '</creditCard>';
-				$xml .= '</payment>';
-
-				$xml .= '<customer>';
-				$xml .= '<email>'.esc_html($post_vars['x_email']).'</email>';
-				$xml .= '</customer>';
-
-				$xml .= '<billTo>';
-				$xml .= '<firstName>'.esc_html($post_vars['x_first_name']).'</firstName>';
-				$xml .= '<lastName>'.esc_html($post_vars['x_last_name']).'</lastName>';
-				$xml .= '<address>'.esc_html($post_vars['x_address']).'</address>';
-				$xml .= '<city>'.esc_html($post_vars['x_city']).'</city>';
-				$xml .= '<state>'.esc_html($post_vars['x_state']).'</state>';
-				$xml .= '<zip>'.esc_html($post_vars['x_zip']).'</zip>';
-				$xml .= '<country>'.esc_html($post_vars['x_country']).'</country>';
-				$xml .= '</billTo>';
-
-				$xml .= '</subscription>';
-
-				$xml .= '</ARBUpdateSubscriptionRequest>';
+				// The card has been declined
 			}
-			else if(!empty($post_vars['x_method']) && $post_vars['x_method'] === 'status')
-			{
-				$xml = '<?xml version="1.0" encoding="utf-8"?>';
-
-				$xml .= '<ARBGetSubscriptionStatusRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">';
-
-				$xml .= '<merchantAuthentication>';
-				$xml .= '<name>'.esc_html($post_vars['x_login']).'</name>';
-				$xml .= '<transactionKey>'.esc_html($post_vars['x_tran_key']).'</transactionKey>';
-				$xml .= '</merchantAuthentication>';
-
-				$xml .= '<subscriptionId>'.esc_html($post_vars['x_subscription_id']).'</subscriptionId>';
-
-				$xml .= '</ARBGetSubscriptionStatusRequest>';
-			}
-			else if(!empty($post_vars['x_method']) && $post_vars['x_method'] === 'cancel')
-			{
-				$xml = '<?xml version="1.0" encoding="utf-8"?>';
-
-				$xml .= '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">';
-
-				$xml .= '<merchantAuthentication>';
-				$xml .= '<name>'.esc_html($post_vars['x_login']).'</name>';
-				$xml .= '<transactionKey>'.esc_html($post_vars['x_tran_key']).'</transactionKey>';
-				$xml .= '</merchantAuthentication>';
-
-				$xml .= '<subscriptionId>'.esc_html($post_vars['x_subscription_id']).'</subscriptionId>';
-
-				$xml .= '</ARBCancelSubscriptionRequest>';
-			}
-			$req['headers']['Accept']       = 'application/xml; charset=UTF-8';
-			$req['headers']['Content-Type'] = 'application/xml; charset=UTF-8';
-
-			$input_time = date('D M j, Y g:i:s a T'); // Record input time for logging.
-
-			$xml = trim(c_ws_plugin__s2member_utils_urls::remote($url, $xml, array_merge($req, array('timeout' => 20))));
-
-			$output_time = date('D M j, Y g:i:s a T'); // Now record after output time.
-
-			$response = c_ws_plugin__s2member_pro_stripe_utilities::_stripe_parse_arb_response($xml);
-
 			if(empty($response['response_code']) || $response['response_code'] !== 'I00001') // A value of I00001 indicates success.
 			{
 				if(strlen($response['response_reason_code']) || $response['response_reason_text'])
@@ -254,7 +104,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 								                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
 								                  FILE_APPEND);
 
-			return apply_filters('ws_plugin__s2member_pro_stripe_arb_response', c_ws_plugin__s2member_pro_stripe_utilities::_stripe_arb_response_filters($response), get_defined_vars());
+			return apply_filters('ws_plugin__s2member_pro_stripe_arb_response', $response, get_defined_vars());
 		}
 
 		/**
@@ -614,6 +464,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return array|string Original array, with prices and description modified when/if a Coupon Code is accepted.
 		 *   Or, if ``$return === 'response'``, return a string response, indicating status.
+		 *
+		 * @TODO Query configured coupon codes in Stripe too.
 		 */
 		public static function stripe_apply_coupon($attr = array(), $coupon_code = '', $return = '', $process = array())
 		{

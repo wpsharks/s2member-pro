@@ -174,14 +174,11 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 
 	border         : none;
 	box-shadow     : none;
+	text-shadow    : none;
 	outline        : none;
 	color          : inherit;
 	cursor         : pointer;
-	background     : rgba(0, 0, 0, 0.1);
-}
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover
-{
-	background : rgba(0, 0, 0, 0.05);
+	background     : rgba(0, 0, 0, 0.05);
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:before
 {
