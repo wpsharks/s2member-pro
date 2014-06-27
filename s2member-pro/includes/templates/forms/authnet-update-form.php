@@ -91,13 +91,13 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-update-form-zip-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-zip-div s2member-pro-authnet-update-form-zip-div">
 			<label for="s2member-pro-authnet-update-zip" id="s2member-pro-authnet-update-form-zip-label" class="s2member-pro-authnet-form-zip-label s2member-pro-authnet-update-form-zip-label">
 				<span><?php echo _x("Postal / Zip Code", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_update[zip]" id="s2member-pro-authnet-update-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-update-zip form-control" value="%%zip_value%%" tabindex="140" />
+				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_update[zip]" id="s2member-pro-authnet-update-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-update-zip form-control" value="%%zip_value%%" tabindex="130" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-update-form-country-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-country-div s2member-pro-authnet-update-form-country-div">
 			<label for="s2member-pro-authnet-update-country" id="s2member-pro-authnet-update-form-country-label" class="s2member-pro-authnet-form-country-label s2member-pro-authnet-update-form-country-label">
 				<span><?php echo _x("Country", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" name="s2member_pro_authnet_update[country]" id="s2member-pro-authnet-update-country" class="s2member-pro-authnet-country s2member-pro-authnet-update-country form-control" tabindex="130">
+				<select aria-required="true" name="s2member_pro_authnet_update[country]" id="s2member-pro-authnet-update-country" class="s2member-pro-authnet-country s2member-pro-authnet-update-country form-control" tabindex="140">
 					%%country_options%%
 				</select>
 			</label>

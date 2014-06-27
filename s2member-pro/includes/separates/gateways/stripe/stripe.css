@@ -179,6 +179,10 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	cursor         : pointer;
 	background     : rgba(0, 0, 0, 0.1);
 }
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover
+{
+	background : rgba(0, 0, 0, 0.05);
+}
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:before
 {
 	content    : '';
@@ -205,8 +209,8 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div div.s2member-pro-stripe-form-card-token-summary
 {
-	font-weight    : bold;
-	text-align     : center;
+	font-weight : bold;
+	text-align  : center;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div label.ws-plugin--s2member-custom-reg-field-op-l
 {

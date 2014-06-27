@@ -112,13 +112,13 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-stripe-sp-checkout-form-zip-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-zip-div s2member-pro-stripe-sp-checkout-form-zip-div">
 			<label for="s2member-pro-stripe-sp-checkout-zip" id="s2member-pro-stripe-sp-checkout-form-zip-label" class="s2member-pro-stripe-form-zip-label s2member-pro-stripe-sp-checkout-form-zip-label">
 				<span><?php echo _x("Postal / Zip Code", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_stripe_sp_checkout[zip]" id="s2member-pro-stripe-sp-checkout-zip" class="s2member-pro-stripe-zip s2member-pro-stripe-sp-checkout-zip form-control" value="%%zip_value%%" tabindex="240" />
+				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_stripe_sp_checkout[zip]" id="s2member-pro-stripe-sp-checkout-zip" class="s2member-pro-stripe-zip s2member-pro-stripe-sp-checkout-zip form-control" value="%%zip_value%%" tabindex="230" />
 			</label>
 		</div>
 		<div id="s2member-pro-stripe-sp-checkout-form-country-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-country-div s2member-pro-stripe-sp-checkout-form-country-div">
 			<label for="s2member-pro-stripe-sp-checkout-country" id="s2member-pro-stripe-sp-checkout-form-country-label" class="s2member-pro-stripe-form-country-label s2member-pro-stripe-sp-checkout-form-country-label">
 				<span><?php echo _x("Country", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" name="s2member_pro_stripe_sp_checkout[country]" id="s2member-pro-stripe-sp-checkout-country" class="s2member-pro-stripe-country s2member-pro-stripe-sp-checkout-country form-control" tabindex="230">
+				<select aria-required="true" name="s2member_pro_stripe_sp_checkout[country]" id="s2member-pro-stripe-sp-checkout-country" class="s2member-pro-stripe-country s2member-pro-stripe-sp-checkout-country form-control" tabindex="240">
 					%%country_options%%
 				</select>
 			</label>

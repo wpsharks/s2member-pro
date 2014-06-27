@@ -168,13 +168,13 @@ if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
 		<div id="s2member-pro-authnet-checkout-form-zip-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-zip-div s2member-pro-authnet-checkout-form-zip-div">
 			<label for="s2member-pro-authnet-checkout-zip" id="s2member-pro-authnet-checkout-form-zip-label" class="s2member-pro-authnet-form-zip-label s2member-pro-authnet-checkout-form-zip-label">
 				<span><?php echo _x("Postal / Zip Code", "s2member-front", "s2member"); ?> *</span><br />
-				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_checkout[zip]" id="s2member-pro-authnet-checkout-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-checkout-zip form-control" value="%%zip_value%%" tabindex="340" />
+				<input type="text" aria-required="true" maxlength="20" autocomplete="off" name="s2member_pro_authnet_checkout[zip]" id="s2member-pro-authnet-checkout-zip" class="s2member-pro-authnet-zip s2member-pro-authnet-checkout-zip form-control" value="%%zip_value%%" tabindex="330" />
 			</label>
 		</div>
 		<div id="s2member-pro-authnet-checkout-form-country-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-country-div s2member-pro-authnet-checkout-form-country-div">
 			<label for="s2member-pro-authnet-checkout-country" id="s2member-pro-authnet-checkout-form-country-label" class="s2member-pro-authnet-form-country-label s2member-pro-authnet-checkout-form-country-label">
 				<span><?php echo _x("Country", "s2member-front", "s2member"); ?> *</span><br />
-				<select aria-required="true" name="s2member_pro_authnet_checkout[country]" id="s2member-pro-authnet-checkout-country" class="s2member-pro-authnet-country s2member-pro-authnet-checkout-country form-control" tabindex="330">
+				<select aria-required="true" name="s2member_pro_authnet_checkout[country]" id="s2member-pro-authnet-checkout-country" class="s2member-pro-authnet-country s2member-pro-authnet-checkout-country form-control" tabindex="340">
 					%%country_options%%
 				</select>
 			</label>
