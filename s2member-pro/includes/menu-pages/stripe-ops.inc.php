@@ -119,7 +119,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
-			echo 'Stripe Image Branding: (Optional)'."\n";
+			echo 'Stripe Image Branding:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
