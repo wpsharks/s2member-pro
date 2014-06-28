@@ -151,6 +151,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-statement-description">'."\n";
+			echo 'Stripe Statement Description:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" maxlength="15" name="ws_plugin__s2member_pro_stripe_api_statement_description" id="ws-plugin--s2member-pro-stripe-api-statement-description" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']).'" /><br />'."\n";
+			echo 'An arbitrary string to be displayed alongside your company name. This appears your customer\'s credit card statement. This may be up to 15 characters. The statement description may NOT include these characters: <code>'.esc_html('<>"\'').'</code>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
