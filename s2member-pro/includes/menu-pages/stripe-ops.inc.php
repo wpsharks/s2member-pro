@@ -128,7 +128,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
-			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here'."\n";
+			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";

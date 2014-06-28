@@ -44,45 +44,269 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 	class c_ws_plugin__s2member_pro_stripe_utilities
 	{
 		/**
-		 * Calls upon `Stripe_Charge` and returns the response.
+		 * Get a Stripe customer object instance.
 		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
+		 * @param null|integer $user_id If it's for an existing user; pass the user's ID (optional).
+		 * @param string       $email Customer's email address (optional).
+		 * @param string       $fname Customer's first name (optional).
+		 * @param string       $lname Customer's last name (optional).
+		 * @param array        $metadata Any metadata (optional).
 		 *
-		 * @param array $post_vars An array of variables to send through the Stripe API call.
-		 *
-		 * @return array An array of variables returned from the API call.
+		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function stripe_customer_charge_response($post_vars)
+		public static function get_customer($user_id = NULL, $email = '', $fname = '', $lname = '', $metadata = array())
 		{
-			global $current_site, $current_blog; // For Multisite support.
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
 
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
-			try
+			try // Obtain existing customer object; else create a new one.
 			{
-				$customer = Stripe_Customer::create($post_vars);
-				Stripe_Charge::create($post_vars);
-			}
-			catch(Stripe_CardError $e)
-			{
-				// The card has been declined
-			}
-			if(empty($response['response_code']) || $response['response_code'] !== 'I00001') // A value of I00001 indicates success.
-			{
-				if(strlen($response['response_reason_code']) || $response['response_reason_text'])
-					// translators: Exclude `%2$s`. This is an English error returned by Stripe. Please replace `%2$s` with: `Unable to process, please try again`, or something to that affect. Or, if you prefer, you could Filter ``$response['__error']`` with `ws_plugin__s2member_pro_stripe_arb_response`.
-					$response['__error'] = sprintf(_x('Error #%1$s. %2$s.', 's2member-front', 's2member'), $response['response_reason_code'], rtrim($response['response_reason_text'], '.'));
+				if(isset($user_id) && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
+					$customer = Stripe_Customer::retrieve($customer_id);
 
-				else // Else, generate an error messsage - so something is reported back to the Customer.
-					$response['__error'] = _x('Error. Please contact Support for assistance.', 's2member-front', 's2member');
+				else $customer = Stripe_Customer::create(array(
+					                                         'email'       => $email,
+					                                         'description' => trim($fname.' '.$lname),
+					                                         'metadata'    => $metadata
+				                                         ));
+				self::log_entry($input_time, $input_vars, time(), $customer);
+
+				return $customer; // Stripe customer object.
 			}
-			/*
-			If debugging is enabled; we need to maintain a comprehensive log file.
-				Logging now supports Multisite Networking as well.
-			*/
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Set a Stripe customer card/token.
+		 *
+		 * @param string $customer_id Customer ID in Stripe.
+		 * @param string $card_token Stripe token.
+		 *
+		 * @return Stripe_Customer|string Customer object; else error message.
+		 */
+		public static function set_customer_card_token($customer_id, $card_token)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Attempt to update the customer's card/token.
+			{
+				$customer       = Stripe_Customer::retrieve($customer_id);
+				$customer->card = $card_token; // Update.
+				$customer       = $customer->save();
+
+				self::log_entry($input_time, $input_vars, time(), $customer);
+
+				return $customer; // Stripe customer object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Create a Stripe customer subscription.
+		 *
+		 * @param string               $customer_id Customer ID in Stripe.
+		 * @param integer|float|string $amount The amount to charge.
+		 * @param string               $currency Three character currency code.
+		 *
+		 * @return Stripe_Charge|string Charge object; else error message.
+		 */
+		public static function create_customer_charge($customer_id, $amount, $currency)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Attempt to charge the customer.
+			{
+				$charge = Stripe_Charge::create(array(
+					                                'customer' => $customer_id,
+					                                'amount'   => self::amount($amount, $currency),
+					                                'currency' => $currency
+				                                ));
+				self::log_entry($input_time, $input_vars, time(), $charge);
+
+				return $charge; // Stripe charge object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Create a Stripe customer subscription.
+		 *
+		 * @param string $customer_id Customer ID in Stripe.
+		 * @param string $subscription_plan_id Subscription plan ID in Stripe.
+		 *
+		 * @return Stripe_Subscription|string Subscription object; else error message.
+		 */
+		public static function create_customer_subscription($customer_id, $subscription_plan_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Attempt to create a new subscription for this customer.
+			{
+				$customer     = Stripe_Customer::retrieve($customer_id);
+				$subscription = $customer->subscriptions->create(array('plan' => $subscription_plan_id));
+
+				self::log_entry($input_time, $input_vars, time(), $subscription);
+
+				return $subscription; // Stripe subscription object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Cancel a Stripe customer subscription.
+		 *
+		 * @param string  $customer_id Customer ID in Stripe.
+		 * @param string  $subscription_id Subscription ID in Stripe.
+		 *
+		 * @param boolean $at_period_end Defaults to a `TRUE` value.
+		 *    If `TRUE`, cancellation is delayed until the end of the current period.
+		 *    If `FALSE`, cancellation is NOT delayed; i.e. it occurs immediately.
+		 *
+		 * @return Stripe_Subscription|string Subscription object; else error message.
+		 */
+		public static function cancel_customer_subscription($customer_id, $subscription_id, $at_period_end = TRUE)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Attempt to cancel the subscription for this customer.
+			{
+				$customer     = Stripe_Customer::retrieve($customer_id);
+				$subscription = $customer->subscriptions->retrieve($subscription_id)->cancel(array('at_period_end' => $at_period_end));
+
+				self::log_entry($input_time, $input_vars, time(), $subscription);
+
+				return $subscription; // Stripe subscription object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Converts an amount into a Stripe amount; based on currency code.
+		 *
+		 * @param integer|float|string $amount The amount to charge.
+		 * @param string               $currency Three character currency code.
+		 *
+		 * @return integer Amount represented as an integer (always).
+		 *
+		 * @see https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support
+		 */
+		public static function amount($amount, $currency)
+		{
+			switch(strtoupper($currency))
+			{
+				case 'BIF':
+				case 'DJF':
+				case 'JPY':
+				case 'KRW':
+				case 'PYG':
+				case 'VUV':
+				case 'XOF':
+				case 'CLP':
+				case 'GNF':
+				case 'KMF':
+				case 'MGA':
+				case 'RWF':
+				case 'XAF':
+				case 'XPF':
+					return (integer)$amount;
+
+				default: // In cents.
+					return (integer)($amount * 100);
+			}
+		}
+
+		/**
+		 * Converts a Stripe exception into an error message.
+		 *
+		 * @param exception $exception
+		 *
+		 * @return string Error message.
+		 */
+		public static function error_message($exception)
+		{
+			if($exception instanceof Stripe_CardError)
+			{
+				$body  = $exception->getJsonBody();
+				$error = $body['error'];
+
+				return sprintf(_x('Error code: <code>%1$s</code>. %2$s.', 's2member-front', 's2member'),
+				               esc_html(trim($error['code'], '.')), esc_html(trim($error['message'], '.')));
+			}
+			if($exception instanceof Stripe_InvalidRequestError)
+				return _x('Invalid parameters to Stripe; please contact the site owner.', 's2member-front', 's2member');
+
+			if($exception instanceof Stripe_AuthenticationError)
+				return _x('Invalid Stripe API keys; please contact the site owner.', 's2member-front', 's2member');
+
+			if($exception instanceof Stripe_ApiConnectionError)
+				return _x('Network communication failure with Stripe; please try again.', 's2member-front', 's2member');
+
+			if($exception instanceof Stripe_Error)
+				return _x('Stripe API error; please try again.', 's2member-front', 's2member');
+
+			return _x('Stripe error; please try again.', 's2member-front', 's2member');
+		}
+
+		/**
+		 * Logs Stripe API communication.
+		 *
+		 * @param integer $input_time Input time.
+		 * @param mixed   $input_vars Input data/vars.
+		 *
+		 * @param integer $output_time Output time.
+		 * @param mixed   $output_vars Output data/vars.
+		 */
+		public static function log_entry($input_time, $input_vars, $output_time, $output_vars)
+		{
+			global $current_site, $current_blog;
+
+			if(!$GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs'])
+				return; // Nothing to do in this case.
+
 			$logt = c_ws_plugin__s2member_utilities::time_details();
 			$logv = c_ws_plugin__s2member_utilities::ver_details();
 			$logm = c_ws_plugin__s2member_utilities::mem_details();
@@ -90,21 +314,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
 			$log2 = (is_multisite() && !is_main_site()) ? 'stripe-api-4-'.trim(preg_replace('/[^a-z0-9]/i', '-', (!empty($_log4) ? $_log4 : '')), '-').'.log' : 'stripe-api.log';
 
-			if(!empty($post_vars['x_card_num']) && strlen($post_vars['x_card_num']) > 4) // Only log last 4 digits for security.
-				$post_vars['x_card_num'] = str_repeat('*', strlen($post_vars['x_card_num']) - 4)
-				                           .substr($post_vars['x_card_num'], -4); // Then display last 4 digits.
-
-			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs'])
-				if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
-					if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-						if(($log = '-------- Input vars: ( '.$input_time.' ) --------'."\n".var_export($post_vars, TRUE)."\n"))
-							if(($log .= '-------- Output string/vars: ( '.$output_time.' ) --------'."\n".$xml."\n".var_export($response, TRUE)))
-								file_put_contents($logs_dir.'/'.$log2,
-								                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
-								                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
-								                  FILE_APPEND);
-
-			return apply_filters('ws_plugin__s2member_pro_stripe_arb_response', $response, get_defined_vars());
+			if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
+				if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
+					if(($log = '-------- Input vars: ( '.$input_time.' ) --------'."\n".var_export($input_vars, TRUE)."\n"))
+						if(($log .= '-------- Output string/vars: ( '.$output_time.' ) --------'."\n".var_export($output_vars, TRUE)))
+							file_put_contents($logs_dir.'/'.$log2,
+							                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
+							                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
+							                  FILE_APPEND);
 		}
 
 		/**
