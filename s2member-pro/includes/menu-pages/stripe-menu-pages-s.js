@@ -53,7 +53,7 @@ jQuery(document).ready(
 		}
 		else if(location.href.match(/page\=ws-plugin--s2member-pro-stripe-forms/))
 		{
-			var taxMayApply = ('<?php echo (int)c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply(); ?>' == '1');
+			var taxMayApply = ('<?php echo (int)c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply(); ?>' == '1');
 
 			var handleFormDescriptions = function(/* This will be re-used on keyup & change events. */)
 			{

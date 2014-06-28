@@ -61,7 +61,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			{
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
 
-				if(is_array($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_postvars()) && ($_stripe = $stripe))
+				if(is_array($stripe = c_ws_plugin__s2member_pro_stripe_utilities::postvars()) && ($_stripe = $stripe))
 				{
 					$stripe['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$stripe['s2member_log'][] = 's2Member POST vars verified with Stripe.';

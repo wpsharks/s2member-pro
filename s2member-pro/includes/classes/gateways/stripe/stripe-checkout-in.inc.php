@@ -77,8 +77,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 				{
 					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('checkout', $post_vars)))
 					{
-						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::stripe_apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
-						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::stripe_cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
+						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
+						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
 						if($cost_calculations['total'] <= 0 && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)
 						{
@@ -190,7 +190,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$stripe['x_start_date'] = date('Y-m-d', $start_time);
 
 								$stripe['x_unit']              = 'days'; // Always calculated in days.
-								$stripe['x_length']            = c_ws_plugin__s2member_pro_stripe_utilities::stripe_per_term_2_days($post_vars['attr']['rp'], $post_vars['attr']['rt']);
+								$stripe['x_length']            = c_ws_plugin__s2member_pro_stripe_utilities::per_term_2_days($post_vars['attr']['rp'], $post_vars['attr']['rt']);
 								$stripe['x_total_occurrences'] = ($post_vars['attr']['rr']) ? (($post_vars['attr']['rrt']) ? $post_vars['attr']['rrt'] : '9999') : '1';
 
 								$stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);
@@ -370,7 +370,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$stripe['x_start_date'] = date('Y-m-d', $start_time);
 
 								$stripe['x_unit']              = 'days'; // Always calculated in days.
-								$stripe['x_length']            = c_ws_plugin__s2member_pro_stripe_utilities::stripe_per_term_2_days($post_vars['attr']['rp'], $post_vars['attr']['rt']);
+								$stripe['x_length']            = c_ws_plugin__s2member_pro_stripe_utilities::per_term_2_days($post_vars['attr']['rp'], $post_vars['attr']['rt']);
 								$stripe['x_total_occurrences'] = ($post_vars['attr']['rr']) ? (($post_vars['attr']['rrt']) ? $post_vars['attr']['rrt'] : '9999') : '1';
 
 								$stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);

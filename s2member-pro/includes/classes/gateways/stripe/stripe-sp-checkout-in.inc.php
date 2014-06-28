@@ -77,8 +77,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 				{
 					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('sp-checkout', $post_vars)))
 					{
-						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::stripe_apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
-						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::stripe_cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
+						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
+						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
 						if(!($stripe = array())) // Direct payments.
 						{

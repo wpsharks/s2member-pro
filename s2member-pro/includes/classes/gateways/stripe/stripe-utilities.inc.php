@@ -158,14 +158,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Get a Stripe subscription plan instance.
+		 * Get a Stripe plan object instance.
 		 *
 		 * @param array $shortcode_attrs An array of shortcode attributes.
 		 * @param array $metadata Any additional metadata.
 		 *
-		 * @return Stripe_Charge|string Charge object; else error message.
+		 * @return Stripe_Plan|string Plan object; else error message.
 		 */
-		public static function create_subscription_plan($shortcode_attrs, $metadata = array())
+		public static function get_plan($shortcode_attrs, $metadata = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -176,15 +176,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$amount            = $shortcode_attrs['ra'];
 			$currency          = $shortcode_attrs['cc'];
 			$name              = $shortcode_attrs['desc'];
-			$trial_period_days = self::stripe_per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
-			$interval_days     = self::stripe_per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
+			$trial_period_days = self::per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
+			$interval_days     = self::per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
+			$plan_id           = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days. // MD5 of these values.
+			                               $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
 
-			$plan_id = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days. // MD5 of these values.
-			                     $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
-
-			try // Attempt to get an existing subscription plan; else create a new one.
+			try // Attempt to get an existing plan; else create a new one.
 			{
-				try // Try to find an existing subscription plan.
+				try // Try to find an existing plan.
 				{
 					$plan = Stripe_Plan::retrieve($plan_id);
 				}
@@ -200,7 +199,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				}
 				self::log_entry($input_time, $input_vars, time(), $plan);
 
-				return $plan; // Stripe subscription plan object.
+				return $plan; // Stripe plan object.
 			}
 			catch(exception $exception)
 			{
@@ -214,11 +213,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * Create a Stripe customer subscription.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
-		 * @param string $subscription_plan_id Subscription plan ID in Stripe.
+		 * @param string $plan_id Subscription plan ID in Stripe.
+		 * @param array  $metadata Any additional metadata.
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
-		public static function create_customer_subscription($customer_id, $subscription_plan_id)
+		public static function create_customer_subscription($customer_id, $plan_id, $metadata = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -229,7 +229,41 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try // Attempt to create a new subscription for this customer.
 			{
 				$customer     = Stripe_Customer::retrieve($customer_id);
-				$subscription = $customer->subscriptions->create(array('plan' => $subscription_plan_id));
+				$subscription = $customer->subscriptions->create(array('plan'     => $plan_id,
+				                                                       'metadata' => $metadata));
+
+				self::log_entry($input_time, $input_vars, time(), $subscription);
+
+				return $subscription; // Stripe subscription object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Get a Stripe customer subscription object instance.
+		 *
+		 * @param string $customer_id Customer ID in Stripe.
+		 * @param string $subscription_id Subscription ID in Stripe.
+		 *
+		 * @return Stripe_Subscription|string Subscription object; else error message.
+		 */
+		public static function get_customer_subscription($customer_id, $subscription_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Obtain existing customer object; else create a new one.
+			{
+				$customer     = Stripe_Customer::retrieve($customer_id);
+				$subscription = $customer->subscriptions->retrieve($subscription_id);
 
 				self::log_entry($input_time, $input_vars, time(), $subscription);
 
@@ -390,7 +424,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return array|bool An array of verified ``$_POST`` or ``$_REQUEST`` variables, else false.
 		 */
-		public static function stripe_postvars()
+		public static function postvars()
 		{
 			if(!empty($_REQUEST['s2member_pro_stripe_notify']) && !empty($_REQUEST['x_MD5_Hash']))
 			{
@@ -423,7 +457,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return int A 'Period Term', in days. Defaults to `0`.
 		 */
-		public static function stripe_per_term_2_days($period = '', $term = '')
+		public static function per_term_2_days($period = '', $term = '')
 		{
 			if(is_numeric($period) && !is_numeric($term) && ($term = strtoupper($term)))
 			{
@@ -447,7 +481,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return bool TRUE if Tax may apply.
 		 */
-		public static function stripe_tax_may_apply()
+		public static function tax_may_apply()
 		{
 			if((float)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'] > 0)
 				return TRUE;
@@ -478,7 +512,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				{
 					if(is_array($attr = (!empty($_p_tax_vars['attr'])) ? unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($_p_tax_vars['attr'])) : FALSE))
 					{
-						$attr = (!empty($attr['coupon'])) ? c_ws_plugin__s2member_pro_stripe_utilities::stripe_apply_coupon($attr, $attr['coupon']) : $attr;
+						$attr = (!empty($attr['coupon'])) ? c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon']) : $attr;
 
 						$trial           = ($attr['rr'] !== 'BN' && $attr['tp']) ? TRUE : FALSE; // Is there a trial?
 						$sub_total_today = ($trial) ? $attr['ta'] : $attr['ra']; // What is the sub-total today?
@@ -491,7 +525,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 						/* Trial is `null` in this function call. We only need to return what it costs today.
 						However, we do tag on a 'trial' element in the array so the ajax routine will know about this. */
-						$a = c_ws_plugin__s2member_pro_stripe_utilities::stripe_cost(NULL, $sub_total_today, $state, $country, $zip, $currency, $desc);
+						$a = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $sub_total_today, $state, $country, $zip, $currency, $desc);
 
 						echo json_encode(array('trial'      => $trial,
 						                       'sub_total'  => $a['sub_total'],
@@ -531,7 +565,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return array Array of calculations.
 		 */
-		public static function stripe_cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '')
+		public static function cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '')
 		{
 			$state   = strtoupper(c_ws_plugin__s2member_pro_utilities::full_state($state, ($country = strtoupper($country))));
 			$rates   = apply_filters('ws_plugin__s2member_pro_tax_rates_before_cost_calculation', strtoupper($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates']), get_defined_vars());
@@ -684,13 +718,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @TODO Query configured coupon codes in Stripe too.
 		 */
-		public static function stripe_apply_coupon($attr = array(), $coupon_code = '', $return = '', $process = array())
+		public static function apply_coupon($attr = array(), $coupon_code = '', $return = '', $process = array())
 		{
 			if(($coupon_code = trim(strtolower($coupon_code))) || ($coupon_code = trim(strtolower($attr['coupon']))))
 				if($attr['accept_coupons'] && $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes'])
 				{
 					$cs = c_ws_plugin__s2member_utils_cur::symbol($attr['cc']);
-					$tx = (c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply()) ? _x(' + tax', 's2member-front', 's2member') : '';
+					$tx = (c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply()) ? _x(' + tax', 's2member-front', 's2member') : '';
 					$ps = _x('%', 's2member-front percentage-symbol', 's2member');
 
 					$full_coupon_code = ''; // Initialize.

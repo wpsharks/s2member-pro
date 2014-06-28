@@ -242,34 +242,28 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					if(!is_user_logged_in())
 						$response = array('response' => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', 's2member-front', 's2member'), esc_attr(wp_login_url($_SERVER['REQUEST_URI']))), 'error' => TRUE);
 
-					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
+					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_cid = get_user_option('s2member_subscr_cid', $user_id)) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
 						$response = array('response' => _x('Nothing to cancel. You\'re NOT a paid Member.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(is_array($stripe = array('x_method' => 'status', 'x_subscription_id' => $subscr_id)))
-					{
-						if(!($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) || !empty($stripe['__error']))
-							$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(!is_object($stripe = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
+						$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
 
-						else if(empty($stripe['subscription_status']) || !preg_match('/^(active|suspended)$/i', $stripe['subscription_status']))
-							$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
-					}
+					else if(!preg_match('/^canceled$/i', $stripe->status))
+						$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($attr['update']) // Special form for Updates. User/Member must be logged in.
 				{
 					if(!is_user_logged_in())
 						$response = array('response' => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to update your billing information.', 's2member-front', 's2member'), esc_attr(wp_login_url($_SERVER['REQUEST_URI']))), 'error' => TRUE);
 
-					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
+					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_cid = get_user_option('s2member_subscr_cid', $user_id)) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
 						$response = array('response' => _x('Nothing to update. You\'re NOT a paid Member.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(is_array($stripe = array('x_method' => 'status', 'x_subscription_id' => $subscr_id)))
-					{
-						if(!($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) || !empty($stripe['__error']))
-							$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(!is_object($stripe = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
+						$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 
-						else if(empty($stripe['subscription_status']) || !preg_match('/^(active|suspended)$/i', $stripe['subscription_status']))
-							$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-					}
+					else if(preg_match('/^canceled$/i', $stripe->status))
+						$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($attr['register']) // Free Registration does not require attr validation.
 				{
@@ -611,13 +605,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(empty($s['card_token']) || !is_string($s['card_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -681,13 +675,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(empty($s['card_token']) || !is_string($s['card_token']))
 						$response = array('response' => _x('Missing Billing Method. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::stripe_tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))

@@ -135,6 +135,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-statement-description">'."\n";
+			echo 'Stripe Statement Description:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" maxlength="15" name="ws_plugin__s2member_pro_stripe_api_statement_description" id="ws-plugin--s2member-pro-stripe-api-statement-description" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']).'" /><br />'."\n";
+			echo 'An arbitrary string to be displayed alongside your company name. This appears on your customer\'s credit card statement. 15 characters max. The statement description may NOT include these special characters: <code>'.esc_html('<>"\'').'</code>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
 			echo 'Stripe Should Verify Zipcodes?'."\n";
 			echo '</label>'."\n";
@@ -148,23 +172,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do NOT validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
 			echo '</select>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-statement-description">'."\n";
-			echo 'Stripe Statement Description:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" maxlength="15" name="ws_plugin__s2member_pro_stripe_api_statement_description" id="ws-plugin--s2member-pro-stripe-api-statement-description" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']).'" /><br />'."\n";
-			echo 'An arbitrary string to be displayed alongside your company name. This appears your customer\'s credit card statement. This may be up to 15 characters. The statement description may NOT include these characters: <code>'.esc_html('<>"\'').'</code>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -244,6 +251,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<h3>Stripe Webhook (aka: IPN Integration) [required]</h3>'."\n";
 			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account Settings -› Webhooks</code></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(site_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
+			echo '<div class="info" style="margin-bottom:0;">'."\n";
+			echo '<p>If you are currently in Test/Sandbox mode (i.e. you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
+			echo '</div>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
