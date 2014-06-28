@@ -158,6 +158,59 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Get a Stripe subscription plan object instance.
+		 *
+		 * @param array $shortcode_attrs An array of shortcode attributes.
+		 * @param array $metadata Any additional metadata.
+		 *
+		 * @return Stripe_Charge|string Charge object; else error message.
+		 */
+		public static function create_subscription_plan($shortcode_attrs, $metadata = array())
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			$amount            = $shortcode_attrs['ra'];
+			$currency          = $shortcode_attrs['cc'];
+			$name              = $shortcode_attrs['desc'];
+			$trial_period_days = self::stripe_per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
+			$interval_days     = self::stripe_per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
+
+			$plan_id = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days. // MD5 of these values.
+			                     $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
+
+			try // Attempt to get an existing subscription plan; else create a new one.
+			{
+				try // Try to find an existing subscription plan.
+				{
+					$plan = Stripe_Plan::retrieve($plan_id);
+				}
+				catch(exception $exception) // Else create one.
+				{
+					$plan = Stripe_Plan::create(array(
+						                            'id'                    => $plan_id,
+						                            'name'                  => $name, 'metadata' => $metadata,
+						                            'amount'                => self::amount($amount, $currency), 'currency' => $currency,
+						                            'trial_period_days'     => $trial_period_days, 'interval' => 'day', 'interval_count' => $interval_days,
+						                            'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+					                            ));
+				}
+				self::log_entry($input_time, $input_vars, time(), $plan);
+
+				return $plan; // Stripe subscription plan object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
 		 * Create a Stripe customer subscription.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
@@ -381,7 +434,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$days = ($term === 'M') ? 30 : $days;
 				$days = ($term === 'Y') ? 365 : $days;
 
-				return (int)$period * (int)$days;
+				return (integer)$period * (integer)$days;
 			}
 			return 0;
 		}
