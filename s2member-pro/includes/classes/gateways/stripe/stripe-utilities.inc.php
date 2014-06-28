@@ -124,10 +124,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string               $customer_id Customer ID in Stripe.
 		 * @param integer|float|string $amount The amount to charge.
 		 * @param string               $currency Three character currency code.
+		 * @param string               $description Description of the charge.
+		 * @param array                $metadata Any additional metadata.
 		 *
 		 * @return Stripe_Charge|string Charge object; else error message.
 		 */
-		public static function create_customer_charge($customer_id, $amount, $currency)
+		public static function create_customer_charge($customer_id, $amount, $currency, $description, $metadata = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -138,9 +140,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try // Attempt to charge the customer.
 			{
 				$charge = Stripe_Charge::create(array(
-					                                'customer' => $customer_id,
-					                                'amount'   => self::amount($amount, $currency),
-					                                'currency' => $currency
+					                                'customer'              => $customer_id,
+					                                'description'           => $description, 'metadata' => $metadata,
+					                                'amount'                => self::amount($amount, $currency), 'currency' => $currency,
+					                                'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
 				                                ));
 				self::log_entry($input_time, $input_vars, time(), $charge);
 
