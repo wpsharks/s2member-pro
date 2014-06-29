@@ -79,50 +79,63 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
-						if($cost_calculations['total'] <= 0 || (($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_aim_response($stripe)) && empty($stripe['__error'])))
+						if($cost_calculations['total'] <= 0 // It's completely free?
+						   || (
+								is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name']))
+								&& is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token']))
+								&& is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc']))
+							)
+						) // It's either a completely free purchase; or the charge went through successfully.
 						{
 							if($cost_calculations['total'] <= 0)
-								$new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
-							else $new__txn_id = $stripe['transaction_id'];
-
-							if(!($ipn = array())) // Simulated PayPal IPN.
 							{
-								$ipn['txn_type'] = 'web_accept';
-								$ipn['txn_id']   = $new__txn_id;
-								$ipn['custom']   = $post_vars['attr']['custom'];
-
-								$ipn['mc_gross']    = $cost_calculations['total'];
-								$ipn['mc_currency'] = $cost_calculations['cur'];
-								$ipn['tax']         = $cost_calculations['tax'];
-
-								$ipn['payer_email'] = $post_vars['email'];
-								$ipn['first_name']  = $post_vars['first_name'];
-								$ipn['last_name']   = $post_vars['last_name'];
-
-								if(is_user_logged_in() && ($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()))
-								{
-									$ipn['option_name1']      = 'Referencing Customer ID';
-									$ipn['option_selection1'] = $referencing;
-								}
-								else // Otherwise, default to the originating domain.
-								{
-									$ipn['option_name1']      = 'Originating Domain';
-									$ipn['option_selection1'] = $_SERVER['HTTP_HOST'];
-								}
-								$ipn['option_name2']      = 'Customer IP Address';
-								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
-
-								$ipn['item_name']   = $cost_calculations['desc'];
-								$ipn['item_number'] = $post_vars['attr']['sp_ids_exp'];
-
-								$ipn['s2member_paypal_proxy']              = 'stripe';
-								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_coupon']       = array('coupon_code' => $cp_attr['_coupon_code'], 'full_coupon_code' => $cp_attr['_full_coupon_code'], 'affiliate_id' => $cp_attr['_coupon_affiliate_id']);
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
-
-								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+								$new__txn_id  = strtoupper('free-'.uniqid());
+								$new__txn_cid = strtoupper('free-'.uniqid());
 							}
+							else // Use values provided by Stripe.
+							{
+								/** @var Stripe_Charge $stripe_charge */
+								$new__txn_id = $stripe_charge->id;
+								/** @var Stripe_Customer $stripe_customer */
+								$new__txn_cid = $stripe_customer->id;
+							}
+							$ipn['txn_type'] = 'web_accept';
+							$ipn['txn_id']   = $new__txn_id;
+							$ipn['txn_cid']  = $new__txn_cid;
+							$ipn['custom']   = $post_vars['attr']['custom'];
+
+							$ipn['mc_gross']    = $cost_calculations['total'];
+							$ipn['mc_currency'] = $cost_calculations['cur'];
+							$ipn['tax']         = $cost_calculations['tax'];
+
+							$ipn['payer_email'] = $post_vars['email'];
+							$ipn['first_name']  = $post_vars['first_name'];
+							$ipn['last_name']   = $post_vars['last_name'];
+
+							if(is_user_logged_in() && ($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()))
+							{
+								$ipn['option_name1']      = 'Referencing Customer ID';
+								$ipn['option_selection1'] = $referencing;
+							}
+							else // Otherwise, default to the originating domain.
+							{
+								$ipn['option_name1']      = 'Originating Domain';
+								$ipn['option_selection1'] = $_SERVER['HTTP_HOST'];
+							}
+							$ipn['option_name2']      = 'Customer IP Address';
+							$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+
+							$ipn['item_name']   = $cost_calculations['desc'];
+							$ipn['item_number'] = $post_vars['attr']['sp_ids_exp'];
+
+							$ipn['s2member_paypal_proxy']              = 'stripe';
+							$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+							$ipn['s2member_paypal_proxy_coupon']       = array('coupon_code' => $cp_attr['_coupon_code'], 'full_coupon_code' => $cp_attr['_full_coupon_code'], 'affiliate_id' => $cp_attr['_coupon_affiliate_id']);
+							$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+							$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
+
+							$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+
 							if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars['attr']['ids'], $post_vars['attr']['exp'])))
 							{
 								setcookie('s2member_sp_tracking', ($s2member_sp_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie('s2member_sp_tracking', $s2member_sp_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE['s2member_sp_tracking'] = $s2member_sp_tracking);
@@ -134,7 +147,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 							}
 							else $global_response = array('response' => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 						}
-						else $global_response = array('response' => $stripe['__error'], 'error' => TRUE);
+						else if(isset($stripe_customer) && is_string($stripe_customer)) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
+						else if(isset($stripe_charge) && is_string($stripe_charge)) $global_response = array('response' => $stripe_charge, 'error' => TRUE);
+						else $global_response = array('response' => _x('Unknown API error. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
 					else // Input form field validation errors.
 						$global_response = $form_submission_validation_errors;

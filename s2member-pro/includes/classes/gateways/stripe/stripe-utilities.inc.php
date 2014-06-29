@@ -46,15 +46,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		/**
 		 * Get a Stripe customer object instance.
 		 *
-		 * @param null|integer $user_id If it's for an existing user; pass the user's ID (optional).
-		 * @param string       $email Customer's email address (optional).
-		 * @param string       $fname Customer's first name (optional).
-		 * @param string       $lname Customer's last name (optional).
-		 * @param array        $metadata Any metadata (optional).
+		 * @param integer $user_id If it's for an existing user; pass the user's ID (optional).
+		 * @param string  $email Customer's email address (optional).
+		 * @param string  $fname Customer's first name (optional).
+		 * @param string  $lname Customer's last name (optional).
+		 * @param array   $metadata Any metadata (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function get_customer($user_id = NULL, $email = '', $fname = '', $lname = '', $metadata = array())
+		public static function get_customer($user_id = 0, $email = '', $fname = '', $lname = '', $metadata = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -64,14 +64,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Obtain existing customer object; else create a new one.
 			{
-				if(isset($user_id) && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
-					$customer = Stripe_Customer::retrieve($customer_id);
-
-				else $customer = Stripe_Customer::create(array(
-					                                         'email'       => $email,
-					                                         'description' => trim($fname.' '.$lname),
-					                                         'metadata'    => $metadata
-				                                         ));
+				try // Attempt to find an existing customer; if that's possible.
+				{
+					if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
+						$customer = Stripe_Customer::retrieve($customer_id);
+				}
+				catch(exception $exception)
+				{
+					// Fail silently; create a new customer below in this case.
+				}
+				if(empty($customer) || !is_object($customer))
+					$customer = Stripe_Customer::create(array(
+						                                    'email'       => $email,
+						                                    'description' => trim($fname.' '.$lname),
+						                                    'metadata'    => $metadata
+					                                    ));
 				self::log_entry($input_time, $input_vars, time(), $customer);
 
 				return $customer; // Stripe customer object.
