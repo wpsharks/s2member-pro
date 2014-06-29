@@ -233,7 +233,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									update_user_option($user_id, 's2member_auto_eot_time', $start_time);
 
 								if($old__subscr_cid && $old__subscr_id && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', TRUE, get_defined_vars()))
-									c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($old__subscr_cid, $old__subscr_id);
+									c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($old__subscr_cid, $old__subscr_id, FALSE);
 
 								setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 								setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
@@ -477,7 +477,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 								if(!$is_independent_ccaps_sale) // Independent?
 									if($old__subscr_cid && $old__subscr_id && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', TRUE, get_defined_vars()))
-										c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($old__subscr_cid, $old__subscr_id);
+										c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($old__subscr_cid, $old__subscr_id, FALSE);
 
 								setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 								setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
