@@ -103,13 +103,13 @@ if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
  */
 if(!function_exists('s2member_pro_login_widget'))
 {
-	function s2member_pro_login_widget($options = FALSE, $args = FALSE)
+	function s2member_pro_login_widget($options = array(), $args = array())
 	{
-		$args = (is_array($args)) ? $args : array('before_widget' => '', 'before_title' => '<h3>', 'after_title' => '</h3>', 'after_widget' => '');
-
 		ob_start(); // Begin output buffering.
 
-		c_ws_plugin__s2member_pro_login_widget::widget($args, $options); // @TODO should not be called statically.
+		$args = (is_array($args)) ? $args : array('before_widget' => '', 'before_title' => '<h3>', 'after_title' => '</h3>', 'after_widget' => '');
+
+		c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 
 		return ob_get_clean();
 	}

@@ -75,10 +75,24 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 		 */
 		public function widget($args = array(), $instance = array())
 		{
+			return self::___static_widget___($args, $instance);
+		}
+
+		/**
+		 * Widget display.
+		 *
+		 * @package s2Member\Widgets
+		 * @since 140628
+		 *
+		 * @param array $args Optional. An array of basic settings.
+		 * @param array $instance Optional. An array of options for this instance.
+		 */
+		public static function ___static_widget___($args = array(), $instance = array())
+		{
 			$options = c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults((array)$instance);
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
-			do_action("ws_plugin__s2member_pro_login_widget_before_display", get_defined_vars(), $this);
+			do_action("ws_plugin__s2member_pro_login_widget_before_display", get_defined_vars());
 			unset($__refs, $__v);
 
 			echo $args["before_widget"]; // OK, here we go into this widget.
@@ -87,7 +101,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 				echo $args["before_title"].apply_filters("widget_title", $options[((is_user_logged_in()) ? "profile_title" : "title")]).$args["after_title"];
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
-			do_action("ws_plugin__s2member_pro_login_widget_during_display_before", get_defined_vars(), $this);
+			do_action("ws_plugin__s2member_pro_login_widget_during_display_before", get_defined_vars());
 			unset($__refs, $__v);
 
 			if(!is_user_logged_in()) // The User/Member is NOT logged in.
@@ -194,12 +208,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 				echo '</div>'."\n";
 			}
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
-			do_action("ws_plugin__s2member_pro_login_widget_during_display_after", get_defined_vars(), $this);
+			do_action("ws_plugin__s2member_pro_login_widget_during_display_after", get_defined_vars());
 			unset($__refs, $__v);
 
 			echo $args["after_widget"];
 
-			do_action("ws_plugin__s2member_pro_login_widget_after_display", get_defined_vars(), $this);
+			do_action("ws_plugin__s2member_pro_login_widget_after_display", get_defined_vars());
 		}
 
 		/**
@@ -209,6 +223,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_login_widget"))
 		 * @since 1.5
 		 *
 		 * @param array $instance Optional. An array of options for this instance.
+		 *
+		 * @return null PhpStorm wants this here for whatever reason. lol
 		 */
 		public function form($instance = array())
 		{
