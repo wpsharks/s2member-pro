@@ -245,10 +245,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_cid = get_user_option('s2member_subscr_cid', $user_id)) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
 						$response = array('response' => _x('Nothing to cancel. You\'re NOT a paid Member.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_object($stripe = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
+					else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
 						$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(preg_match('/^canceled$/i', $stripe->status) || $stripe->cancel_at_period_end)
+					else if(preg_match('/^canceled$/i', $stripe_subscription->status) || $stripe_subscription->cancel_at_period_end)
 						$response = array('response' => _x('Nothing to cancel. You have NO recurring fees.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($attr['update']) // Special form for Updates. User/Member must be logged in.
@@ -259,10 +259,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_cid = get_user_option('s2member_subscr_cid', $user_id)) || !($subscr_id = get_user_option('s2member_subscr_id', $user_id)))
 						$response = array('response' => _x('Nothing to update. You\'re NOT a paid Member.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_object($stripe = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
+					else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($subscr_cid, $subscr_id)))
 						$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(preg_match('/^canceled$/i', $stripe->status) || $stripe->cancel_at_period_end)
+					else if(preg_match('/^canceled$/i', $stripe_subscription->status) || $stripe_subscription->cancel_at_period_end)
 						$response = array('response' => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($attr['register']) // Free Registration does not require attr validation.

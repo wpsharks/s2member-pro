@@ -56,7 +56,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 			if(!empty($_POST['s2member_pro_stripe_cancellation']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_cancellation']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-cancellation'))
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_cancellation_response'] = array(); // This holds the global response details.
-				$global_response                                                 = & $GLOBALS['ws_plugin__s2member_pro_stripe_cancellation_response']; // This is a shorter reference.
+				$global_response                                                 = & $GLOBALS['ws_plugin__s2member_pro_stripe_cancellation_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_cancellation']));
 				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
@@ -71,61 +71,53 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 					{
 						if(is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) // Are they logged in?
 						{
-							if(($stripe = array('x_method' => 'status')) && ($stripe['x_subscription_id'] = $cur__subscr_id = get_user_option('s2member_subscr_id')))
+							if(($cur__subscr_cid = get_user_option('s2member_subscr_cid')) && ($cur__subscr_id = get_user_option('s2member_subscr_id')))
 							{
-								if(($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) && empty($stripe['__error']) && $stripe['subscription_status'])
+								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($cur__subscr_cid, $cur__subscr_id)))
 								{
-									if(preg_match('/^(active|suspended)$/i', $stripe['subscription_status'])) // Still active/suspended?
+									if(!preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 									{
-										if(!($ipn = array())) // With Stripe, we need their IPN signup vars.
-											if(is_array($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars()))
-											{
-												$ipn['txn_type']  = 'subscr_cancel';
-												$ipn['subscr_id'] = $ipn_signup_vars['subscr_id'];
-												$ipn['custom']    = $ipn_signup_vars['custom'];
-
-												$ipn['period1'] = $ipn_signup_vars['period1'];
-												$ipn['period3'] = $ipn_signup_vars['period3'];
-
-												$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
-												$ipn['first_name']  = $ipn_signup_vars['first_name'];
-												$ipn['last_name']   = $ipn_signup_vars['last_name'];
-
-												$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
-												$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
-
-												$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
-												$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
-
-												$ipn['item_name']   = $ipn_signup_vars['item_name'];
-												$ipn['item_number'] = $ipn_signup_vars['item_number'];
-
-												$ipn['s2member_paypal_proxy']              = 'stripe';
-												$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-												$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-
-												c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
-											}
-
-										if(($stripe = array('x_method' => 'cancel', 'x_subscription_id' => $cur__subscr_id)))
+										if(is_array($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars()))
 										{
-											c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe);
+											$ipn['txn_type']   = 'subscr_cancel';
+											$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+											$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+											$ipn['custom']     = $ipn_signup_vars['custom'];
 
-											$global_response = array('response' => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
+											$ipn['period1'] = $ipn_signup_vars['period1'];
+											$ipn['period3'] = $ipn_signup_vars['period3'];
 
-											if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', /* Deprecated in v111106 ». */
-											                                                                              '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-											)
-												wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+											$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+											$ipn['first_name']  = $ipn_signup_vars['first_name'];
+											$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+											$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+											$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+											$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+											$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+											$ipn['item_name']   = $ipn_signup_vars['item_name'];
+											$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+											$ipn['s2member_paypal_proxy']              = 'stripe';
+											$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+											$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+											c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 										}
+										c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($cur__subscr_cid, $cur__subscr_id);
+
+										$global_response = array('response' => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
+
+										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
+											wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
 									else // Else, account already terminated.
 									{
 										$global_response = array('response' => _x('<strong>Billing terminated.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
 
-										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', /* Deprecated in v111106 ». */
-										                                                                              '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-										)
+										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
 											wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
 								}
@@ -133,9 +125,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 								{
 									$global_response = array('response' => _x('<strong>Billing terminated.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
 
-									if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', /* Deprecated in v111106 ». */
-									                                                                              '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-									)
+									if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
 										wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 								}
 							}
@@ -143,9 +133,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 							{
 								$global_response = array('response' => _x('<strong>Billing terminated.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
 
-								if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', /* Deprecated in v111106 ». */
-								                                                                              '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-								)
+								if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 							}
 						}
