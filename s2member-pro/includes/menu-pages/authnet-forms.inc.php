@@ -674,7 +674,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<tr style="padding-top:0;">'."\n";
 
 						echo '<td style="padding-top:0;">'."\n";
-						echo '<ul>'."\n";
+						echo '<ul class="ws-menu-page-li-margins">'."\n";
 						echo '<li><code>accept="visa,mastercard,amex,discover"</code> Accepted Billing Methods. A comma-delimited list of Billing Methods you want to accept. Not valid when <code>cancel="1"</code>.</li>'."\n";
 						echo '<li><code>accept_coupons="1"</code> Accept Coupons? Possible values: <code>0</code> = do NOT accept Coupons on this particular Form; <code>1</code> = DO accept Coupon Codes on this particular Form.</li>'."\n";
 						echo '<li><code>cancel="0"</code> Cancellation Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Cancellation Form, <code>1</code> = this IS a Cancellation Form.</li>'."\n";

@@ -369,7 +369,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 						echo '<tr style="padding-top:0;">' . "\n";
 
 						echo '<td style="padding-top:0;">' . "\n";
-						echo '<ul>' . "\n";
+						echo '<ul class="ws-menu-page-li-margins">' . "\n";
 						echo '<li><code>cancel="0"</code> Cancellation Button. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Cancellation Button, <code>1</code> = this IS a Cancellation Button.</li>' . "\n";
 						echo '<li><code>cbp="325"</code> ClickBank Product Item #, which MUST correlate with a Product you\'ve configured at ClickBank.com. <a href="#" onclick="alert(\'This MUST correlate with a Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a></li>' . "\n";
 						echo '<li><code>cbskin=""</code> Optional ClickBank Order Form Template, which MUST correlate with an Order Form you\'ve configured at ClickBank.com. <a href="#" onclick="alert(\'This MUST correlate with an Order Form that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a></li>' . "\n";
@@ -413,7 +413,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 						echo '<tr style="padding-top:0;">' . "\n";
 
 						echo '<td style="padding-top:0;">' . "\n";
-						echo '<ul>' . "\n";
+						echo '<ul class="ws-menu-page-li-margins">' . "\n";
 						echo '<li><code>&amp;s2_custom=' . esc_html ($_SERVER["HTTP_HOST"]) . '</code> The domain of your site, which is passed through the `custom` attribute in your Shortcode. You can pipe in additional values if you like (ex: <code><em>' . esc_html ($_SERVER["HTTP_HOST"]) . '|cv1|cv2|cv3</em></code>).</li>' . "\n";
 						echo '<li><code>&amp;s2_customer_ip=' . esc_html (S2MEMBER_CURRENT_USER_IP) . '</code> This is the Customer\'s IP Address via <code>$_SERVER["REMOTE_ADDR"]</code>. s2Member will store the Customer\'s IP Address in case you need it for tracking and/or affiliate program integration <em>(optional)</em>.</li>' . "\n";
 						echo '<li><code>&amp;s2_desc=Brief Description</code> Description s2Member uses for your ClickBank Product. This can/could be different from what you have on file at ClickBank for a particular Product.</li>' . "\n";
