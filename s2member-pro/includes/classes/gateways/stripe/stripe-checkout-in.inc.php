@@ -100,6 +100,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							{
 								if(substr_count($post_vars['attr']['level_ccaps_eotper'], ':') === 1)
 									$post_vars['attr']['level_ccaps_eotper'] .= ':'.$post_vars['attr']['rp'].' '.$post_vars['attr']['rt'];
+
 								else if(substr_count($post_vars['attr']['level_ccaps_eotper'], ':') === 0)
 									$post_vars['attr']['level_ccaps_eotper'] .= '::'.$post_vars['attr']['rp'].' '.$post_vars['attr']['rt'];
 							}
@@ -107,6 +108,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							{
 								if(substr_count($post_vars['attr']['level_ccaps_eotper'], ':') === 1)
 									$post_vars['attr']['level_ccaps_eotper'] .= ':'.($post_vars['attr']['rp'] * $post_vars['attr']['rrt']).' '.$post_vars['attr']['rt'];
+
 								else if(substr_count($post_vars['attr']['level_ccaps_eotper'], ':') === 0)
 									$post_vars['attr']['level_ccaps_eotper'] .= '::'.($post_vars['attr']['rp'] * $post_vars['attr']['rrt']).' '.$post_vars['attr']['rt'];
 							}
@@ -117,184 +119,120 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							$plan_attr['ta'] = $cost_calculations['trial_total'];
 							$plan_attr['ra'] = $cost_calculations['total'];
 
-							$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
-							$period3 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars['attr']['rp'].' '.$post_vars['attr']['rt']);
+							update_user_meta($user_id, 'first_name', $post_vars['first_name']);
+							update_user_meta($user_id, 'last_name', $post_vars['last_name']);
 
-							$start_time = ($post_vars['attr']['tp']) ? // If there's an Initial/Trial Period; start when it's over.
-								c_ws_plugin__s2member_pro_stripe_utilities::stripe_start_time($period1) : // After Trial is over.
-								c_ws_plugin__s2member_pro_stripe_utilities::stripe_start_time($period3); // Or next billing cycle.
+							$old__subscr_cid      = get_user_option('s2member_subscr_cid');
+							$old__subscr_id       = get_user_option('s2member_subscr_id');
+							$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 
-							$reference = $start_time.':'.$period1.':'.$period3.'~'.$_SERVER['HTTP_HOST'].'~'.$post_vars['attr']['level_ccaps_eotper'].'~'.$cost_calculations['cur'];
-
-							update_user_meta($user_id, 'first_name', $post_vars['first_name']).update_user_meta($user_id, 'last_name', $post_vars['last_name']);
-
-							if(!($_stripe = array()) && (!$post_vars['attr']['tp'] || ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)))
+							if(!$global_response && (($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) || (!$post_vars['attr']['tp'] && $cost_calculations['total'] > 0)))
 							{
-								$_stripe['x_type']   = 'AUTH_CAPTURE';
-								$_stripe['x_method'] = 'CC';
+								if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'])))
+									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-								$_stripe['x_email']       = $user->user_email;
-								$_stripe['x_first_name']  = $post_vars['first_name'];
-								$_stripe['x_last_name']   = $post_vars['last_name'];
-								$_stripe['x_customer_ip'] = $_SERVER['REMOTE_ADDR'];
+								else if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token'])))
+									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-								$_stripe['x_invoice_num'] = 's2-'.uniqid();
-								$_stripe['x_description'] = $cost_calculations['desc'];
+								else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) ? $cost_calculations['trial_total'] : $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'])))
+									$global_response = array('response' => $stripe_charge, 'error' => TRUE);
 
-								$_stripe['s2_initial_payment'] = '1'; // Initial.
-
-								$_stripe['s2_invoice'] = $post_vars['attr']['level_ccaps_eotper'];
-								$_stripe['s2_custom']  = $post_vars['attr']['custom'];
-
-								if($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)
+								else // We got what we needed here.
 								{
-									$_stripe['x_tax']           = $cost_calculations['trial_tax'];
-									$_stripe['x_amount']        = $cost_calculations['trial_total'];
-									$_stripe['x_currency_code'] = $cost_calculations['cur'];
-								}
-								else // Otherwise, charge for the first Regular payment.
-								{
-									$_stripe['x_tax']           = $cost_calculations['tax'];
-									$_stripe['x_amount']        = $cost_calculations['total'];
-									$_stripe['x_currency_code'] = $cost_calculations['cur'];
-								}
-								$_stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);
-								$_stripe['x_exp_date']  = c_ws_plugin__s2member_pro_stripe_utilities::stripe_exp_date($post_vars['card_expiration']);
-								$_stripe['x_card_code'] = $post_vars['card_verification'];
-
-								#if (in_array($post_vars['card_type'], array('Maestro', 'Solo')))
-								#	if (preg_match ('/^[0-9]{2}\/[0-9]{4}$/', $post_vars['card_start_date_issue_number']))
-								#		$_stripe['x_card_start_date'] = preg_replace ('/[^0-9]/', '', $post_vars['card_start_date_issue_number']);
-								#	else // Otherwise, we assume they provided an issue number instead.
-								#		$_stripe['x_card_issue_number'] = $post_vars['card_start_date_issue_number'];
-
-								$_stripe['x_address'] = $post_vars['street'];
-								$_stripe['x_city']    = $post_vars['city'];
-								$_stripe['x_state']   = $post_vars['state'];
-								$_stripe['x_country'] = $post_vars['country'];
-								$_stripe['x_zip']     = $post_vars['zip'];
-							}
-							if(!($stripe = array())) // Recurring Profile.
-							{
-								$stripe['x_method'] = 'create';
-
-								$stripe['x_email']       = $user->user_email;
-								$stripe['x_first_name']  = $post_vars['first_name'];
-								$stripe['x_last_name']   = $post_vars['last_name'];
-								$stripe['x_customer_ip'] = $_SERVER['REMOTE_ADDR'];
-
-								$stripe['x_invoice_num'] = ($_stripe) ? $_stripe['x_invoice_num'] : 's2-'.uniqid();
-								$stripe['x_description'] = $cost_calculations['desc'];
-								$stripe['x_description'] .= ' (('.$reference.'))';
-
-								$stripe['x_amount']        = $cost_calculations['total'];
-								$stripe['x_currency_code'] = $cost_calculations['cur'];
-
-								$stripe['x_start_date'] = date('Y-m-d', $start_time);
-
-								$stripe['x_unit']              = 'days'; // Always calculated in days.
-								$stripe['x_length']            = c_ws_plugin__s2member_pro_stripe_utilities::per_term_2_days($post_vars['attr']['rp'], $post_vars['attr']['rt']);
-								$stripe['x_total_occurrences'] = ($post_vars['attr']['rr']) ? (($post_vars['attr']['rrt']) ? $post_vars['attr']['rrt'] : '9999') : '1';
-
-								$stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);
-								$stripe['x_exp_date']  = c_ws_plugin__s2member_pro_stripe_utilities::stripe_exp_date($post_vars['card_expiration']);
-								$stripe['x_card_code'] = $post_vars['card_verification'];
-
-								#if (in_array($post_vars['card_type'], array('Maestro', 'Solo')))
-								#	if (preg_match ('/^[0-9]{2}\/[0-9]{4}$/', $post_vars['card_start_date_issue_number']))
-								#		$stripe['x_card_start_date'] = preg_replace ('/[^0-9]/', '', $post_vars['card_start_date_issue_number']);
-								#	else // Otherwise, we assume they provided an issue number instead.
-								#		$stripe['x_card_issue_number'] = $post_vars['card_start_date_issue_number'];
-
-								$stripe['x_address'] = $post_vars['street'];
-								$stripe['x_city']    = $post_vars['city'];
-								$stripe['x_state']   = $post_vars['state'];
-								$stripe['x_country'] = $post_vars['country'];
-								$stripe['x_zip']     = $post_vars['zip'];
-							}
-							if(($cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0) || !$_stripe || (($_stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_aim_response($_stripe)) && empty($_stripe['__error'])))
-							{
-								if(($cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0) || (($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) && (empty($stripe['__error']) || ($_stripe && !empty($_stripe['transaction_id']) && $stripe['response_reason_code'] === 'E00018'))))
-								{
-									// $stripe['response_reason_code'] === 'E00018' ... Card expires before start time.
-
-									if($cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
-										$new__txn_id = $new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
-
-									else // Handle this normally. The transaction/subscription IDs come from Stripe as they always do.
-									{
-										$new__txn_id    = ($_stripe && !empty($_stripe['transaction_id'])) ? $_stripe['transaction_id'] : FALSE;
-										$new__subscr_id = ($_stripe && !empty($_stripe['transaction_id']) && $stripe['response_reason_code'] === 'E00018') ? $new__txn_id : $stripe['subscription_id'];
-									}
-									$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
-									$old__subscr_id       = get_user_option('s2member_subscr_id');
-
-									if(!($ipn = array())) // Simulated PayPal IPN.
-									{
-										$ipn['txn_type']  = 'subscr_signup';
-										$ipn['subscr_id'] = $new__subscr_id;
-										$ipn['custom']    = $post_vars['attr']['custom'];
-
-										$ipn['txn_id'] = ($new__txn_id) ? $new__txn_id : $new__subscr_id;
-
-										$ipn['period1'] = $period1;
-										$ipn['period3'] = $period3;
-
-										$ipn['mc_amount1'] = $cost_calculations['trial_total'];
-										$ipn['mc_amount3'] = $cost_calculations['total'];
-
-										$ipn['mc_gross'] = (preg_match('/^[1-9]/', $ipn['period1'])) ? $ipn['mc_amount1'] : $ipn['mc_amount3'];
-
-										$ipn['mc_currency'] = $cost_calculations['cur'];
-										$ipn['tax']         = $cost_calculations['tax'];
-
-										$ipn['recurring'] = ($post_vars['attr']['rr']) ? '1' : '';
-
-										$ipn['payer_email'] = $user->user_email;
-										$ipn['first_name']  = $post_vars['first_name'];
-										$ipn['last_name']   = $post_vars['last_name'];
-
-										$ipn['option_name1']      = 'Referencing Customer ID';
-										$ipn['option_selection1'] = $old__subscr_or_wp_id;
-
-										$ipn['option_name2']      = 'Customer IP Address';
-										$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
-
-										$ipn['item_name']   = $cost_calculations['desc'];
-										$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];
-
-										$ipn['s2member_paypal_proxy']     = 'stripe';
-										$ipn['s2member_paypal_proxy_use'] = 'pro-emails';
-										$ipn['s2member_paypal_proxy_use'] .= ($ipn['mc_gross'] > 0) ? ',subscr-signup-as-subscr-payment' : '';
-										$ipn['s2member_paypal_proxy_coupon']       = array('coupon_code' => $cp_attr['_coupon_code'], 'full_coupon_code' => $cp_attr['_full_coupon_code'], 'affiliate_id' => $cp_attr['_coupon_affiliate_id']);
-										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-										$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
-
-										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
-									}
-									if($_stripe && !empty($_stripe['transaction_id']) && $stripe['response_reason_code'] === 'E00018')
-									{
-										update_user_option($user_id, 's2member_auto_eot_time', $start_time);
-									}
-									if(($stripe = array('x_method' => 'cancel')) && ($stripe['x_subscription_id'] = $old__subscr_id) && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', TRUE, get_defined_vars()))
-									{
-										c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe);
-									}
-									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE['s2member_tracking'] = $s2member_tracking);
-
-									$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
-
-									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-										wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
-								}
-								else // Else, an error.
-								{
-									$global_response = array('response' => $stripe['__error'], 'error' => TRUE);
+									$new__txn_id  = $stripe_charge->id;
+									$new__txn_cid = $stripe_customer->id;
 								}
 							}
-							else // Else, an error.
+							else if(!$global_response)
 							{
-								$global_response = array('response' => $_stripe['__error'], 'error' => TRUE);
+								$new__txn_id  = strtoupper('free-'.uniqid());
+								$new__txn_cid = strtoupper('free-'.uniqid());
+							}
+							if(!$global_response && $cost_calculations['total'] > 0) // NOTE: we need to flag non-recurring subscriptions; it is s2Member's job to stop them.
+							{
+								if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
+									$global_response = array('response' => $stripe_plan, 'error' => TRUE);
+
+								else if((!isset($stripe_customer) || !is_object($stripe_customer))
+								        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name']))
+								) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
+
+								else if((!isset($stripe_customer) || !is_object($stripe_customer))
+								        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token']))
+								) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
+
+								else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id)))
+									$global_response = array('response' => $stripe_subscription, 'error' => TRUE);
+
+								else // We got what we needed here.
+								{
+									$new__subscr_id  = $stripe_subscription->id;
+									$new__subscr_cid = $stripe_customer->id;
+								}
+							}
+							else if(!$global_response)
+							{
+								$new__subscr_id  = strtoupper('free-'.uniqid());
+								$new__subscr_cid = strtoupper('free-'.uniqid());
+							}
+							if(!$global_response)
+							{
+								$ipn['txn_type']  = 'subscr_signup';
+								$ipn['subscr_id'] = $new__subscr_id;
+								$ipn['custom']    = $post_vars['attr']['custom'];
+
+								$ipn['txn_id'] = ($new__txn_id) ? $new__txn_id : $new__subscr_id;
+
+								$ipn['period1'] = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
+								$ipn['period3'] = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars['attr']['rp'].' '.$post_vars['attr']['rt']);
+
+								$ipn['mc_amount1'] = $cost_calculations['trial_total'];
+								$ipn['mc_amount3'] = $cost_calculations['total'];
+
+								$ipn['mc_gross'] = (preg_match('/^[1-9]/', $ipn['period1'])) ? $ipn['mc_amount1'] : $ipn['mc_amount3'];
+
+								$ipn['mc_currency'] = $cost_calculations['cur'];
+								$ipn['tax']         = $cost_calculations['tax'];
+
+								$ipn['recurring'] = ($post_vars['attr']['rr']) ? '1' : '';
+
+								$ipn['payer_email'] = $user->user_email;
+								$ipn['first_name']  = $post_vars['first_name'];
+								$ipn['last_name']   = $post_vars['last_name'];
+
+								$ipn['option_name1']      = 'Referencing Customer ID';
+								$ipn['option_selection1'] = $old__subscr_or_wp_id;
+
+								$ipn['option_name2']      = 'Customer IP Address';
+								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+
+								$ipn['item_name']   = $cost_calculations['desc'];
+								$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];
+
+								$ipn['s2member_paypal_proxy']     = 'stripe';
+								$ipn['s2member_paypal_proxy_use'] = 'pro-emails';
+								$ipn['s2member_paypal_proxy_use'] .= ($ipn['mc_gross'] > 0) ? ',subscr-signup-as-subscr-payment' : '';
+								$ipn['s2member_paypal_proxy_coupon']       = array('coupon_code' => $cp_attr['_coupon_code'], 'full_coupon_code' => $cp_attr['_full_coupon_code'], 'affiliate_id' => $cp_attr['_coupon_affiliate_id']);
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
+
+								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+
+								if($_stripe && !empty($_stripe['transaction_id']) && $stripe['response_reason_code'] === 'E00018')
+								{
+									update_user_option($user_id, 's2member_auto_eot_time', $start_time);
+								}
+								if($old__subscr_cid && $old__subscr_id && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', TRUE, get_defined_vars()))
+									c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($old__subscr_cid, $old__subscr_id);
+
+								setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+								setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+								($_COOKIE['s2member_tracking'] = $s2member_tracking);
+
+								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+
+								if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
+									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
 							}
 						}
 						else if($use_recurring_profile && !is_user_logged_in()) // Create a new account.
