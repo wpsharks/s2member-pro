@@ -58,7 +58,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 			if(!empty($_POST['s2member_pro_stripe_sp_checkout']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_sp_checkout']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-sp-checkout'))
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'] = array(); // This holds the global response details.
-				$global_response                                                = & $GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response']; // This is a shorter reference.
+				$global_response                                                = & $GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_sp_checkout']));
 				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
@@ -67,55 +67,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 				$post_vars['name']  = trim($post_vars['first_name'].' '.$post_vars['last_name']);
 				$post_vars['email'] = apply_filters('user_registration_email', sanitize_email($post_vars['email']), get_defined_vars());
 
-				if(empty($post_vars['card_expiration']) && isset($post_vars['card_expiration_month'], $post_vars['card_expiration_year']))
-					$post_vars['card_expiration'] = $post_vars['card_expiration_month'].'/'.$post_vars['card_expiration_year'];
-
 				$post_vars['recaptcha_challenge_field'] = (isset($_POST['recaptcha_challenge_field'])) ? trim(stripslashes($_POST['recaptcha_challenge_field'])) : '';
 				$post_vars['recaptcha_response_field']  = (isset($_POST['recaptcha_response_field'])) ? trim(stripslashes($_POST['recaptcha_response_field'])) : '';
 
 				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr'])) // Attr errors?
 				{
-					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('sp-checkout', $post_vars)))
+					if(!($form_submission_validation_errors // Validate sp-checkout input form fields.
+						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('sp-checkout', $post_vars))
+					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
-						if(!($stripe = array())) // Direct payments.
-						{
-							$stripe['x_type']   = 'AUTH_CAPTURE';
-							$stripe['x_method'] = 'CC';
-
-							$stripe['x_email']       = $post_vars['email'];
-							$stripe['x_first_name']  = $post_vars['first_name'];
-							$stripe['x_last_name']   = $post_vars['last_name'];
-							$stripe['x_customer_ip'] = $_SERVER['REMOTE_ADDR'];
-
-							$stripe['x_invoice_num'] = 's2-'.uniqid();
-							$stripe['x_description'] = $cost_calculations['desc'];
-
-							$stripe['s2_invoice'] = $post_vars['attr']['sp_ids_exp'];
-							$stripe['s2_custom']  = $post_vars['attr']['custom'];
-
-							$stripe['x_tax']           = $cost_calculations['tax'];
-							$stripe['x_amount']        = $cost_calculations['total'];
-							$stripe['x_currency_code'] = $cost_calculations['cur'];
-
-							$stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);
-							$stripe['x_exp_date']  = c_ws_plugin__s2member_pro_stripe_utilities::stripe_exp_date($post_vars['card_expiration']);
-							$stripe['x_card_code'] = $post_vars['card_verification'];
-
-							#if (in_array($post_vars['card_type'], array('Maestro', 'Solo')))
-							#	if (preg_match ('/^[0-9]{2}\/[0-9]{4}$/', $post_vars['card_start_date_issue_number']))
-							#		$stripe['x_card_start_date'] = preg_replace ('/[^0-9]/', '', $post_vars['card_start_date_issue_number']);
-							#	else // Otherwise, we assume they provided an issue number instead.
-							#		$stripe['x_card_issue_number'] = $post_vars['card_start_date_issue_number'];
-
-							$stripe['x_address'] = $post_vars['street'];
-							$stripe['x_city']    = $post_vars['city'];
-							$stripe['x_state']   = $post_vars['state'];
-							$stripe['x_country'] = $post_vars['country'];
-							$stripe['x_zip']     = $post_vars['zip'];
-						}
 						if($cost_calculations['total'] <= 0 || (($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_aim_response($stripe)) && empty($stripe['__error'])))
 						{
 							if($cost_calculations['total'] <= 0)
@@ -169,20 +132,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 								if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 							}
-							else // Else, unable to generate Access Link.
-							{
-								$global_response = array('response' => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-							}
+							else $global_response = array('response' => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 						}
-						else // Else, an error.
-						{
-							$global_response = array('response' => $stripe['__error'], 'error' => TRUE);
-						}
+						else $global_response = array('response' => $stripe['__error'], 'error' => TRUE);
 					}
-					else // Else, an error.
-					{
-						$global_response = $error;
-					}
+					else // Input form field validation errors.
+						$global_response = $form_submission_validation_errors;
 				}
 			}
 		}
