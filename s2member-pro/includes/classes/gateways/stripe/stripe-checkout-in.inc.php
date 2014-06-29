@@ -118,9 +118,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						}
 						if($use_subscription && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 						{
-							$plan_attr       = $cp_attr; // For the subscription plan.
-							$plan_attr['ta'] = $cost_calculations['trial_total'];
-							$plan_attr['ra'] = $cost_calculations['total'];
+							$plan_attr         = $cp_attr; // For the subscription plan.
+							$plan_attr['ta']   = $cost_calculations['trial_total'];
+							$plan_attr['ra']   = $cost_calculations['total'];
+							$plan_attr['desc'] = $cost_calculations['desc'];
 
 							update_user_meta($user_id, 'first_name', $post_vars['first_name']);
 							update_user_meta($user_id, 'last_name', $post_vars['last_name']);
@@ -247,9 +248,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						}
 						else if($use_subscription && !is_user_logged_in()) // Create a new account.
 						{
-							$plan_attr       = $cp_attr; // For the subscription plan.
-							$plan_attr['ta'] = $cost_calculations['trial_total'];
-							$plan_attr['ra'] = $cost_calculations['total'];
+							$plan_attr         = $cp_attr; // For the subscription plan.
+							$plan_attr['ta']   = $cost_calculations['trial_total'];
+							$plan_attr['ra']   = $cost_calculations['total'];
+							$plan_attr['desc'] = $cost_calculations['desc'];
 
 							$period1    = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
 							$period3    = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars['attr']['rp'].' '.$post_vars['attr']['rt']);
