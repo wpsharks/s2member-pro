@@ -55,7 +55,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 		 */
 		public static function stripe_sp_checkout()
 		{
-			if(!empty($_POST['s2member_pro_stripe_sp_checkout']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_sp_checkout']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-sp-checkout'))
+			if(!empty($_POST['s2member_pro_stripe_sp_checkout']['nonce'])
+			   && ($nonce = $_POST['s2member_pro_stripe_sp_checkout']['nonce'])
+			   && wp_verify_nonce($nonce, 's2member-pro-stripe-sp-checkout')
+			)
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'] = array(); // This holds the global response details.
 				$global_response                                                = & $GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'];
@@ -79,29 +82,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
-						if($cost_calculations['total'] <= 0 // It's completely free?
-						   || (
-								is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name']))
-								&& is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token']))
-								&& is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc']))
-							)
-						) // It's either a completely free purchase; or the charge went through successfully.
+						if(!$global_response)
+							if($cost_calculations['total'] > 0)
+							{
+								if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'])))
+									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+
+								else if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token'])))
+									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+
+								else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'])))
+									$global_response = array('response' => $stripe_charge, 'error' => TRUE);
+
+								else // We got what we needed here.
+								{
+									$new__txn_cid = $stripe_customer->id;
+									$new__txn_id  = $stripe_charge->id;
+								}
+							}
+						if(!$global_response)
 						{
-							if($cost_calculations['total'] <= 0)
-							{
-								$new__txn_id  = strtoupper('free-'.uniqid());
-								$new__txn_cid = strtoupper('free-'.uniqid());
-							}
-							else // Use values provided by Stripe.
-							{
-								/** @var Stripe_Charge $stripe_charge */
-								$new__txn_id = $stripe_charge->id;
-								/** @var Stripe_Customer $stripe_customer */
-								$new__txn_cid = $stripe_customer->id;
-							}
+							if(empty($new__txn_cid)) $new__txn_cid = strtoupper('free-'.uniqid());
+							if(empty($new__txn_id)) $new__txn_id = strtoupper('free-'.uniqid());
+
 							$ipn['txn_type'] = 'web_accept';
-							$ipn['txn_id']   = $new__txn_id;
 							$ipn['txn_cid']  = $new__txn_cid;
+							$ipn['txn_id']   = $new__txn_id;
 							$ipn['custom']   = $post_vars['attr']['custom'];
 
 							$ipn['mc_gross']    = $cost_calculations['total'];
@@ -136,20 +142,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 
 							$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
+							setcookie('s2member_sp_tracking', ($s2member_sp_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+							setcookie('s2member_sp_tracking', $s2member_sp_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+							($_COOKIE['s2member_sp_tracking'] = $s2member_sp_tracking);
+
 							if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars['attr']['ids'], $post_vars['attr']['exp'])))
 							{
-								setcookie('s2member_sp_tracking', ($s2member_sp_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie('s2member_sp_tracking', $s2member_sp_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE['s2member_sp_tracking'] = $s2member_sp_tracking);
-
 								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your purchase has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">click here</a> to proceed.', 's2member-front', 's2member'), esc_attr($sp_access_url)));
 
-								if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+								if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
+								   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
+								   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+								) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 							}
 							else $global_response = array('response' => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 						}
-						else if(isset($stripe_customer) && is_string($stripe_customer)) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
-						else if(isset($stripe_charge) && is_string($stripe_charge)) $global_response = array('response' => $stripe_charge, 'error' => TRUE);
-						else $global_response = array('response' => _x('Unknown API error. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
 					else // Input form field validation errors.
 						$global_response = $form_submission_validation_errors;

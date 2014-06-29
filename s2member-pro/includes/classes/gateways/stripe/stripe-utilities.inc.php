@@ -422,6 +422,55 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Calculates start date for a Recurring Payment Profile.
+		 *
+		 * @param string $period1 Optional. A "Period Term" combination. Defaults to `0 D`.
+		 * @param string $period3 Optional. A "Period Term" combination. Defaults to `0 D`.
+		 *
+		 * @return integer The start time, a Unix timestamp.
+		 */
+		public static function start_time($period1 = '', $period3 = '')
+		{
+			if(!($p1_time = 0) && ($period1 = trim(strtoupper($period1))))
+			{
+				list($num, $span) = preg_split('/\s+/', $period1, 2);
+
+				$days = 0; // Days start at 0.
+
+				if(is_numeric($num) && !is_numeric($span))
+				{
+					$days = ($span === 'D') ? 1 : $days;
+					$days = ($span === 'W') ? 7 : $days;
+					$days = ($span === 'M') ? 30 : $days;
+					$days = ($span === 'Y') ? 365 : $days;
+				}
+				$p1_days = (integer)$num * (integer)$days;
+				$p1_time = $p1_days * 86400;
+			}
+			if(!($p3_time = 0) && ($period3 = trim(strtoupper($period3))))
+			{
+				list($num, $span) = preg_split('/\s+/', $period3, 2);
+
+				$days = 0; // Days start at 0.
+
+				if(is_numeric($num) && !is_numeric($span))
+				{
+					$days = ($span === 'D') ? 1 : $days;
+					$days = ($span === 'W') ? 7 : $days;
+					$days = ($span === 'M') ? 30 : $days;
+					$days = ($span === 'Y') ? 365 : $days;
+				}
+				$p3_days = (integer)$num * (integer)$days;
+				$p3_time = $p3_days * 86400;
+			}
+			$start_time = strtotime('now') + $p1_time + $p3_time;
+			$start_time = ($start_time <= 0) ? strtotime('now') : $start_time;
+			$start_time = $start_time + 43200; // + 12 hours.
+
+			return $start_time;
+		}
+
+		/**
 		 * Get ``$_POST`` or ``$_REQUEST`` vars from Stripe.
 		 *
 		 * Stripe returns `x_MD5_Hash` in uppercase format for some reason.

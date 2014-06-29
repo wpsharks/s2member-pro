@@ -53,7 +53,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 		 */
 		public static function stripe_registration()
 		{
-			if(!empty($_POST['s2member_pro_stripe_registration']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_registration']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-registration'))
+			if(!empty($_POST['s2member_pro_stripe_registration']['nonce'])
+			   && ($nonce = $_POST['s2member_pro_stripe_registration']['nonce'])
+			   && wp_verify_nonce($nonce, 's2member-pro-stripe-registration')
+			)
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_registration_response'] = array(); // This holds the global response details.
 				$global_response                                                 = & $GLOBALS['ws_plugin__s2member_pro_stripe_registration_response'];
@@ -76,10 +79,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('registration', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						$_POST['ws_plugin__s2member_custom_reg_field_user_pass1'] = $post_vars['password1'];
-						$_POST['ws_plugin__s2member_custom_reg_field_first_name'] = $post_vars['first_name'];
-						$_POST['ws_plugin__s2member_custom_reg_field_last_name']  = $post_vars['last_name'];
-						$_POST['ws_plugin__s2member_custom_reg_field_opt_in']     = @$post_vars['custom_fields']['opt_in'];
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = $post_vars['password1'];
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_first_name'] = $post_vars['first_name'];
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_last_name']  = $post_vars['last_name'];
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_opt_in']     = @$post_vars['custom_fields']['opt_in'];
 
 						if($GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_fields'])
 							foreach(json_decode($GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_fields'], TRUE) as $field)
@@ -88,46 +91,39 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 								$field_id_class = preg_replace('/_/', '-', $field_var);
 
 								if(isset ($post_vars['custom_fields'][$field_var]))
-									$_POST['ws_plugin__s2member_custom_reg_field_'.$field_var] = $post_vars['custom_fields'][$field_var];
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_'.$field_var]
+										= $post_vars['custom_fields'][$field_var];
 							}
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']         = $post_vars['attr']['level'];
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']         = $post_vars['attr']['ccaps'];
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']        = $post_vars['attr']['custom'];
-						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time'] = ($post_vars['attr']['tp'] && $post_vars['attr']['tt']) ? date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $post_vars['attr']['tp'].' '.$post_vars['attr']['tt'])) : '';
-						$GLOBALS['ws_plugin__s2member_registration_return_url']                                                          = $post_vars['attr']['success']; // Custom success return.
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time'] = ($post_vars['attr']['tp'] && $post_vars['attr']['tt'])
+							? date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $post_vars['attr']['tp'].' '.$post_vars['attr']['tt'])) : '';
+						$GLOBALS['ws_plugin__s2member_registration_return_url']                                                          = $post_vars['attr']['success'];
 
 						$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 						$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
 						$create_user['user_pass']  = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
+						$has_custom_password       = $post_vars['password1'] && $post_vars['password1'] === $create_user['user_pass'];
 
-						if($post_vars['password1'] && $post_vars['password1'] === $create_user['user_pass']) // A custom password?
+						if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
+						    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
+						   && !is_wp_error($new__user_id)
+						)
 						{
-							if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass']))) || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email']))) && !is_wp_error($new__user_id))
-							{
-								update_user_option($new__user_id, 'default_password_nag', FALSE, TRUE);
-								wp_new_user_notification($new__user_id, $create_user['user_pass']);
+							update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
+							wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
+							if($has_custom_password)
 								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Please <a href="%s" rel="nofollow">login</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+							else $global_response = array('response' => _x('<strong>Thank you.</strong> You\'ll receive an email momentarily.', 's2member-front', 's2member'));
 
-								if($post_vars['attr']['success'] && substr($GLOBALS['ws_plugin__s2member_registration_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $GLOBALS['ws_plugin__s2member_registration_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
-							}
-							else $global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+							if($post_vars['attr']['success'] && substr($GLOBALS['ws_plugin__s2member_registration_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
+							   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $GLOBALS['ws_plugin__s2member_registration_return_url']))
+							   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+							) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 						}
-						else // Otherwise, they'll need to check their email for the auto-generated password.
-						{
-							if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass']))) || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email']))) && !is_wp_error($new__user_id))
-							{
-								update_user_option($new__user_id, 'default_password_nag', TRUE, TRUE); // Password nag.
-								wp_new_user_notification($new__user_id, $create_user['user_pass']);
-
-								$global_response = array('response' => _x('<strong>Thank you.</strong> You\'ll receive an email momentarily.', 's2member-front', 's2member'));
-
-								if($post_vars['attr']['success'] && substr($GLOBALS['ws_plugin__s2member_registration_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $GLOBALS['ws_plugin__s2member_registration_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
-							}
-							else $global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-						}
+						else $global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
 					else // Input form field validation errors.
 						$global_response = $form_submission_validation_errors;

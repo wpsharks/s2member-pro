@@ -53,7 +53,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 		 */
 		public static function stripe_update()
 		{
-			if(!empty($_POST['s2member_pro_stripe_update']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_update']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-update'))
+			if(!empty($_POST['s2member_pro_stripe_update']['nonce'])
+			   && ($nonce = $_POST['s2member_pro_stripe_update']['nonce'])
+			   && wp_verify_nonce($nonce, 's2member-pro-stripe-update')
+			)
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_update_response'] = array(); // This holds the global response details.
 				$global_response                                           = & $GLOBALS['ws_plugin__s2member_pro_stripe_update_response'];
@@ -81,8 +84,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 
-										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-											wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+										if($post_vars['attr']['success']
+										   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success']))
+										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+										) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
 									else $global_response = array('response' => $set_customer_card_token, 'error' => TRUE);
 								}
