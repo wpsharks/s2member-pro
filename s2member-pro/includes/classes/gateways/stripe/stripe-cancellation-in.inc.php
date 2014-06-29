@@ -67,7 +67,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 
 				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr'])) // Must NOT have any attr errors.
 				{
-					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('cancellation', $post_vars)))
+					if(!($form_submission_validation_errors // Validate cancellation input form fields.
+						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('cancellation', $post_vars))
+					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
 						if(is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) // Are they logged in?
 						{
@@ -77,41 +79,43 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 								{
 									if(!preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 									{
-										if(is_array($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars()))
+										if(is_object(c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($cur__subscr_cid, $cur__subscr_id)))
 										{
-											$ipn['txn_type']   = 'subscr_cancel';
-											$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
-											$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
-											$ipn['custom']     = $ipn_signup_vars['custom'];
+											if(is_array($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars()))
+											{
+												$ipn['txn_type']   = 'subscr_cancel';
+												$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+												$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+												$ipn['custom']     = $ipn_signup_vars['custom'];
 
-											$ipn['period1'] = $ipn_signup_vars['period1'];
-											$ipn['period3'] = $ipn_signup_vars['period3'];
+												$ipn['period1'] = $ipn_signup_vars['period1'];
+												$ipn['period3'] = $ipn_signup_vars['period3'];
 
-											$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
-											$ipn['first_name']  = $ipn_signup_vars['first_name'];
-											$ipn['last_name']   = $ipn_signup_vars['last_name'];
+												$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+												$ipn['first_name']  = $ipn_signup_vars['first_name'];
+												$ipn['last_name']   = $ipn_signup_vars['last_name'];
 
-											$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
-											$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+												$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+												$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
 
-											$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
-											$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+												$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+												$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
 
-											$ipn['item_name']   = $ipn_signup_vars['item_name'];
-											$ipn['item_number'] = $ipn_signup_vars['item_number'];
+												$ipn['item_name']   = $ipn_signup_vars['item_name'];
+												$ipn['item_number'] = $ipn_signup_vars['item_number'];
 
-											$ipn['s2member_paypal_proxy']              = 'stripe';
-											$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-											$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+												$ipn['s2member_paypal_proxy']              = 'stripe';
+												$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+												$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-											c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+												c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+											}
+											$global_response = array('response' => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
+
+											if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
+												wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 										}
-										c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($cur__subscr_cid, $cur__subscr_id);
-
-										$global_response = array('response' => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
-
-										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-											wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+										else $global_response = array('response' => _x('API failure. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 									}
 									else // Else, account already terminated.
 									{
@@ -137,15 +141,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 							}
 						}
-						else // Else, an error. Not logged in.
-						{
-							$global_response = array('response' => _x('You\'re <strong>NOT</strong> logged in.', 's2member-front', 's2member'), 'error' => TRUE);
-						}
+						else $global_response = array('response' => _x('You\'re <strong>NOT</strong> logged in.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
-					else // Else, an error.
-					{
-						$global_response = $error;
-					}
+					else // Input form field validation errors.
+						$global_response = $form_submission_validation_errors;
 				}
 			}
 		}

@@ -56,88 +56,44 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 			if(!empty($_POST['s2member_pro_stripe_update']['nonce']) && ($nonce = $_POST['s2member_pro_stripe_update']['nonce']) && wp_verify_nonce($nonce, 's2member-pro-stripe-update'))
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_update_response'] = array(); // This holds the global response details.
-				$global_response                                           = & $GLOBALS['ws_plugin__s2member_pro_stripe_update_response']; // This is a shorter reference.
+				$global_response                                           = & $GLOBALS['ws_plugin__s2member_pro_stripe_update_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_update']));
 				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 				$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_stripe_update_post_attr', $post_vars['attr'], get_defined_vars());
-
-				if(empty($post_vars['card_expiration']) && isset($post_vars['card_expiration_month'], $post_vars['card_expiration_year']))
-					$post_vars['card_expiration'] = $post_vars['card_expiration_month'].'/'.$post_vars['card_expiration_year'];
 
 				$post_vars['recaptcha_challenge_field'] = (isset($_POST['recaptcha_challenge_field'])) ? trim(stripslashes($_POST['recaptcha_challenge_field'])) : '';
 				$post_vars['recaptcha_response_field']  = (isset($_POST['recaptcha_response_field'])) ? trim(stripslashes($_POST['recaptcha_response_field'])) : '';
 
 				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr'])) // Must NOT have any attr errors.
 				{
-					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('update', $post_vars)))
+					if(!($form_submission_validation_errors // Validate update input form fields.
+						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('update', $post_vars))
+					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID))
+						if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID)) // Are they logged in?
 						{
-							if(($stripe = array('x_method' => 'status')) && ($stripe['x_subscription_id'] = $cur__subscr_id = get_user_option('s2member_subscr_id')))
+							if(($cur__subscr_cid = get_user_option('s2member_subscr_cid')) && ($cur__subscr_id = get_user_option('s2member_subscr_id')))
 							{
-								if(($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) && empty($stripe['__error']) && preg_match('/^(active|suspended)$/i', $stripe['subscription_status']))
+								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($cur__subscr_cid, $cur__subscr_id)) && !preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 								{
-									$stripe = array(); // Reset the Stripe array.
-
-									$stripe['x_method']          = 'update';
-									$stripe['x_subscription_id'] = $cur__subscr_id;
-
-									$stripe['x_email']      = $user->user_email;
-									$stripe['x_first_name'] = $user->first_name;
-									$stripe['x_last_name']  = $user->last_name;
-
-									$stripe['x_card_num']  = preg_replace('/[^0-9]/', '', $post_vars['card_number']);
-									$stripe['x_exp_date']  = c_ws_plugin__s2member_pro_stripe_utilities::stripe_exp_date($post_vars['card_expiration']);
-									$stripe['x_card_code'] = $post_vars['card_verification'];
-
-									#if (in_array($post_vars['card_type'], array('Maestro', 'Solo')))
-									#	if (preg_match ('/^[0-9]{2}\/[0-9]{4}$/', $post_vars['card_start_date_issue_number']))
-									#		$stripe['x_card_start_date'] = preg_replace ('/[^0-9]/', '', $post_vars['card_start_date_issue_number']);
-									#	else // Otherwise, we assume they provided an issue number instead.
-									#		$stripe['x_card_issue_number'] = $post_vars['card_start_date_issue_number'];
-
-									$stripe['x_address'] = $post_vars['street'];
-									$stripe['x_city']    = $post_vars['city'];
-									$stripe['x_state']   = $post_vars['state'];
-									$stripe['x_country'] = $post_vars['country'];
-									$stripe['x_zip']     = $post_vars['zip'];
-
-									if(($stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_arb_response($stripe)) && empty($stripe['__error']))
+									if(is_object($set_customer_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($cur__subscr_cid, $post_vars['card_token'])))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 
 										if($post_vars['attr']['success'] && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
 											wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
-									else // Else, an error.
-									{
-										$global_response = array('response' => $stripe['__error'], 'error' => TRUE);
-									}
+									else $global_response = array('response' => $set_customer_card_token, 'error' => TRUE);
 								}
-								else if($stripe && empty($stripe['__error']) && !preg_match('/^(active|suspended)$/i', $stripe['subscription_status']))
-								{
-									$global_response = array('response' => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-								}
-								else // Else, an error.
-								{
-									$global_response = array('response' => $stripe['__error'], 'error' => TRUE);
-								}
+								else $global_response = array('response' => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 							}
-							else // Else, an error.
-							{
-								$global_response = array('response' => _x('<strong>Oops.</strong> No Subscr. ID. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-							}
+							else $global_response = array('response' => _x('<strong>Oops.</strong> No Customer|Subscr. ID. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 						}
-						else // Else, an error.
-						{
-							$global_response = array('response' => _x('You\'re <strong>NOT</strong> logged in.', 's2member-front', 's2member'), 'error' => TRUE);
-						}
+						else $global_response = array('response' => _x('You\'re <strong>NOT</strong> logged in.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
-					else // Else, an error.
-					{
-						$global_response = $error;
-					}
+					else // Input form field validation errors.
+						$global_response = $form_submission_validation_errors;
 				}
 			}
 		}
