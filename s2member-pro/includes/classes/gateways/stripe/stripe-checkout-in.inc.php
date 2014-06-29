@@ -373,7 +373,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
 								@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
-								if($eotper) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
+								if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
 									= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
 
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
@@ -569,7 +569,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
 								@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
-								if($eotper) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
+								if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
 									= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
 
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
