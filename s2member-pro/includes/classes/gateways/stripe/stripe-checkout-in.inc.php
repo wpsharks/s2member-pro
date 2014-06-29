@@ -143,11 +143,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									$new__txn_cid = $stripe_customer->id;
 								}
 							}
-							else if(!$global_response)
-							{
-								$new__txn_id  = strtoupper('free-'.uniqid());
-								$new__txn_cid = strtoupper('free-'.uniqid());
-							}
 							if(!$global_response && $cost_calculations['total'] > 0) // NOTE: we need to flag non-recurring subscriptions; it is s2Member's job to stop them.
 							{
 								if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
