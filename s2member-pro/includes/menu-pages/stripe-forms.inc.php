@@ -453,7 +453,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<h3>Free Registration Forms (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-free-registration\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 				echo '<div id="ws-plugin--s2member-pro-forms-success-free-registration" style="display:none;">'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%role%%</code> = The Role ID <code>(subscriber, s2member_level[0-9]+, administrator, editor, author, contributor)</code>.</li>'."\n";
 				echo '<li><code>%%level%%</code> = The Level number <code>(0, 1, 2, 3, 4)</code>. (<em>deprecated, no longer recommended; use <code>%%role%%</code></em>)</li>'."\n";
 				echo '<li><code>%%ccaps%%</code> = Custom Capabilities. Ex: <code>music,videos,free_gift</code> (<em>in comma-delimited format</em>).</li>'."\n";
@@ -471,7 +471,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 				echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 				echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -479,7 +479,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 				echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 				echo '</ul>'."\n";
@@ -492,7 +492,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<h3>Membership Sales / Signups &amp; Modifications (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 				echo '<div id="ws-plugin--s2member-pro-forms-success-sales" style="display:none;">'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%subscr_id%%</code> = The Stripe Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Stripe does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 				echo '<li><code>%%subscr_cid%%</code> = This is the Customer\'s ID in Stripe, which remains constant throughout any &amp; all future payments. Each Stripe Customer has this Customer ID; and also a Subscription and/or Transaction ID [ <a href="#" onclick="alert(\'Each Stripe Customer has a Customer ID; and also a Subscription and/or Transaction ID. See %%subscr_id%% for further details.\'); return false;">?</a> ]</li>'."\n";
 				echo '<li><code>%%initial%%</code> = The Initial Fee charged during signup. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent, whenever they initially signed up, no matter what. Even if that amount is 0.\\n\\nIf a Customer signs up, under the terms of a 100% Free Trial Period, this will be 0. So be careful using %%initial%% when you offer a 100% Free Trial Period, because a $0.00 sale amount could cause havoc with affiliate programs.\\n\\nIf you\\\'re offering a 100% Free Trial Period, and you need to track sales through affiliate programs, you can either hard-code an amount; or use `s2Member -› API Notifications -› Payment Notifications` instead.\'); return false;">?</a> ]</li>'."\n";
@@ -519,14 +519,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Coupon Replacement Codes:</strong>'."\n";
-				echo '<ul>'."\n";
+				echo '<ul class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>'."\n";
 				echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
 				echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 				echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 				echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -534,7 +534,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 				echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 				echo '</ul>'."\n";
@@ -547,7 +547,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<h3>Independent Custom Capability Sales (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-ccaps\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 				echo '<div id="ws-plugin--s2member-pro-forms-success-ccaps" style="display:none;">'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%txn_id%%</code> = The Payment Transaction ID, which is always unique for each payment received.</li>'."\n";
 				echo '<li><code>%%txn_cid%%</code> = This is the Customer\'s ID in Stripe. Each Stripe Customer has this Customer ID; and also a Transaction ID associated with their purchase.</li>'."\n";
 				echo '<li><code>%%amount%%</code> = The Amount of the payment. Most affiliate programs calculate commissions from this.</li>'."\n";
@@ -569,14 +569,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Coupon Replacement Codes:</strong>'."\n";
-				echo '<ul>'."\n";
+				echo '<ul class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>'."\n";
 				echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
 				echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 				echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 				echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -584,7 +584,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 				echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 				echo '</ul>'."\n";
@@ -597,7 +597,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<h3>Specific Post/Page Transactions (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sp-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 				echo '<div id="ws-plugin--s2member-pro-forms-success-sp-sales" style="display:none;">'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>'."\n";
 				echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>'."\n";
 				echo '<li><code>%%txn_id%%</code> = The Stripe Transaction ID. Stripe assigns a unique identifier for every purchase.</li>'."\n";
@@ -615,14 +615,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '</ul>'."\n";
 
 				echo '<strong>Coupon Replacement Codes:</strong>'."\n";
-				echo '<ul>'."\n";
+				echo '<ul class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>'."\n";
 				echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
 				echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
 				echo '</ul>'."\n";
 
 				echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 				echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 				echo '</ul>'."\n";
@@ -635,7 +635,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<h3>Cancellations &amp; Billing Updates (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-cancellations-updates\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 				echo '<div id="ws-plugin--s2member-pro-forms-success-cancellations-updates" style="display:none;">'."\n";
-				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+				echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 				echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link back to their account page. You don\'t have to use this. You can generate your own response if you like.</li>'."\n";
 				echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link back to their account page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>'."\n";
 				echo '</ul>'."\n";

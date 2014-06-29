@@ -318,7 +318,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<textarea name="ws_plugin__s2member_pro_signup_email_message" id="ws-plugin--s2member-pro-signup-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_signup_email_message']).'</textarea><br />'."\n";
 			echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through a Stripe Pro Form.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%registration_url%%</code> = Not needed with Stripe Pro Form integration. Pro Forms handle this automatically.</li>'."\n";
 			echo '<li><code>%%subscr_id%%</code> = The Stripe Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Stripe does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%subscr_cid%%</code> = Applicable only with Stripe integration. This is the Customer\'s ID in Stripe, which remains constant throughout any &amp; all future payments. Each Stripe Customer has this Customer ID; and also a Subscription and/or Transaction ID [ <a href="#" onclick="alert(\'Applicable only when you integrate s2Member with Stripe. In all other cases, the %%subscr_cid%% is simply set to the %%subscr_id%% value; i.e. it is a duplicate of %%subscr_id%% when running anything other than Stripe.\\n\\nEach Stripe Customer has a Customer ID; and also a Subscription and/or Transaction ID. See %%subscr_id%% for further details.\'); return false;">?</a> ]</li>'."\n";
@@ -340,7 +340,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 			echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 			echo '</ul>'."\n";
@@ -421,7 +421,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<textarea name="ws_plugin__s2member_modification_email_message" id="ws-plugin--s2member-modification-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['modification_email_message']).'</textarea><br />'."\n";
 			echo 'Message Body used in the email sent to a Customer after a successful modification has occurred through Stripe.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%subscr_id%%</code> = The Stripe Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Stripe does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%subscr_cid%%</code> = Applicable only with Stripe integration. This is the Customer\'s ID in Stripe, which remains constant throughout any &amp; all future payments. Each Stripe Customer has this Customer ID; and also a Subscription and/or Transaction ID [ <a href="#" onclick="alert(\'Applicable only when you integrate s2Member with Stripe. In all other cases, the %%subscr_cid%% is simply set to the %%subscr_id%% value; i.e. it is a duplicate of %%subscr_id%% when running anything other than Stripe.\\n\\nEach Stripe Customer has a Customer ID; and also a Subscription and/or Transaction ID. See %%subscr_id%% for further details.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%initial%%</code> = The Initial Fee. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent when they completed checkout, no matter what. Even if that amount is 0. If a Customer upgrades/downgrades under the terms of a 100% Free Trial Period, this will be 0.\'); return false;">?</a> ]</li>'."\n";
@@ -448,7 +448,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Registration/Profile Fields are also supported in this email:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -456,7 +456,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 			echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 			echo '</ul>'."\n";
@@ -537,7 +537,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<textarea name="ws_plugin__s2member_ccap_email_message" id="ws-plugin--s2member-ccap-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['ccap_email_message']).'</textarea><br />'."\n";
 			echo 'Message Body used in the email sent to a Customer after a purchase is completed through Stripe.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%txn_id%%</code> = The Stripe Transaction ID. Stripe assigns a unique identifier for every purchase.</li>'."\n";
 			echo '<li><code>%%txn_cid%%</code> = Applicable only with Stripe integration. This is the Customer\'s ID in Stripe. Each Stripe Customer has this Customer ID; and also a Transaction ID associated with their purchase of a the Custom Capability [ <a href="#" onclick="alert(\'Applicable only when you integrate s2Member with Stripe. In all other cases, the %%txn_cid%% is simply set to the %%txn_id%% value; i.e. it is a duplicate of %%txn_id%% when running anything other than Stripe.\\n\\nEach Stripe Customer has a Customer ID; and also a Transaction ID. See %%txn_id%% for further details.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%amount%%</code> = The full Amount that you charged for Custom Capability access.</li>'."\n";
@@ -557,7 +557,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Registration/Profile Fields are also supported in this email:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -565,7 +565,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 			echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 			echo '</ul>'."\n";
@@ -646,7 +646,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<textarea name="ws_plugin__s2member_pro_sp_email_message" id="ws-plugin--s2member-pro-sp-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_sp_email_message']).'</textarea><br />'."\n";
 			echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through a Stripe Pro Form, for Specific Post/Page Access.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>'."\n";
 			echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>'."\n";
 			echo '<li><code>%%txn_id%%</code> = The Stripe Transaction ID. Stripe assigns a unique identifier for every purchase.</li>'."\n";
@@ -662,7 +662,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-			echo '<ul>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 			echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 			echo '</ul>'."\n";
