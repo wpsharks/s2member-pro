@@ -94,10 +94,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							$cost_calculations['trial_tax_per']   = ''; // Ditch this calculation now also.
 							$cost_calculations['trial_total']     = '0.00'; // Ditch this calculation now also.
 						}
-						$use_recurring_profile     = ($post_vars['attr']['rr'] === 'BN' || (!$post_vars['attr']['tp'] && !$post_vars['attr']['rr'])) ? FALSE : TRUE;
+						$use_subscription          = ($post_vars['attr']['rr'] === 'BN' || (!$post_vars['attr']['tp'] && !$post_vars['attr']['rr'])) ? FALSE : TRUE;
 						$is_independent_ccaps_sale = ($post_vars['attr']['level'] === '*') ? TRUE : FALSE; // Selling Independent Custom Capabilities?
 
-						if($use_recurring_profile && $cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
+						if($use_subscription && $cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
 						{
 							if(!$post_vars['attr']['rr'] && $post_vars['attr']['rt'] !== 'L')
 							{
@@ -116,7 +116,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									$post_vars['attr']['level_ccaps_eotper'] .= '::'.($post_vars['attr']['rp'] * $post_vars['attr']['rrt']).' '.$post_vars['attr']['rt'];
 							}
 						}
-						if($use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
+						if($use_subscription && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 						{
 							$plan_attr       = $cp_attr; // For the subscription plan.
 							$plan_attr['ta'] = $cost_calculations['trial_total'];
@@ -245,7 +245,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
 							}
 						}
-						else if($use_recurring_profile && !is_user_logged_in()) // Create a new account.
+						else if($use_subscription && !is_user_logged_in()) // Create a new account.
 						{
 							$plan_attr       = $cp_attr; // For the subscription plan.
 							$plan_attr['ta'] = $cost_calculations['trial_total'];
@@ -413,7 +413,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								}
 							}
 						}
-						else if(!$use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
+						else if(!$use_subscription && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 						{
 							update_user_meta($user_id, 'first_name', $post_vars['first_name']);
 							update_user_meta($user_id, 'last_name', $post_vars['last_name']);
@@ -492,7 +492,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
 							}
 						}
-						else if(!$use_recurring_profile && !is_user_logged_in()) // Create a new account.
+						else if(!$use_subscription && !is_user_logged_in()) // Create a new account.
 						{
 							if(!$global_response)
 								if($cost_calculations['total'] > 0)
