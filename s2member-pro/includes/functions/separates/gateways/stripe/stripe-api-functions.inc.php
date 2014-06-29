@@ -53,8 +53,41 @@ if(!function_exists('s2member_pro_stripe_s2p_v_query_ok'))
 {
 	function s2member_pro_stripe_s2p_v_query_ok($url_uri_query = FALSE, $ignore_time = FALSE, $exp_secs = FALSE)
 	{
-		$check_time = ($ignore_time) ? FALSE : TRUE;
+		$check_time = ($ignore_time) ? FALSE : TRUE; // Make this compatible with `$check_time`.
 
 		return c_ws_plugin__s2member_utils_urls::s2member_sig_ok($url_uri_query, $check_time, $exp_secs, 's2p-v');
+	}
+}
+/**
+ * Get a Stripe customer object instance.
+ *
+ * @param null|integer $user_id If it's for an existing user; pass the user's ID (optional).
+ * @param string       $email Customer's email address (optional).
+ * @param string       $fname Customer's first name (optional).
+ * @param string       $lname Customer's last name (optional).
+ * @param array        $metadata Any metadata (optional).
+ *
+ * @return Stripe_Customer|string Customer object; else error message.
+ */
+if(!function_exists('s2member_pro_stripe_customer'))
+{
+	function s2member_pro_stripe_customer()
+	{
+		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer', func_get_args());
+	}
+}
+/**
+ * Get a Stripe customer subscription object instance.
+ *
+ * @param string $customer_id Customer ID in Stripe.
+ * @param string $subscription_id Subscription ID in Stripe.
+ *
+ * @return Stripe_Subscription|string Subscription object; else error message.
+ */
+if(!function_exists('s2member_pro_stripe_customer_subscription'))
+{
+	function s2member_pro_stripe_customer_subscription()
+	{
+		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription', func_get_args());
 	}
 }
