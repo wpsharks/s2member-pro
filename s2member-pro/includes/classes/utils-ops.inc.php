@@ -79,16 +79,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_ops"))
 											}
 										else if (is_string ($op) && $fill) // Handle Replacement Codes.
 											{
-												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_site->domain . $current_site->path, "/") . "/"), $op) : preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/") . "/"), $op);
-												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_site->domain . $current_site->path, "/")), $op) : preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/")), $op);
+												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim ($current_site->domain . $current_site->path, "/") . "/"), $op) : preg_replace ("/%%_op__current_site_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/") . "/"), $op);
+												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim ($current_site->domain . $current_site->path, "/")), $op) : preg_replace ("/%%_op__current_site_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/")), $op);
 
-												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_blog_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_blog->domain . $current_blog->path, "/") . "/"), $op) : preg_replace ("/%%_op__current_blog_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/") . "/"), $op);
-												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_blog_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim ($current_blog->domain . $current_blog->path, "/")), $op) : preg_replace ("/%%_op__current_blog_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/")), $op);
+												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_blog_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim ($current_blog->domain . $current_blog->path, "/") . "/"), $op) : preg_replace ("/%%_op__current_blog_domain_path\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/") . "/"), $op);
+												$op = (is_multisite ()) ? preg_replace ("/%%_op__current_blog_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim ($current_blog->domain . $current_blog->path, "/")), $op) : preg_replace ("/%%_op__current_blog_domain_path%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/")), $op);
 
-												$op = preg_replace ("/%%_op__site_url%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/")), preg_replace ("/%%_op__site_url\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (site_url (), "/") . "/"), $op));
-												$op = preg_replace ("/%%_op__home_url%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (home_url (), "/")), preg_replace ("/%%_op__home_url\/%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (rtrim (home_url (), "/") . "/"), $op));
+												$op = preg_replace ("/%%_op__site_url%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/")), preg_replace ("/%%_op__site_url\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (site_url (), "/") . "/"), $op));
+												$op = preg_replace ("/%%_op__home_url%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (home_url (), "/")), preg_replace ("/%%_op__home_url\/%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (rtrim (home_url (), "/") . "/"), $op));
 
-												$op = preg_replace ("/%%_op__domain%%/i", c_ws_plugin__s2member_utils_strings::esc_ds ($_SERVER["HTTP_HOST"]), preg_replace ("/%%_op__blog_name%%/i", c_ws_plugin__s2member_utils_strings::esc_ds (get_bloginfo ("name")), $op));
+												$op = preg_replace ("/%%_op__domain%%/i", c_ws_plugin__s2member_utils_strings::esc_refs ($_SERVER["HTTP_HOST"]), preg_replace ("/%%_op__blog_name%%/i", c_ws_plugin__s2member_utils_strings::esc_refs (get_bloginfo ("name")), $op));
 											}
 									}
 							}

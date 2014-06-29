@@ -83,10 +83,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images/clickbank-edit-button.png";
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-cancellation-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								if($attr["output"] === "url" && preg_match('/ href\="(.*?)"/', $code, $m) && ($href = $m[1]))
@@ -101,34 +101,34 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:".$attr["ids"].":".$attr["exp"];
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-sp-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
-								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["cbp"])), $code);
-								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
-								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["sp_ids_exp"])), $code);
-								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["desc"])), $code);
-								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
+								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
+								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
+								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["sp_ids_exp"])), $code);
+								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["desc"])), $code);
+								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["custom"])), $code);
 
-								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
-								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
-								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
-								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbf"])), $code);
 
-								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
-								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["vtid"])), $code);
 
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
-								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_ds("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
+								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 
 								if(preg_match('/ href\="(.*?)"/', $code, $m) && ($url = c_ws_plugin__s2member_utils_urls::n_amps($m[1])))
-									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
+									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								if($attr["output"] === "url" && preg_match('/ href\="(.*?)"/', $code, $m) && ($href = $m[1]))
@@ -144,36 +144,36 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-ccaps-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
-								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["cbp"])), $code);
-								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
-								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["level_ccaps_eotper"])), $code);
-								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["desc"])), $code);
-								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
+								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
+								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
+								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["level_ccaps_eotper"])), $code);
+								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["desc"])), $code);
+								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["custom"])), $code);
 
-								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
-								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
-								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
-								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbf"])), $code);
 
-								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
-								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["vtid"])), $code);
 
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
-								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
+								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(uniqid())), $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
-								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_ds("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
+								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 
 								if(preg_match('/ href\="(.*?)"/', $code, $m) && ($url = c_ws_plugin__s2member_utils_urls::n_amps($m[1])))
-									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
+									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								if($attr["output"] === "url" && preg_match('/ href\="(.*?)"/', $code, $m) && ($href = $m[1]))
@@ -189,38 +189,38 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
-								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["cbp"])), $code);
-								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
-								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["level_ccaps_eotper"])), $code);
-								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["desc"])), $code);
-								$code = preg_replace("/%%p1%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tp"]." ".$attr["tt"])) : ""), $code);
-								$code = preg_replace("/%%p3%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["rp"]." ".$attr["rt"])) : ""), $code);
-								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["custom"])), $code);
+								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
+								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
+								$code = preg_replace("/%%invoice%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["level_ccaps_eotper"])), $code);
+								$code = preg_replace("/%%desc%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["desc"])), $code);
+								$code = preg_replace("/%%p1%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["tp"]." ".$attr["tt"])) : ""), $code);
+								$code = preg_replace("/%%p3%%/", (($attr["rr"]) ? c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["rp"]." ".$attr["rt"])) : ""), $code);
+								$code = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["custom"])), $code);
 
-								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbskin"])), $code);
-								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbfid"])), $code);
-								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbur"])), $code);
-								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["cbf"])), $code);
+								$code = preg_replace("/%%cbskin%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbskin"])), $code);
+								$code = preg_replace("/%%cbfid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbfid"])), $code);
+								$code = preg_replace("/%%cbur%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbur"])), $code);
+								$code = preg_replace("/%%cbf%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["cbf"])), $code);
 
-								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["tid"])), $code);
-								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($attr["vtid"])), $code);
+								$code = preg_replace("/%%tid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["tid"])), $code);
+								$code = preg_replace("/%%vtid%%/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($attr["vtid"])), $code);
 
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
-								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode(uniqid())), $code);
+								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(uniqid())), $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
 
-								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_ds("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
+								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 
 								if(preg_match('/ href\="(.*?)"/', $code, $m) && ($url = c_ws_plugin__s2member_utils_urls::n_amps($m[1])))
-									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
+									$code = preg_replace('/ href\=".*?"/', ' href="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(c_ws_plugin__s2member_utils_urls::add_s2member_sig($url))).'"', $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								if($attr["output"] === "url" && preg_match('/ href\="(.*?)"/', $code, $m) && ($href = $m[1]))

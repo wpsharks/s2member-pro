@@ -95,10 +95,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/clickbank-checkout-button-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($n)), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $n . "_label"])), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($n)), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $n . "_label"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
@@ -129,8 +129,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 						echo 'Button Code<br />For Cancellations:<br /><br />' . "\n";
 						echo '<div id="ws-plugin--s2member-pro-cancellation-button-prev">' . "\n";
 						$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/buttons/clickbank-cancellation-button.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr (site_url ())), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace ("/&amp;/", "&", $ws_plugin__s2member_pro_temp_s); // Match this with the JavaScript generator.
 						echo preg_replace ("/\<a/", '<a target="_blank"', $ws_plugin__s2member_pro_temp_s);
 						echo '</div>' . "\n";
@@ -202,8 +202,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/clickbank-ccaps-checkout-button-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
@@ -302,8 +302,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 						$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/clickbank-sp-checkout-button-shortcode.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ("0")), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";

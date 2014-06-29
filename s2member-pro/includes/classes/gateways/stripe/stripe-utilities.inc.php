@@ -715,8 +715,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return array|string Original array, with prices and description modified when/if a Coupon Code is accepted.
 		 *   Or, if ``$return === 'response'``, return a string response, indicating status.
-		 *
-		 * @TODO Query configured coupon codes in Stripe too.
 		 */
 		public static function apply_coupon($attr = array(), $coupon_code = '', $return = '', $process = array())
 		{
@@ -756,8 +754,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 							{
 								if($coupon['singulars'] === array('all') || in_array($attr['singular'], $coupon['singulars']))
 								{
-									$coupon_accepted = /* Yes, this Coupon Code has been accepted. */
-										TRUE;
+									$coupon_accepted = TRUE; // Yes, this Coupon Code has been accepted.
 
 									if($coupon['flat-rate']) // If it's a flat-rate Coupon.
 									{
@@ -950,9 +947,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 								$response = sprintf(_x('<div>Sorry, your Coupon <strong>expired</strong>: <em>%s</em>.</div>', 's2member-front', 's2member'), $coupon['expired']);
 						}
 					}
-					if(isset($coupon_applies, $desc) && $coupon_applies /* Need to modify the description dynamically? */)
+					if(isset($coupon_applies, $full_coupon_code, $desc) && $coupon_applies /* Need to modify the description dynamically? */)
 						// translators: `%1$s` is new price/description, after coupon applied. `%2$s` is original description.
-						$attr['desc'] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', 's2member-front', 's2member'), $desc, $attr['desc']);
+						$attr['desc'] = sprintf(_x('%1$s %2$s ~ ORIGINALLY: %3$s', 's2member-front', 's2member'), strtoupper($full_coupon_code), $desc, $attr['desc']);
 
 					$attr['ta'] = (isset($coupon_applies, $ta) && $coupon_applies) ? $ta : $attr['ta']; // Do we have a new Trial Amount?
 					$attr['ra'] = (isset($coupon_applies, $ra) && $coupon_applies) ? $ra : $attr['ra']; // A new Regular Amount?
@@ -964,10 +961,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 									foreach(preg_split('/['."\r\n\t".']+/', $_urls) as $_url /* Notify each of the URLs. */)
 
-										if(($_url = preg_replace('/%%full_coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($full_coupon_code)), $_url)))
-											if(($_url = preg_replace('/%%coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($coupon_code)), $_url)))
-												if(($_url = preg_replace('/%%(?:coupon_affiliate_id|affiliate_id)%%/i', c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($affiliate_id)), $_url)))
-													if(($_url = preg_replace('/%%user_ip%%/i', c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER['REMOTE_ADDR'])), $_url)))
+										if(($_url = preg_replace('/%%full_coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($full_coupon_code)), $_url)))
+											if(($_url = preg_replace('/%%coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($coupon_code)), $_url)))
+												if(($_url = preg_replace('/%%(?:coupon_affiliate_id|affiliate_id)%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($affiliate_id)), $_url)))
+													if(($_url = preg_replace('/%%user_ip%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER['REMOTE_ADDR'])), $_url)))
 													{
 														if(($_url = trim(preg_replace('/%%(.+?)%%/i', '', $_url))) /* Cleanup any remaining Replacement Codes. */)
 
