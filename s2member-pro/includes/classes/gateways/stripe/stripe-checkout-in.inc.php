@@ -67,15 +67,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 				$post_vars['username'] = (is_multisite()) ? strtolower(@$post_vars['username']) : @$post_vars['username']; // Force lowercase.
 				$post_vars['username'] = preg_replace('/\s+/', '', sanitize_user(($post_vars['_o_username'] = $post_vars['username']), is_multisite()));
 
-				if(empty($post_vars['card_expiration']) && isset($post_vars['card_expiration_month'], $post_vars['card_expiration_year']))
-					$post_vars['card_expiration'] = $post_vars['card_expiration_month'].'/'.$post_vars['card_expiration_year'];
-
 				$post_vars['recaptcha_challenge_field'] = (isset($_POST['recaptcha_challenge_field'])) ? trim(stripslashes($_POST['recaptcha_challenge_field'])) : '';
 				$post_vars['recaptcha_response_field']  = (isset($_POST['recaptcha_response_field'])) ? trim(stripslashes($_POST['recaptcha_response_field'])) : '';
 
 				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr'])) // Attr errors?
 				{
-					if(!($error = c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('checkout', $post_vars)))
+					if(!($form_submission_validation_errors // Validate checkout input form fields.
+						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('checkout', $post_vars))
+					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
@@ -772,20 +771,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									}
 								}
 							}
-							else // Else, an error.
-							{
-								$global_response = array('response' => $stripe['__error'], 'error' => TRUE);
-							}
+							else $global_response = array('response' => $stripe['__error'], 'error' => TRUE);
 						}
-						else // Else, we have an unknown scenario.
-						{
-							$global_response = array('response' => _x('<strong>Unknown error.</strong> Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
-						}
+						else $global_response = array('response' => _x('<strong>Unknown error.</strong> Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 					}
-					else // Else, an error.
-					{
-						$global_response = $error;
-					}
+					else // Input form field validation errors.
+						$global_response = $form_submission_validation_errors;
 				}
 			}
 		}
