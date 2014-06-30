@@ -44,14 +44,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 	class c_ws_plugin__s2member_pro_stripe_notify_in
 	{
 		/**
-		 * Handles Stripe IPN URL processing.
+		 * Handles Stripe Webhook/IPN event processing.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
 		 * @attaches-to ``add_action('init');``
-		 *
-		 * @return null Or exits script execution after handling IPN processing.
 		 */
 		public static function stripe_notify()
 		{
@@ -59,88 +57,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 			if(!empty($_GET['s2member_pro_stripe_notify']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key'])
 			{
+				$stripe = array(); // Initialize array of Webhook/IPN event data and s2Member log details.
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
 
-				if(is_array($stripe = c_ws_plugin__s2member_pro_stripe_utilities::event()) && ($_stripe = $stripe))
+				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
 				{
-					$stripe['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
-					$stripe['s2member_log'][] = 's2Member POST vars verified with Stripe.';
-
-					if($stripe['x_subscription_id'] && $stripe['x_subscription_paynum'] && $stripe['x_response_code'] === '1')
-					{
-						if(($_stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_parse_arb_desc($stripe)) && ($stripe = $_stripe))
-						{
-							$stripe['s2member_log'][] = 'Stripe transaction identified as ( `ARB / PAYMENT #'.$stripe['x_subscription_paynum'].'` ).';
-							$stripe['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_payment` ).';
-							$stripe['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
-
-							$processing = $processed = TRUE;
-							$ipn        = array(); // Reset.
-
-							$ipn['txn_type']  = 'subscr_payment';
-							$ipn['subscr_id'] = $stripe['x_subscription_id'];
-							$ipn['txn_id']    = $stripe['x_trans_id'];
-
-							$ipn['custom'] = $stripe['s2_custom'];
-
-							$ipn['mc_gross']    = number_format($stripe['x_amount'], 2, '.', '');
-							$ipn['mc_currency'] = strtoupper((!empty($stripe['s2_currency']) ? $stripe['s2_currency'] : 'USD'));
-							$ipn['tax']         = number_format($stripe['x_tax'], 2, '.', '');
-
-							$ipn['payer_email'] = $stripe['x_email'];
-							$ipn['first_name']  = $stripe['x_first_name'];
-							$ipn['last_name']   = $stripe['x_last_name'];
-
-							$ipn['option_name1']      = 'Referencing Customer ID';
-							$ipn['option_selection1'] = $stripe['x_subscription_id'];
-
-							$ipn['option_name2']      = 'Customer IP Address';
-							$ipn['option_selection2'] = NULL;
-
-							$ipn['item_number'] = $stripe['s2_invoice'];
-							$ipn['item_name']   = $stripe['x_description'];
-
-							$ipn['s2member_paypal_proxy']              = 'stripe';
-							$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-							$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-
-							c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
-						}
-						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
-						{
-							$stripe['s2member_log'][] = 'Stripe transaction identified as ( `ARB / PAYMENT #'.$stripe['x_subscription_paynum'].'` ).';
-							$stripe['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
-						}
-					}
-					else if($stripe['x_subscription_id'] && $stripe['x_subscription_paynum'] && preg_match('/^(2|3)$/', $stripe['x_response_code']))
-					{
-						if(($_stripe = c_ws_plugin__s2member_pro_stripe_utilities::stripe_parse_arb_desc($stripe)) && ($stripe = $_stripe))
-						{
-							$stripe['s2member_log'][] = 'Stripe transaction identified as ( `ARB / FAILED PAYMENT` ).';
-							$stripe['s2member_log'][] = 's2Member does NOT respond to individual failed payment notifications.';
-							$stripe['s2member_log'][] = 'When multiple consecutive payments fail, s2Member is notified via ARB services.';
-							$stripe['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
-						}
-						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
-						{
-							$stripe['s2member_log'][] = 'Stripe transaction identified as ( `ARB / FAILED PAYMENT` ).';
-							$stripe['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
-						}
-					}
-					else if(empty($processed)) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
-						$stripe['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT require any action on the part of s2Member.';
+					if(empty($processed)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
-					$stripe['s2member_log'][] = 'Unable to verify POST vars. This is most likely related to an invalid Stripe configuration. Please check: s2Member -› Stripe Options.';
-					$stripe['s2member_log'][] = 'If you\'re absolutely SURE that your Stripe configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to Stripe over an HTTPS connection.';
-					$stripe['s2member_log'][] = 's2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.';
-					$stripe['s2member_log'][] = var_export($_REQUEST, TRUE); // Recording _POST + _GET vars for analysis and debugging.
+					$stripe['s2member_log'][] = 'Unable to verify Webhook/IPN event ID. This is most likely related to an invalid Stripe configuration. Please check: s2Member -› Stripe Options.';
+					$stripe['s2member_log'][] = 'If you\'re absolutely SURE that your Stripe configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables (and php://input) are populated; and that your server is able to connect to Stripe over an HTTPS connection.';
+					$stripe['s2member_log'][] = 's2Member uses the Stripe SDK for remote connections; which relies upon the cURL extension for PHP. Please make sure that your installation of PHP has the cURL extension; and that it\'s configured together with OpenSSL for HTTPS communication.';
+					$stripe['s2member_log'][] = var_export($_REQUEST, TRUE)."\n".var_export(json_decode(@file_get_contents('php://input')), TRUE);
 				}
-				/*
-				If debugging/logging is enabled; we need to append $stripe to the log file.
-					Logging now supports Multisite Networking as well.
-				*/
 				$logt = c_ws_plugin__s2member_utilities::time_details();
 				$logv = c_ws_plugin__s2member_utilities::ver_details();
 				$logm = c_ws_plugin__s2member_utilities::mem_details();
