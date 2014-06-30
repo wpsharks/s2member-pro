@@ -83,7 +83,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
 								$ipn['custom']     = $ipn_signup_vars['custom'];
 
-								$ipn['mc_gross']    = number_format($event->total, 2, '.', '');
+								$ipn['mc_gross']    = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($event->total, $event->currency), 2, '.', '');
 								$ipn['mc_currency'] = strtoupper($event->currency);
 								$ipn['tax']         = number_format(0, 2, '.', '');
 
