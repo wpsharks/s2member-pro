@@ -343,7 +343,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$event = json_decode($input);
 
 			$input_time = time(); // Initialize.
-			$input_vars = get_defined_vars(); // Arguments.
+			$input_vars = array('event_id' => $event->id);
 
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
