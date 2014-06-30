@@ -58,11 +58,163 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			if(!empty($_GET['s2member_pro_stripe_notify']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key'])
 			{
 				$stripe = array(); // Initialize array of Webhook/IPN event data and s2Member log details.
-				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
+				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken.
+
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+				Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
 				{
-					if(empty($processed)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
+					switch($event->type)
+					{
+						case 'invoice.payment_succeeded': // Subscription payments.
+
+							if(!empty($event->customer) && !empty($event->subscription) && !empty($event->charge) && !empty($event->paid) && !empty($event->total)
+							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
+							)
+							{
+								$processing = TRUE;
+
+								$ipn['txn_type']   = 'subscr_payment';
+								$ipn['txn_id']     = $event->charge;
+								$ipn['txn_cid']    = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+								$ipn['custom']     = $ipn_signup_vars['custom'];
+
+								$ipn['mc_gross']    = number_format($event->total, 2, '.', '');
+								$ipn['mc_currency'] = strtoupper($event->currency);
+								$ipn['tax']         = number_format(0, 2, '.', '');
+
+								$ipn['period1'] = $ipn_signup_vars['period1'];
+								$ipn['period3'] = $ipn_signup_vars['period3'];
+
+								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+								$ipn['first_name']  = $ipn_signup_vars['first_name'];
+								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+								$ipn['item_name']   = $ipn_signup_vars['item_name'];
+								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+								$ipn['s2member_paypal_proxy']              = 'stripe';
+								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+							}
+							break; // Break switch handler.
+
+						case 'invoice.payment_failed': // Subscription payment failures.
+
+							if(!empty($event->customer) && !empty($event->subscription)
+							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Ignoring. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
+								$stripe['s2member_log'][] = 'You may control the behavior(s) associated w/ subscription payment failures from your Stripe Dashboard please.';
+							}
+							break; // Break switch handler.
+
+						case 'customer.deleted': // Customer deletions.
+
+							if(!empty($event->data->object)
+							   && ($stripe_customer = $event->data->object) instanceof Stripe_Customer
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_customer->id))
+							)
+							{
+								$processing = TRUE;
+
+								$ipn['txn_type']   = 'subscr_eot';
+								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+								$ipn['custom']     = $ipn_signup_vars['custom'];
+
+								$ipn['period1'] = $ipn_signup_vars['period1'];
+								$ipn['period3'] = $ipn_signup_vars['period3'];
+
+								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+								$ipn['first_name']  = $ipn_signup_vars['first_name'];
+								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+								$ipn['item_name']   = $ipn_signup_vars['item_name'];
+								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+								$ipn['s2member_paypal_proxy']              = 'stripe';
+								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+							}
+							break; // Break switch handler.
+
+						case 'customer.subscription.deleted': // Customer subscription deletion.
+
+							if(!empty($event->data->object)
+							   && ($stripe_subscription = $event->data->object) instanceof Stripe_Subscription
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
+							)
+							{
+								$processing = TRUE;
+
+								$ipn['txn_type']   = 'subscr_eot';
+								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+								$ipn['custom']     = $ipn_signup_vars['custom'];
+
+								$ipn['period1'] = $ipn_signup_vars['period1'];
+								$ipn['period3'] = $ipn_signup_vars['period3'];
+
+								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+								$ipn['first_name']  = $ipn_signup_vars['first_name'];
+								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+								$ipn['item_name']   = $ipn_signup_vars['item_name'];
+								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+								$ipn['s2member_paypal_proxy']              = 'stripe';
+								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+							}
+							break; // Break switch handler.
+					}
+					if(empty($processing)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
