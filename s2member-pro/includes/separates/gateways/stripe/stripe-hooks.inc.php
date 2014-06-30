@@ -45,8 +45,6 @@ add_action('init', 'c_ws_plugin__s2member_pro_stripe_cancellation::stripe_cancel
 
 add_filter('ws_plugin__s2member_during_constants_c', 'c_ws_plugin__s2member_pro_stripe_constants::stripe_constants', 10, 2);
 
-add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_stripe_arb::stripe_arb_service');
-
 add_action('wp_ajax_ws_plugin__s2member_pro_stripe_ajax_tax', 'c_ws_plugin__s2member_pro_stripe_utilities::stripe_ajax_tax');
 add_action('wp_ajax_nopriv_ws_plugin__s2member_pro_stripe_ajax_tax', 'c_ws_plugin__s2member_pro_stripe_utilities::stripe_ajax_tax');
 
