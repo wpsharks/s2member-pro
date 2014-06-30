@@ -79,13 +79,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						                                    'description' => trim($fname.' '.$lname),
 						                                    'metadata'    => $metadata
 					                                    ));
-				self::log_entry($input_time, $input_vars, time(), $customer);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				return $customer; // Stripe customer object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -113,13 +113,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$customer->card = $card_token; // Update.
 				$customer       = $customer->save();
 
-				self::log_entry($input_time, $input_vars, time(), $customer);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				return $customer; // Stripe customer object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -152,13 +152,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					                                'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
 					                                'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
 				                                ));
-				self::log_entry($input_time, $input_vars, time(), $charge);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
 
 				return $charge; // Stripe charge object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -209,13 +209,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						                            'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
 					                            ));
 				}
-				self::log_entry($input_time, $input_vars, time(), $plan);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $plan);
 
 				return $plan; // Stripe plan object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -244,13 +244,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$subscription = $customer->subscriptions->create(array('plan'     => $plan_id,
 				                                                       'metadata' => $metadata));
 
-				self::log_entry($input_time, $input_vars, time(), $subscription);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
 				return $subscription; // Stripe subscription object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -277,13 +277,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$customer     = Stripe_Customer::retrieve($customer_id);
 				$subscription = $customer->subscriptions->retrieve($subscription_id);
 
-				self::log_entry($input_time, $input_vars, time(), $subscription);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
 				return $subscription; // Stripe subscription object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -314,13 +314,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$customer     = Stripe_Customer::retrieve($customer_id);
 				$subscription = $customer->subscriptions->retrieve($subscription_id)->cancel(array('at_period_end' => $at_period_end));
 
-				self::log_entry($input_time, $input_vars, time(), $subscription);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
 				return $subscription; // Stripe subscription object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -355,13 +355,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				$event = Stripe_Event::retrieve($event->id);
 
-				self::log_entry($input_time, $input_vars, time(), $event);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $event);
 
 				return $event; // Stripe event object.
 			}
 			catch(exception $exception)
 			{
-				self::log_entry($input_time, $input_vars, time(), $exception);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
 			}
@@ -472,13 +472,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		/**
 		 * Logs Stripe API communication.
 		 *
+		 * @param string  $function Name of the caller.
+		 *
 		 * @param integer $input_time Input time.
 		 * @param mixed   $input_vars Input data/vars.
 		 *
 		 * @param integer $output_time Output time.
 		 * @param mixed   $output_vars Output data/vars.
 		 */
-		public static function log_entry($input_time, $input_vars, $output_time, $output_vars)
+		public static function log_entry($function, $input_time, $input_vars, $output_time, $output_vars)
 		{
 			global $current_site, $current_blog;
 
@@ -494,12 +496,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
 				if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-					if(($log = '-------- Input vars: ( '.date(DATE_RFC822, $input_time).' ) --------'."\n".print_r($input_vars, TRUE)."\n"))
-						if(($log .= '-------- Output string/vars: ( '.date(DATE_RFC822, $output_time).' ) --------'."\n".print_r($output_vars, TRUE)))
-							file_put_contents($logs_dir.'/'.$log2,
-							                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
-							                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
-							                  FILE_APPEND);
+					if(($log = '-------- Function/Caller: ( '.$function.' ) --------'."\n"))
+						if(($log .= '-------- Input vars: ( '.date(DATE_RFC822, $input_time).' ) --------'."\n".print_r($input_vars, TRUE)."\n"))
+							if(($log .= '-------- Output string/vars: ( '.date(DATE_RFC822, $output_time).' ) --------'."\n".print_r($output_vars, TRUE)))
+								file_put_contents($logs_dir.'/'.$log2,
+								                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
+								                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
+								                  FILE_APPEND);
 		}
 
 		/**
