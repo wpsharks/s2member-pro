@@ -69,7 +69,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					{
 						case 'invoice.payment_succeeded': // Subscription payments.
 
-							if(!empty($event->customer) && !empty($event->subscription) && !empty($event->charge) && !empty($event->paid) && !empty($event->total)
+							if(!empty($event->data->object)
+							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
+							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
+							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', ''))
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
@@ -77,14 +80,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$processing = TRUE;
 
 								$ipn['txn_type']   = 'subscr_payment';
-								$ipn['txn_id']     = $event->charge;
+								$ipn['txn_id']     = $stripe_invoice->id;
 								$ipn['txn_cid']    = $ipn_signup_vars['subscr_cid'];
 								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
 								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
 								$ipn['custom']     = $ipn_signup_vars['custom'];
 
-								$ipn['mc_gross']    = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($event->total, $event->currency), 2, '.', '');
-								$ipn['mc_currency'] = strtoupper($event->currency);
+								$ipn['mc_gross']    = $stripe_invoice_total;
+								$ipn['mc_currency'] = strtoupper($stripe_invoice->currency);
 								$ipn['tax']         = number_format(0, 2, '.', '');
 
 								$ipn['period1'] = $ipn_signup_vars['period1'];
@@ -117,7 +120,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 						case 'invoice.payment_failed': // Subscription payment failures.
 
-							if(!empty($event->customer) && !empty($event->subscription)
+							if(!empty($event->data->object)
+							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
+							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
+							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', ''))
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)

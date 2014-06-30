@@ -191,6 +191,11 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	height     : 26px;
 	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
 }
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:focus,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:active
+{
+	opacity : 0.5;
+}
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > i,
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
 {
