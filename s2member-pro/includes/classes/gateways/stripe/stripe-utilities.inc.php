@@ -459,8 +459,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
 				if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-					if(($log = '-------- Input vars: ( '.$input_time.' ) --------'."\n".var_export($input_vars, TRUE)."\n"))
-						if(($log .= '-------- Output string/vars: ( '.$output_time.' ) --------'."\n".var_export($output_vars, TRUE)))
+					if(($log = '-------- Input vars: ( '.date(DATE_RFC822, $input_time).' ) --------'."\n".var_export($input_vars, TRUE)."\n"))
+						if(($log .= '-------- Output string/vars: ( '.date(DATE_RFC822, $output_time).' ) --------'."\n".var_export($output_vars, TRUE)))
 							file_put_contents($logs_dir.'/'.$log2,
 							                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
 							                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
@@ -642,25 +642,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$default = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'];
 			$ps      = _x('%', 's2member-front percentage-symbol', 's2member');
 
-			$trial_tax       = $trial_tax_per = 0.00;
-			$trial_sub_total = $trial_total = 0.00;
-			$tax             = $tax_per = 0.00;
-			$sub_total       = $total = 0.00;
-
+			$trial_tax = $tax = $trial_tax_per = $tax_per = $trial_total = $total = NULL; // Initialize.
 			foreach(array('trial_sub_total' => $trial_sub_total, 'sub_total' => $sub_total) as $this_key => $this_sub_total)
 			{
 				$_default = $this_tax = $this_tax_per = $this_total = $configured_rates = $configured_rate = $location = $rate = $m = NULL;
 
-				if(is_numeric($this_sub_total) && $this_sub_total > 0) // Must have a valid Sub-Total.
+				if(is_numeric($this_sub_total) && $this_sub_total > 0) // Must have a valid sub-total.
 				{
-					if(preg_match('/%$/', $default)) // Percentage-based.
+					if($default && preg_match('/%$/', $default)) // Percentage-based.
 					{
 						if(($_default = (float)$default) > 0)
 						{
 							$this_tax     = round(($this_sub_total / 100) * $_default, 2);
 							$this_tax_per = $_default.$ps;
 						}
-						else // Else the Tax is 0.00.
+						else // Else the tax is 0.00.
 						{
 							$this_tax     = 0.00;
 							$this_tax_per = $_default.$ps;
@@ -671,9 +667,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						$this_tax     = round($_default, 2);
 						$this_tax_per = ''; // Flat.
 					}
-					else // Else the Tax is 0.00.
+					else // Else the tax is 0.00.
 					{
-						$this_tax     = 0.00; // No Tax.
+						$this_tax     = 0.00; // No tax.
 						$this_tax_per = ''; // Flat rate.
 					}
 					if(strlen($country) === 2) // Must have a valid country.
@@ -714,9 +710,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 									$this_tax     = round(($this_sub_total / 100) * $configured_rate, 2);
 									$this_tax_per = $configured_rate.$ps;
 								}
-								else // Else the Tax is 0.00.
+								else // Else the tax is 0.00.
 								{
-									$this_tax     = 0.00; // No Tax.
+									$this_tax     = 0.00; // No tax.
 									$this_tax_per = $configured_rate.$ps;
 								}
 							}
@@ -725,18 +721,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 								$this_tax     = round($configured_rate, 2);
 								$this_tax_per = ''; // Flat rate.
 							}
-							else // Else the Tax is 0.00.
+							else // Else the tax is 0.00.
 							{
-								$this_tax     = 0.00; // No Tax.
+								$this_tax     = 0.00; // No tax.
 								$this_tax_per = ''; // Flat rate.
 							}
 						}
 					}
 					$this_total = $this_sub_total + $this_tax;
 				}
-				else // Else the Tax is 0.00.
+				else // Else the tax is 0.00.
 				{
-					$this_tax       = 0.00; // No Tax.
+					$this_tax       = 0.00; // No tax.
 					$this_tax_per   = ''; // Flat rate.
 					$this_sub_total = 0.00; // 0.00.
 					$this_total     = 0.00; // 0.00.
@@ -756,19 +752,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					$total     = $this_total;
 				}
 			}
-			return array('trial_sub_total' => number_format($trial_sub_total, 2, '.', ''),
-			             'sub_total'       => number_format($sub_total, 2, '.', ''),
-			             'trial_tax'       => number_format($trial_tax, 2, '.', ''),
+			return array(
+				'trial_sub_total' => number_format($trial_sub_total, 2, '.', ''),
+				'sub_total'       => number_format($sub_total, 2, '.', ''),
 
-			             'tax'             => number_format($tax, 2, '.', ''),
-			             'trial_tax_per'   => $trial_tax_per,
-			             'tax_per'         => $tax_per,
+				'trial_tax'       => number_format($trial_tax, 2, '.', ''),
+				'tax'             => number_format($tax, 2, '.', ''),
 
-			             'trial_total'     => number_format($trial_total, 2, '.', ''),
-			             'total'           => number_format($total, 2, '.', ''),
+				'trial_tax_per'   => $trial_tax_per,
+				'tax_per'         => $tax_per,
 
-			             'cur'             => $currency,
-			             'cur_symbol'      => c_ws_plugin__s2member_utils_cur::symbol($currency), 'desc' => $desc);
+				'trial_total'     => number_format($trial_total, 2, '.', ''),
+				'total'           => number_format($total, 2, '.', ''),
+
+				'cur'             => $currency,
+				'cur_symbol'      => c_ws_plugin__s2member_utils_cur::symbol($currency),
+
+				'desc'            => $desc
+			);
 		}
 
 		/**

@@ -259,9 +259,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								c_ws_plugin__s2member_pro_stripe_utilities::start_time($period1) : // After Trial is over.
 								c_ws_plugin__s2member_pro_stripe_utilities::start_time($period3); // Or next billing cycle.
 
-							file_put_contents(WP_CONTENT_DIR.'/debug.log', var_export($post_vars, TRUE)."\n\n", FILE_APPEND);
-							file_put_contents(WP_CONTENT_DIR.'/debug.log', var_export($cost_calculations, TRUE)."\n\n", FILE_APPEND);
-
 							if(!$global_response)
 								if(($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) || (!$post_vars['attr']['tp'] && $cost_calculations['total'] > 0))
 								{
