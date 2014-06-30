@@ -327,6 +327,47 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Receives a Stripe Webhook event object instance.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 140617
+		 *
+		 * @return Stripe_Event|string Stripe event object; else error message.
+		 */
+		public static function get_event()
+		{
+			if(empty($_REQUEST['s2member_pro_stripe_notify']))
+				return ''; // Not applicable.
+
+			$input = @file_get_contents('php://input');
+			$event = json_decode($input);
+
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Acquire the event from the Stripe servers.
+			{
+				if(!is_object($event) || empty($event->id))
+					throw new exception('Missing event ID.');
+
+				$event = Stripe_Event::retrieve($event->id);
+
+				self::log_entry($input_time, $input_vars, time(), $event);
+
+				return $event; // Stripe event object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry($input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
 		 * Converts an amount into a Stripe amount; based on currency code.
 		 *
 		 * @param integer|float|string $amount The amount to charge.
@@ -473,38 +514,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$start_time = $start_time + 43200; // + 12 hours.
 
 			return $start_time;
-		}
-
-		/**
-		 * Get ``$_POST`` or ``$_REQUEST`` vars from Stripe.
-		 *
-		 * Stripe returns `x_MD5_Hash` in uppercase format for some reason.
-		 *
-		 * @package s2Member\Stripe
-		 * @since 140617
-		 *
-		 * @return array|bool An array of verified ``$_POST`` or ``$_REQUEST`` variables, else false.
-		 */
-		public static function postvars()
-		{
-			if(!empty($_REQUEST['s2member_pro_stripe_notify']) && !empty($_REQUEST['x_MD5_Hash']))
-			{
-				$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
-
-				foreach($postvars as $var => $value)
-					if(preg_match('/^s2member_/', $var))
-						unset($postvars[$var]);
-
-				$aim_digest_vars = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_login_id'].$postvars['x_trans_id'].$postvars['x_amount'];
-				$arb_digest_vars = $postvars['x_trans_id'].$postvars['x_amount'];
-
-				if(strtolower($postvars['x_MD5_Hash']) === md5($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_salt_key'].$aim_digest_vars))
-					return $postvars;
-
-				else if(strtolower($postvars['x_MD5_Hash']) === md5($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_salt_key'].$arb_digest_vars))
-					return $postvars;
-			}
-			return FALSE;
 		}
 
 		/**
