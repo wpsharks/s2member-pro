@@ -73,7 +73,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
 							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', ''))
-							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
+							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
 							{
@@ -113,7 +113,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+
+								if(($maybe_end_subscription = self::_maybe_end_subscription($stripe_invoice->customer, $stripe_subscription)))
+									$stripe['s2member_log'][] = $maybe_end_subscription;
+
+								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
 								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 							}
 							break; // Break switch handler.
@@ -124,14 +128,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
 							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', ''))
-							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($event->customer, $event->subscription))
+							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
 							{
 								$processing = TRUE;
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-								$stripe['s2member_log'][] = 'Ignoring. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
+
+								if(($maybe_end_subscription = self::_maybe_end_subscription($stripe_invoice->customer, $stripe_subscription)))
+									$stripe['s2member_log'][] = $maybe_end_subscription;
+
+								$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'`. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
 								$stripe['s2member_log'][] = 'You may control the behavior(s) associated w/ subscription payment failures from your Stripe Dashboard please.';
 							}
 							break; // Break switch handler.
@@ -173,7 +181,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
 								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 							}
 							break; // Break switch handler.
@@ -215,7 +223,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-								$stripe['s2member_log'][] = 'Webhook/IPN event reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
 								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 							}
 							break; // Break switch handler.
@@ -250,6 +258,46 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 				exit(); // Exit now.
 			}
+		}
+
+		/**
+		 * Handles Stripe Webhook/IPN event processing.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 140617
+		 *
+		 * @param string              $customer_id Customer's ID in Stripe.
+		 * @param Stripe_Subscription $subscription Customer's subscription object instance.
+		 *
+		 * @return string Additional log entry if ending subscription; else an empty string.
+		 */
+		public static function _maybe_end_subscription($customer_id, $subscription)
+		{
+			if(!$customer_id || !($subscription instanceof Stripe_Subscription))
+				return ''; // Not possible.
+
+			if(isset($subscription->plan->metadata->recurring)
+			   && !filter_var($subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			)
+			{
+				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $subscription->id);
+
+				return 'Subscription `'.$subscription->id.'` has `plan->metadata->recurring=false`.'.
+				       ' Auto-cancelling subscription after current period ends.';
+			}
+			else if(isset($subscription->plan->metadata->recurring)
+			        && filter_var($subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			        && isset($subscription->plan->metadata->recurring_times) && $subscription->plan->metadata->recurring_times > 0
+			)
+			{
+				// TODO; need to determine the end of the recurring times here.
+
+				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $subscription->id);
+
+				return 'Subscription `'.$subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times='.$subscription->plan->metadata->recurring_times.'`.'.
+				       ' Auto-cancelling subscription after current period ends. This was the last billing cycle.';
+			}
+			return ''; // Default behavior; i.e. do nothing.
 		}
 	}
 }
