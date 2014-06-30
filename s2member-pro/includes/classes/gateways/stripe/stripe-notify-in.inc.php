@@ -291,6 +291,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			)
 			{
 				// TODO; need to determine the end of the recurring times here.
+				// Need to figure out a good way to calculate this so there are no conflicts.
 
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
 
