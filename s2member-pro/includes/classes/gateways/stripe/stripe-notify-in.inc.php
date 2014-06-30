@@ -267,34 +267,34 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 		 * @since 140617
 		 *
 		 * @param string              $customer_id Customer's ID in Stripe.
-		 * @param Stripe_Subscription $subscription Customer's subscription object instance.
+		 * @param Stripe_Subscription $stripe_subscription Customer's subscription object instance.
 		 *
 		 * @return string Additional log entry if ending subscription; else an empty string.
 		 */
-		public static function _maybe_end_subscription($customer_id, $subscription)
+		public static function _maybe_end_subscription($customer_id, $stripe_subscription)
 		{
-			if(!$customer_id || !($subscription instanceof Stripe_Subscription))
+			if(!$customer_id || !($stripe_subscription instanceof Stripe_Subscription))
 				return ''; // Not possible.
 
-			if(isset($subscription->plan->metadata->recurring)
-			   && !filter_var($subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			if(isset($stripe_subscription->plan->metadata->recurring)
+			   && !filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
 			)
 			{
-				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $subscription->id);
+				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
 
-				return 'Subscription `'.$subscription->id.'` has `plan->metadata->recurring=false`.'.
+				return 'Subscription `'.$stripe_subscription->id.'` has `plan->metadata->recurring=false`.'.
 				       ' Auto-cancelling subscription after current period ends.';
 			}
-			else if(isset($subscription->plan->metadata->recurring)
-			        && filter_var($subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			        && isset($subscription->plan->metadata->recurring_times) && $subscription->plan->metadata->recurring_times > 0
+			else if(isset($stripe_subscription->plan->metadata->recurring)
+			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			        && isset($stripe_subscription->plan->metadata->recurring_times) && $stripe_subscription->plan->metadata->recurring_times > 0
 			)
 			{
 				// TODO; need to determine the end of the recurring times here.
 
-				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $subscription->id);
+				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
 
-				return 'Subscription `'.$subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times='.$subscription->plan->metadata->recurring_times.'`.'.
+				return 'Subscription `'.$stripe_subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times='.$stripe_subscription->plan->metadata->recurring_times.'`.'.
 				       ' Auto-cancelling subscription after current period ends. This was the last billing cycle.';
 			}
 			return ''; // Default behavior; i.e. do nothing.
