@@ -149,7 +149,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$charge = Stripe_Charge::create(array(
 					                                'customer'              => $customer_id,
 					                                'description'           => $description, 'metadata' => $metadata,
-					                                'amount'                => self::amount($amount, $currency), 'currency' => $currency,
+					                                'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
 					                                'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
 				                                ));
 				self::log_entry($input_time, $input_vars, time(), $charge);
@@ -202,7 +202,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					$plan = Stripe_Plan::create(array(
 						                            'id'                    => $plan_id,
 						                            'name'                  => $name, 'metadata' => $metadata,
-						                            'amount'                => self::amount($amount, $currency), 'currency' => $currency,
+						                            'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
 						                            'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
 
 						                            'interval'              => 'day', 'interval_count' => $interval_days,
@@ -368,16 +368,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Converts an amount into a Stripe amount; based on currency code.
+		 * Converts a dollar amount into a Stripe amount (usually in cents); based on currency code.
 		 *
-		 * @param integer|float|string $amount The amount to charge.
+		 * @param integer|float|string $amount The amount.
 		 * @param string               $currency Three character currency code.
 		 *
 		 * @return integer Amount represented as an integer (always).
 		 *
 		 * @see https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support
 		 */
-		public static function amount($amount, $currency)
+		public static function dollar_amount_to_cents($amount, $currency)
 		{
 			switch(strtoupper($currency))
 			{
@@ -399,6 +399,41 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				default: // In cents.
 					return (integer)($amount * 100);
+			}
+		}
+
+		/**
+		 * Converts a Stripe amount (usually in cents) into a dollar amount; based on currency code.
+		 *
+		 * @param integer|float|string $amount The amount.
+		 * @param string               $currency Three character currency code.
+		 *
+		 * @return integer|float Amount represented as an integer or float.
+		 *
+		 * @see https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support
+		 */
+		public static function cents_to_dollar_amount($amount, $currency)
+		{
+			switch(strtoupper($currency))
+			{
+				case 'BIF':
+				case 'DJF':
+				case 'JPY':
+				case 'KRW':
+				case 'PYG':
+				case 'VUV':
+				case 'XOF':
+				case 'CLP':
+				case 'GNF':
+				case 'KMF':
+				case 'MGA':
+				case 'RWF':
+				case 'XAF':
+				case 'XPF':
+					return (integer)$amount;
+
+				default: // In dollars.
+					return (float)number_format($amount / 100, 2, '.', '');
 			}
 		}
 
