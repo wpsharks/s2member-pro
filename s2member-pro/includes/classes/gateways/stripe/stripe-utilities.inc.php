@@ -497,8 +497,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
 				if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
 					if(($log = '-------- Function/Caller: ( '.$function.' ) --------'."\n"))
-						if(($log .= '-------- Input vars: ( '.date(DATE_RFC822, $input_time).' ) --------'."\n".print_r($input_vars, TRUE)."\n"))
-							if(($log .= '-------- Output string/vars: ( '.date(DATE_RFC822, $output_time).' ) --------'."\n".print_r($output_vars, TRUE)))
+						if(($log .= '-------- Input vars: ( '.date(DATE_RFC822, $input_time).' ) --------'."\n".var_export($input_vars, TRUE)."\n"))
+							if(($log .= '-------- Output string/vars: ( '.date(DATE_RFC822, $output_time).' ) --------'."\n".var_export($output_vars, TRUE)))
 								file_put_contents($logs_dir.'/'.$log2,
 								                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
 								                  c_ws_plugin__s2member_utils_logs::conceal_private_info($log)."\n\n",
