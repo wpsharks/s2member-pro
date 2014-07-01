@@ -114,7 +114,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 
-								if(($maybe_end_subscription = self::_maybe_end_subscription($stripe_invoice->customer, $stripe_subscription)))
+								if(($maybe_end_subscription = self::_maybe_end_subscription_after_payment($stripe_invoice->customer, $stripe_subscription)))
 									$stripe['s2member_log'][] = $maybe_end_subscription;
 
 								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
@@ -136,7 +136,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 
-								if(($maybe_end_subscription = self::_maybe_end_subscription($stripe_invoice->customer, $stripe_subscription)))
+								if(($maybe_end_subscription = self::_maybe_end_subscription_after_payment($stripe_invoice->customer, $stripe_subscription)))
 									$stripe['s2member_log'][] = $maybe_end_subscription;
 
 								$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'`. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
@@ -271,13 +271,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 		 *
 		 * @return string Additional log entry if ending subscription; else an empty string.
 		 */
-		public static function _maybe_end_subscription($customer_id, $stripe_subscription)
+		public static function _maybe_end_subscription_after_payment($customer_id, $stripe_subscription)
 		{
 			if(!$customer_id || !($stripe_subscription instanceof Stripe_Subscription))
 				return ''; // Not possible.
 
 			if(isset($stripe_subscription->plan->metadata->recurring)
 			   && !filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			   && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
@@ -287,12 +288,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			}
 			else if(isset($stripe_subscription->plan->metadata->recurring)
 			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			        && isset($stripe_subscription->plan->metadata->recurring_times) && $stripe_subscription->plan->metadata->recurring_times > 0
+			        && isset($stripe_subscription->plan->metadata->recurring_times) && (integer)$stripe_subscription->plan->metadata->recurring_times === 1
+			        && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
 			)
 			{
-				// TODO; need to determine the end of the recurring times here.
-				// Need to figure out a good way to calculate this so there are no conflicts.
+				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
 
+				return 'Subscription `'.$stripe_subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times=1`.'.
+				       ' Auto-cancelling subscription after current period ends. This was the last billing cycle.';
+			}
+			else if(isset($stripe_subscription->plan->metadata->recurring)
+			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+			        && isset($stripe_subscription->plan->metadata->recurring_times) && $stripe_subscription->plan->metadata->recurring_times > 0
+			        && strtolower($stripe_subscription->plan->interval) === 'day' // s2Member configures all plans with a day-based interval.
+			        && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
+
+			        && ($rr_start_time = $stripe_subscription->trial_end ? $stripe_subscription->trial_end : $stripe_subscription->start)
+			        && ($rr_end_time = $rr_start_time + (($stripe_subscription->plan->interval_count * $stripe_subscription->plan->metadata->recurring_times) * 86400))
+			        && (time() + 43200 >= $rr_end_time) // Give this 12 hours of leeway.
+			)
+			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
 
 				return 'Subscription `'.$stripe_subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times='.$stripe_subscription->plan->metadata->recurring_times.'`.'.
