@@ -191,6 +191,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					}
 				$create = array('user_login' => (string)@$op['data']['user_login'], 'user_pass' => (string)@$op['data']['user_pass'], 'user_email' => (string)@$op['data']['user_email']);
 
+				/** @var WP_Error|integer $new Need this for IDEs. Particular in the case of a WP_Error. */
 				if(((is_multisite() && ($new = $user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create['user_login'], $create['user_email'], $create['user_pass']))) || ($new = $user_id = wp_create_user($create['user_login'], $create['user_pass'], $create['user_email']))) && !is_wp_error($new))
 				{
 					if(is_object($user = new WP_User ($user_id)) && !empty($user->ID) && ($user_id = $user->ID))
@@ -202,7 +203,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					}
 					return 'Error: Creation may have failed. Unable to obtain WP_User ID.';
 				}
-				/** @var WP_Error $new */
 				else if(is_wp_error($new) && $new->get_error_code())
 					return 'Error: '.$new->get_error_message();
 
@@ -344,8 +344,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					$pr_times                 = get_user_option('s2member_paid_registration_times', $user->ID);
 					$pr_times['level']        = (empty($pr_times['level'])) ? time() : $pr_times['level'];
 					$pr_times['level'.$level] = (empty($pr_times['level'.$level])) ? time() : $pr_times['level'.$level];
-					update_user_option /* Update now. */
-					($user->ID, 's2member_paid_registration_times', $pr_times);
+					update_user_option($user->ID, 's2member_paid_registration_times', $pr_times);
 				}
 				if(!empty($op['data']['opt_in']) && !empty($role) && $level >= 0)
 					c_ws_plugin__s2member_list_servers::process_list_servers($role, $level, $user->user_login, ((!empty($op['data']['user_pass'])) ? (string)$op['data']['user_pass'] : ''), $user->user_email, $user->first_name, $user->last_name, FALSE, TRUE, TRUE, $user->ID);
