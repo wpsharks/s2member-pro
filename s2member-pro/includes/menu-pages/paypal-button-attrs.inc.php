@@ -49,7 +49,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_paypal_button_attrs"))
 
 						echo '<h3>Additional Shortcode Attributes (enabled by s2Member Pro)</h3>' . "\n";
 
-						echo '<ul>' . "\n";
+						echo '<ul class="ws-menu-page-li-margins">' . "\n";
 						echo '<li><code>success=""</code> Success Return URL <em>(optional)</em>. s2Member handles this automatically for you. However, if you would prefer to take control over the landing page after checkout <em>(i.e. your own custom Thank-You Page)</em>, you can. If supplied, this must be a full URL, starting with <code>http://</code>. Note, s2Member will NOT use this value if an existing account holder is being modified. s2Member handles account updates <em>(i.e. billing modification)</em> in a more dynamic way. Your Success Return URL is only applied to (new) Customers.</li>' . "\n";
 					}
 			}

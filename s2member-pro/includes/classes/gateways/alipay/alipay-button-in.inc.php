@@ -76,14 +76,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:" . $attr["ids"] . ":" . $attr["exp"];
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/alipay-sp-checkout-button.php")));
-								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
-								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
+								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
+								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr (site_url ())), $code);
 
 								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["sp_ids_exp"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"]) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
-								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
+								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($default_image)) . '"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($default_image)) . '"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;
@@ -98,14 +98,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim ($attr["level_ccaps_eotper"], ":");
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/alipay-ccaps-checkout-button.php")));
-								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
-								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
+								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
+								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr (site_url ())), $code);
 
 								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
-								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
+								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($default_image)) . '"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($default_image)) . '"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;
@@ -122,14 +122,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim ($attr["level_ccaps_eotper"], ":");
 
 								$code = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/buttons/alipay-checkout-button.php")));
-								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
-								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr (site_url ())), $code);
+								$code = preg_replace ("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/images")), $code);
+								$code = preg_replace ("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr (site_url ())), $code);
 
 								$vars = array("service" => "create_direct_pay_by_user", "payment_type" => 1, "partner" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"], "seller_email" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"], "subject" => $_SERVER["HTTP_HOST"], "body" => $attr["desc"], "out_trade_no" => uniqid () . "~" . $attr["level_ccaps_eotper"] . (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id ()) ? "~" . $referencing : "~") . "~" . $_SERVER["REMOTE_ADDR"], "extra_common_param" => $attr["custom"], "total_fee" => $attr["ra"], "paymethod" => "directPay", "show_url" => home_url ("/"), "return_url" => (($attr["success"] && !$referencing) ? $attr["success"] : site_url ("/?s2member_pro_alipay_return=1")), "notify_url" => site_url ("/"));
 
-								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
+								$code = preg_replace ("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($url = c_ws_plugin__s2member_pro_alipay_utilities::alipay_link_gen ($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($default_image)) . '"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($attr["image"])) . '"', $code) : preg_replace ('/ src\="(.*?)"/', ' src="' . c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($default_image)) . '"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;

@@ -79,10 +79,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								$default_image = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images/ccbill-edit-button.png";
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/ccbill-cancellation-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								if($attr["output"] === "url" && preg_match('/ href\="(.*?)"/', $code, $m) && ($href = $m[1]))
@@ -97,17 +97,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:".$attr["ids"].":".$attr["exp"];
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/ccbill-sp-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
 								$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ra"], "formPeriod" => round($attr["exp"] / 24), "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_desc" => $attr["desc"], "s2_invoice" => $attr["sp_ids_exp"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
 
 								if /* Are we referencing a User/Member in the database? */($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id())
 									$vars["s2_referencing"] = /* Add this into the ``$vars`` array. */ $referencing;
 
-								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
+								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;
@@ -122,17 +122,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/ccbill-ccaps-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
 								$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ra"], "formPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["rp"], $attr["rt"]), "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_desc" => $attr["desc"], "s2_invoice" => $attr["level_ccaps_eotper"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
 
 								if /* Are we referencing an account already in the database? */($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id())
 									$vars["s2_referencing"] = /* Add this into the ``$vars`` array. */ $referencing;
 
-								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
+								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;
@@ -149,8 +149,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/ccbill-checkout-button.php")));
-								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
 
 								if /* This is NOT a Recurring Subscription (i.e. an Initial/Trial Period is NOT possible). */(!$attr["rr"])
 									$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ra"], "formPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["rp"], $attr["rt"]), "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_p1" => "0 D", "s2_p3" => $attr["rp"]." ".$attr["rt"], "s2_desc" => $attr["desc"], "s2_invoice" => $attr["level_ccaps_eotper"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
@@ -161,9 +161,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								if /* Are we referencing an account already in the database? */($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id())
 									$vars["s2_referencing"] = /* Add this into the ``$vars`` array. */ $referencing;
 
-								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
+								$code = preg_replace("/%%url%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($url = c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_link_gen($vars))), $code);
 
-								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($default_image)).'"', $code);
+								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
 								$code = ($attr["output"] === "anchor") ? /* Buttons already in anchor format. */ $code : $code;
 								$code = ($attr["output"] === "url") ? /* From the routine above. */ $url : $code;

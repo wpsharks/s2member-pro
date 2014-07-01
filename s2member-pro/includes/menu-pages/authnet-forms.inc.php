@@ -88,9 +88,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<form onsubmit="return false;">'."\n";
 						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-registration-form-shortcode.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level0_label"])), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level0_label"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-registration-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
 						echo '</form>'."\n";
 						echo '</td>'."\n";
@@ -132,9 +132,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<form onsubmit="return false;">'."\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 								$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-checkout-form-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($n)), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level".$n."_label"])), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($n)), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level".$n."_label"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
 								echo '</form>'."\n";
 								echo '</td>'."\n";
@@ -192,9 +192,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<form onsubmit="return false;">'."\n";
 						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-checkout-form-shortcode.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr("1")), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level1_label"])), $ws_plugin__s2member_pro_temp_s);
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("1")), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level1_label"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						$ws_plugin__s2member_pro_temp_s = preg_replace("/\/]$/", 'modify="1" /]', $ws_plugin__s2member_pro_temp_s); // Adds modify="1" to the end of the Shortcode.
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-modification-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
 						echo '</form>'."\n";
@@ -239,7 +239,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '<form onsubmit="return false;">'."\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 								$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-ccaps-checkout-form-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
 								echo '</form>'."\n";
 								echo '</td>'."\n";
@@ -380,7 +380,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<form onsubmit="return false;">'."\n";
 						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 						$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/authnet-sp-checkout-form-shortcode.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
 						echo '</form>'."\n";
 						echo '</td>'."\n";
@@ -448,7 +448,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<h3>Free Registration Forms (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-free-registration\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-free-registration" style="display:none;">'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%role%%</code> = The Role ID <code>(subscriber, s2member_level[0-9]+, administrator, editor, author, contributor)</code>.</li>'."\n";
 								echo '<li><code>%%level%%</code> = The Level number <code>(0, 1, 2, 3, 4)</code>. (<em>deprecated, no longer recommended; use <code>%%role%%</code></em>)</li>'."\n";
 								echo '<li><code>%%ccaps%%</code> = Custom Capabilities. Ex: <code>music,videos,free_gift</code> (<em>in comma-delimited format</em>).</li>'."\n";
@@ -466,7 +466,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 								echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -474,7 +474,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 								echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 								echo '</ul>'."\n";
@@ -487,7 +487,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<h3>Membership Sales / Signups &amp; Modifications (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-sales" style="display:none;">'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%subscr_id%%</code> = The Authorize.Net Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Authorize.Net does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e. there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%initial%%</code> = The Initial Fee charged during signup. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent, whenever they initially signed up, no matter what. Even if that amount is 0.\\n\\nIf a Customer signs up, under the terms of a 100% Free Trial Period, this will be 0. So be careful using %%initial%% when you offer a 100% Free Trial Period, because a $0.00 sale amount could cause havoc with affiliate programs.\\n\\nIf you\\\'re offering a 100% Free Trial Period, and you need to track sales through affiliate programs, you can either hard-code an amount; or use `s2Member -› API Notifications -› Payment Notifications` instead.\'); return false;">?</a> ]</li>'."\n";
 								echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offer something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
@@ -513,14 +513,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Coupon Replacement Codes:</strong>' . "\n";
-								echo '<ul>' . "\n";
+								echo '<ul class="ws-menu-page-li-margins">' . "\n";
 								echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>' . "\n";
 								echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>' . "\n";
 								echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>' . "\n";
 								echo '</ul>' . "\n";
 
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 								echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -528,7 +528,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 								echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 								echo '</ul>'."\n";
@@ -541,7 +541,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<h3>Independent Custom Capability Sales (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-ccaps\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-ccaps" style="display:none;">'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%txn_id%%</code> = The Payment Transaction ID, which is always unique for each payment received.</li>'."\n";
 								echo '<li><code>%%amount%%</code> = The Amount of the payment. Most affiliate programs calculate commissions from this.</li>'."\n";
 								echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased the Independent Custom Capabilities.</li>'."\n";
@@ -562,14 +562,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Coupon Replacement Codes:</strong>' . "\n";
-								echo '<ul>' . "\n";
+								echo '<ul class="ws-menu-page-li-margins">' . "\n";
 								echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>' . "\n";
 								echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>' . "\n";
 								echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>' . "\n";
 								echo '</ul>' . "\n";
 
 								echo '<strong>Custom Registration/Profile Fields are also supported here:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 								echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 								echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
@@ -577,7 +577,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 								echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 								echo '</ul>'."\n";
@@ -590,7 +590,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<h3>Specific Post/Page Transactions (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-sp-sales\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-sp-sales" style="display:none;">'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%sp_access_url%%</code> = The full URL (generated by s2Member) where the Customer can gain access.</li>'."\n";
 								echo '<li><code>%%sp_access_exp%%</code> = Human readable expiration for <code>%%sp_access_url%%</code>. Ex: <em>(link expires in <code>%%sp_access_exp%%</code>)</em>.</li>'."\n";
 								echo '<li><code>%%txn_id%%</code> = The Authorize.Net Transaction ID. Authorize.Net assigns a unique identifier for every purchase.</li>'."\n";
@@ -607,14 +607,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 								echo '</ul>'."\n";
 
 								echo '<strong>Coupon Replacement Codes:</strong>' . "\n";
-								echo '<ul>' . "\n";
+								echo '<ul class="ws-menu-page-li-margins">' . "\n";
 								echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (e.g. the full Coupon Code).</li>' . "\n";
 								echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>' . "\n";
 								echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>' . "\n";
 								echo '</ul>' . "\n";
 
 								echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
 								echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER["HTTP_HOST"]).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 								echo '</ul>'."\n";
@@ -627,7 +627,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 								echo '<h3>Cancellations &amp; Billing Updates (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-forms-success-cancellations-updates\').toggle(); return false;" class="ws-dotted-link">open/close</a>)</h3>'."\n";
 								echo '<div id="ws-plugin--s2member-pro-forms-success-cancellations-updates" style="display:none;">'."\n";
-								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;">'."\n";
+								echo '<ul style="margin: 10px 0 10px 20px; list-style: disc outside;" class="ws-menu-page-li-margins">'."\n";
 								echo '<li><code>%%response%%</code> = Deprecated. Use <code>%%s_response%%</code>. A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link back to their account page. You don\'t have to use this. You can generate your own response if you like.</li>'."\n";
 								echo '<li><code>%%s_response%%</code> = A successful response message that *would* have been displayed to the Customer, had they NOT been redirected to your Custom Return URL upon success. This may contain some basic HTML. For instance, a link back to their account page. You don\'t have to use this. You can generate your own response if you like. Value is encrypted. Use <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-functions/#src_doc_s2member_decrypt()" target="_blank" rel="external">s2member_decrypt()</a>.</li>'."\n";
 								echo '</ul>'."\n";
@@ -674,7 +674,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<tr style="padding-top:0;">'."\n";
 
 						echo '<td style="padding-top:0;">'."\n";
-						echo '<ul>'."\n";
+						echo '<ul class="ws-menu-page-li-margins">'."\n";
 						echo '<li><code>accept="visa,mastercard,amex,discover"</code> Accepted Billing Methods. A comma-delimited list of Billing Methods you want to accept. Not valid when <code>cancel="1"</code>.</li>'."\n";
 						echo '<li><code>accept_coupons="1"</code> Accept Coupons? Possible values: <code>0</code> = do NOT accept Coupons on this particular Form; <code>1</code> = DO accept Coupon Codes on this particular Form.</li>'."\n";
 						echo '<li><code>cancel="0"</code> Cancellation Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Cancellation Form, <code>1</code> = this IS a Cancellation Form.</li>'."\n";
@@ -697,7 +697,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<li><code>rrt=""</code> Recurring Times <em>(i.e. a fixed number of installments)</em>. Only valid w/ Membership Level Access. When unspecified, any recurring charges will remain ongoing until cancelled, or until payments start failing. If this is set to <code>1 or higher</code> the regular recurring charges will only continue for X billing cycles, depending on what you specify. This is only valid when <code>rr="1"</code> for recurring "Subscriptions". Please note that a fixed number of installments, also means a fixed period of access. If a Customer\'s billing is monthly, and you set <code>rrt="3"</code>, billing will continue for only 3 monthly installments. After that, billing would stop, and their access to the site would be revoked as well <em>(based on your EOT Behavior setting under: s2Member -› Authorize.Net Options)</em>.</li>'."\n";
 						echo '<li><code>sp="0"</code> Specific Post/Page Form. Possible values: <code>0</code> = this is NOT a Specific Post/Page Access Form, <code>1</code> = this IS a Specific Post/Page Access Form.</li>'."\n";
 						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>success=""</code> 100% optional. This can be used to create a Custom Return URL on success. Please see the sub-section above titled: <em>Custom Return URLs on Success</em>.</li>'."\n" : '';
-						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>template=""</code> 100% optional. This can be a custom template file that exists inside your WordPress theme directory. For example: <code>template="checkout.php"</code>.</li>'."\n" : '';
+						echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<li><code>template=""</code> 100% optional. This can be a custom template file that exists inside your WordPress theme directory. For example: <code>template="checkout.php"</code>. Please see <a href="http://www.s2member.com/kb/pro-forms/#customizing-pro-forms" target="_blank" rel="external">this KB article</a> for further details.</li>'."\n" : '';
 						echo '<li><code>ta="0.00"</code> Trial Amount. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 						echo '<li><code>tp="0"</code> Trial Period. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 						echo '<li><code>tt="D"</code> Trial Term. Only valid w/ Membership Level Access. Possible values: <code>D</code> = Days, <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years.</li>'."\n";
@@ -716,7 +716,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-form-options-section">' . "\n";
 						echo '<h3>Wrapping Multiple Shortcodes as "Checkout Options"</h3>' . "\n";
-						echo '<p>If you would like to offer a single Pro Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro Form Shortcodes the same as you normally would (using some of the Pro Form Generators on this page). Then, you can simply wrap them all inside another Pro Form Shortcode (as seen below). For instance, if you generate two Pro Form Shortcodes (or you have multiple Pro Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro Form Shortcode and it consolidates all the Pro Form Shortcodes into a single Pro Form with multiple "Checkout Options" (e.g. it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>' . "\n";
+						echo '<p>If you would like to offer a single Pro Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro Form Shortcodes the same as you normally would (using some of the Pro Form Generators on this page). Then, you can simply wrap them all inside another Pro Form Shortcode (as seen below). For instance, if you generate two Pro Form Shortcodes (or you have multiple Pro Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro Form Shortcode and it consolidates all the Pro Form Shortcodes into a single Pro Form with multiple "Checkout Options" (i.e. it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
@@ -740,7 +740,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 						echo '<div class="ws-menu-page-hr"></div>' . "\n";
 
 						echo '<h3>Behind-The-Scene — How do "Checkout Options" work?</h3>' . "\n";
-						echo '<p>Given this simple example (as seen below); s2Member will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (e.g. a child). The one s2Member merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
+						echo '<p>Given this simple example (as seen below); s2Member will first take the primary default Shortcode Attributes (from the top-level parent Shortcode); and then it merges those together with Shortcode Attributes from a particular Checkout Option (i.e. a child). The one s2Member merges with is based on the currently selected Checkout Option (e.g. the Checkout Option selected by your customer).</p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";

@@ -676,10 +676,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 
 													foreach(preg_split("/[\r\n\t]+/", $_urls) as $_url /* Notify each of the URLs. */)
 
-														if(($_url = preg_replace("/%%full_coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($full_coupon_code)), $_url)))
-															if(($_url = preg_replace("/%%coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($coupon_code)), $_url)))
-																if(($_url = preg_replace("/%%(?:coupon_affiliate_id|affiliate_id)%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($affiliate_id)), $_url)))
-																	if(($_url = preg_replace("/%%user_ip%%/i", c_ws_plugin__s2member_utils_strings::esc_ds(urlencode($_SERVER["REMOTE_ADDR"])), $_url)))
+														if(($_url = preg_replace("/%%full_coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($full_coupon_code)), $_url)))
+															if(($_url = preg_replace("/%%coupon_code%%/i", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($coupon_code)), $_url)))
+																if(($_url = preg_replace("/%%(?:coupon_affiliate_id|affiliate_id)%%/i", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($affiliate_id)), $_url)))
+																	if(($_url = preg_replace("/%%user_ip%%/i", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $_url)))
 																		{
 																			if(($_url = trim(preg_replace("/%%(.+?)%%/i", "", $_url))) /* Cleanup any remaining Replacement Codes. */)
 

@@ -216,6 +216,7 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s2member-pro-paypal-card-expiration-year
 {
 	width   : 50%;
+	float   : left;
 	display : inline-block;
 }
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div select.s2member-pro-paypal-card-expiration-year

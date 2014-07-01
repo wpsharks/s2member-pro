@@ -92,9 +92,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-checkout-button-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($n)), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $n . "_label"])), $ws_plugin__s2member_pro_temp_s);
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($n)), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level" . $n . "_label"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level' . $n . '-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
@@ -146,7 +146,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 								echo '<form onsubmit="return false;">' . "\n";
 								echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 								$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-ccaps-checkout-button-shortcode.php")));
-								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+								$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 								echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 								echo '</form>' . "\n";
 								echo '</td>' . "\n";
@@ -243,7 +243,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 						echo '<form onsubmit="return false;">' . "\n";
 						echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />' . "\n";
 						$ws_plugin__s2member_pro_temp_s = trim (c_ws_plugin__s2member_utilities::evl (file_get_contents (dirname (dirname (__FILE__)) . "/templates/shortcodes/alipay-sp-checkout-button-shortcode.php")));
-						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_ds (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+						$ws_plugin__s2member_pro_temp_s = preg_replace ("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs (esc_attr ($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
 						echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-shortcode" value="' . format_to_edit ($ws_plugin__s2member_pro_temp_s) . '" onclick="this.select ();" class="monospace" />' . "\n";
 						echo '</form>' . "\n";
 						echo '</td>' . "\n";
@@ -309,7 +309,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 						echo '<tr style="padding-top:0;">' . "\n";
 
 						echo '<td style="padding-top:0;">' . "\n";
-						echo '<ul>' . "\n";
+						echo '<ul class="ws-menu-page-li-margins">' . "\n";
 						echo (!is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? '<li><code>ccaps="music,videos"</code> A comma-delimited list of Custom Capabilities. Only valid w/ Membership Level Access and/or Independent Custom Capabilities.</li>' . "\n" : '';
 						echo '<li><code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '"</code> must start with your domain. Additional values can be piped in (ex: <code>custom="' . esc_html ($_SERVER["HTTP_HOST"]) . '|cv1|cv2|cv3|etc"</code>).</li>' . "\n";
 						echo '<li><code>desc="Gold Membership"</code> A brief purchase Description; which may also include pricing details.</li>' . "\n";
