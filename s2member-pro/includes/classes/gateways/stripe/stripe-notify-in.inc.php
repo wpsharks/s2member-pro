@@ -278,7 +278,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 			if(isset($stripe_subscription->plan->metadata->recurring)
 			   && !filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			   && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
+			   && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
@@ -289,7 +289,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			else if(isset($stripe_subscription->plan->metadata->recurring)
 			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
 			        && isset($stripe_subscription->plan->metadata->recurring_times) && (integer)$stripe_subscription->plan->metadata->recurring_times === 1
-			        && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
+			        && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
@@ -301,7 +301,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
 			        && isset($stripe_subscription->plan->metadata->recurring_times) && $stripe_subscription->plan->metadata->recurring_times > 0
 			        && strtolower($stripe_subscription->plan->interval) === 'day' // s2Member configures all plans with a day-based interval.
-			        && $stripe_subscription->status !== 'trialing' // Past the initial/trial period?
+			        && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 
 			        && ($rr_start_time = $stripe_subscription->trial_end ? $stripe_subscription->trial_end : $stripe_subscription->start)
 			        && ($rr_end_time = $rr_start_time + (($stripe_subscription->plan->interval_count * $stripe_subscription->plan->metadata->recurring_times) * 86400))
