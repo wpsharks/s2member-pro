@@ -110,7 +110,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
 			'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_secret_key' => '', 'pro_stripe_sandbox' => '0',
-			'pro_stripe_api_statement_description'    => substr($_SERVER['HTTP_HOST'], 0, 15), 'pro_stripe_api_validate_zipcode' => '0',
+			'pro_stripe_api_statement_description'    => '', 'pro_stripe_api_validate_zipcode' => '0',
 			'pro_stripe_api_image'                    => str_ireplace(array('http:', 'https:'), '', $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url']).'/images/stripe-square.png',
 
 			'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',
