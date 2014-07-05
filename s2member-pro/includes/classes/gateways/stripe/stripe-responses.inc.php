@@ -344,6 +344,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['ra'] < 0.00)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
+					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
+
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
 				}
@@ -412,8 +415,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['tp'] && $attr['ta'] && !is_numeric($attr['ta']))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be numeric.', "s2member-admin", 's2member'), 'error' => TRUE);
 
-					else if($attr['tp'] && $attr['ta'] && $attr['ta'] < 0.00)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['tp'] && $attr['ta'] && $attr['ta'] < 0.50)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be >= 0.50.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['tp'] && $attr['ta'] && $attr['ta'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ta" attribute. The Trial Amount. When provided, must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -468,6 +471,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 
 					else if($attr['ra'] < 0.00)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
+
+					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
