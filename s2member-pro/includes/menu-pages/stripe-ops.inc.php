@@ -86,7 +86,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
 			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings -› API Keys</code>.'."\n";
 			echo '</td>'."\n";
 
