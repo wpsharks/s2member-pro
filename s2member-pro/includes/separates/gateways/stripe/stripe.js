@@ -116,14 +116,30 @@ jQuery(document).ready( // DOM ready.
 			 */
 			else if(($rgForm = $('form#s2member-pro-stripe-registration-form')).length === 1)
 			{
-				registrationSection = 'div#s2member-pro-stripe-registration-form-registration-section',
+				optionsSection = 'div#s2member-pro-stripe-registration-form-options-section',
+					optionsSelect = optionsSection + ' select#s2member-pro-stripe-registration-options',
+
+					descSection = 'div#s2member-pro-stripe-registration-form-description-section',
+
+					registrationSection = 'div#s2member-pro-stripe-registration-form-registration-section',
 					captchaSection = 'div#s2member-pro-stripe-registration-form-captcha-section',
 					submissionSection = 'div#s2member-pro-stripe-registration-form-submission-section',
-					submissionButton = submissionSection + ' button#s2member-pro-stripe-registration-submit';
+					submissionButton = submissionSection + ' button#s2member-pro-stripe-registration-submit',
+					submissionNonceVerification = submissionSection + ' input#s2member-pro-stripe-registration-nonce';
 
 				$(submissionButton).removeAttr('disabled'),
 					ws_plugin__s2member_animateProcessing($(submissionButton), 'reset');
 
+				if(!$(optionsSelect + ' option').length)
+					$(optionsSection).hide(), $(descSection).show();
+
+				else $(optionsSection).show(), $(descSection).hide(),
+					$(optionsSelect).on('change', function(/* Handle checkout option changes. */)
+					{
+						$(submissionNonceVerification).val('option'),
+							$rgForm.attr('action', $rgForm.attr('action').replace(/#.*$/, '') + '#s2p-form'),
+							$rgForm.submit(); // Submit form with a new checkout option.
+					});
 				if($(submissionSection + ' input#s2member-pro-stripe-registration-names-not-required-or-not-possible').length)
 				{
 					$(registrationSection + ' > div#s2member-pro-stripe-registration-form-first-name-div').hide(),
@@ -148,41 +164,44 @@ jQuery(document).ready( // DOM ready.
 				});
 				$rgForm.on('submit', function(/* Form validation. */)
 				{
-					var context = this, label = '', error = '', errors = '',
-						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
-						$password1 = $(registrationSection + ' input#s2member-pro-stripe-registration-password1[aria-required="true"]'),
-						$password2 = $(registrationSection + ' input#s2member-pro-stripe-registration-password2');
+					if($.inArray($(submissionNonceVerification).val(), ['option']) === -1)
+					{
+						var context = this, label = '', error = '', errors = '',
+							$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
+							$password1 = $(registrationSection + ' input#s2member-pro-stripe-registration-password1[aria-required="true"]'),
+							$password2 = $(registrationSection + ' input#s2member-pro-stripe-registration-password2');
 
-					$(':input', context)
-						.each(function(/* Go through them all together. */)
-						      {
-							      var id = $.trim($(this).attr('id')).replace(/---[0-9]+$/g, ''/* Remove numeric suffixes. */);
-
-							      if(id && (label = $.trim($('label[for="' + id + '"]', context).first().children('span').first().text().replace(/[\r\n\t]+/g, ' '))))
+						$(':input', context)
+							.each(function(/* Go through them all together. */)
 							      {
-								      if(error = ws_plugin__s2member_validationErrors(label, this, context))
-									      errors += error + '\n\n'/* Collect errors. */;
-							      }
-						      });
-					if((errors = $.trim(errors)))
-					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
-						return false;
-					}
-					else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
-					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
-						return false;
-					}
-					else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
-					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
-						return false;
-					}
-					else if($recaptchaResponse.length && !$recaptchaResponse.val())
-					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
-						return false;
+								      var id = $.trim($(this).attr('id')).replace(/---[0-9]+$/g, ''/* Remove numeric suffixes. */);
+
+								      if(id && (label = $.trim($('label[for="' + id + '"]', context).first().children('span').first().text().replace(/[\r\n\t]+/g, ' '))))
+								      {
+									      if(error = ws_plugin__s2member_validationErrors(label, this, context))
+										      errors += error + '\n\n'/* Collect errors. */;
+								      }
+							      });
+						if((errors = $.trim(errors)))
+						{
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+							return false;
+						}
+						else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
+						{
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+							return false;
+						}
+						else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
+						{
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
+							return false;
+						}
+						else if($recaptchaResponse.length && !$recaptchaResponse.val())
+						{
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+							return false;
+						}
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));

@@ -177,9 +177,30 @@ jQuery(document).ready (function($)
 
 		else if (($rgForm = $('form#s2member-pro-authnet-registration-form')).length === 1)
 			{
-				var handleNameIssues, handlePasswordIssues, registrationSection = 'div#s2member-pro-authnet-registration-form-registration-section', captchaSection = 'div#s2member-pro-authnet-registration-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-registration-form-submission-section', $submissionButton = $(submissionSection + ' button#s2member-pro-authnet-registration-submit');
+				var handleOptions, handleNameIssues, handlePasswordIssues, optionsSection = 'div#s2member-pro-authnet-registration-form-options-section', descSection = 'div#s2member-pro-authnet-registration-form-description-section', registrationSection = 'div#s2member-pro-authnet-registration-form-registration-section', captchaSection = 'div#s2member-pro-authnet-registration-form-captcha-section', submissionSection = 'div#s2member-pro-authnet-registration-form-submission-section', submissionNonceVerification = submissionSection + ' input#s2member-pro-authnet-registration-nonce', $submissionButton = $(submissionSection + ' button#s2member-pro-authnet-registration-submit');
 
 				ws_plugin__s2member_animateProcessing($submissionButton, 'reset'), $submissionButton.removeAttr ('disabled');
+
+				(handleOptions = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
+					{
+						if (!$(optionsSection + ' select#s2member-pro-authnet-registration-options option').length)
+							{
+								$(optionsSection).hide /* No options on this particular form. */ ();
+								$(descSection).show /* Show description on this particular form. */ ();
+							}
+						else // This is turned off by default for smoother loading. (via: display:none).
+							{
+								$(optionsSection).show /* OK. So we need to display this now. */ ();
+								$(descSection).hide /* OK. So we need to hide this now. */ ();
+								$(optionsSection + ' select#s2member-pro-authnet-registration-options').change
+									(function() // Handle option changes.
+									 {
+										$(submissionNonceVerification).val ('option');
+										 $rgForm.attr('action', $rgForm.attr('action').replace(/#.*$/, '')+'#s2p-form');
+										 $rgForm.submit ();
+									 });
+							}
+					}) ();
 
 				(handleNameIssues = /* eventTrigger is passed by jQuery for DOM events. */ function(eventTrigger)
 					{
@@ -209,52 +230,54 @@ jQuery(document).ready (function($)
 
 				$rgForm.submit ( /* Form validation. */function()
 					{
-						var context = this, label = '', error = '', errors = '';
+						if ($.inArray($(submissionNonceVerification).val (), ['option']) === -1)
+						{
+							var context = this, label = '', error = '', errors = '';
 
-						var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+							var $recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
 
-						var $password1 = $(registrationSection + ' input#s2member-pro-authnet-registration-password1[aria-required="true"]');
-						var $password2 = $(registrationSection + ' input#s2member-pro-authnet-registration-password2');
+							var $password1 = $(registrationSection + ' input#s2member-pro-authnet-registration-password1[aria-required="true"]');
+							var $password2 = $(registrationSection + ' input#s2member-pro-authnet-registration-password2');
 
-						$(':input', context).each ( /* Go through them all together. */function()
-							{
-								var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
+							$(':input', context).each ( /* Go through them all together. */function()
+								{
+									var id = /* Remove numeric suffixes. */ $.trim ($(this).attr ('id')).replace (/---[0-9]+$/g, '');
 
-								if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
-									{
-										if (error = ws_plugin__s2member_validationErrors(label, this, context))
-											errors += /* Collect errors. */ error + '\n\n';
-									}
-							});
+									if (id && (label = $.trim ($('label[for="' + id + '"]', context).first ().children ('span').first ().text ().replace (/[\r\n\t]+/g, ' '))))
+										{
+											if (error = ws_plugin__s2member_validationErrors(label, this, context))
+												errors += /* Collect errors. */ error + '\n\n';
+										}
+								});
 
-						if (errors = $.trim (errors))
-							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+							if (errors = $.trim (errors))
+								{
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
 
-								return false;
-							}
+									return false;
+								}
 
-						else if ($password1.length && $.trim ($password1.val ()) !== $.trim ($password2.val ()))
-							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+							else if ($password1.length && $.trim ($password1.val ()) !== $.trim ($password2.val ()))
+								{
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
 
-								return false;
-							}
+									return false;
+								}
 
-						else if /* Enforce minimum length requirement here. */ ($password1.length && $.trim ($password1.val ()).length < 6)
-							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
+							else if /* Enforce minimum length requirement here. */ ($password1.length && $.trim ($password1.val ()).length < 6)
+								{
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
 
-								return false;
-							}
+									return false;
+								}
 
-						else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
-							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+							else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
+								{
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 
-								return false;
-							}
-
+									return false;
+								}
+						}
 						$submissionButton.attr (disabled), ws_plugin__s2member_animateProcessing($submissionButton);
 
 						return true;
@@ -351,7 +374,7 @@ jQuery(document).ready (function($)
 							{
 								calculateTax(eventTrigger);
 							}, 10); // Brief delay.
-					}
+					};
 
 				$(billingAddressSection + ' input#s2member-pro-authnet-sp-checkout-state').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);
 				$(billingAddressSection + ' input#s2member-pro-authnet-sp-checkout-zip').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);
@@ -603,7 +626,7 @@ jQuery(document).ready (function($)
 							{
 								calculateTax(eventTrigger);
 							}, 10); // Brief delay.
-					}
+					};
 
 				$(billingAddressSection + ' input#s2member-pro-authnet-checkout-state').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);
 				$(billingAddressSection + ' input#s2member-pro-authnet-checkout-zip').bind ('keyup blur', calculateTax).bind ('cut paste', cTaxDelay);

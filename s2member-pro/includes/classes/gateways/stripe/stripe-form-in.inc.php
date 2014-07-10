@@ -282,6 +282,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
+				$code = preg_replace('/%%options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($option_selections), $code);
 				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
 				$code = preg_replace('/%%first_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(@$_p['s2member_pro_stripe_registration']['first_name'])), $code);
 				$code = preg_replace('/%%last_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(@$_p['s2member_pro_stripe_registration']['last_name'])), $code);

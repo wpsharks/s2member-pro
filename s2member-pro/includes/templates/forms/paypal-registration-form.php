@@ -15,6 +15,19 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div style="clear:both;"></div>
 	</div>
 
+	<!-- Options Section (this is filled by Shortcode options; when/if specified). -->
+	<div id="s2member-pro-paypal-registration-form-options-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-options-section s2member-pro-paypal-registration-form-options-section">
+		<div id="s2member-pro-paypal-registration-form-options-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-registration-form-section-title s2member-pro-paypal-form-options-section-title s2member-pro-paypal-registration-form-options-section-title">
+			<?php echo _x("Registration Options", "s2member-front", "s2member"); ?>
+		</div>
+		<div id="s2member-pro-paypal-registration-form-options-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-options-div s2member-pro-paypal-registration-form-options-div">
+			<select name="s2p-option" id="s2member-pro-paypal-registration-options" class="s2member-pro-paypal-options s2member-pro-paypal-registration-options form-control" tabindex="-1">
+				%%options%%
+			</select>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+
 	<!-- Registration Description (this is the desc="" attribute from your Shortcode). -->
 	<div id="s2member-pro-paypal-registration-form-description-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-description-section s2member-pro-paypal-registration-form-description-section">
 		<div id="s2member-pro-paypal-registration-form-description-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-description-div s2member-pro-paypal-registration-form-description-div">
