@@ -15,6 +15,19 @@ if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
 		<div style="clear:both;"></div>
 	</div>
 
+	<!-- Options Section (this is filled by Shortcode options; when/if specified). -->
+	<div id="s2member-pro-authnet-registration-form-options-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-options-section s2member-pro-authnet-registration-form-options-section">
+		<div id="s2member-pro-authnet-registration-form-options-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-options-section-title s2member-pro-authnet-registration-form-options-section-title">
+			<?php echo _x("Registration Options", "s2member-front", "s2member"); ?>
+		</div>
+		<div id="s2member-pro-authnet-registration-form-options-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-options-div s2member-pro-authnet-registration-form-options-div">
+			<select name="s2p-option" id="s2member-pro-authnet-registration-options" class="s2member-pro-authnet-options s2member-pro-authnet-registration-options form-control" tabindex="-1">
+				%%options%%
+			</select>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+
 	<!-- Registration Description (this is the desc="" attribute from your Shortcode). -->
 	<div id="s2member-pro-authnet-registration-form-description-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-description-section s2member-pro-authnet-registration-form-description-section">
 		<div id="s2member-pro-authnet-registration-form-description-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-description-div s2member-pro-authnet-registration-form-description-div">

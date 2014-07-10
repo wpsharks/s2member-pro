@@ -322,6 +322,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								*/
 								$code = preg_replace ("/%%response%%/", c_ws_plugin__s2member_utils_strings::esc_refs ($response["response"]), $code);
 								/*
+								Fill in the option selections.
+								*/
+								$code = preg_replace("/%%options%%/", c_ws_plugin__s2member_utils_strings::esc_refs($option_selections), $code);
+								/*
 								Fill in the description.
 								*/
 								$code = preg_replace ("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs ($attr["desc"]), $code);
