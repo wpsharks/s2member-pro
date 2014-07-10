@@ -191,9 +191,9 @@ jQuery(document).ready(
 					alert('— Oops, a slight problem: —\n\nMax paid Trial Period Years is: 2. * This is a Stripe limitation.');
 					return false;
 				}
-				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
+				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.50))
 				{
-					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
+					alert('— Oops, a slight problem: —\n\nAmount (if greater than zero), must be >= 0.50. This is a Stripe limitation; minimum amount is 0.50.');
 					return false;
 				}
 				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
@@ -250,7 +250,7 @@ jQuery(document).ready(
 				}
 				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
 				{
-					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
+					alert('— Oops, a slight problem: —\n\nAmount (if greater than zero), must be >= 0.50. This is a Stripe limitation; minimum amount is 0.50.');
 					return false;
 				}
 				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
@@ -297,7 +297,7 @@ jQuery(document).ready(
 				}
 				else if(regAmount !== '0' && (isNaN(regAmount) || regAmount < 0.00))
 				{
-					alert('— Oops, a slight problem: —\n\nAmount must be >= 0.00');
+					alert('— Oops, a slight problem: —\n\nAmount (if greater than zero), must be >= 0.50. This is a Stripe limitation; minimum amount is 0.50.');
 					return false;
 				}
 				else if(regAmount > /* $999999.99 maximum. */ 999999.99)
