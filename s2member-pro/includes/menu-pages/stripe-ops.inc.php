@@ -186,7 +186,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<th style="padding-top:0;">'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-sandbox">'."\n";
-			echo 'Developer/Sandbox Testing?'."\n";
+			echo 'Sandbox/Test Mode?'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
