@@ -73,6 +73,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_return_in"))
 												if(is_array($order) && isset($order[0]) && is_array($order[0]))
 													$order = $order[0]; // If there is more than one, we only want the first one.
 
+												foreach($order as $_k => &$_v) if(is_array($_v) && isset($_v['@nil']))
+														$_v = NULL; // Nullify properly.
+												unset($_k, $_v); // Housekeeping.
+
 												$clickbank["s2member_log"][] = "Order API variables have been obtained from ClickBank.";
 
 												$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars(http_build_query($clickbank, null, "&"), $order["txnType"]);
