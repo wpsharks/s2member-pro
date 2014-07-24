@@ -33,7 +33,7 @@
 if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 	exit('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_imports'))
+if(!class_exists('c_ws_plugin__s2member_pro_imports_v1'))
 {
 	/**
 	 * Handles various importations.
@@ -41,7 +41,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports'))
 	 * @package s2Member\Imports
 	 * @since 1.5
 	 */
-	class c_ws_plugin__s2member_pro_imports
+	class c_ws_plugin__s2member_pro_imports_v1
 	{
 		/**
 		 * Handles various importations.
@@ -51,11 +51,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports'))
 		 */
 		public static function import()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_import_users']))
-				c_ws_plugin__s2member_pro_imports_in::import_users();
+			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_users']))
+				c_ws_plugin__s2member_pro_imports_v1_in::import_users();
 
-			if(!empty($_POST['ws_plugin__s2member_pro_import_ops']))
-				c_ws_plugin__s2member_pro_imports_in::import_ops();
+			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_ops']))
+				c_ws_plugin__s2member_pro_imports_v1_in::import_ops();
 		}
 	}
 }
