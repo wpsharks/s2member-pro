@@ -283,8 +283,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						{
 							if(strpos($_header, '_um_') === 0)
 							{
-								if(isset($data[$_index])) // @TODO
-									$wpdb->insert($wpdb->usermeta, array('meta_key' => $_header));
+								if(isset($data[$_index]))
+								{
+									$_new_meta_value = $data[$_index];
+									$_user_meta_key  = substr($_header, 4);
+
+									$_existing_meta_row = $wpdb->get_row("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' AND `meta_value` = '".esc_sql($_new_meta_value)."' LIMIT 1");
+									if(is_object($_existing_meta_row)) continue; // No need to update this; it is still the same value.
+
+									$_existing_meta_rows = $wpdb->get_results("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' LIMIT 2");
+									if($_existing_meta_rows && count($_existing_meta_rows) > 1) continue; // We don't update multivalue keys. This can cause database corruption via CSV import files.
+
+									$_existing_meta_row = $_existing_meta_rows ? $_existing_meta_rows[0] : NULL;
+									/** @var object $_existing_meta_row This line is for IDEs; so they don't choke. */
+
+									if(is_object($_existing_meta_row) && $_new_meta_value !== $_existing_meta_row->meta_value)
+										$wpdb->update($wpdb->usermeta, array('meta_value' => $_new_meta_value), array('umeta_id' => $_existing_meta_row->umeta_id));
+
+									else if(!is_object($_existing_meta_row))
+										$wpdb->insert($wpdb->usermeta, array('user_id' => $_user_id, 'meta_key' => $_user_meta_key, 'meta_value' => $_new_meta_value));
+								}
 							}
 							else if(strpos($_header, '_cf_') === 0)
 							{
