@@ -84,17 +84,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 
 				if(isset($file) && is_resource($file)) // Only process if we have a resource.
 				{
-					while(($data = ((version_compare(PHP_VERSION, '5.3', '>=')) ? fgetcsv($file, 0, ',', '"', '"') : fgetcsv($file, 0, ',', '"'))) !== FALSE)
+					while(($_csv_data = ((version_compare(PHP_VERSION, '5.3', '>=')) ? fgetcsv($file, 0, ',', '"', '"') : fgetcsv($file, 0, ',', '"'))) !== FALSE)
 					{
 						$line_index = (int)$line_index + 1; // CSV lines.
 						$line       = (int)$line + 1; // CSV lines.
 
-						$data = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($data));
+						$_csv_data = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_csv_data));
 
-						if($line_index === 1 && isset($data[0]))
+						if($line_index === 1 && isset($_csv_data[0]))
 						{
 							$line = $line - 1;
-							foreach($data as $_header) $headers[] = $_header;
+							foreach($_csv_data as $_header)
+								$headers[] = $_header;
 							unset($_header); // Housekeeping.
 						}
 						if($line_index >= 1 && (!$headers || (!in_array('ID', $headers, TRUE) && !in_array('user_login', $headers, TRUE))))
@@ -104,24 +105,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							break; // Stop here; we have no headers in this importation.
 						}
 						$_user_ID_key = array_search('ID', $headers);
-						$_user_id     = $_user_ID_key !== FALSE && !empty($data[$_user_ID_key]) ? (integer)$data[$_user_ID_key] : 0;
+						$_user_id     = $_user_ID_key !== FALSE && !empty($_csv_data[$_user_ID_key]) ? (integer)$_csv_data[$_user_ID_key] : 0;
 						unset($_user_ID_key); // Housekeeping.
 
 						$_user_login_key = array_search('user_login', $headers);
-						$_user_login     = $_user_login_key !== FALSE && !empty($data[$_user_login_key]) ? $data[$_user_login_key] : '';
+						$_user_login     = $_user_login_key !== FALSE && !empty($_csv_data[$_user_login_key]) ? $_csv_data[$_user_login_key] : '';
 						unset($_user_login_key); // Housekeeping.
 
 						$_user_email_key = array_search('user_email', $headers);
-						$_user_email     = $_user_email_key !== FALSE && !empty($data[$_user_email_key]) ? $data[$_user_email_key] : '';
+						$_user_email     = $_user_email_key !== FALSE && !empty($_csv_data[$_user_email_key]) ? $_csv_data[$_user_email_key] : '';
 						unset($_user_email_key); // Housekeeping.
 
 						$_user_role_key = array_search('role', $headers);
-						$_user_role     = $_user_role_key !== FALSE && !empty($data[$_user_role_key]) ? $data[$_user_role_key] : '';
+						$_user_role     = $_user_role_key !== FALSE && !empty($_csv_data[$_user_role_key]) ? $_csv_data[$_user_role_key] : '';
 						$_user_role     = is_numeric($_user_role) ? ($_user_role == 0 ? 'subscriber' : 's2member_level'.$_user_role) : $_user_role;
 						unset($_user_role_key); // Housekeeping.
 
 						$_user_ccaps_key = array_search('ccaps', $headers);
-						$_user_ccaps     = $_user_ccaps_key !== FALSE && !empty($data[$_user_ccaps_key]) ? $data[$_user_ccaps_key] : '';
+						$_user_ccaps     = $_user_ccaps_key !== FALSE && !empty($_csv_data[$_user_ccaps_key]) ? $_csv_data[$_user_ccaps_key] : '';
 						unset($_user_ccaps_key); // Housekeeping.
 
 						if($_user_login) // Sanitize the username.
@@ -190,10 +191,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 										$errors[] = 'Line #'.$line.'. Network. The email and/or username (<code>'.esc_html($_user_email).'</code> / <code>'.esc_html($_user_login).'</code>) are in conflict w/ network rules.';
 										continue; // Skip this line.
 									}
+							unset($_email_login_validation); // Housekeeping.
+
 							$_wp_update_user = array();
 							foreach($user_keys as $_user_key)
-								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($data[$_user_data_key]))
-									$_wp_update_user[$_user_key] = $data[$_user_data_key];
+								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($_csv_data[$_user_data_key]))
+									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
 							unset($_user_key, $_user_data_key); // Housekeeping.
 
 							if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
@@ -239,6 +242,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 									$errors[] = 'Line #'.$line.'. Network. The email and/or username (<code>'.esc_html($_user_email).'</code> / <code>'.esc_html($_user_login).'</code>) are in conflict w/ network rules.';
 									continue; // Skip this line.
 								}
+							unset($_email_login_validation); // Housekeeping.
+
 							if(!($user_id = wp_insert_user(array('user_login' => $_user_login, 'user_email' => $_user_email))) || is_wp_error($user_id))
 							{
 								$errors[] = 'Line #'.$line.'. Unknown insertion error, please try again.';
@@ -246,8 +251,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							}
 							$_wp_update_user = array();
 							foreach($user_keys as $_user_key)
-								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($data[$_user_data_key]))
-									$_wp_update_user[$_user_key] = $data[$_user_data_key];
+								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($_csv_data[$_user_data_key]))
+									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
 							unset($_user_key, $_user_data_key); // Housekeeping.
 
 							if(!wp_update_user($_wp_update_user))
@@ -279,13 +284,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 									if(strlen($_ccap = trim(strtolower(preg_replace('/[^a-z_0-9]/i', '', $_ccap)))))
 										$_user->add_cap('access_s2member_ccap_'.$_ccap);
 						}
+						$_user_custom_fields = get_user_option('s2member_custom_fields', $_user->ID);
+						$_user_custom_fields = is_array($_user_custom_fields) ? $_user_custom_fields : array();
+
 						foreach($headers as $_index => $_header)
 						{
 							if(strpos($_header, '_um_') === 0)
 							{
-								if(isset($data[$_index]))
+								if(isset($_csv_data[$_index]))
 								{
-									$_new_meta_value = $data[$_index];
+									$_new_meta_value = $_csv_data[$_index];
 									$_user_meta_key  = substr($_header, 4);
 
 									$_existing_meta_row = $wpdb->get_row("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' AND `meta_value` = '".esc_sql($_new_meta_value)."' LIMIT 1");
@@ -306,11 +314,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							}
 							else if(strpos($_header, '_cf_') === 0)
 							{
+								if(isset($_csv_data[$_index]))
+								{
+									$_new_custom_field_value = maybe_unserialize($_csv_data[$_index]);
+									$_user_custom_field_key  = substr($_header, 4);
+
+									$_user_custom_fields[$_user_custom_field_key] = $_new_custom_field_value;
+								}
 							}
 						}
-						unset($_index, $_header); // Housekeeping.
+						update_user_option($_user_id, 's2member_custom_fields', $_user_custom_fields);
+
+						unset($_user_custom_fields, $_index, $_header); // Housekeeping.
+						unset($_new_meta_value, $_user_meta_key, $_existing_meta_rows, $_existing_meta_row);
 					}
 					fclose($file); // Close the file resource handle now.
+					unset($_csv_data, $_user, $_user_id, $_user_login, $_user_email);
+					unset($_user_id_exists_but_not_on_blog, $_user_role, $_user_ccaps);
 				}
 				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
 
