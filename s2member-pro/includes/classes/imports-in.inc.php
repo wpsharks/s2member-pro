@@ -158,6 +158,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> does NOT belong to an existing User.';
 								continue; // Skip this line.
 							}
+							if(is_super_admin($_user_id) || $_user->has_cap('administrator'))
+							{
+								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> belongs to an Administrator. Bypassing this line for security.';
+								continue; // Skip this line.
+							}
 							if(is_multisite() && $_user_id_exists_but_not_on_blog && add_existing_user_to_blog(array('user_id' => $_user_id, 'role' => 'subscriber')) !== TRUE)
 							{
 								$errors[] = 'Line #'.$line.'. Unknown user/site addition error, please try again.';
@@ -166,11 +171,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							if(is_multisite() && !is_user_member_of_blog($_user_id)) // Must be a Member of this Blog.
 							{
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> does NOT belong to an existing User on this site.';
-								continue; // Skip this line.
-							}
-							if($_user->has_cap('administrator'))
-							{
-								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> belongs to an Administrator. Bypassing this line for security.';
 								continue; // Skip this line.
 							}
 							if($_user_email && strcasecmp($_user_email, $_user->user_email) !== 0 && email_exists($_user_email))
@@ -284,7 +284,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 									if(strlen($_ccap = trim(strtolower(preg_replace('/[^a-z_0-9]/i', '', $_ccap)))))
 										$_user->add_cap('access_s2member_ccap_'.$_ccap);
 						}
-						$_user_custom_fields = get_user_option('s2member_custom_fields', $_user->ID);
+						$_user_custom_fields = get_user_option('s2member_custom_fields', $_user_id);
 						$_user_custom_fields = is_array($_user_custom_fields) ? $_user_custom_fields : array();
 
 						foreach($headers as $_index => $_header)
