@@ -70,7 +70,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 				else if(!empty($_POST['ws_plugin__s2member_pro_import_users_direct_input']))
 					fwrite(($file = tmpfile()), trim(stripslashes($_POST['ws_plugin__s2member_pro_import_users_direct_input']))).fseek($file, 0);
 
-				if(isset($file) && is_resource($file) && !($imported = 0)) // Only process if we have a resource.
+				$imported = $line = 0; // Initialize these counters.
+
+				if(isset($file) && is_resource($file)) // Only process if we have a resource.
 				{
 					$custom_field_vars = array(); // Initialize this array.
 					if($GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_fields'])
@@ -250,7 +252,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							else
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.$ID.'</code> does NOT belong to an existing User.';
 						}
-
 						else if(is_multisite() && ($user_id = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($user_login, $user_email)) && !is_super_admin($user_id))
 						{
 							if(strtolower($role) !== 'administrator') // Do NOT add existing Users as Administrators.
@@ -287,7 +288,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							else
 								$errors[] = 'Line #'.$line.'. Role cannot be Administrator. Bypassing this line for security.';
 						}
-
 						else // Otherwise, we are adding a brand new User.
 						{
 							if(strtolower($role) !== 'administrator') // Admin?
@@ -361,20 +361,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 								$errors[] = 'Line #'.$line.'. Role cannot be Administrator. Bypassing this line for security.';
 						}
 					}
-
-					fclose($file);
+					fclose($file); // Close the file resource handle now.
 				}
-				else
-					$errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
+				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
 
 				c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
 
 				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
 					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
 			}
-
-			return /* Return for uniformity. */
-				;
 		}
 
 		/**
@@ -382,8 +377,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 		 *
 		 * @package s2Member\Imports
 		 * @since 110815
-		 *
-		 * @return null
 		 */
 		public static function import_ops()
 		{
@@ -409,16 +402,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						}
 						c_ws_plugin__s2member_menu_pages::update_all_options($import, TRUE, TRUE, FALSE, FALSE, FALSE);
 					}
-					else
-						$errors[] = 'Invalid data received. Please try again.'; // Unserialization failed?
+					else $errors[] = 'Invalid data received. Please try again.'; // Unserialization failed?
 				}
-				else
-					$errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
+				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
 
 				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
 					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
-				else
-					c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
+				else c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
 			}
 		}
 	}
