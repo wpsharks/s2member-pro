@@ -75,10 +75,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 				$user_keys = array(); // Initialize array of user keys.
 				if(is_object($_user_row = $wpdb->get_row("SELECT * FROM `".$wpdb->users."` LIMIT 1")))
 					foreach(array_keys((array)$_user_row) as $_user_key)
-					{
-						if(!in_array($_user_key, array('user_pass'), TRUE))
-							$user_keys[] = $_user_key;
-					}
+						$user_keys[] = $_user_key;
 				unset($_user_row, $_user_key); // Housekeeping.
 				$user_keys = array_unique($user_keys); // Only unique keys please.
 
