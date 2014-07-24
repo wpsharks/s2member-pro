@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles various importations.
+ * Handles various exportations.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -27,35 +27,34 @@
  * (i.e. new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member\Imports
+ * @package s2Member\Exports
  * @since 1.5
  */
 if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
-	exit('Do not access this file directly.');
+	exit ('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_imports_v1'))
+if(!class_exists('c_ws_plugin__s2member_pro_exports_simple'))
 {
 	/**
-	 * Handles various importations.
+	 * Handles various exportations.
 	 *
-	 * @package s2Member\Imports
+	 * @package s2Member\Exports
 	 * @since 1.5
 	 */
-	class c_ws_plugin__s2member_pro_imports_v1
+	class c_ws_plugin__s2member_pro_exports_simple
 	{
 		/**
-		 * Handles various importations.
+		 * Handles various exportations.
 		 *
-		 * @package s2Member\Imports
+		 * @package s2Member\Exports
 		 * @since 1.5
+		 *
+		 * @attaches-to ``add_action('init');``
 		 */
-		public static function import()
+		public static function export()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_users']))
-				c_ws_plugin__s2member_pro_imports_v1_in::import_users();
-
-			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_ops']))
-				c_ws_plugin__s2member_pro_imports_v1_in::import_ops();
+			if(!empty($_POST['ws_plugin__s2member_pro_export_simple_users']))
+				c_ws_plugin__s2member_pro_exports_simple_in::export_users();
 		}
 	}
 }

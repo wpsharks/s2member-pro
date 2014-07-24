@@ -33,7 +33,7 @@
 if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 	exit('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
+if(!class_exists('c_ws_plugin__s2member_pro_exports_simple_in'))
 {
 	/**
 	 * Handles various exportations (innner processing routines).
@@ -41,7 +41,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 	 * @package s2Member\Exports
 	 * @since 1.5
 	 */
-	class c_ws_plugin__s2member_pro_exports_v1_in
+	class c_ws_plugin__s2member_pro_exports_simple_in
 	{
 		/**
 		 * Handles the exportation of Users/Members.
@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 		 */
 		public static function export_users()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_export_v1_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_export_v1_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-users') && current_user_can('create_users'))
+			if(!empty($_POST['ws_plugin__s2member_pro_export_simple_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_export_simple_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-users') && current_user_can('create_users'))
 			{
 				global $wpdb; // Global database object reference.
 				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
@@ -259,47 +259,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 				header('Pragma: no-cache');
 
 				header('Content-Disposition: attachment; filename="export-'.$start.'-'.($start + $limit - 1).'.csv"');
-
-				exit($export); // Exportation file.
-			}
-		}
-
-		/**
-		 * Handles the exportation of options.
-		 *
-		 * @package s2Member\Exports
-		 * @since 110815
-		 *
-		 * @return null Or exits script execution after issuing file download prompt with TXT file.
-		 */
-		public static function export_ops()
-		{
-			if(!empty($_GET['ws_plugin__s2member_pro_export_v1_ops']) && ($nonce = $_GET['ws_plugin__s2member_pro_export_v1_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-ops') && current_user_can('create_users'))
-			{
-				$export = serialize(c_ws_plugin__s2member_pro_utils_ops::op_replace($GLOBALS['WS_PLUGIN__']['s2member']['o']));
-
-				@set_time_limit(0);
-				@ini_set('memory_limit', apply_filters('admin_memory_limit', WP_MAX_MEMORY_LIMIT));
-
-				@ini_set('zlib.output_compression', 0);
-				if(function_exists('apache_setenv'))
-					@apache_setenv('no-gzip', '1');
-
-				while(@ob_end_clean()) ;
-
-				status_header(200); // 200 OK status header.
-
-				header('Content-Encoding: none');
-				header('Accept-Ranges: none');
-				header('Content-Type: text/plain; charset=UTF-8');
-				header('Content-Length: '.strlen($export));
-				header('Expires: '.gmdate('D, d M Y H:i:s', strtotime('-1 week')).' GMT');
-				header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-				header('Cache-Control: no-cache, must-revalidate, max-age=0');
-				header('Cache-Control: post-check=0, pre-check=0', FALSE);
-				header('Pragma: no-cache');
-
-				header('Content-Disposition: attachment; filename="export.s2e"');
 
 				exit($export); // Exportation file.
 			}

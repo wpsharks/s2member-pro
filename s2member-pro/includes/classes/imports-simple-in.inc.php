@@ -33,7 +33,7 @@
 if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 	exit('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_imports_v1_in'))
+if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 {
 	/**
 	 * Handles various importations (inner processing routines).
@@ -41,19 +41,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_v1_in'))
 	 * @package s2Member\Imports
 	 * @since 1.5
 	 */
-	class c_ws_plugin__s2member_pro_imports_v1_in
+	class c_ws_plugin__s2member_pro_imports_simple_in
 	{
 		/**
 		 * Handles the importation of Users/Members.
 		 *
 		 * @package s2Member\Imports
 		 * @since 110815
-		 *
-		 * @return null
 		 */
 		public static function import_users()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_import_v1_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-users') && current_user_can('create_users'))
+			if(!empty($_POST['ws_plugin__s2member_pro_import_simple_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_import_simple_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-users') && current_user_can('create_users'))
 			{
 				global $wpdb; // Global database object reference.
 				global $current_site, $current_blog; // Multisite Networking.
@@ -371,51 +369,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_v1_in'))
 
 				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
 					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
-			}
-		}
-
-		/**
-		 * Handles the importation of options.
-		 *
-		 * @package s2Member\Imports
-		 * @since 110815
-		 *
-		 * @return null
-		 */
-		public static function import_ops()
-		{
-			if(!empty($_POST['ws_plugin__s2member_pro_import_v1_ops']) && ($nonce = $_POST['ws_plugin__s2member_pro_import_v1_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-ops') && current_user_can('create_users'))
-			{
-				@set_time_limit(0); // Make time for processing large import files.
-				@ini_set('memory_limit', apply_filters('admin_memory_limit', WP_MAX_MEMORY_LIMIT));
-
-				if(!empty($_FILES['ws_plugin__s2member_pro_import_ops_file']) && empty($_FILES['ws_plugin__s2member_pro_import_ops_file']['error']))
-					$file = file_get_contents($_FILES['ws_plugin__s2member_pro_import_ops_file']['tmp_name'], 'r');
-
-				if(!empty($file)) // Only process if we have an importation file.
-				{
-					if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), TRUE)) && !empty($import) && ($import['configured'] = '1'))
-					{
-						unset($import['options_checksum'], $import['options_version']);
-
-						foreach($import as $key => $value) // Add prefixes now.
-						{
-							(is_array($value)) ? array_unshift($value, 'update-signal') : NULL;
-							$import['ws_plugin__s2member_'.$key] = $value;
-							unset($import[$key]);
-						}
-						c_ws_plugin__s2member_menu_pages::update_all_options($import, TRUE, TRUE, FALSE, FALSE, FALSE);
-					}
-					else
-						$errors[] = 'Invalid data received. Please try again.'; // Unserialization failed?
-				}
-				else
-					$errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
-
-				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
-					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
-				else
-					c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
 			}
 		}
 	}
