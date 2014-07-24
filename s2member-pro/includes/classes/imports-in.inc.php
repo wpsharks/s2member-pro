@@ -94,6 +94,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							foreach($_csv_data as $_header)
 								$headers[] = $_header;
 							unset($_header); // Housekeeping.
+
+							continue; // We've got the headers now; let's move to the next line.
 						}
 						if($line_index >= 1 && (!$headers || (!in_array('ID', $headers, TRUE) && !in_array('user_login', $headers, TRUE))))
 						{

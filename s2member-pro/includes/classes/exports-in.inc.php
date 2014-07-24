@@ -164,9 +164,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								$_value = $_user->{$_user_key};
 								break;
 						}
-						$_value = maybe_serialize($_value);
-
-						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
+						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq((string)$_value, 1, '"').'"';
 					}
 					unset($_user_key, $_value); // Housekeeping.
 
@@ -184,8 +182,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								$_value = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($_user));
 								break;
 						}
-						$_value = maybe_serialize($_value);
-
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
 					unset($_user_permission_key, $_value); // Housekeeping.
@@ -203,8 +199,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 									$_value = $_user_meta_values[$_user_meta_key]->meta_value;
 								break;
 						}
-						$_value = maybe_serialize($_value);
-
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
 					unset($_user_meta_values, $_user_meta_key, $_value); // Housekeeping.
