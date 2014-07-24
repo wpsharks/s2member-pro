@@ -104,6 +104,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_affiliate_coupon_code_tracking_urls' => '', // A line-delimited list of Coupon Code tracking URLs.
 			'pro_affiliate_coupon_code_suffix_chars'  => '-A:', // Chars indicating an Affiliate Coupon Code suffix.
 			'pro_login_welcome_page_otos'             => '', // A line-delimited list of Login Welcome Page offers.
+			'pro_import_export_advanced_mode'         => '0', // Enable the advanced mode?
 
 			'pro_gateways_enabled'                    => array('paypal'), // Defaults to PayPal Pro.
 
@@ -187,6 +188,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_login_welcome_page_otos' && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_import_export_advanced_mode' && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_gateways_enabled' && !is_array($value))
