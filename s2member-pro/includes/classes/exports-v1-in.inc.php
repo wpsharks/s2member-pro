@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 		 */
 		public static function export_users()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_export_v1_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_export_v1_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-v1-users') && current_user_can('create_users'))
+			if(!empty($_POST['ws_plugin__s2member_pro_export_v1_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_export_v1_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-users') && current_user_can('create_users'))
 			{
 				global $wpdb; // Global database object reference.
 				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
@@ -68,10 +68,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 
 				while(@ob_end_clean()) ;
 
-				$format   = !empty($_POST['ws_plugin__s2member_pro_export_v1_users_format']) ? $_POST['ws_plugin__s2member_pro_export_v1_users_format'] : '';
-				$utf8_bom = isset($_POST['ws_plugin__s2member_pro_export_v1_users_utf8_bom']) ? (int)$_POST['ws_plugin__s2member_pro_export_v1_users_utf8_bom'] : 0;
-				$start    = !empty($_POST['ws_plugin__s2member_pro_export_v1_users_start']) ? (int)$_POST['ws_plugin__s2member_pro_export_v1_users_start'] : 1;
-				$limit    = !empty($_POST['ws_plugin__s2member_pro_export_v1_users_limit']) ? (int)$_POST['ws_plugin__s2member_pro_export_v1_users_limit']
+				$format   = !empty($_POST['ws_plugin__s2member_pro_export_users_format']) ? $_POST['ws_plugin__s2member_pro_export_users_format'] : '';
+				$utf8_bom = isset($_POST['ws_plugin__s2member_pro_export_users_utf8_bom']) ? (int)$_POST['ws_plugin__s2member_pro_export_users_utf8_bom'] : 0;
+				$start    = !empty($_POST['ws_plugin__s2member_pro_export_users_start']) ? (int)$_POST['ws_plugin__s2member_pro_export_users_start'] : 1;
+				$limit    = !empty($_POST['ws_plugin__s2member_pro_export_users_limit']) ? (int)$_POST['ws_plugin__s2member_pro_export_users_limit']
 					: apply_filters('ws_plugin__s2member_pro_export_users_limit', 1000); // Back compatibility; and for blog farms.
 
 				$start  = ($start >= 1) ? $start : 1; // Must be 1 or higher.
@@ -274,7 +274,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_v1_in'))
 		 */
 		public static function export_ops()
 		{
-			if(!empty($_GET['ws_plugin__s2member_pro_export_v1_ops']) && ($nonce = $_GET['ws_plugin__s2member_pro_export_v1_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-v1-ops') && current_user_can('create_users'))
+			if(!empty($_GET['ws_plugin__s2member_pro_export_v1_ops']) && ($nonce = $_GET['ws_plugin__s2member_pro_export_v1_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-ops') && current_user_can('create_users'))
 			{
 				$export = serialize(c_ws_plugin__s2member_pro_utils_ops::op_replace($GLOBALS['WS_PLUGIN__']['s2member']['o']));
 
