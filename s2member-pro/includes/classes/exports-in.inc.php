@@ -93,6 +93,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 				$user_meta_keys = $wpdb->get_col("SELECT DISTINCT `meta_key` FROM `".$wpdb->usermeta."` WHERE (`".$wpdb->usermeta."`.`meta_key` NOT LIKE '".esc_sql(like_escape($wpdb->base_prefix))."%' OR `".$wpdb->usermeta."`.`meta_key` LIKE '".esc_sql(like_escape($wpdb->prefix))."%')");
 				$user_meta_keys = is_array($user_meta_keys) ? $user_meta_keys : array();
 
+				foreach($user_meta_keys as $_index => $_meta_key)
+				{
+					if($_meta_key === $wpdb->prefix.'s2member_custom_fields')
+						unset($user_meta_keys[$_index]);
+				}
 				if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 					foreach($user_meta_keys as $_index => $_meta_key)
 					{
@@ -159,9 +164,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								$_value = $_user->{$_user_key};
 								break;
 						}
-						if($format === 'readable' && !is_scalar($_value))
-							$_value = maybe_serialize($_value);
-						else $_value = maybe_serialize($_value);
+						$_value = maybe_serialize($_value);
 
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
@@ -181,13 +184,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								$_value = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($_user));
 								break;
 						}
-						if($format === 'readable' && !is_scalar($_value))
-							$_value = maybe_serialize($_value);
-						else $_value = maybe_serialize($_value);
+						$_value = maybe_serialize($_value);
 
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
 					unset($_user_permission_key, $_value); // Housekeeping.
+
+					$_user_meta_values = $wpdb->get_results("SELECT `meta_key`, `meta_value` FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user->ID)."'", OBJECT_K);
 
 					foreach($user_meta_keys as $_user_meta_key)
 					{
@@ -196,16 +199,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 						switch($_user_meta_key)
 						{
 							default:
-								$_value = get_user_meta($_user_meta_key, TRUE);
+								if(isset($_user_meta_values[$_user_meta_key]))
+									$_value = $_user_meta_values[$_user_meta_key]->meta_value;
 								break;
 						}
-						if($format === 'readable' && !is_scalar($_value))
-							$_value = maybe_serialize($_value);
-						else $_value = maybe_serialize($_value);
+						$_value = maybe_serialize($_value);
 
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
-					unset($_user_meta_key, $_value); // Housekeeping.
+					unset($_user_meta_values, $_user_meta_key, $_value); // Housekeeping.
+
+					$_user_custom_fields = get_user_option('s2member_custom_fields', $_user->ID);
 
 					foreach($user_custom_field_keys as $_user_custom_field_key)
 					{
@@ -214,16 +218,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 						switch($_user_custom_field_key)
 						{
 							default:
-								$_value = get_user_meta($_user_custom_field_key, TRUE);
+								if(isset($_user_custom_fields[$_user_custom_field_key]))
+									$_value = $_user_custom_fields[$_user_custom_field_key];
 								break;
 						}
-						if($format === 'readable' && !is_scalar($_value))
-							$_value = maybe_serialize($_value);
+						if($format === 'readable' && is_array($_value))
+							$_value = implode('|', $_value);
 						else $_value = maybe_serialize($_value);
 
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
 					}
-					unset($_user_custom_field_key, $_value); // Housekeeping.
+					unset($_user_custom_fields, $_user_custom_field_key, $_value); // Housekeeping.
 
 					$export .= trim($_user_line, " \r\n\t\0\x0B,")."\n";
 				}
@@ -254,8 +259,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 		 * @package s2Member\Exports
 		 * @since 110815
 		 */
-		public
-		static function export_ops()
+		public static function export_ops()
 		{
 			if(!empty($_GET['ws_plugin__s2member_pro_export_ops']) && ($nonce = $_GET['ws_plugin__s2member_pro_export_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-ops') && current_user_can('create_users'))
 			{
