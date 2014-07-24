@@ -60,13 +60,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 			if(isset($_REQUEST['enable_advanced_tools']))
 				c_ws_plugin__s2member_menu_pages::update_all_options(array('ws_plugin__s2member_pro_import_export_advanced_mode' => (string)(integer)$_REQUEST['enable_advanced_tools']), TRUE, FALSE, FALSE, FALSE, FALSE);
-			$enable_advanced_tools = $GLOBALS['WS_PLUGIN__']['s2member_pro']['o']['pro_import_export_advanced_mode'];
+			$enable_advanced_tools = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_import_export_advanced_mode'];
 
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
 				if(!$enable_advanced_tools)
-					echo '<p style="text-align:right;"><a href="'.esc_attr(add_query_arg('enable_advanced_tools', '1')).'">click here to ENABLE the Advanced Import/Export Tools</a> <i class="fa fa-eye"></i></p>';
-				else echo '<p style="text-align:right;"><a href="'.esc_attr(add_query_arg('enable_advanced_tools', '0')).'">click here to HIDE the Advanced Import/Export Tools</a> <i class="fa fa-eye-slash"></i></p>';
+					echo '<p style="text-align:right;"><a href="'.esc_attr(add_query_arg('enable_advanced_tools', '1')).'">click here to ENABLE the <span class="ws-menu-page-hilite">Advanced Import/Export Tools</span></a> <i class="fa fa-eye"></i></p>';
+				else echo '<p style="text-align:right;"><a href="'.esc_attr(add_query_arg('enable_advanced_tools', '0')).'">click here to DISABLE the Advanced Import/Export Tools</a> <i class="fa fa-eye-slash"></i></p>';
 			}
 			/*
 			 * Advanced version.
@@ -81,7 +81,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<p><em><strong>*No Email Notification*</strong> This import routine works silently. Users/Members will NOT be contacted by s2Member; that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress -› Users -› Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
 				echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>*PHP v5.3+ recommended*</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
 				echo '<p class="info"><em><strong class="ws-menu-page-hilite">*ADVANCED (PLEASE READ)*</strong> This importer uses an ENTIRELY DIFFERENT format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
-				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> Please do NOT attempt to import a file that you originally exported with the default s2Member User Export system (it is not compatible). This tool uses an entirely different format; i.e. the Advanced Export Tool format is required here. For further details, please see <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article</a>.</em></p>'."\n";
+				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> Please do NOT attempt to import a file that you originally exported with the default s2Member User Export system (it is not compatible). This tool uses an entirely different format; i.e. the Advanced Export Tool format is required here. Importing with the wrong format may result in User database table corruption.</em></p>'."\n";
 
 				echo '<table class="form-table">'."\n";
 				echo '<tbody>'."\n";
@@ -221,7 +221,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-exportation-section">'."\n";
 				echo '<h3>User/Member Exportation (download CSV export files)</h3>'."\n";
 				echo '<p class="info"><em><strong class="ws-menu-page-hilite">*ADVANCED (PLEASE READ)*</strong> This exporter uses an ENTIRELY DIFFERENT format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
-				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> The export you receive from this Advanced Tool is NOT compatible with the default s2Member User Import system. This tool uses an entirely different format; i.e. files exported here are in the Advanced Import Tool format. If you plan to reimport and/or mass update existing Users/Members based on these Advanced files, you MUST use the Advanced Import Tool to do so. Attempting to import an Advanced Export file with the Default Import Tool may result in database corruption.</em></p>'."\n";
+				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> The export you receive from this Advanced Tool is NOT compatible with the default s2Member User Import system. This tool uses an entirely different format; i.e. files exported here are in the Advanced Import Tool format. If you plan to reimport and/or mass update existing Users/Members based on these Advanced files, you MUST use the Advanced Import Tool to do so. Attempting to import an Advanced Export file with the Default Import Tool may result in User database table corruption.</em></p>'."\n";
 
 				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_export_users" id="ws-plugin--s2member-pro-export-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-export-users")).'" />'."\n";

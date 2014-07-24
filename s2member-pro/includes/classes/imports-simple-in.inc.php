@@ -68,7 +68,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 				else if(!empty($_POST['ws_plugin__s2member_pro_import_users_direct_input']))
 					fwrite(($file = tmpfile()), trim(stripslashes($_POST['ws_plugin__s2member_pro_import_users_direct_input']))).fseek($file, 0);
 
-				if(isset($file) && is_resource($file) && !($imported = 0)) // Only process if we have a resource.
+				$imported = $line = 0; // Initialize these counters.
+
+				if(isset($file) && is_resource($file)) // Only process if we have a resource.
 				{
 					$custom_field_vars = array(); // Initialize this array.
 					if($GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_fields'])
@@ -248,7 +250,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 							else
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.$ID.'</code> does NOT belong to an existing User.';
 						}
-
 						else if(is_multisite() && ($user_id = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($user_login, $user_email)) && !is_super_admin($user_id))
 						{
 							if(strtolower($role) !== 'administrator') // Do NOT add existing Users as Administrators.
@@ -359,11 +360,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 								$errors[] = 'Line #'.$line.'. Role cannot be Administrator. Bypassing this line for security.';
 						}
 					}
-
-					fclose($file);
+					fclose($file); // Close the file resource handle now.
 				}
-				else
-					$errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
+				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
 
 				c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
 
