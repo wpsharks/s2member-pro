@@ -79,6 +79,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('sp-checkout', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
+						unset($_POST['s2member_pro_stripe_sp_checkout']['card_token']); // These are good one-time only.
+						unset($_POST['s2member_pro_stripe_sp_checkout']['card_token_summary']);
+
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
 
