@@ -1,426 +1,417 @@
 <?php
 /**
-* Handles various importations (inner processing routines).
-*
-* Copyright: © 2009-2011
-* {@link http://www.websharks-inc.com/ WebSharks, Inc.}
-* (coded in the USA)
-*
-* This WordPress plugin (s2Member Pro) is comprised of two parts:
-*
-* o (1) Its PHP code is licensed under the GPL license, as is WordPress.
-* 	You should have received a copy of the GNU General Public License,
-* 	along with this software. In the main directory, see: /licensing/
-* 	If not, see: {@link http://www.gnu.org/licenses/}.
-*
-* o (2) All other parts of (s2Member Pro); including, but not limited to:
-* 	the CSS code, some JavaScript code, images, and design;
-* 	are licensed according to the license purchased.
-* 	See: {@link http://www.s2member.com/prices/}
-*
-* Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
-* or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
-*
-* Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
-* to our video tutorial library: {@link http://www.s2member.com/videos/}
-*
-* @package s2Member\Imports
-* @since 1.5
-*/
-if(realpath(__FILE__) === realpath($_SERVER["SCRIPT_FILENAME"]))
-	exit("Do not access this file directly.");
+ * Handles various importations (inner processing routines).
+ *
+ * Copyright: © 2009-2011
+ * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
+ * (coded in the USA)
+ *
+ * This WordPress plugin (s2Member Pro) is comprised of two parts:
+ *
+ * o (1) Its PHP code is licensed under the GPL license, as is WordPress.
+ *   You should have received a copy of the GNU General Public License,
+ *   along with this software. In the main directory, see: /licensing/
+ *   If not, see: {@link http://www.gnu.org/licenses/}.
+ *
+ * o (2) All other parts of (s2Member Pro); including, but not limited to:
+ *   the CSS code, some JavaScript code, images, and design;
+ *   are licensed according to the license purchased.
+ *   See: {@link http://www.s2member.com/prices/}
+ *
+ * Unless you have our prior written consent, you must NOT directly or indirectly license,
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * or make an offer to do any of these things. All of these things are strictly
+ * prohibited with part (2) of the s2Member Pro Module.
+ *
+ * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
+ * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * to our video tutorial library: {@link http://www.s2member.com/videos/}
+ *
+ * @package s2Member\Imports
+ * @since 1.5
+ */
+if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
+	exit('Do not access this file directly.');
 
-if(!class_exists("c_ws_plugin__s2member_pro_imports_in"))
+if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
+{
+	/**
+	 * Handles various importations (inner processing routines).
+	 *
+	 * @package s2Member\Imports
+	 * @since 1.5
+	 */
+	class c_ws_plugin__s2member_pro_imports_in
 	{
 		/**
-		* Handles various importations (inner processing routines).
-		*
-		* @package s2Member\Imports
-		* @since 1.5
-		*/
-		class c_ws_plugin__s2member_pro_imports_in
+		 * Handles the importation of Users/Members.
+		 *
+		 * @package s2Member\Imports
+		 * @since 110815
+		 */
+		public static function import_users()
+		{
+			if(!empty($_POST['ws_plugin__s2member_pro_import_users'])
+			   && ($nonce = $_POST['ws_plugin__s2member_pro_import_users'])
+			   && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-users')
+			   && current_user_can('create_users')
+			)
 			{
-				/**
-				* Handles the importation of Users/Members.
-				*
-				* @package s2Member\Imports
-				* @since 110815
-				*
-				* @return null
-				*/
-				public static function import_users()
+				global $wpdb; // Global database object reference.
+				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
+				global $current_site, $current_blog; // Multisite Networking.
+
+				@set_time_limit(0); // Make time for processing large import files.
+				@ini_set('memory_limit', apply_filters('admin_memory_limit', WP_MAX_MEMORY_LIMIT));
+
+				remove_all_actions('profile_update').remove_all_actions('user_register');
+				remove_all_actions('added_existing_user').remove_all_actions('add_user_to_blog');
+
+				if(!empty($_FILES['ws_plugin__s2member_pro_import_users_file']) && empty($_FILES['ws_plugin__s2member_pro_import_users_file']['error']))
+					$file = fopen($_FILES['ws_plugin__s2member_pro_import_users_file']['tmp_name'], 'r');
+
+				else if(!empty($_POST['ws_plugin__s2member_pro_import_users_direct_input']))
+					fwrite(($file = tmpfile()), trim(stripslashes($_POST['ws_plugin__s2member_pro_import_users_direct_input']))).fseek($file, 0);
+
+				$imported = $line = $line_index = 0; // Initialize these counters.
+				$headers  = array(); // Initialize the array of CSV import file headers.
+
+				$user_keys = array(); // Initialize array of user keys.
+				if(is_object($_user_row = $wpdb->get_row("SELECT * FROM `".$wpdb->users."` LIMIT 1")))
+					foreach(array_keys((array)$_user_row) as $_user_key)
+						$user_keys[] = $_user_key;
+				unset($_user_row, $_user_key); // Housekeeping.
+				$user_keys = array_unique($user_keys); // Only unique keys please.
+
+				if(isset($file) && is_resource($file)) // Only process if we have a resource.
+				{
+					while(($_csv_data = ((version_compare(PHP_VERSION, '5.3', '>=')) ? fgetcsv($file, 0, ',', '"', '"') : fgetcsv($file, 0, ',', '"'))) !== FALSE)
 					{
-						if(!empty($_POST["ws_plugin__s2member_pro_import_users"]) && ($nonce = $_POST["ws_plugin__s2member_pro_import_users"]) && wp_verify_nonce($nonce, "ws-plugin--s2member-pro-import-users") && current_user_can("create_users"))
+						$line_index = (int)$line_index + 1; // CSV lines.
+						$line       = (int)$line + 1; // CSV lines.
+
+						$_csv_data = c_ws_plugin__s2member_utils_strings::trim_deep($_csv_data);
+
+						if($line_index === 1 && isset($_csv_data[0]))
+						{
+							$line = $line - 1;
+							foreach($_csv_data as $_header)
+								$headers[] = $_header;
+							unset($_header); // Housekeeping.
+
+							continue; // We've got the headers now; let's move to the next line.
+						}
+						if($line_index >= 1 && (!$headers || (!in_array('ID', $headers, TRUE) && !in_array('user_login', $headers, TRUE))))
+						{
+							$errors[] = 'Line #'.$line.'. Missing first-line CSV headers; please try again.'.
+							            ' Please note that your CSV headers MUST contain (at a minimum), one of: "ID", or "user_login"';
+							break; // Stop here; we have no headers in this importation.
+						}
+						$_user_ID_key = array_search('ID', $headers);
+						$_user_id     = $_user_ID_key !== FALSE && !empty($_csv_data[$_user_ID_key]) ? (integer)$_csv_data[$_user_ID_key] : 0;
+						unset($_user_ID_key); // Housekeeping.
+
+						$_user_login_key = array_search('user_login', $headers);
+						$_user_login     = $_user_login_key !== FALSE && !empty($_csv_data[$_user_login_key]) ? $_csv_data[$_user_login_key] : '';
+						unset($_user_login_key); // Housekeeping.
+
+						$_user_email_key = array_search('user_email', $headers);
+						$_user_email     = $_user_email_key !== FALSE && !empty($_csv_data[$_user_email_key]) ? $_csv_data[$_user_email_key] : '';
+						unset($_user_email_key); // Housekeeping.
+
+						$_user_role_key = array_search('role', $headers);
+						$_user_role     = $_user_role_key !== FALSE && !empty($_csv_data[$_user_role_key]) ? $_csv_data[$_user_role_key] : '';
+						$_user_role     = is_numeric($_user_role) ? ($_user_role == 0 ? 'subscriber' : 's2member_level'.$_user_role) : $_user_role;
+						unset($_user_role_key); // Housekeeping.
+
+						$_user_ccaps_key = array_search('ccaps', $headers);
+						$_user_ccaps     = $_user_ccaps_key !== FALSE && !empty($_csv_data[$_user_ccaps_key]) ? $_csv_data[$_user_ccaps_key] : '';
+						unset($_user_ccaps_key); // Housekeeping.
+
+						if($_user_login) // Sanitize the username.
+						{
+							if(is_multisite()) $_user_login = strtolower($_user_login);
+							$_user_login = preg_replace('/\s+/', '', sanitize_user($_user_login, is_multisite()));
+						}
+						if($_user_email) $_user_email = sanitize_email($_user_email);
+
+						$_user_id_exists_but_not_on_blog = 0; // Initialize.
+						if(!$_user_id && $_user_login && $_user_email && is_multisite())
+							$_user_id = $_user_id_exists_but_not_on_blog = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($_user_login, $_user_email);
+
+						if(strcasecmp($_user_role, 'administrator') === 0)
+						{
+							$errors[] = 'Line #'.$line.'. Users cannot be updated to an Administrator. Bypassing this line for security.';
+							continue; // Skip this line.
+						}
+						if($_user_email && !is_email($_user_email)) // Is the email address valid?
+						{
+							$errors[] = 'Line #'.$line.'. Invalid email address (<code>'.esc_html($_user_email).'</code>); please try again.';
+							continue; // Skip this line.
+						}
+						if($_user_login && !validate_username($_user_login)) // Is the username valid?
+						{
+							$errors[] = 'Line #'.$line.'. Invalid username (<code>'.esc_html($_user_login).'</code>).';
+							continue; // Skip this line.
+						}
+						if($_user_id) // Updating an existing user based on their ID in the database?
+						{
+							if(!is_object($_user = new WP_User($_user_id)) || !$_user->ID)
 							{
-								global /* Global database object reference. */ $wpdb;
-								global /* Multisite Networking. */ $current_site, $current_blog;
-
-								@set_time_limit /* Make time for processing large import files. */(0);
-								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-
-								remove_all_actions("profile_update").remove_all_actions("user_register");
-								remove_all_actions("added_existing_user").remove_all_actions("add_user_to_blog");
-
-								if(!empty($_FILES["ws_plugin__s2member_pro_import_users_file"]) && empty($_FILES["ws_plugin__s2member_pro_import_users_file"]["error"]))
-									$file = fopen($_FILES["ws_plugin__s2member_pro_import_users_file"]["tmp_name"], "r");
-
-								else if(!empty($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))
-									fwrite(($file = tmpfile()), trim(stripslashes($_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).fseek($file, 0);
-
-								if /* Only process if we have a resource. */(isset($file) && is_resource($file) && !($imported = 0))
-									{
-										$custom_field_vars = /* Initialize this array. */ array();
-										if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"])
-											foreach(json_decode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_fields"], TRUE) as $field)
-											{
-												$custom_field_var = preg_replace("/[^a-z0-9]/i", "_", strtolower($field["id"]));
-												$custom_field_vars[] = $custom_field_var;
-											}
-										sort /* Always sort this array. */($custom_field_vars, SORT_STRING);
-
-										while(($data = ((version_compare(PHP_VERSION, "5.3", ">=")) ? fgetcsv($file, 0, ",", '"', '"') : fgetcsv($file, 0, ",", '"'))) !== false)
-											{
-												$line = /* CSV lines. */ (int)$line + 1;
-
-												$data = c_ws_plugin__s2member_utils_strings::trim_deep($data);
-												$data = stripslashes_deep($data);
-
-												if /* Skip first line if it contains headers. */($line === 1 && strtoupper($data[0]) === "ID")
-													{
-														$line = $line - 1;
-														continue;
-													}
-												if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
-													{
-														$ID = $data[0];
-
-														$user_login = (is_multisite()) ? strtolower($data[1]) : $data[1];
-														$user_login = preg_replace("/\s+/", "", sanitize_user($user_login, is_multisite()));
-														$user_pass = (string)"";
-
-														$first_name = $data[2];
-														$last_name = $data[3];
-														$display_name = $data[4];
-
-														$user_email = sanitize_email($data[5]);
-														$user_url = $data[6];
-
-														$role = $data[7];
-														$custom_capabilities = $data[8];
-
-														$user_registered = ($data[9]) ? date("Y-m-d H:i:s", strtotime($data[9])) : "";
-														$paid_registration_times = ($data[10]) ? maybe_unserialize($data[10]) : "";
-														$last_payment_time = ($data[11]) ? strtotime($data[11]) : "";
-														$auto_eot_time = ($data[12]) ? strtotime($data[12]) : "";
-
-														$custom = $data[13];
-														$subscr_id = $data[14];
-														$subscr_gateway = strtolower($data[15]);
-
-														$custom_fields = /* Initialize. */ array();
-														if /* Now loop through Custom Fields. */(count($data) > 16)
-															for($i = 16, $j = 0; $i < count($data); $i++, $j++)
-																if /* A field in this position? */ (isset($custom_field_vars[$j]))
-																	$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
-													}
-												else // Otherwise, we use the standardized format for importation.
-													{
-														$ID = $data[0];
-
-														$user_login = (is_multisite()) ? strtolower($data[1]) : $data[1];
-														$user_login = preg_replace("/\s+/", "", sanitize_user($user_login, is_multisite()));
-														$user_pass = $data[2];
-
-														$first_name = $data[3];
-														$last_name = $data[4];
-														$display_name = $data[5];
-
-														$user_email = sanitize_email($data[6]);
-														$user_url = $data[7];
-
-														$role = $data[8];
-														$custom_capabilities = $data[9];
-
-														$user_registered = ($data[10]) ? date("Y-m-d H:i:s", strtotime($data[10])) : "";
-														$paid_registration_times = ($data[11]) ? maybe_unserialize($data[11]) : "";
-														$last_payment_time = ($data[12]) ? strtotime($data[12]) : "";
-														$auto_eot_time = ($data[13]) ? strtotime($data[13]) : "";
-
-														$custom = $data[14];
-														$subscr_id = $data[15];
-														$subscr_gateway = strtolower($data[16]);
-
-														$custom_fields = /* Initialize. */ array();
-														if /* Now loop through Custom Fields. */(count($data) > 17)
-															for($i = 17, $j = 0; $i < count($data); $i++, $j++)
-																if /* A field in this position? */ (isset($custom_field_vars[$j]))
-																	$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
-													}
-												$role = (is_numeric($role)) ? (($role == 0) ? "subscriber" : "s2member_level".$role) : $role;
-
-												if($paid_registration_times && !is_array($paid_registration_times))
-													$paid_registration_times = array("level" => strtotime($paid_registration_times));
-												$paid_registration_times = (!$paid_registration_times || !is_array($paid_registration_times)) ? array(): $paid_registration_times;
-
-												$user_details = compact("ID", "user_login", "user_pass", "first_name", "last_name", "display_name", "user_email", "user_url", "role", "user_registered");
-												if(empty($user_details["user_pass"])) // If there was NO Password given.
-													unset($user_details["user_pass"]); // Unset the Password array element.
-
-												if($ID) // Are we dealing with an existing User ID?
-													{
-														if(is_object($user = new WP_User($ID)) && $user->ID) // Is this User in the database?
-															{
-																if(!is_multisite() || is_user_member_of_blog($ID)) // Must be a Member of this Blog.
-																	{
-																		if((!is_multisite() || !is_super_admin($ID)) && !$user->has_cap("administrator"))
-																			{
-																				if(strtolower($role) !== "administrator") // Do NOT update to Administrator.
-																					{
-																						if($user_email && is_email($user_email)) // Is the email address valid?
-																							{
-																								if($user_login) // Has a Username (aka: user_login) been supplied?
-																									{
-																										if(validate_username($user_login)) // Is the Username valid?
-																											{
-																												if(($_same_email = (strtolower($user_email) === strtolower($user->user_email))) || !email_exists($user_email))
-																													{
-																														if(($_same_login = (strtolower($user_login) === strtolower($user->user_login))) || !username_exists($user_login))
-																															{
-																																if(!is_multisite() || ($_same_email && $_same_login) || (($_ = wpmu_validate_user_signup($user_login, $user_email)) && (!is_wp_error($_["errors"]) || !$_["errors"]->get_error_code())))
-																																	{
-																																		if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
-																																			unset($user_details["user_login"], $user_details["user_pass"]);
-
-																																		if(($user_id = wp_update_user($user_details)))
-																																			{
-																																				$user = new WP_User($ID); // Refresh object value.
-
-																																				update_user_option($user_id, "s2member_custom", $custom);
-																																				update_user_option($user_id, "s2member_subscr_id", $subscr_id);
-																																				update_user_option($user_id, "s2member_subscr_gateway", $subscr_gateway);
-																																				update_user_option($user_id, "s2member_auto_eot_time", $auto_eot_time);
-																																				update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
-																																				update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
-																																				update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-
-																																				foreach($user->allcaps as $cap => $cap_enabled)
-																																					if(preg_match("/^access_s2member_ccap_/", $cap))
-																																						$user->remove_cap($ccap = $cap);
-
-																																				if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
-																																					foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
-																																						if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
-																																							$user->add_cap("access_s2member_ccap_".$ccap);
-
-																																				$imported = $imported + 1;
-																																			}
-																																		else
-																																			$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> could NOT be updated. Unknown error, please try again.";
-																																	}
-																																else
-																																	$errors[] = "Line #".$line.". Network. The Username and/or Email (<code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code>) are in conflict w/ Network rules.";
-																															}
-																														else
-																															$errors[] = "Line #".$line.". Conflicting. The Username (<code>".esc_html($user_login)."</code>), already exists.";
-																													}
-																												else
-																													$errors[] = "Line #".$line.". Conflicting. The Email address (<code>".esc_html($user_email)."</code>), already exists.";
-																											}
-																										else
-																											$errors[] = "Line #".$line.". Invalid Username (<code>".esc_html($user_login)."</code>). Lowercase alphanumerics are required.";
-																									}
-																								else
-																									$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
-																							}
-																						else
-																							$errors[] = "Line #".$line.". Missing or invalid Email address (<code>".esc_html($user_email)."</code>); please try again.";
-																					}
-																				else
-																					$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> cannot be updated to an Administrator. Bypassing this line for security.";
-																			}
-																		else
-																			$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> belongs to an Administrator. Bypassing this line for security.";
-																	}
-																else
-																	$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> does NOT belong to an existing User on this site.";
-															}
-														else
-															$errors[] = "Line #".$line.". User ID# <code>".$ID."</code> does NOT belong to an existing User.";
-													}
-
-												else if(is_multisite() && ($user_id = c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog($user_login, $user_email)) && !is_super_admin($user_id))
-													{
-														if(strtolower($role) !== "administrator") // Do NOT add existing Users as Administrators.
-															{
-																if(add_existing_user_to_blog(array("user_id" => $user_id, "role" => $role)))
-																	{
-																		if(is_object($user = new WP_User($user_id)) && $user->ID)
-																			{
-																				update_user_option($user_id, "s2member_custom", $custom);
-																				update_user_option($user_id, "s2member_subscr_id", $subscr_id);
-																				update_user_option($user_id, "s2member_subscr_gateway", $subscr_gateway);
-																				update_user_option($user_id, "s2member_auto_eot_time", $auto_eot_time);
-																				update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
-																				update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
-																				update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-
-																				foreach($user->allcaps as $cap => $cap_enabled)
-																					if(preg_match("/^access_s2member_ccap_/", $cap))
-																						$user->remove_cap($ccap = $cap);
-
-																				if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
-																					foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
-																						if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
-																							$user->add_cap("access_s2member_ccap_".$ccap);
-
-																				$imported = $imported + 1;
-																			}
-																		else
-																			$errors[] = "Line #".$line.". Unknown object error, please try again.";
-																	}
-																else
-																	$errors[] = "Line #".$line.". Unknown User/site addition error, please try again.";
-															}
-														else
-															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";
-													}
-
-												else // Otherwise, we are adding a brand new User.
-													{
-														if(strtolower($role) !== "administrator") // Admin?
-															{
-																if($user_email && is_email($user_email) /* Valid? */)
-																	{
-																		if($user_login) // Was a Username even supplied?
-																			{
-																				if(validate_username($user_login)) // Is it valid?
-																					{
-																						if(!email_exists($user_email) /* Exists already? */)
-																							{
-																								if(!username_exists($user_login) /* Exists? */)
-																									{
-																										if(!is_multisite() || (($_ = wpmu_validate_user_signup($user_login, $user_email)) && (!is_wp_error($_["errors"]) || !$_["errors"]->get_error_code())))
-																											{
-																												if(($user_id = wp_insert_user($user_details)))
-																													{
-																														if(is_object($user = new WP_User($user_id)) && $user->ID)
-																															{
-																																if($user_pass) // If we are given an "un-encrypted Password".
-																																	wp_update_user(array("ID" => $user_id, "user_pass" => $user_pass));
-
-																																if(is_multisite()) // New Users on a Multisite Network need this too.
-																																	update_user_meta($user_id, "s2member_originating_blog", $current_blog->blog_id);
-
-																																update_user_option($user_id, "s2member_custom", $custom);
-																																update_user_option($user_id, "s2member_subscr_id", $subscr_id);
-																																update_user_option($user_id, "s2member_subscr_gateway", $subscr_gateway);
-																																update_user_option($user_id, "s2member_auto_eot_time", $auto_eot_time);
-																																update_user_option($user_id, "s2member_paid_registration_times", $paid_registration_times);
-																																update_user_option($user_id, "s2member_last_payment_time", $last_payment_time);
-																																update_user_option($user_id, "s2member_custom_fields", $custom_fields);
-
-																																foreach($user->allcaps as $cap => $cap_enabled)
-																																	if(preg_match("/^access_s2member_ccap_/", $cap))
-																																		$user->remove_cap($ccap = $cap);
-
-																																if($custom_capabilities && preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities)))
-																																	foreach(preg_split("/[\r\n\t\s;,]+/", preg_replace("/^-all[\r\n\t\s;,]*/", "", str_replace("+", "", $custom_capabilities))) as $ccap)
-																																		if(strlen($ccap = trim(strtolower(preg_replace("/[^a-z_0-9]/i", "", $ccap)))))
-																																			$user->add_cap("access_s2member_ccap_".$ccap);
-
-																																$imported = $imported + 1;
-																															}
-																														else
-																															$errors[] = "Line #".$line.". Unknown object error, please try again.";
-																													}
-																												else
-																													$errors[] = "Line #".$line.". Unknown insertion error, please try again.";
-																											}
-																										else
-																											$errors[] = "Line #".$line.". Network. The Username and/or Email (<code>".esc_html($user_login)."</code> / <code>".esc_html($user_email)."</code>) are in conflict w/ Network rules.";
-																									}
-																								else
-																									$errors[] = "Line #".$line.". Conflicting. The Username (<code>".esc_html($user_login)."</code>), already exists.";
-																							}
-																						else
-																							$errors[] = "Line #".$line.". Conflicting. The Email address (<code>".esc_html($user_email)."</code>), already exists.";
-																					}
-																				else
-																					$errors[] = "Line #".$line.". Invalid Username (<code>".esc_html($user_login)."</code>). Lowercase alphanumerics are required.";
-																			}
-																		else
-																			$errors[] = "Line #".$line.". Missing Username; please try again."; // We have two separate errors for Usernames. This provides clarity.
-																	}
-																else
-																	$errors[] = "Line #".$line.". Missing or invalid Email address (<code>".esc_html($user_email)."</code>); please try again.";
-															}
-														else
-															$errors[] = "Line #".$line.". Role cannot be Administrator. Bypassing this line for security.";
-													}
-											}
-
-										fclose($file);
-									}
-								else
-									$errors[] = "No data was received. Please try again."; // The upload failed, or it was empty.
-
-								c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
-
-								if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
+								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> does NOT belong to an existing User.';
+								continue; // Skip this line.
 							}
-
-						return /* Return for uniformity. */;
-					}
-				/**
-				* Handles the importation of options.
-				*
-				* @package s2Member\Imports
-				* @since 110815
-				*
-				* @return null
-				*/
-				public static function import_ops()
-					{
-						if(!empty($_POST["ws_plugin__s2member_pro_import_ops"]) && ($nonce = $_POST["ws_plugin__s2member_pro_import_ops"]) && wp_verify_nonce($nonce, "ws-plugin--s2member-pro-import-ops") && current_user_can("create_users"))
+							if(is_super_admin($_user_id) || $_user->has_cap('administrator'))
 							{
-								@set_time_limit(0); // Make time for processing large import files.
-								@ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT));
-
-								if(!empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]) && empty($_FILES["ws_plugin__s2member_pro_import_ops_file"]["error"]))
-									$file = file_get_contents($_FILES["ws_plugin__s2member_pro_import_ops_file"]["tmp_name"], "r");
-
-								if(!empty($file)) // Only process if we have an importation file.
-									{
-										if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), true)) && !empty($import) && ($import["configured"] = "1"))
-											{
-												unset($import["options_checksum"], $import["options_version"]);
-
-												foreach($import as $key => $value) // Add prefixes now.
-													{
-														(is_array($value)) ? array_unshift($value, "update-signal") : null;
-														$import["ws_plugin__s2member_".$key] = $value;
-														unset($import[$key]);
-													}
-
-												c_ws_plugin__s2member_menu_pages::update_all_options($import, true, true, false, false, false);
-											}
-										else
-											$errors[] = "Invalid data received. Please try again."; // Unserialization failed?
-									}
-								else
-									$errors[] = "No data was received. Please try again."; // The upload failed, or it was empty.
-
-								if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
-									c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode("</li><li>", $errors).'</li></ul>', true);
-								else
-									c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
+								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> belongs to an Administrator. Bypassing this line for security.';
+								continue; // Skip this line.
 							}
-						return /* Return for uniformity. */;
+							if(is_multisite() && $_user_id_exists_but_not_on_blog && add_existing_user_to_blog(array('user_id' => $_user_id, 'role' => 'subscriber')) !== TRUE)
+							{
+								$errors[] = 'Line #'.$line.'. Unknown user/site addition error, please try again.';
+								continue; // Skip this line.
+							}
+							if(is_multisite() && !is_user_member_of_blog($_user_id)) // Must be a Member of this Blog.
+							{
+								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> does NOT belong to an existing User on this site.';
+								continue; // Skip this line.
+							}
+							if($_user_email && strcasecmp($_user_email, $_user->user_email) !== 0 && email_exists($_user_email))
+							{
+								$errors[] = 'Line #'.$line.'. Conflicting; the email address (<code>'.esc_html($_user_email).'</code>), already exists.';
+								continue; // Skip this line.
+							}
+							if($_user_login && strcasecmp($_user_login, $_user->user_login) !== 0 && username_exists($_user_login))
+							{
+								$errors[] = 'Line #'.$line.'. Conflicting; the username (<code>'.esc_html($_user_login).'</code>), already exists.';
+								continue; // Skip this line.
+							}
+							/** @var WP_Error $_email_login_validation */
+							if(is_multisite() && strcasecmp($_user_email, $_user->user_email) !== 0 && strcasecmp($_user_login, $_user->user_login) !== 0)
+								if(is_wp_error($_email_login_validation = wpmu_validate_user_signup($_user_login, $_user_email)))
+									if($_email_login_validation->get_error_code())
+									{
+										$errors[] = 'Line #'.$line.'. Network. The email and/or username (<code>'.esc_html($_user_email).'</code> / <code>'.esc_html($_user_login).'</code>) are in conflict w/ network rules.';
+										continue; // Skip this line.
+									}
+							unset($_email_login_validation); // Housekeeping.
+
+							$_wp_update_user = array();
+							foreach($user_keys as $_user_key)
+								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($_csv_data[$_user_data_key]))
+									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
+							unset($_user_key, $_user_data_key); // Housekeeping.
+
+							if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
+								unset($_wp_update_user['user_login'], $_wp_update_user['user_pass']);
+
+							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
+							{
+								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> could NOT be updated. Unknown error, please try again.';
+								continue; // Skip this line.
+							}
+							unset($_wp_update_user); // Housekeeping.
+
+							clean_user_cache($_user_id);
+							wp_cache_delete($_user_id, 'user_meta');
+							$_user = new WP_User($_user_id);
+
+							$imported = $imported + 1;
+						}
+						else // Creating a new user on this blog.
+						{
+							if(!$_user_email)
+							{
+								$errors[] = 'Line #'.$line.'. Missing email address.';
+								continue; // Skip this line.
+							}
+							if(email_exists($_user_email))
+							{
+								$errors[] = 'Line #'.$line.'. Conflicting; the email address (<code>'.esc_html($_user_email).'</code>), already exists.';
+								continue; // Skip this line.
+							}
+							if(!$_user_login)
+							{
+								$errors[] = 'Line #'.$line.'. Missing user login (i.e. username).';
+								continue; // Skip this line.
+							}
+							if(username_exists($_user_login))
+							{
+								$errors[] = 'Line #'.$line.'. Conflicting; the username (<code>'.esc_html($_user_login).'</code>), already exists.';
+								continue; // Skip this line.
+							}
+							/** @var WP_Error $_email_login_validation */
+							if(is_multisite() && is_wp_error($_email_login_validation = wpmu_validate_user_signup($_user_login, $_user_email)))
+								if($_email_login_validation->get_error_code())
+								{
+									$errors[] = 'Line #'.$line.'. Network. The email and/or username (<code>'.esc_html($_user_email).'</code> / <code>'.esc_html($_user_login).'</code>) are in conflict w/ network rules.';
+									continue; // Skip this line.
+								}
+							unset($_email_login_validation); // Housekeeping.
+
+							if(!($user_id = wp_insert_user(array('user_login' => $_user_login, 'user_email' => $_user_email))) || is_wp_error($user_id))
+							{
+								$errors[] = 'Line #'.$line.'. Unknown insertion error, please try again.';
+								continue; // Skip this line.
+							}
+							$_wp_update_user = array();
+							foreach($user_keys as $_user_key)
+								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($_csv_data[$_user_data_key]))
+									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
+							unset($_user_key, $_user_data_key); // Housekeeping.
+
+							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
+							{
+								$errors[] = 'Line #'.$line.'. Post insertion update failed on User ID# <code>'.esc_html($_user_id).'</code>. Unknown error, please try again.';
+								continue; // Skip this line.
+							}
+							unset($_wp_update_user); // Housekeeping.
+
+							if(is_multisite()) // New Users on a Multisite Network need this too.
+								update_user_meta($_user_id, 's2member_originating_blog', $current_blog->blog_id);
+
+							clean_user_cache($_user_id);
+							wp_cache_delete($_user_id, 'user_meta');
+							$_user = new WP_User($_user_id);
+
+							$imported = $imported + 1;
+						}
+						if($_user_role) $_user->set_role($_user_role);
+
+						if($_user_ccaps) // Deal with custom capabilities.
+						{
+							foreach($_user->allcaps as $_cap => $_cap_enabled)
+								if(preg_match('/^access_s2member_ccap_/', $_cap))
+									$_user->remove_cap($_cap);
+							unset($_cap, $_cap_enabled); // Housekeeping.
+
+							if(preg_replace('/^-all['."\r\n\t".'\s;,]*/', '', str_replace('+', '', $_user_ccaps)))
+								foreach(preg_split('/['."\r\n\t".'\s;,]+/', preg_replace('/^-all['."\r\n\t".'\s;,]*/', '', str_replace('+', '', $_user_ccaps))) as $_ccap)
+									if(strlen($_ccap = trim(strtolower(preg_replace('/[^a-z_0-9]/i', '', $_ccap)))))
+										$_user->add_cap('access_s2member_ccap_'.$_ccap);
+						}
+						$_user_custom_fields = get_user_option('s2member_custom_fields', $_user_id);
+						$_user_custom_fields = is_array($_user_custom_fields) ? $_user_custom_fields : array();
+
+						foreach($headers as $_index => $_header)
+						{
+							if(strpos($_header, 'meta_key__') === 0)
+							{
+								if(isset($_csv_data[$_index]))
+								{
+									$_new_meta_value = $_csv_data[$_index];
+									$_user_meta_key  = substr($_header, strlen('meta_key__'));
+
+									if($_user_meta_key === $wpdb->prefix.'capabilities' && ($_user_role || $_user_ccaps))
+										continue; // Already handled via `role` and `ccaps`.
+
+									if($_user_meta_key === $wpdb->prefix.'capabilities' && stripos($_new_meta_value, 'administrator') !== FALSE)
+										continue; // Do not allow this for security purposes.
+
+									if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
+										if(strpos($_user_meta_key, $wpdb->prefix) !== 0 && !in_array($_user_meta_key, array('first_name', 'last_name', 'nickname', 'description'), TRUE))
+											continue; // Child sites may NOT update meta data for other child blogs.
+
+									switch($_user_meta_key)
+									{
+										case $wpdb->prefix.'capabilities':
+										case $wpdb->prefix.'s2member_sp_references':
+										case $wpdb->prefix.'s2member_ipn_signup_vars':
+										case $wpdb->prefix.'s2member_access_cap_times':
+										case $wpdb->prefix.'s2member_paid_registration_times':
+										case $wpdb->prefix.'s2member_file_download_access_arc':
+										case $wpdb->prefix.'s2member_file_download_access_log':
+											if(isset($_new_meta_value[0])) // This handles JSON-decoding for known array values.
+												if(!is_null($_new_meta_value_decoded = json_decode($_new_meta_value, TRUE)))
+													$_new_meta_value = maybe_serialize($_new_meta_value_decoded);
+											break;
+									}
+									$_existing_meta_row = $wpdb->get_row("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' AND `meta_value` = '".esc_sql($_new_meta_value)."' LIMIT 1");
+									if(is_object($_existing_meta_row)) continue; // No need to update this; it is still the same value.
+
+									$_existing_meta_rows = $wpdb->get_results("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' LIMIT 2");
+									if($_existing_meta_rows && count($_existing_meta_rows) > 1) continue; // We don't update multivalue keys. This can cause database corruption via CSV import files.
+
+									$_existing_meta_row = $_existing_meta_rows ? $_existing_meta_rows[0] : NULL;
+									/** @var object $_existing_meta_row This line is for IDEs; so they don't choke. */
+
+									if(is_object($_existing_meta_row) && $_new_meta_value !== $_existing_meta_row->meta_value)
+										$wpdb->update($wpdb->usermeta, array('meta_value' => $_new_meta_value), array('umeta_id' => $_existing_meta_row->umeta_id));
+
+									else if(!is_object($_existing_meta_row))
+										$wpdb->insert($wpdb->usermeta, array('user_id' => $_user_id, 'meta_key' => $_user_meta_key, 'meta_value' => $_new_meta_value));
+								}
+							}
+							else if(strpos($_header, 'custom_field_key__') === 0)
+							{
+								if(isset($_csv_data[$_index]))
+								{
+									$_new_custom_field_value = $_csv_data[$_index];
+									if(!is_null($_new_custom_field_value_decoded = json_decode($_new_custom_field_value, TRUE)))
+										$_new_custom_field_value = $_new_custom_field_value_decoded;
+									$_user_custom_field_key = substr($_header, strlen('custom_field_key__'));
+
+									$_user_custom_fields[$_user_custom_field_key] = $_new_custom_field_value;
+								}
+							}
+						}
+						update_user_option($_user_id, 's2member_custom_fields', $_user_custom_fields);
+
+						unset($_user_custom_fields, $_index, $_header); // Housekeeping.
+						unset($_new_meta_value, $_new_meta_value_decoded, $_user_meta_key, $_existing_meta_rows, $_existing_meta_row);
+						unset($_new_custom_field_value, $_new_custom_field_value_decoded, $_user_custom_field_key);
 					}
+					fclose($file); // Close the file resource handle now.
+					unset($_csv_data, $_user, $_user_id, $_user_login, $_user_email);
+					unset($_user_id_exists_but_not_on_blog, $_user_role, $_user_ccaps);
+				}
+				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
+
+				c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Users/Members imported: <code>'.(int)$imported.'</code>.');
+
+				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
+					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
 			}
+		}
+
+		/**
+		 * Handles the importation of options.
+		 *
+		 * @package s2Member\Imports
+		 * @since 110815
+		 */
+		public static function import_ops()
+		{
+			if(!empty($_POST['ws_plugin__s2member_pro_import_ops']) && ($nonce = $_POST['ws_plugin__s2member_pro_import_ops']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-ops') && current_user_can('create_users'))
+			{
+				@set_time_limit(0); // Make time for processing large import files.
+				@ini_set('memory_limit', apply_filters('admin_memory_limit', WP_MAX_MEMORY_LIMIT));
+
+				if(!empty($_FILES['ws_plugin__s2member_pro_import_ops_file']) && empty($_FILES['ws_plugin__s2member_pro_import_ops_file']['error']))
+					$file = file_get_contents($_FILES['ws_plugin__s2member_pro_import_ops_file']['tmp_name'], 'r');
+
+				if(!empty($file)) // Only process if we have an importation file.
+				{
+					if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), TRUE)) && !empty($import) && ($import['configured'] = '1'))
+					{
+						unset($import['options_checksum'], $import['options_version']);
+
+						foreach($import as $key => $value) // Add prefixes now.
+						{
+							(is_array($value)) ? array_unshift($value, 'update-signal') : NULL;
+							$import['ws_plugin__s2member_'.$key] = $value;
+							unset($import[$key]);
+						}
+						c_ws_plugin__s2member_menu_pages::update_all_options($import, TRUE, TRUE, FALSE, FALSE, FALSE);
+					}
+					else $errors[] = 'Invalid data received. Please try again.'; // Unserialization failed?
+				}
+				else $errors[] = 'No data was received. Please try again.'; // The upload failed, or it was empty.
+
+				if(!empty($errors)) // Here is where a detailed error log will be returned to the Site Owner; as a way of clarifying what just happened during importation.
+					c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>The following errors were encountered during importation:</strong><ul style="font-size:80%; list-style:disc outside; margin-left:25px;"><li>'.implode('</li><li>', $errors).'</li></ul>', TRUE);
+				else c_ws_plugin__s2member_admin_notices::display_admin_notice('Operation complete. Options imported.');
+			}
+		}
 	}
-?>
+}

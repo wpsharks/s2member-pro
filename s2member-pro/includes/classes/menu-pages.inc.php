@@ -304,6 +304,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				public static function import_export_page ()
 					{
 						c_ws_plugin__s2member_pro_imports::import (); // Handles imports.
+						c_ws_plugin__s2member_pro_imports_simple::import (); // Handles imports.
 
 						include_once dirname (dirname (__FILE__)) . "/menu-pages/import-export.inc.php";
 

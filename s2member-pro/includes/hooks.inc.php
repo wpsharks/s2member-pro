@@ -36,6 +36,7 @@ if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 Add the plugin Actions/Filters here.
 */
 add_action('init', 'c_ws_plugin__s2member_pro_exports::export', 3);
+add_action('init', 'c_ws_plugin__s2member_pro_exports_simple::export', 3);
 add_action('init', 'c_ws_plugin__s2member_pro_remote_ops::remote_ops');
 
 add_action('admin_init', 'c_ws_plugin__s2member_pro_lock_icons::configure_lock_icons');
