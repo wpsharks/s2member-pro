@@ -208,10 +208,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						'interval'              => 'day', 'interval_count' => $interval_days,
 						'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
 					);
-					if(!$plan['statement_description']) // If empty don't send this.
+					if(!trim($plan['statement_description'])) // If empty don't send this.
 						unset($plan['statement_description']);
 
-					$plan = Stripe_Plan::create();
+					$plan = Stripe_Plan::create($plan);
 				}
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $plan);
 
