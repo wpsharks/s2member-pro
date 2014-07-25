@@ -208,8 +208,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								break;
 
 							default: // Default handler.
-								if(isset($_user_meta_values[$_user_meta_key]))
-									$_value = $_user_meta_values[$_user_meta_key]->meta_value;
+								if(isset($_user_meta_values[$_user_meta_key][0]))
+									if($format === 'readable' && strpos($_user_meta_values[$_user_meta_key]->meta_value, '{'))
+										$_value = json_encode(maybe_unserialize($_user_meta_values[$_user_meta_key]->meta_value));
+									else $_value = $_user_meta_values[$_user_meta_key]->meta_value;
 								break;
 						}
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
@@ -230,7 +232,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								break;
 						}
 						if($format === 'readable' && is_array($_value))
-							$_value = implode('|', $_value);
+							$_value = implode('|', $_value); // A little easier.
 						else if(is_array($_value)) $_value = json_encode($_value);
 
 						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq((string)$_value, 1, '"').'"';
