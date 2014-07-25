@@ -212,6 +212,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							}
 							unset($_wp_update_user); // Housekeeping.
 
+							clean_user_cache($_user_id);
+							wp_cache_delete($_user_id, 'user_meta');
 							$_user = new WP_User($_user_id);
 
 							$imported = $imported + 1;
@@ -268,14 +270,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							if(is_multisite()) // New Users on a Multisite Network need this too.
 								update_user_meta($_user_id, 's2member_originating_blog', $current_blog->blog_id);
 
+							clean_user_cache($_user_id);
+							wp_cache_delete($_user_id, 'user_meta');
 							$_user = new WP_User($_user_id);
 
 							$imported = $imported + 1;
 						}
-						if($_user_role)
-							$_user->set_role($_user_role);
+						if($_user_role) $_user->set_role($_user_role);
 
-						if($_user_ccaps)
+						if($_user_ccaps) // Deal with custom capabilities.
 						{
 							foreach($_user->allcaps as $_cap => $_cap_enabled)
 								if(preg_match('/^access_s2member_ccap_/', $_cap))
@@ -297,8 +300,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 								if(isset($_csv_data[$_index]))
 								{
 									$_new_meta_value = $_csv_data[$_index];
+									$_user_meta_key  = substr($_header, strlen('meta_key__'));
 
-									switch($_user_meta_key = substr($_header, strlen('meta_key__')))
+									if($_user_meta_key === $wpdb->prefix.'capabilities' && ($_user_role || $_user_ccaps))
+										continue; // Already handled via `role` and `ccaps`.
+
+									if($_user_meta_key === $wpdb->prefix.'capabilities' && stripos($_new_meta_value, 'administrator') !== FALSE)
+										continue; // Do not allow this for security purposes.
+
+									if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
+										if(strpos($_user_meta_key, $wpdb->prefix) !== 0 && !in_array($_user_meta_key, array('first_name', 'last_name', 'nickname', 'description'), TRUE))
+											continue; // Child sites may NOT update meta data for other child blogs.
+
+									switch($_user_meta_key)
 									{
 										case $wpdb->prefix.'capabilities':
 										case $wpdb->prefix.'s2member_sp_references':

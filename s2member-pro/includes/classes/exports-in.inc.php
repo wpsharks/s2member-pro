@@ -108,9 +108,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 						if(strpos($_meta_key, $wpdb->prefix) !== 0)
 							if(!in_array($_meta_key, array('first_name', 'last_name', 'nickname', 'description'), TRUE))
 								unset($user_meta_keys[$_index]);
-
-						if($_meta_key === $wpdb->prefix.'s2member_custom_fields')
-							unset($user_meta_keys[$_index]);
 					}
 				unset($_index, $_meta_key); // Housekeeping.
 				$user_meta_keys = array_unique($user_meta_keys); // Only unique keys please.
@@ -182,8 +179,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 								$_value = c_ws_plugin__s2member_user_access::user_access_role($_user);
 								break;
 
-							case 'ccaps':
-								// s2 custom capabilities.
+							case 'ccaps': // s2 custom capabilities.
 								$_value = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($_user));
 								break;
 						}
