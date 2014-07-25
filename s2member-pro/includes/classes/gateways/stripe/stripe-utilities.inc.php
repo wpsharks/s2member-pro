@@ -146,12 +146,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Attempt to charge the customer.
 			{
-				$charge = Stripe_Charge::create(array(
-					                                'customer'              => $customer_id,
-					                                'description'           => $description, 'metadata' => $metadata,
-					                                'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-					                                'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
-				                                ));
+				$charge = array(
+					'customer'              => $customer_id,
+					'description'           => $description, 'metadata' => $metadata,
+					'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
+					'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
+				);
+				if(!trim($charge['statement_description'])) unset($charge['statement_description']);
+
+				$charge = Stripe_Charge::create($charge);
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
 
 				return $charge; // Stripe charge object.
@@ -188,8 +191,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$trial_period_days           = self::per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
 			$interval_days               = self::per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
 
-			$plan_id = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days.serialize($metadata).
-			                     $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
+			$plan_id = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days.serialize($metadata).$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
 
 			try // Attempt to get an existing plan; else create a new one.
 			{
@@ -204,12 +206,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						'name'                  => $name, 'metadata' => $metadata,
 						'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
 						'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
-
 						'interval'              => 'day', 'interval_count' => $interval_days,
 						'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
 					);
-					if(!trim($plan['statement_description'])) // If empty don't send this.
-						unset($plan['statement_description']);
+					if(!trim($plan['statement_description'])) unset($plan['statement_description']);
 
 					$plan = Stripe_Plan::create($plan);
 				}
