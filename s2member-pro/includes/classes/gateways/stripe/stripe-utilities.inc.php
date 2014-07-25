@@ -203,7 +203,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						                            'id'                    => $plan_id,
 						                            'name'                  => $name, 'metadata' => $metadata,
 						                            'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-						                            'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+						                            'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
+							                            ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'] : substr($_SERVER['HTTP_HOST'], 0, 15),
 
 						                            'interval'              => 'day', 'interval_count' => $interval_days,
 						                            'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
