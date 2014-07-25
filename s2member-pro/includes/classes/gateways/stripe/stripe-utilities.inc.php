@@ -199,16 +199,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				}
 				catch(exception $exception) // Else create one.
 				{
-					$plan = Stripe_Plan::create(array(
-						                            'id'                    => $plan_id,
-						                            'name'                  => $name, 'metadata' => $metadata,
-						                            'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-						                            'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
-							                            ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'] : substr($_SERVER['HTTP_HOST'], 0, 15),
+					$plan = array(
+						'id'                    => $plan_id,
+						'name'                  => $name, 'metadata' => $metadata,
+						'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
+						'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
 
-						                            'interval'              => 'day', 'interval_count' => $interval_days,
-						                            'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
-					                            ));
+						'interval'              => 'day', 'interval_count' => $interval_days,
+						'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
+					);
+					if(!$plan['statement_description']) // If empty don't send this.
+						unset($plan['statement_description']);
+
+					$plan = Stripe_Plan::create();
 				}
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $plan);
 
