@@ -203,12 +203,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 							case $wpdb->prefix.'s2member_file_download_access_arc':
 							case $wpdb->prefix.'s2member_file_download_access_log':
 								// This handles JSON-encoding for known array values.
-								if(isset($_user_meta_values[$_user_meta_key][0]))
+								if(isset($_user_meta_values[$_user_meta_key]->meta_value[0]))
 									$_value = json_encode(maybe_unserialize($_user_meta_values[$_user_meta_key]->meta_value));
 								break;
 
 							default: // Default handler.
-								if(isset($_user_meta_values[$_user_meta_key][0]))
+								if(isset($_user_meta_values[$_user_meta_key]->meta_value[0]))
 									if($format === 'readable' && strpos($_user_meta_values[$_user_meta_key]->meta_value, '{'))
 										$_value = json_encode(maybe_unserialize($_user_meta_values[$_user_meta_key]->meta_value));
 									else $_value = $_user_meta_values[$_user_meta_key]->meta_value;
