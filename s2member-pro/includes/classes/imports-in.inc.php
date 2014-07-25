@@ -51,7 +51,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 		 */
 		public static function import_users()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_import_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_import_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-users') && current_user_can('create_users'))
+			if(!empty($_POST['ws_plugin__s2member_pro_import_users'])
+			   && ($nonce = $_POST['ws_plugin__s2member_pro_import_users'])
+			   && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-import-users')
+			   && current_user_can('create_users')
+			)
 			{
 				global $wpdb; // Global database object reference.
 				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
@@ -86,7 +90,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						$line_index = (int)$line_index + 1; // CSV lines.
 						$line       = (int)$line + 1; // CSV lines.
 
-						$_csv_data = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_csv_data));
+						$_csv_data = c_ws_plugin__s2member_utils_strings::trim_deep($_csv_data);
 
 						if($line_index === 1 && isset($_csv_data[0]))
 						{
@@ -201,7 +205,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 								unset($_wp_update_user['user_login'], $_wp_update_user['user_pass']);
 
-							if(!wp_update_user($_wp_update_user))
+							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
 							{
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> could NOT be updated. Unknown error, please try again.';
 								continue; // Skip this line.
@@ -254,7 +258,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
 							unset($_user_key, $_user_data_key); // Housekeeping.
 
-							if(!wp_update_user($_wp_update_user))
+							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
 							{
 								$errors[] = 'Line #'.$line.'. Post insertion update failed on User ID# <code>'.esc_html($_user_id).'</code>. Unknown error, please try again.';
 								continue; // Skip this line.
@@ -288,13 +292,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 
 						foreach($headers as $_index => $_header)
 						{
-							if(strpos($_header, '_um_') === 0)
+							if(strpos($_header, 'meta_key__') === 0)
 							{
 								if(isset($_csv_data[$_index]))
 								{
 									$_new_meta_value = $_csv_data[$_index];
-									$_user_meta_key  = substr($_header, 4);
 
+									switch($_user_meta_key = substr($_header, strlen('meta_key__')))
+									{
+										case $wpdb->prefix.'capabilities':
+										case $wpdb->prefix.'s2member_sp_references':
+										case $wpdb->prefix.'s2member_ipn_signup_vars':
+										case $wpdb->prefix.'s2member_access_cap_times':
+										case $wpdb->prefix.'s2member_paid_registration_times':
+										case $wpdb->prefix.'s2member_file_download_access_arc':
+										case $wpdb->prefix.'s2member_file_download_access_log':
+											if(isset($_new_meta_value[0])) // This handles JSON-decoding for known array values.
+												if(!is_null($_new_meta_value_decoded = json_decode($_new_meta_value, TRUE)))
+													$_new_meta_value = maybe_serialize($_new_meta_value_decoded);
+											break;
+									}
 									$_existing_meta_row = $wpdb->get_row("SELECT * FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($_user_id)."' AND `meta_key` = '".esc_sql($_user_meta_key)."' AND `meta_value` = '".esc_sql($_new_meta_value)."' LIMIT 1");
 									if(is_object($_existing_meta_row)) continue; // No need to update this; it is still the same value.
 
@@ -311,12 +328,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 										$wpdb->insert($wpdb->usermeta, array('user_id' => $_user_id, 'meta_key' => $_user_meta_key, 'meta_value' => $_new_meta_value));
 								}
 							}
-							else if(strpos($_header, '_cf_') === 0)
+							else if(strpos($_header, 'custom_field_key__') === 0)
 							{
 								if(isset($_csv_data[$_index]))
 								{
-									$_new_custom_field_value = maybe_unserialize($_csv_data[$_index]);
-									$_user_custom_field_key  = substr($_header, 4);
+									$_new_custom_field_value = $_csv_data[$_index];
+									if(!is_null($_new_custom_field_value_decoded = json_decode($_new_custom_field_value, TRUE)))
+										$_new_custom_field_value = $_new_custom_field_value_decoded;
+									$_user_custom_field_key = substr($_header, strlen('custom_field_key__'));
 
 									$_user_custom_fields[$_user_custom_field_key] = $_new_custom_field_value;
 								}
@@ -325,7 +344,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						update_user_option($_user_id, 's2member_custom_fields', $_user_custom_fields);
 
 						unset($_user_custom_fields, $_index, $_header); // Housekeeping.
-						unset($_new_meta_value, $_user_meta_key, $_existing_meta_rows, $_existing_meta_row);
+						unset($_new_meta_value, $_new_meta_value_decoded, $_user_meta_key, $_existing_meta_rows, $_existing_meta_row);
+						unset($_new_custom_field_value, $_new_custom_field_value_decoded, $_user_custom_field_key);
 					}
 					fclose($file); // Close the file resource handle now.
 					unset($_csv_data, $_user, $_user_id, $_user_login, $_user_email);

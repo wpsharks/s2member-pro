@@ -53,7 +53,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 		 */
 		public static function export_users()
 		{
-			if(!empty($_POST['ws_plugin__s2member_pro_export_users']) && ($nonce = $_POST['ws_plugin__s2member_pro_export_users']) && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-users') && current_user_can('create_users'))
+			if(!empty($_POST['ws_plugin__s2member_pro_export_users'])
+			   && ($nonce = $_POST['ws_plugin__s2member_pro_export_users'])
+			   && wp_verify_nonce($nonce, 'ws-plugin--s2member-pro-export-users')
+			   && current_user_can('create_users')
+			)
 			{
 				global $wpdb; // Global database object reference.
 				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
@@ -134,11 +138,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 				unset($_user_permission_key); // Housekeeping.
 
 				foreach($user_meta_keys as $_user_meta_key) // Next comes all of the user meta fields.
-					$export_headers .= ',"_um_'.c_ws_plugin__s2member_utils_strings::esc_dq($_user_meta_key, 1, '"').'"';
+					$export_headers .= ',"meta_key__'.c_ws_plugin__s2member_utils_strings::esc_dq($_user_meta_key, 1, '"').'"';
 				unset($_user_meta_key); // Housekeeping.
 
 				foreach($user_custom_field_keys as $_user_custom_field_key) // Now the s2Member custom fields separately.
-					$export_headers .= ',"_cf_'.c_ws_plugin__s2member_utils_strings::esc_dq($_user_custom_field_key, 1, '"').'"';
+					$export_headers .= ',"custom_field_key__'.c_ws_plugin__s2member_utils_strings::esc_dq($_user_custom_field_key, 1, '"').'"';
 				unset($_user_custom_field_key); // Housekeeping.
 
 				$export_headers = trim($export_headers, ','); // Trim away leading/trailing delimiters.
@@ -160,7 +164,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 
 						switch($_user_key)
 						{
-							default:
+							default: // Default handler.
 								$_value = $_user->{$_user_key};
 								break;
 						}
@@ -174,11 +178,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 
 						switch($_user_permission_key)
 						{
-							case 'role':
+							case 'role': // The user's role.
 								$_value = c_ws_plugin__s2member_user_access::user_access_role($_user);
 								break;
 
 							case 'ccaps':
+								// s2 custom capabilities.
 								$_value = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($_user));
 								break;
 						}
@@ -194,7 +199,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 
 						switch($_user_meta_key)
 						{
-							default:
+							case $wpdb->prefix.'capabilities':
+							case $wpdb->prefix.'s2member_sp_references':
+							case $wpdb->prefix.'s2member_ipn_signup_vars':
+							case $wpdb->prefix.'s2member_access_cap_times':
+							case $wpdb->prefix.'s2member_paid_registration_times':
+							case $wpdb->prefix.'s2member_file_download_access_arc':
+							case $wpdb->prefix.'s2member_file_download_access_log':
+								// This handles JSON-encoding for known array values.
+								if(isset($_user_meta_values[$_user_meta_key][0]))
+									$_value = json_encode(maybe_unserialize($_user_meta_values[$_user_meta_key]->meta_value));
+								break;
+
+							default: // Default handler.
 								if(isset($_user_meta_values[$_user_meta_key]))
 									$_value = $_user_meta_values[$_user_meta_key]->meta_value;
 								break;
@@ -211,16 +228,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 
 						switch($_user_custom_field_key)
 						{
-							default:
+							default: // Default handler.
 								if(isset($_user_custom_fields[$_user_custom_field_key]))
 									$_value = $_user_custom_fields[$_user_custom_field_key];
 								break;
 						}
 						if($format === 'readable' && is_array($_value))
 							$_value = implode('|', $_value);
-						else $_value = maybe_serialize($_value);
+						else if(is_array($_value)) $_value = json_encode($_value);
 
-						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq($_value, 1, '"').'"';
+						$_user_line .= ',"'.c_ws_plugin__s2member_utils_strings::esc_dq((string)$_value, 1, '"').'"';
 					}
 					unset($_user_custom_fields, $_user_custom_field_key, $_value); // Housekeeping.
 
