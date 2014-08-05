@@ -115,11 +115,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 		{
 			global $current_site, $current_blog;
 
-			if(is_multisite() && !is_main_site())
+			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key'])
+				$key = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key'];
+
+			else if(is_multisite() && !is_main_site()) // Child blogs in a MS network get their own key.
 				$key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt($current_blog->domain.$current_blog->path, FALSE, FALSE));
 
-			else // Else it's a standard API Key; not on a Multisite Network, or not on the main site anyway.
-				$key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt(preg_replace('/\:[0-9]+$/', '', $_SERVER['HTTP_HOST']), FALSE, FALSE));
+			else $key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt(preg_replace('/\:[0-9]+$/', '', $_SERVER['HTTP_HOST']), FALSE, FALSE));
 
 			return apply_filters('ws_plugin__s2member_pro_remote_ops_key', (!empty($key)) ? $key : '');
 		}
