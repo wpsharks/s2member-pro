@@ -113,7 +113,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 		 */
 		public static function remote_ops_key_gen()
 		{
-			global $current_site, $current_blog; // Multisite Networking.
+			global $current_site, $current_blog;
 
 			if(is_multisite() && !is_main_site())
 				$key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt($current_blog->domain.$current_blog->path, FALSE, FALSE));

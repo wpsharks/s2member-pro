@@ -106,6 +106,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_login_welcome_page_otos'             => '', // A line-delimited list of Login Welcome Page offers.
 			'pro_import_export_advanced_mode'         => '0', // Enable the advanced mode?
 
+			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
+
 			'pro_gateways_enabled'                    => array('paypal'), // Defaults to PayPal Pro.
 
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
