@@ -122,8 +122,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 							{
 								if(get_user_option('s2member_authnet_payment_failures', $user_id) > 2)
 								{
+
 								}
-								else $authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+								else {
+									$authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+								}
 							}
 							else $authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
 						}
