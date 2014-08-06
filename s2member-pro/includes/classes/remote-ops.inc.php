@@ -132,7 +132,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 		 * @package s2Member\API_Remote_Ops
 		 * @since 140806
 		 *
-		 * @attaches-to ``add_action('wp_ajax_ws_plugin__s2member_update_roles_via_ajax');``
+		 * @attaches-to ``add_action('wp_ajax_ws_plugin__s2member_update_remote_ops_key_via_ajax');``
 		 */
 		public static function update_remote_ops_key_via_ajax()
 		{
@@ -142,22 +142,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 			header('Content-Type: text/plain; charset=UTF-8'); // Content-Type with UTF-8.
 			while(@ob_end_clean()) ; // Clean any existing output buffers.
 
-			if(current_user_can('create_users')) // Check privileges. Ability to create Users?
+			if(current_user_can('create_users')) // Ability to create Users?
 
 				if(!empty($_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
 					if(($nonce = $_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
 						if(wp_verify_nonce($nonce, 'ws-plugin--s2member-update-remote-ops-key-via-ajax'))
-
-							if(!apply_filters('ws_plugin__s2member_lock_roles_caps', FALSE))
+							if(!empty($_POST['ws_plugin__s2member_update_remote_ops_key']) && is_string($_POST['ws_plugin__s2member_update_remote_ops_key']))
 							{
-								c_ws_plugin__s2member_roles_caps::config_roles();
-								$success = TRUE; // Roles updated.
+								c_ws_plugin__s2member_menu_pages::update_all_options(array('ws_plugin__s2member_pro_remote_ops_key' => trim(stripslashes($_POST['ws_plugin__s2member_update_remote_ops_key']))), TRUE, FALSE, FALSE, FALSE, FALSE);
+								$success = TRUE; // Updated successfully.
 							}
-							else // Else flag as having been locked here.
-								$locked = TRUE;
-
-			exit(apply_filters('ws_plugin__s2member_update_remote_ops_key_via_ajax', // Also handle ``$locked`` here.
-				((isset($success) && $success) ? '1' : ((isset($locked) && $locked) ? 'l' : '0')), get_defined_vars()));
+			exit(apply_filters('ws_plugin__s2member_update_remote_ops_key_via_ajax', (!empty($success) ? '1' : '0'), get_defined_vars()));
 		}
 	}
 }

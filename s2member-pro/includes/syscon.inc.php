@@ -195,6 +195,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if($key === 'pro_import_export_advanced_mode' && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
+				else if($key === 'pro_remote_ops_key' && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
 				else if($key === 'pro_gateways_enabled' && !is_array($value))
 					$value = $pro_default_options[$key];
 
