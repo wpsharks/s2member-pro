@@ -117,9 +117,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
 							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as ( `ARB / FAILED PAYMENT` ).';
-							$authnet['s2member_log'][] = 's2Member does NOT respond to individual failed payment notifications.';
-							$authnet['s2member_log'][] = 'When multiple consecutive payments fail, s2Member is notified via ARB services.';
-							$authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+
+							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
+							{
+								if(get_user_option('s2member_authnet_payment_failures', $user_id) > 2)
+								{
+								}
+								else $authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+							}
+							else $authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
 						}
 						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 						{
