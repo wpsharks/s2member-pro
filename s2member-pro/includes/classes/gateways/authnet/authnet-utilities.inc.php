@@ -553,7 +553,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				* @todo Continue optimizing this routine with ``empty()`` and ``isset()``.
 				* @todo Candidate for the use of ``ifsetor()``?
 				*/
-				public static function authnet_parse_arb_desc($array = FALSE)
+				public static function authnet_parse_arb_desc($array)
 					{
 						if(is_array($array) && !empty($array["x_description"]) && preg_match("/\(\((.+?)\)\)/i", $array["x_description"], $m))
 							{
@@ -567,8 +567,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								return c_ws_plugin__s2member_utils_strings::trim_deep($array);
 							}
-						else // False.
-							return false;
+						return false;
 					}
 				/**
 				* Determines whether or not Tax may apply.

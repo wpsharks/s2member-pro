@@ -117,7 +117,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_stripe_api_image'                    => str_ireplace(array('http:', 'https:'), '', $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url']).'/images/stripe-square.png',
 
 			'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',
-			'pro_authnet_api_login_id'                => '', 'pro_authnet_api_trans_key' => '', 'pro_authnet_api_salt_key' => '', 'pro_authnet_sandbox' => '0',
+			'pro_authnet_api_login_id'                => '', 'pro_authnet_api_trans_key' => '', 'pro_authnet_api_salt_key' => '', 'pro_authnet_sandbox' => '0', 'pro_authnet_max_payment_failures' => '2',
 			'pro_ccbill_client_id'                    => '', 'pro_ccbill_client_sid' => '0000', 'pro_ccbill_form_name' => '', 'pro_ccbill_dl_user' => '', 'pro_ccbill_dl_pass' => '', 'pro_ccbill_dl_cancellations' => '0', 'pro_ccbill_salt_key' => '', 'pro_ccbill_return_template_header' => '',
 			'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => '',
 			'pro_google_merchant_id'                  => '', 'pro_google_merchant_key' => '', 'pro_google_sandbox' => '0',
@@ -202,6 +202,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_authnet_(?:api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if(preg_match('/^pro_authnet_(?:max_payment_failures)$/', $key) && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_ccbill_(?:client_id|client_sid|form_name|dl_user|dl_pass|dl_cancellations|salt_key|return_template_header)$/', $key) && (!is_string($value) || !strlen($value)))

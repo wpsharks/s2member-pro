@@ -70,8 +70,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
-							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as ( `ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'` ).';
-							$authnet['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_payment` ).';
+							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'`).';
+
+							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
+							{
+								delete_user_option($user_id, 's2member_authnet_payment_failures');
+								$authnet['s2member_log'][] = 'Successful payment. Resetting payment failures to `0` for this subscription.';
+							}
+							$authnet['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` (`subscr_payment`).';
 							$authnet['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
 
 							$processing = $processed = TRUE;
@@ -108,7 +114,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 						}
 						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 						{
-							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as ( `ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'` ).';
+							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'`).';
 							$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
 						}
 					}
@@ -116,14 +122,64 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
-							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as ( `ARB / FAILED PAYMENT` ).';
-							$authnet['s2member_log'][] = 's2Member does NOT respond to individual failed payment notifications.';
-							$authnet['s2member_log'][] = 'When multiple consecutive payments fail, s2Member is notified via ARB services.';
-							$authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
+							{
+								if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
+								   && ($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) >= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
+								) // If a site owner limits payment failures, trigger an EOT when/if the max failed payments threshold is reached for this subscription.
+								{
+									$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
+									$authnet['s2member_log'][] = 'This subscription has `'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures'].'` or more failed payments.';
+									$authnet['s2member_log'][] = 'Max failed payments. IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` (`subscr_eot`).';
+									$authnet['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+
+									$processing = $processed = TRUE;
+									$ipn        = array(); // Reset.
+
+									$ipn['txn_type']  = 'subscr_eot';
+									$ipn['subscr_id'] = $authnet['x_subscription_id'];
+
+									$ipn['custom'] = $authnet['s2_custom'];
+
+									$ipn['period1'] = $authnet['s2_p1'];
+									$ipn['period3'] = $authnet['s2_p3'];
+
+									$ipn['payer_email'] = $authnet['x_email'];
+									$ipn['first_name']  = $authnet['x_first_name'];
+									$ipn['last_name']   = $authnet['x_last_name'];
+
+									$ipn['option_name1']      = 'Referencing Customer ID';
+									$ipn['option_selection1'] = $authnet['x_subscription_id'];
+
+									$ipn['option_name2']      = 'Customer IP Address';
+									$ipn['option_selection2'] = NULL;
+
+									$ipn['item_number'] = $authnet['s2_invoice'];
+									$ipn['item_name']   = $authnet['x_description'];
+
+									$ipn['s2member_paypal_proxy']              = 'authnet';
+									$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+									c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								}
+								else
+								{
+									$current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id);
+									update_user_option($user_id, 's2member_authnet_payment_failures', $current_payment_failures + 1);
+									$authnet['s2member_log'][] = 'Bumping payment failures for subscription: `'.$authnet['x_subscription_id'].'`, to: `'.($current_payment_failures + 1).'`';
+									$authnet['s2member_log'][] = 'Recording number of payment failures only. This does not require any action (at the moment) on the part of s2Member.';
+								}
+							}
+							else
+							{
+								$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
+								$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference to an existing user/member.';
+							}
 						}
 						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 						{
-							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as ( `ARB / FAILED PAYMENT` ).';
+							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
 							$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
 						}
 					}
