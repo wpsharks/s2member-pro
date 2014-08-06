@@ -58,6 +58,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_remote_ops_api"))
 				echo '<h4>Remote Operations API: <strong>Your secret API Key</strong></h4>'."\n";
 				echo '<form method="post" name="ws_plugin__s2member_options_form" id="ws-plugin--s2member-options-form" onsubmit="if(!confirm(\'Are you sure? Please note that changing your API Key will delete the previous key.\')) return false;">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
+				echo '<a href="#" onclick="ws_plugin__s2member_generateSecurityKey(\'#ws-plugin--s2member-pro-remote-ops-key\'); return false;" title="Insert an auto-generated key (recommended).">auto-generate a new key?</a>'."\n";
 				echo '<table style="width:100%;"><tr><td><input type="text" autocomplete="off" name="ws_plugin__s2member_pro_remote_ops_key" id="ws-plugin--s2member-pro-remote-ops-key" value="'.format_to_edit(c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen()).'" style="width:99%;" /></td><td><input type="submit" value="Update API Key" /></td></tr></table>'."\n";
 				echo '</form>'."\n";
 
