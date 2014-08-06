@@ -59,7 +59,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 			{
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
 
-				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && ($_clickbank = $clickbank))
+				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars_v2_1()) && ($_clickbank = $clickbank))
 				{
 					$clickbank['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$clickbank['s2member_log'][] = 's2Member POST vars verified with ClickBank.';
