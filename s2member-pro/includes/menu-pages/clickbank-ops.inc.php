@@ -161,14 +161,18 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 						echo '</div>' . "\n";
 
-						echo '<div class="ws-menu-page-group" title="ClickBank IPN v2.1 Integration">' . "\n";
+						echo '<div class="ws-menu-page-group" title="ClickBank IPN v2.1 or v6 Integration">' . "\n";
 
 						echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">' . "\n";
-						echo '<h3>ClickBank IPN v2.1 / Instant Payment Notifications (required)</h3>' . "\n";
-						echo '<p>Log into your ClickBank account and navigate to this section:<br /><code>Account Settings -› My Site -› Advanced Tools</code></p>' . "\n";
-						echo '<p>Edit your IPN settings &amp; generate a Secret Key.</strong></p>' . "\n";
-						echo '<p>You\'ll need your IPN v2.1 URL, which is:<br /><code>' . esc_html (site_url ("/?s2member_pro_clickbank_notify=1")) . '</code></p>' . "\n";
-						echo '<p>Then provide s2Member with your Secret Key in the field below.</strong></p>' . "\n";
+						echo '<h3>ClickBank IPN "Instant Payment Notifications" (required)</h3>' . "\n";
+						echo '<p><strong>1.</strong> Log into your ClickBank account and navigate to this section:<br /><code>Account Settings -› My Site -› Advanced Tools</code></p>' . "\n";
+						echo '<p><strong>2.</strong> Edit your IPN settings &amp; generate a Secret Key.</strong></p>' . "\n";
+						echo '<p><strong>3.</strong> You\'ll need your IPN v2.1 URL, which is:<br /><code>' . esc_html (site_url ("/?s2member_pro_clickbank_notify=2.1")) . '</code></p>' . "\n";
+						echo '<p>Or, you can choose to use v6. Your v6 IPN URL is:<br /><code>' . esc_html (site_url ("/?s2member_pro_clickbank_notify=6")) . '</code></p>' . "\n";
+
+						echo '<p class="warning">Please do NOT integrate both IPN URLs. Choose one version or the other.</strong></p>' . "\n";
+
+						echo '<p><strong>4.</strong> Now provide s2Member with your Secret Key in the field below.</strong></p>' . "\n";
 
 						echo '<table class="form-table">' . "\n";
 						echo '<tbody>' . "\n";
