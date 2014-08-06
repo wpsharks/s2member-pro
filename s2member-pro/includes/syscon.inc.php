@@ -151,21 +151,6 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 	function ws_plugin__s2member_pro_options_before_checksum(&$options = array())
 	{
 		$pro_default_options = ws_plugin__s2member_pro_default_options();
-		/*
-		Backward compatibility for 'pro_paypal_default_tax'; renamed in v1.3.
-		*/
-		if(isset($options['pro_paypal_default_tax']))
-			$options['pro_default_tax'] = $options['pro_paypal_default_tax'];
-		/*
-		Backward compatibility for 'pro_paypal_tax_rates'; renamed in v1.3.
-		*/
-		if(isset($options['pro_paypal_tax_rates']))
-			$options['pro_tax_rates'] = $options['pro_paypal_tax_rates'];
-		/*
-		Backward compatibility for 'pro_other_gateways_enabled'; renamed in v1.5.
-		*/
-		if(isset($options['pro_other_gateways_enabled']) && is_array($options['pro_other_gateways_enabled']))
-			$options['pro_gateways_enabled'] = array_unique(array_merge($options['pro_other_gateways_enabled'], $pro_default_options['pro_gateways_enabled']));
 
 		foreach($options as $key => &$value /* $GLOBALS['WS_PLUGIN__']['s2member']['o'] */)
 		{
