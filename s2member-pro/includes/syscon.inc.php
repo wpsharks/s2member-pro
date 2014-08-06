@@ -106,6 +106,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_login_welcome_page_otos'             => '', // A line-delimited list of Login Welcome Page offers.
 			'pro_import_export_advanced_mode'         => '0', // Enable the advanced mode?
 
+			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
+
 			'pro_gateways_enabled'                    => array('paypal'), // Defaults to PayPal Pro.
 
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
@@ -149,21 +151,6 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 	function ws_plugin__s2member_pro_options_before_checksum(&$options = array())
 	{
 		$pro_default_options = ws_plugin__s2member_pro_default_options();
-		/*
-		Backward compatibility for 'pro_paypal_default_tax'; renamed in v1.3.
-		*/
-		if(isset($options['pro_paypal_default_tax']))
-			$options['pro_default_tax'] = $options['pro_paypal_default_tax'];
-		/*
-		Backward compatibility for 'pro_paypal_tax_rates'; renamed in v1.3.
-		*/
-		if(isset($options['pro_paypal_tax_rates']))
-			$options['pro_tax_rates'] = $options['pro_paypal_tax_rates'];
-		/*
-		Backward compatibility for 'pro_other_gateways_enabled'; renamed in v1.5.
-		*/
-		if(isset($options['pro_other_gateways_enabled']) && is_array($options['pro_other_gateways_enabled']))
-			$options['pro_gateways_enabled'] = array_unique(array_merge($options['pro_other_gateways_enabled'], $pro_default_options['pro_gateways_enabled']));
 
 		foreach($options as $key => &$value /* $GLOBALS['WS_PLUGIN__']['s2member']['o'] */)
 		{
@@ -191,6 +178,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_import_export_advanced_mode' && (!is_string($value) || !is_numeric($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_remote_ops_key' && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_gateways_enabled' && !is_array($value))
