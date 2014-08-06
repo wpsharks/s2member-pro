@@ -125,5 +125,39 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 
 			return apply_filters('ws_plugin__s2member_pro_remote_ops_key', (!empty($key)) ? $key : '');
 		}
+
+		/**
+		 * Updates Pro Remote OPs Key via AJAX.
+		 *
+		 * @package s2Member\API_Remote_Ops
+		 * @since 140806
+		 *
+		 * @attaches-to ``add_action('wp_ajax_ws_plugin__s2member_update_roles_via_ajax');``
+		 */
+		public static function update_remote_ops_key_via_ajax()
+		{
+			do_action('ws_plugin__s2member_before_update_remote_ops_key_via_ajax', get_defined_vars());
+
+			status_header(200); // Send a 200 OK status header.
+			header('Content-Type: text/plain; charset=UTF-8'); // Content-Type with UTF-8.
+			while(@ob_end_clean()) ; // Clean any existing output buffers.
+
+			if(current_user_can('create_users')) // Check privileges. Ability to create Users?
+
+				if(!empty($_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
+					if(($nonce = $_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
+						if(wp_verify_nonce($nonce, 'ws-plugin--s2member-update-remote-ops-key-via-ajax'))
+
+							if(!apply_filters('ws_plugin__s2member_lock_roles_caps', FALSE))
+							{
+								c_ws_plugin__s2member_roles_caps::config_roles();
+								$success = TRUE; // Roles updated.
+							}
+							else // Else flag as having been locked here.
+								$locked = TRUE;
+
+			exit(apply_filters('ws_plugin__s2member_update_remote_ops_key_via_ajax', // Also handle ``$locked`` here.
+				((isset($success) && $success) ? '1' : ((isset($locked) && $locked) ? 'l' : '0')), get_defined_vars()));
+		}
 	}
 }
