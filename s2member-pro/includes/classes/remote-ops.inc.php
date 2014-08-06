@@ -125,34 +125,5 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
 
 			return apply_filters('ws_plugin__s2member_pro_remote_ops_key', (!empty($key)) ? $key : '');
 		}
-
-		/**
-		 * Updates Pro Remote OPs Key via AJAX.
-		 *
-		 * @package s2Member\API_Remote_Ops
-		 * @since 140806
-		 *
-		 * @attaches-to ``add_action('wp_ajax_ws_plugin__s2member_update_remote_ops_key_via_ajax');``
-		 */
-		public static function update_remote_ops_key_via_ajax()
-		{
-			do_action('ws_plugin__s2member_before_update_remote_ops_key_via_ajax', get_defined_vars());
-
-			status_header(200); // Send a 200 OK status header.
-			header('Content-Type: text/plain; charset=UTF-8'); // Content-Type with UTF-8.
-			while(@ob_end_clean()) ; // Clean any existing output buffers.
-
-			if(current_user_can('create_users')) // Ability to create Users?
-
-				if(!empty($_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
-					if(($nonce = $_POST['ws_plugin__s2member_update_remote_ops_key_via_ajax']))
-						if(wp_verify_nonce($nonce, 'ws-plugin--s2member-update-remote-ops-key-via-ajax'))
-							if(!empty($_POST['ws_plugin__s2member_update_remote_ops_key']) && is_string($_POST['ws_plugin__s2member_update_remote_ops_key']))
-							{
-								c_ws_plugin__s2member_menu_pages::update_all_options(array('ws_plugin__s2member_pro_remote_ops_key' => trim(stripslashes($_POST['ws_plugin__s2member_update_remote_ops_key']))), TRUE, FALSE, FALSE, FALSE, FALSE);
-								$success = TRUE; // Updated successfully.
-							}
-			exit(apply_filters('ws_plugin__s2member_update_remote_ops_key_via_ajax', (!empty($success) ? '1' : '0'), get_defined_vars()));
-		}
 	}
 }
