@@ -71,6 +71,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
 							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'`).';
+
+							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
+							{
+								delete_user_option($user_id, 's2member_authnet_payment_failures');
+								$authnet['s2member_log'][] = 'Successful payment. Resetting payment failures to `0` for this subscription.';
+							}
 							$authnet['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` (`subscr_payment`).';
 							$authnet['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
 
@@ -118,7 +124,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 						{
 							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
 							{
-								if(($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) >= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures'])
+								if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
+								   && ($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) >= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
+								) // If a site owner limits payment failures, trigger an EOT when/if the max failed payments threshold is reached for this subscription.
 								{
 									$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
 									$authnet['s2member_log'][] = 'This subscription has `'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures'].'` or more failed payments.';
@@ -130,13 +138,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 
 									$ipn['txn_type']  = 'subscr_eot';
 									$ipn['subscr_id'] = $authnet['x_subscription_id'];
-									$ipn['txn_id']    = $authnet['x_trans_id'];
 
 									$ipn['custom'] = $authnet['s2_custom'];
 
-									$ipn['mc_gross']    = number_format($authnet['x_amount'], 2, '.', '');
-									$ipn['mc_currency'] = strtoupper((!empty($authnet['s2_currency']) ? $authnet['s2_currency'] : 'USD'));
-									$ipn['tax']         = number_format($authnet['x_tax'], 2, '.', '');
+									$ipn['period1'] = $authnet['s2_p1'];
+									$ipn['period3'] = $authnet['s2_p3'];
 
 									$ipn['payer_email'] = $authnet['x_email'];
 									$ipn['first_name']  = $authnet['x_first_name'];
@@ -159,6 +165,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 								}
 								else
 								{
+									$current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id);
 									update_user_option($user_id, 's2member_authnet_payment_failures', $current_payment_failures + 1);
 									$authnet['s2member_log'][] = 'Bumping payment failures for subscription: `'.$authnet['x_subscription_id'].'`, to: `'.($current_payment_failures + 1).'`';
 									$authnet['s2member_log'][] = 'Recording number of payment failures only. This does not require any action (at the moment) on the part of s2Member.';
