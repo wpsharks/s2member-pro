@@ -204,6 +204,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if(preg_match('/^pro_authnet_(?:api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
+				else if(preg_match('/^pro_authnet_(?:max_payment_failures)$/', $key) && (!is_string($value) || !is_numeric($value)))
+					$value = $pro_default_options[$key];
+
 				else if(preg_match('/^pro_ccbill_(?:client_id|client_sid|form_name|dl_user|dl_pass|dl_cancellations|salt_key|return_template_header)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 

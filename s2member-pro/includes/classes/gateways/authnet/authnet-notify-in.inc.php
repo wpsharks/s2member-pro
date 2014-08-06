@@ -120,12 +120,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 
 							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
 							{
-								if(get_user_option('s2member_authnet_payment_failures', $user_id) > 2)
+								if(($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) > $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures'])
 								{
-
 								}
-								else {
-									$authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
+								else
+								{
+									update_user_option($user_id, 's2member_authnet_payment_failures', $current_payment_failures + 1);
+									$authnet['s2member_log'][] = 'Bumping payment failures for subscription: `'.$authnet['x_subscription_id'].'`, to: `'.($current_payment_failures + 1).'`';
+									$authnet['s2member_log'][] = 'Recording number of payment failures only. This does not require any action (at the moment) on the part of s2Member.';
 								}
 							}
 							else $authnet['s2member_log'][] = 'This does not require any action (at the moment) on the part of s2Member.';
