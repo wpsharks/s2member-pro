@@ -44,22 +44,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 	class c_ws_plugin__s2member_pro_clickbank_utilities
 	{
 		/**
-		 * Formulates request Authorization headers.
-		 *
-		 * @package s2Member\ClickBank
-		 * @since 1.5
-		 *
-		 * @return array Request Authorization headers for ClickBank API communication.
-		 */
-		public static function clickbank_api_headers()
-		{
-			$req['headers']['Accept']        = 'application/json';
-			$req['headers']['Authorization'] = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_developer_key'].':'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_clerk_key'];
-
-			return $req; // Return array with headers.
-		}
-
-		/**
 		 * Get ``$_POST`` or ``$_REQUEST`` vars from ClickBank.
 		 *
 		 * @package s2Member\ClickBank
@@ -196,6 +180,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 				return $s2vars; // Looks good. Return ``$s2vars``.
 
 			return array(); // Default empty array.
+		}
+
+		/**
+		 * Formulates request Authorization headers.
+		 *
+		 * @package s2Member\ClickBank
+		 * @since 1.5
+		 *
+		 * @return array Request Authorization headers for ClickBank API communication.
+		 */
+		public static function clickbank_api_headers()
+		{
+			$req['headers']['Accept']        = 'application/json';
+			$req['headers']['Authorization'] = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_developer_key'].':'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_clerk_key'];
+
+			return $req; // Return array with headers.
 		}
 
 		/**
