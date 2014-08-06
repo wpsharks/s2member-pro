@@ -722,6 +722,30 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 						echo '<tr>' . "\n";
 
 						echo '<th>' . "\n";
+						echo '<label for="ws-plugin--s2member-pro-authnet-max-payment-failures">' . "\n";
+						echo 'Max Payment Failures (for Authorize.Net Integration Only):' . "\n";
+						echo '</label>' . "\n";
+						echo '</th>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '<tr>' . "\n";
+
+						echo '<td>' . "\n";
+						echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_authnet_max_payment_failures" id="ws-plugin--s2member-pro-authnet-max-payment-failures" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_max_payment_failures"]).'" /><br />'."\n";
+						echo '<em>With Authorize.Net integration, s2Member monitors failed payments on it\'s own since Authorize.Net does not notify s2Member about these via the ARB polling service. What you configure here is used by s2Member as a threshold. If a subscription reaches X consecutive failed payments (as configured here), an EOT will occur automatically. If you don\'t want s2Member to monitor failed payments you can set this to <code>0</code>.</em>'."\n";
+						echo '</td>' . "\n";
+
+						echo '</tr>' . "\n";
+						echo '</tbody>'."\n";
+						echo '</table>'."\n";
+
+						echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+						echo '<table class="form-table">'."\n";
+						echo '<tbody>'."\n";
+						echo '<tr>' . "\n";
+
+						echo '<th>' . "\n";
 						echo '<label for="ws-plugin--s2member-membership-eot-behavior">' . "\n";
 						echo 'Membership EOT Behavior (Demote or Delete)?' . "\n";
 						echo '</label>' . "\n";
