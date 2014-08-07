@@ -1,6 +1,6 @@
 <?php
 /**
- * ClickBank IPN Handler (inner processing routines).
+ * ClickBank IPN v2.1 Handler (inner processing routines).
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -28,31 +28,28 @@
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\ClickBank
- * @since 140806
+ * @since 1.5
  */
 if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 	exit ('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
+if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 {
 	/**
 	 * ClickBank IPN Handler (inner processing routines).
 	 *
 	 * @package s2Member\ClickBank
-	 * @since 140806
+	 * @since 1.5
 	 */
-	class c_ws_plugin__s2member_pro_clickbank_notify_in
+	class c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in
 	{
 		/**
 		 * Handles ClickBank IPN URL processing.
 		 *
 		 * @package s2Member\ClickBank
-		 * @since 140806
+		 * @since 1.5
 		 *
 		 * @attaches-to ``add_action('init');``
-		 *
-		 * @TODO This needs MUCH more work before it will be ready.
-		 *    See also: `clickbank_postvars()`.
 		 */
 		public static function clickbank_notify()
 		{
@@ -62,7 +59,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 			{
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
 
-				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && ($_clickbank = $clickbank))
+				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars_v2_1()) && ($_clickbank = $clickbank))
 				{
 					$clickbank['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$clickbank['s2member_log'][] = 's2Member POST vars verified with ClickBank.';
