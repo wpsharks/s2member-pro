@@ -189,7 +189,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 							echo '</script>'."\n";
 						}
 					}
-					else // Extensive log reporting here. Sometimes it takes a few seconds for the ClickBank API to receive data for new orders. This is here in case that happens.
+					else // Sometimes it takes a few seconds for the ClickBank API to receive data for new orders. This is here in case that happens.
 					{
 						$clickbank['s2member_log'][] = 'Unable to obtain API vars. The ClickBank API may NOT have data for this order yet. Or, your ClickBank API Keys are NOT configured properly under `s2Member -› ClickBank Options`.';
 						$clickbank['s2member_log'][] = var_export($_REQUEST, TRUE); // Recording ``$_POST`` + ``$_GET`` vars for analysis and debugging.
@@ -223,7 +223,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 					echo "window.location = '".c_ws_plugin__s2member_utils_strings::esc_js_sq(home_url("/"))."';";
 					echo '</script>'."\n";
 				}
-
 				$logt = c_ws_plugin__s2member_utilities::time_details();
 				$logv = c_ws_plugin__s2member_utilities::ver_details();
 				$logm = c_ws_plugin__s2member_utilities::mem_details();
@@ -239,7 +238,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 							                  c_ws_plugin__s2member_utils_logs::conceal_private_info(var_export($clickbank, TRUE))."\n\n",
 							                  FILE_APPEND);
 
-				exit(); // Exit now.
+				exit(); // Clean exit; all done here.
 			}
 		}
 	}
