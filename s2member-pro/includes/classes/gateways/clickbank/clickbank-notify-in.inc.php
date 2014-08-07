@@ -50,6 +50,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 		 * @since 140806
 		 *
 		 * @attaches-to ``add_action('init');``
+		 *
+		 * @TODO This needs MUCH more work before it will be ready.
+		 *    See also: `clickbank_postvars()`.
 		 */
 		public static function clickbank_notify()
 		{
