@@ -707,6 +707,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<li><code>ta="0.00"</code> Trial Amount. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 			echo '<li><code>tp="0"</code> Trial Period. Only valid w/ Membership Level Access. Must be <code>0</code> when <code>rt="L"</code> or when <code>rr="BN"</code>.</li>'."\n";
 			echo '<li><code>tt="D"</code> Trial Term. Only valid w/ Membership Level Access. Possible values: <code>D</code> = Days, <code>W</code> = Weeks, <code>M</code> = Months, <code>Y</code> = Years.</li>'."\n";
+			echo '<li><code>unsub="0"</code> Unsubscribe user? Only valid when <code>cancel="1"</code>. Possible values: <code>0</code> = do NOT unsubscribe (wait until an EOT occurs), <code>1</code> = yes, unusbscribe user immediately; i.e. when they submit the cancellation form. <em>NOTE: Just to clarify, this pertains to List Servers that you\'ve configured with s2Member. Setting <code>unsub="1"</code> will cause the user to be unsubscribed from a mailing list (if they are currently subscribed).</em></li>'."\n";
 			echo '<li><code>update="0"</code> Billing Update Form. Only valid w/ Membership Level Access. Possible values: <code>0</code> = this is NOT a Billing Update Form, <code>1</code> = this IS a Billing Update Form.</li>'."\n";
 			echo '</ul>'."\n";
 			echo '</td>'."\n";

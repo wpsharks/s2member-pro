@@ -149,6 +149,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_cancellation_in"))
 																if ($post_vars["attr"]["success"] && ($custom_success_url = str_ireplace (array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode (c_ws_plugin__s2member_utils_encryption::encrypt ($global_response["response"])), urlencode ($global_response["response"])), $post_vars["attr"]["success"])) && ($custom_success_url = trim (preg_replace ("/%%(.+?)%%/i", "", $custom_success_url))))
 																	wp_redirect (c_ws_plugin__s2member_utils_urls::add_s2member_sig ($custom_success_url, "s2p-v")) . exit ();
 															}
+														if($post_vars["attr"]["unsub"]) c_ws_plugin__s2member_list_servers::process_list_server_removals_against_current_user();
 													}
 												else // Else, an error. Not logged in.
 													{
