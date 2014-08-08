@@ -181,10 +181,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-cancellation-form.php")) ? TEMPLATEPATH . "/authnet-cancellation-form.php" : false;
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-cancellation-form.html")) ? TEMPLATEPATH . "/authnet-cancellation-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (TEMPLATEPATH . "/" . $attr["template"])) ? TEMPLATEPATH . "/" . $attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (WP_CONTENT_DIR . "/" . $attr["template"])) ? WP_CONTENT_DIR . "/" . $attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/authnet-cancellation-form.php")) ? TEMPLATEPATH."/authnet-cancellation-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/authnet-cancellation-form.php")) ? get_stylesheet_directory()."/authnet-cancellation-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim (file_get_contents ((($custom_template) ? $custom_template : dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/forms/authnet-cancellation-form.php")));
 								$code = trim (((!$custom_template || !is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code));
@@ -306,10 +308,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-registration-form.php")) ? TEMPLATEPATH . "/authnet-registration-form.php" : false;
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-registration-form.html")) ? TEMPLATEPATH . "/authnet-registration-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (TEMPLATEPATH . "/" . $attr["template"])) ? TEMPLATEPATH . "/" . $attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (WP_CONTENT_DIR . "/" . $attr["template"])) ? WP_CONTENT_DIR . "/" . $attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/authnet-registration-form.php")) ? TEMPLATEPATH."/authnet-registration-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/authnet-registration-form.php")) ? get_stylesheet_directory()."/authnet-registration-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim (file_get_contents ((($custom_template) ? $custom_template : dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/forms/authnet-registration-form.php")));
 								$code = trim (((!$custom_template || !is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code));
@@ -442,10 +446,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-update-form.php")) ? TEMPLATEPATH . "/authnet-update-form.php" : false;
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-update-form.html")) ? TEMPLATEPATH . "/authnet-update-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (TEMPLATEPATH . "/" . $attr["template"])) ? TEMPLATEPATH . "/" . $attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (WP_CONTENT_DIR . "/" . $attr["template"])) ? WP_CONTENT_DIR . "/" . $attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/authnet-update-form.php")) ? TEMPLATEPATH."/authnet-update-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/authnet-update-form.php")) ? get_stylesheet_directory()."/authnet-update-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim (file_get_contents ((($custom_template) ? $custom_template : dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/forms/authnet-update-form.php")));
 								$code = trim (((!$custom_template || !is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code));
@@ -595,10 +601,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-sp-checkout-form.php")) ? TEMPLATEPATH . "/authnet-sp-checkout-form.php" : false;
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-sp-checkout-form.html")) ? TEMPLATEPATH . "/authnet-sp-checkout-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (TEMPLATEPATH . "/" . $attr["template"])) ? TEMPLATEPATH . "/" . $attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (WP_CONTENT_DIR . "/" . $attr["template"])) ? WP_CONTENT_DIR . "/" . $attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/authnet-sp-checkout-form.php")) ? TEMPLATEPATH."/authnet-sp-checkout-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/authnet-sp-checkout-form.php")) ? get_stylesheet_directory()."/authnet-sp-checkout-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim (file_get_contents ((($custom_template) ? $custom_template : dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/forms/authnet-sp-checkout-form.php")));
 								$code = trim (((!$custom_template || !is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code));
@@ -805,10 +813,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-checkout-form.php")) ? TEMPLATEPATH . "/authnet-checkout-form.php" : false;
-								$custom_template = (file_exists (TEMPLATEPATH . "/authnet-checkout-form.html")) ? TEMPLATEPATH . "/authnet-checkout-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (TEMPLATEPATH . "/" . $attr["template"])) ? TEMPLATEPATH . "/" . $attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists (WP_CONTENT_DIR . "/" . $attr["template"])) ? WP_CONTENT_DIR . "/" . $attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/authnet-checkout-form.php")) ? TEMPLATEPATH."/authnet-checkout-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/authnet-checkout-form.php")) ? get_stylesheet_directory()."/authnet-checkout-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim (file_get_contents ((($custom_template) ? $custom_template : dirname (dirname (dirname (dirname (__FILE__)))) . "/templates/forms/authnet-checkout-form.php")));
 								$code = trim (((!$custom_template || !is_multisite () || !c_ws_plugin__s2member_utils_conds::is_multisite_farm () || is_main_site ()) ? c_ws_plugin__s2member_utilities::evl ($code) : $code));
