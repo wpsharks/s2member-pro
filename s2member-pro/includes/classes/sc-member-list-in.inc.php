@@ -172,7 +172,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
 			$custom_template = (is_file(TEMPLATEPATH.'/member-list.php')) ? TEMPLATEPATH.'/member-list.php' : '';
+			$custom_template = (is_file(get_stylesheet_directory().'/member-list.php')) ? get_stylesheet_directory().'/member-list.php' : $custom_template;
+
 			$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+			$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 			$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 			if($attr['template'] && !$custom_template) // Unable to locate the template file?
@@ -210,7 +213,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$p_var    = self::p_var();
 
 			$custom_template = (is_file(TEMPLATEPATH.'/member-list-search-box.php')) ? TEMPLATEPATH.'/member-list-search-box.php' : '';
+			$custom_template = (is_file(get_stylesheet_directory().'/member-list-search-box.php')) ? get_stylesheet_directory().'/member-list-search-box.php' : $custom_template;
+
 			$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+			$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 			$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 			if($attr['template'] && !$custom_template) // Unable to locate the template file?

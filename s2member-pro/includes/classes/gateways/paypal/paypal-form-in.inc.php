@@ -187,10 +187,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-cancellation-form.php")) ? TEMPLATEPATH."/paypal-cancellation-form.php" : false;
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-cancellation-form.html")) ? TEMPLATEPATH."/paypal-cancellation-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/paypal-cancellation-form.php")) ? TEMPLATEPATH."/paypal-cancellation-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/paypal-cancellation-form.php")) ? get_stylesheet_directory()."/paypal-cancellation-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-cancellation-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -312,10 +314,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-registration-form.php")) ? TEMPLATEPATH."/paypal-registration-form.php" : false;
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-registration-form.html")) ? TEMPLATEPATH."/paypal-registration-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/paypal-registration-form.php")) ? TEMPLATEPATH."/paypal-registration-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/paypal-registration-form.php")) ? get_stylesheet_directory()."/paypal-registration-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-registration-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -448,10 +452,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-update-form.php")) ? TEMPLATEPATH."/paypal-update-form.php" : false;
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-update-form.html")) ? TEMPLATEPATH."/paypal-update-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/paypal-update-form.php")) ? TEMPLATEPATH."/paypal-update-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/paypal-update-form.php")) ? get_stylesheet_directory()."/paypal-update-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-update-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -602,10 +608,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-sp-checkout-form.php")) ? TEMPLATEPATH."/paypal-sp-checkout-form.php" : false;
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-sp-checkout-form.html")) ? TEMPLATEPATH."/paypal-sp-checkout-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/paypal-sp-checkout-form.php")) ? TEMPLATEPATH."/paypal-sp-checkout-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/paypal-sp-checkout-form.php")) ? get_stylesheet_directory()."/paypal-sp-checkout-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-sp-checkout-form.php")));
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-sp-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-sp-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;
@@ -814,10 +822,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Get the form template.
 								*/
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-checkout-form.php")) ? TEMPLATEPATH."/paypal-checkout-form.php" : false;
-								$custom_template = (file_exists(TEMPLATEPATH."/paypal-checkout-form.html")) ? TEMPLATEPATH."/paypal-checkout-form.html" : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && file_exists(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								$custom_template = (is_file(TEMPLATEPATH."/paypal-checkout-form.php")) ? TEMPLATEPATH."/paypal-checkout-form.php" : '';
+								$custom_template = (is_file(get_stylesheet_directory()."/paypal-checkout-form.php")) ? get_stylesheet_directory()."/paypal-checkout-form.php" : $custom_template;
+
+								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
+								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-checkout-form.php")));
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;
