@@ -178,10 +178,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_cancellation[attr]" id="s2member-pro-stripe-cancellation-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-cancellation-form.php')) ? TEMPLATEPATH.'/stripe-cancellation-form.php' : FALSE;
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-cancellation-form.html')) ? TEMPLATEPATH.'/stripe-cancellation-form.html' : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				$custom_template = (is_file(TEMPLATEPATH.'/stripe-cancellation-form.php')) ? TEMPLATEPATH.'/stripe-cancellation-form.php' : '';
+				$custom_template = (is_file(get_stylesheet_directory().'/stripe-cancellation-form.php')) ? get_stylesheet_directory().'/stripe-cancellation-form.php' : $custom_template;
+
+				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-cancellation-form.php')));
 				$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -272,10 +274,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_registration[attr]" id="s2member-pro-stripe-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-registration-form.php')) ? TEMPLATEPATH.'/stripe-registration-form.php' : FALSE;
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-registration-form.html')) ? TEMPLATEPATH.'/stripe-registration-form.html' : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				$custom_template = (is_file(TEMPLATEPATH.'/stripe-registration-form.php')) ? TEMPLATEPATH.'/stripe-registration-form.php' : '';
+				$custom_template = (is_file(get_stylesheet_directory().'/stripe-registration-form.php')) ? get_stylesheet_directory().'/stripe-registration-form.php' : $custom_template;
+
+				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-registration-form.php')));
 				$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -331,10 +335,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[attr]" id="s2member-pro-stripe-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-update-form.php')) ? TEMPLATEPATH.'/stripe-update-form.php' : FALSE;
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-update-form.html')) ? TEMPLATEPATH.'/stripe-update-form.html' : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				$custom_template = (is_file(TEMPLATEPATH.'/stripe-update-form.php')) ? TEMPLATEPATH.'/stripe-update-form.php' : '';
+				$custom_template = (is_file(get_stylesheet_directory().'/stripe-update-form.php')) ? get_stylesheet_directory().'/stripe-update-form.php' : $custom_template;
+
+				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-update-form.php')));
 				$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -415,10 +421,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[attr]" id="s2member-pro-stripe-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : FALSE;
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-sp-checkout-form.html')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.html' : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				$custom_template = (is_file(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : '';
+				$custom_template = (is_file(get_stylesheet_directory().'/stripe-sp-checkout-form.php')) ? get_stylesheet_directory().'/stripe-sp-checkout-form.php' : $custom_template;
+
+				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-sp-checkout-form.php')));
 				$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -540,10 +548,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00) ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : FALSE;
-				$custom_template = (file_exists(TEMPLATEPATH.'/stripe-checkout-form.html')) ? TEMPLATEPATH.'/stripe-checkout-form.html' : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && file_exists(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';
+				$custom_template = (is_file(get_stylesheet_directory().'/stripe-checkout-form.php')) ? get_stylesheet_directory().'/stripe-checkout-form.php' : $custom_template;
+
+				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-checkout-form.php')));
 				$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
