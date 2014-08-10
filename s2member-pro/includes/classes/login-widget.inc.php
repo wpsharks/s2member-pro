@@ -50,14 +50,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		 * @package s2Member\Widgets
 		 * @since 1.5
 		 */
-		public function c_ws_plugin__s2member_pro_login_widget() // Builds the classname, id_base, description, etc.
+		public function c_ws_plugin__s2member_pro_login_widget()
 		{
-			$widget_ops  = array('classname' => 'colors', 'description' => 'Displays a Login Form if NOT logged in. Or a Profile Summary when a User/Member is logged in.');
+			$widget_ops  = array('classname'   => 'colors', // Default widget options.
+			                     'description' => 'Displays a Login Form if NOT logged in. Or a Profile Summary when a User/Member is logged in.');
 			$control_ops = array('width' => 400, 'id_base' => 'ws_plugin__s2member_pro_login_widget');
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_before_construction', get_defined_vars(), $this);
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 
 			$this->WP_Widget($control_ops['id_base'], 's2Member Pro (Login Widget)', $widget_ops, $control_ops);
 
@@ -89,11 +90,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		 */
 		public static function ___static_widget___($args = array(), $instance = array())
 		{
-			$options = c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults((array)$instance);
+			$options = self::___static_configure_options_and_their_defaults___((array)$instance);
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_before_display', get_defined_vars());
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 
 			echo $args['before_widget']; // OK, here we go into this widget.
 
@@ -102,7 +103,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_during_display_before', get_defined_vars());
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 
 			if(!is_user_logged_in()) // The User/Member is NOT logged in.
 			{
@@ -210,7 +211,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			}
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_during_display_after', get_defined_vars());
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 
 			echo $args['after_widget'];
 
@@ -229,11 +230,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		 */
 		public function form($instance = array())
 		{
-			$options = c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults((array)$instance);
+			$options = $this->configure_options_and_their_defaults((array)$instance);
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_before_form', get_defined_vars(), $this);
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 			/*
 			Ok, here is where we need to handle the widget control form. This allows a user to further customize the widget.
 			*/
@@ -303,11 +304,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		{
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_login_widget_before_update', get_defined_vars(), $this);
-			unset($__refs, $__v);
+			unset($__refs, $__v); // Housekeeping.
 
 			$instance = (array)c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($instance));
 
-			return c_ws_plugin__s2member_pro_login_widget::configure_options_and_their_defaults($instance);
+			return $this->configure_options_and_their_defaults($instance);
 		}
 
 		/**
@@ -321,6 +322,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		 * @return array Array of options, after having been validated and merged with defaults.
 		 */
 		public function configure_options_and_their_defaults($options = array())
+		{
+			return self::___static_configure_options_and_their_defaults___($options);
+		}
+
+		/**
+		 * Configure/validate all widget options; and set their defaults.
+		 *
+		 * @package s2Member\Widgets
+		 * @since 140810
+		 *
+		 * @param array $options Optional. An array of options for a particular instance.
+		 *
+		 * @return array Array of options, after having been validated and merged with defaults.
+		 */
+		public static function ___static_configure_options_and_their_defaults___($options = array())
 		{
 			$default_options = apply_filters('ws_plugin__s2member_pro_login_widget_default_options', array('title' => _x('Membership Login', 's2member-front', 's2member'), 'profile_title' => _x('My Profile Summary', 's2member-front', 's2member'), 'signup_url' => '%%automatic%%', 'my_account_url' => '%%automatic%%', 'my_profile_url' => '%%automatic%%', 'login_redirect' => '', 'logout_redirect' => '%%home%%', 'logged_in_code' => '', 'logged_out_code' => '', 'display_gravatar' => '1', 'link_gravatar' => '1', 'display_name' => '1'));
 
