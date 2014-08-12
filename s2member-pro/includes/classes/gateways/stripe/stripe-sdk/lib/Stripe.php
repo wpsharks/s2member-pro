@@ -13,6 +13,9 @@ if (!function_exists('mb_detect_encoding')) {
   throw new Exception('Stripe needs the Multibyte String PHP extension.');
 }
 
+if(class_exists('Stripe'))
+	return; // Stripe already loaded up.
+
 // Stripe singleton
 require(dirname(__FILE__) . '/Stripe/Stripe.php');
 
