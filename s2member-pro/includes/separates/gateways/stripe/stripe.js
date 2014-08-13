@@ -202,6 +202,7 @@ jQuery(document).ready( // DOM ready.
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 							return false;
 						}
+						$(optionsSelect).attr(disabled); // Not an option selection.
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));
@@ -609,8 +610,9 @@ jQuery(document).ready( // DOM ready.
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 								return false;
 							}
+							$(optionsSelect).attr(disabled); // Not an option selection.
 						}
-						$(optionsSelect).attr(disabled), $(couponApplyButton).attr(disabled),
+						$(couponApplyButton).attr(disabled),
 							$(submissionButton).attr(disabled), ws_plugin__s2member_animateProcessing($(submissionButton));
 						return true;
 					});
