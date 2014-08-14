@@ -1101,7 +1101,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$attr['_full_coupon_code']    = (isset($coupon_applies) && $coupon_applies && !empty($full_coupon_code)) ? $full_coupon_code : ((isset($coupon_applies) && $coupon_applies) ? $coupon_code : '');
 			$attr['_coupon_affiliate_id'] = (isset($coupon_applies) && $coupon_applies && !empty($affiliate_id) && empty($_COOKIE['idev'])) ? $affiliate_id : '';
 
-			return ($return === 'response') ? ((!empty($response)) ? (string)$response : '') : $attr;
+			return ($return === 'response') ? (!empty($response) ? (string)$response : '') : $attr;
 		}
 	}
 }
