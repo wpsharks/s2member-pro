@@ -78,7 +78,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_cancellation_pf_in'))
 						{
 							if(($cur__subscr_id = get_user_option('s2member_subscr_id'))) // Does the customer have a Billing Profile?
 							{
-								if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal['TENDER'] !== 'P')
+								if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && @$paypal['TENDER'] !== 'P')
 								{
 									if(preg_match('/^(Active|ActiveProfile)$/i', $paypal['STATUS'])) // Possible?
 									{
@@ -92,7 +92,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_cancellation_pf_in'))
 											$ipn['period3'] = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($paypal);
 
 											$ipn['payer_email'] = $paypal['EMAIL'];
-											$ipn['first_name']  = $paypal['FIRSTNAME'];
+											$ipn['first_name']  = $paypal['NAME'];
 											$ipn['last_name']   = $paypal['LASTNAME'];
 
 											$ipn['option_name1']      = 'Referencing Customer ID';
