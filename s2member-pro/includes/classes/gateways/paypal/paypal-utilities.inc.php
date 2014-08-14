@@ -152,7 +152,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_utilities"))
 				* @param string $baid A Billing Agreement ID (aka: BAID).
 				* @return boolean True if the profile was cancelled, else false.
 				*/
-				public static function payflow_cancel_profile($subscr_id = FALSE, $baid = FALSE)
+				public static function payflow_cancel_profile($subscr_id = '', $baid = '')
 					{
 						$payflow["TRXTYPE"] = "R";
 						$payflow["ACTION"] = "C";
