@@ -54,7 +54,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_rsf_files_in'))
 			if(empty($_GET['s2member_rsf_file']))
 				return; // Nothing to do here.
 
-			header('Content-Type: text/xml; charset=UTF-8');
+			header('Content-Type: application/smil+xml; charset=UTF-8');
 			while(@ob_end_clean()) ; // Clean any existing output buffers.
 
 			$smil_file_id = trim(stripslashes((string)$_GET['s2member_rsf_file']));
