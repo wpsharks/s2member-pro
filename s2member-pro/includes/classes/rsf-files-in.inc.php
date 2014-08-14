@@ -48,6 +48,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_rsf_files_in'))
 		 *
 		 * @package s2Member\Shortcodes
 		 * @since 140814
+		 *
+		 * @see http://tools.ietf.org/html/rfc4536
 		 */
 		public static function serve()
 		{
