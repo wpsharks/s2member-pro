@@ -126,7 +126,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_sc_mop_vars_notice_in"))
 					# ---------------------------------------------------------------------------------------------------
 
 					if(!empty($_g["_s2member_seeking"]["_uri"]) /* Full URI they were trying to access. */)
-						$content = str_ireplace("%%SEEKING_URI%%", esc_html(site_url(base64_decode($_g["_s2member_seeking"]["_uri"]))), $content);
+						$content = str_ireplace("%%SEEKING_URI%%", esc_html(home_url(base64_decode($_g["_s2member_seeking"]["_uri"]))), $content);
 
 					# ---------------------------------------------------------------------------------------------------
 

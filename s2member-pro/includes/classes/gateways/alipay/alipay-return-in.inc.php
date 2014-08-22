@@ -100,7 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_return_in"))
 												if (!empty /* Using a custom Return URL on success? */ ($_GET["s2member_pro_alipay_return_success"]))
 													$rtn_q .= "&s2member_paypal_return_success=" . rawurlencode (trim (stripslashes ($_GET["s2member_pro_alipay_return_success"])));
 
-												$rtn_r = add_query_arg (urlencode_deep ($rtn), site_url ("/?s2member_pro_alipay_return&s2member_paypal_return=1" . $rtn_q));
+												$rtn_r = add_query_arg (urlencode_deep ($rtn), home_url ("/?s2member_pro_alipay_return&s2member_paypal_return=1" . $rtn_q));
 												$rtn_r = c_ws_plugin__s2member_utils_urls::add_s2member_sig ($rtn_r, "s2member_paypal_proxy_verification");
 
 												$alipay["s2member_log"][] = /* Log the full Return redirection URL here. */ $rtn_r;

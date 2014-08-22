@@ -108,7 +108,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_cancellation_pf_in'))
 											$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 											$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-											c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+											c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 										}
 										c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($paypal['PROFILEID'], !empty($paypal['BAID']) ? $paypal['BAID'] : '');
 
