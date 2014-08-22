@@ -111,7 +111,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 												$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 												$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+												c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 											}
 											$global_response = array('response' => _x('<strong>Billing termination confirmed.</strong> Your account has been cancelled.', 's2member-front', 's2member'));
 

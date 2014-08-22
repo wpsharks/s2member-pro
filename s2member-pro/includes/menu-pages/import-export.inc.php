@@ -398,7 +398,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ops-importation-exportation-section">'."\n";
 
-			echo '<h3 style="margin-bottom:5px;">s2Member Options Export <small>(<a href="'.esc_attr(site_url("/?ws_plugin__s2member_pro_export_ops=".urlencode(wp_create_nonce("ws-plugin--s2member-pro-export-ops")))).'">download serialized export file</a>)</small></h3>'."\n";
+			echo '<h3 style="margin-bottom:5px;">s2Member Options Export <small>(<a href="'.esc_attr(home_url("/?ws_plugin__s2member_pro_export_ops=".urlencode(wp_create_nonce("ws-plugin--s2member-pro-export-ops")))).'">download serialized export file</a>)</small></h3>'."\n";
 			echo '<p style="margin-top:5px;">This allows you to export your current s2Member configuration, and then import it into another instance of WordPress.'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";

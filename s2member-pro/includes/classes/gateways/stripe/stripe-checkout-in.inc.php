@@ -231,7 +231,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
 								if(!empty($stripe_subscription_failed_charge_succeeded))
 									update_user_option($user_id, 's2member_auto_eot_time', $start_time);
@@ -397,7 +397,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(!empty($stripe_subscription_failed_charge_succeeded))
 										update_user_option($new__user_id, 's2member_auto_eot_time', $start_time);
 
-									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
 									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
@@ -414,7 +414,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								}
 								else // Else, an error reponse should be given.
 								{
-									c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 									$global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 								}
@@ -480,7 +480,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
 								if(!$is_independent_ccaps_sale) // Independent?
 									if($old__subscr_cid && $old__subscr_id && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', TRUE, get_defined_vars()))
@@ -592,7 +592,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 									wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
-									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
 									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
@@ -609,7 +609,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								}
 								else // Else, an error reponse should be given.
 								{
-									c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 									$global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 								}

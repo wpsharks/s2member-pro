@@ -102,7 +102,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] = "standard-emails";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (home_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!$ccbill["denialId"] && $ccbill["subscription_id"] && $ccbill["recurringPeriod"])
@@ -151,7 +151,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_notify_in"))
 												$ipn["s2member_paypal_proxy_use"] .= ($ipn["mc_gross"] > 0) ? ",subscr-signup-as-subscr-payment" : "";
 												$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-												c_ws_plugin__s2member_utils_urls::remote (site_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+												c_ws_plugin__s2member_utils_urls::remote (home_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
 											}
 
 										else if (!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.

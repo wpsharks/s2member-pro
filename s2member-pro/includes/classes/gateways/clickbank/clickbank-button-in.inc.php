@@ -84,7 +84,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-cancellation-button.php")));
 								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(home_url())), $code);
 
 								$code = $_code = ($attr["image"] && $attr["image"] !== "default") ? preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["image"])).'"', $code) : preg_replace('/ src\="(.*?)"/', ' src="'.c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($default_image)).'"', $code);
 
@@ -102,7 +102,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-sp-checkout-button.php")));
 								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(home_url())), $code);
 
 								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
 								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
@@ -145,7 +145,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-ccaps-checkout-button.php")));
 								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(home_url())), $code);
 
 								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
 								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);
@@ -190,7 +190,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(dirname(dirname(__FILE__))))."/templates/buttons/clickbank-checkout-button.php")));
 								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
-								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(site_url())), $code);
+								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(home_url())), $code);
 
 								$code = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($attr["cbp"])), $code);
 								$code = preg_replace("/%%vendor%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"])), $code);

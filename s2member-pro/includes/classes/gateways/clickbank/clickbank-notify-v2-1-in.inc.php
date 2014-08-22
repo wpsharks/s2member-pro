@@ -110,7 +110,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
 						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					else if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']))
 					{
@@ -158,7 +158,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 						$ipn['s2member_paypal_proxy_use'] .= ($ipn['mc_gross'] > 0) ? ',subscr-signup-as-subscr-payment' : '';
 						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					else if(preg_match('/^(?:TEST_)?BILL$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']))
 					{
@@ -197,7 +197,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
 						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					else if(preg_match('/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i', $clickbank['ctransaction'])) // Product Type irrelevant here; checked below.
 					{
@@ -236,7 +236,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
 						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['crebillstatus'].
 						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']) && (preg_match('/^COMPLETED$/i', $clickbank['crebillstatus']) || $clickbank['cfuturepayments'] <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
@@ -275,7 +275,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
 						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(site_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					if(empty($processed)) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
 						$clickbank['s2member_log'][] = 'Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.';
