@@ -262,9 +262,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$opt_in .= '<label for="s2member-pro-stripe-registration-form-custom-reg-field-opt-in" id="s2member-pro-stripe-registration-form-custom-reg-field-opt-in-label" class="s2member-pro-stripe-form-custom-reg-field-opt-in-label s2member-pro-stripe-registration-form-custom-reg-field-opt-in-label">'."\n";
 					$opt_in .= '<input type="checkbox" name="s2member_pro_stripe_registration[custom_fields][opt_in]" id="s2member-pro-stripe-registration-form-custom-reg-field-opt-in" class="s2member-pro-stripe-form-custom-reg-field-opt-in s2member-pro-stripe-registration-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_opt_in'] == 1) || @$_p['s2member_pro_stripe_registration']['custom_fields']['opt_in']) ? ' checked="checked"' : '').' tabindex="300" />'."\n";
 					$opt_in .= $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_opt_in_label']."\n";
-					$opt_in .= '</label>'.'\n';
+					$opt_in .= '</label>'."\n";
 
-					$opt_in .= '</div>'.'\n';
+					$opt_in .= '</div>'."\n";
 				}
 				else $opt_in = ''; // Not applicable.
 
