@@ -38,7 +38,6 @@ jQuery(document).ready (function($)
 					string = string.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 			return string;
 		};
-
 		if (location.href.match (/page\=ws-plugin--s2member-pro-clickbank-ops/))
 			{
 				$('select#ws-plugin--s2member-auto-eot-system-enabled').change (function()
@@ -47,12 +46,11 @@ jQuery(document).ready (function($)
 						var $viaCron = $('p#ws-plugin--s2member-auto-eot-system-enabled-via-cron');
 
 						if /* Display Cron instructions. */ (val == 2)
-							$viaCron.show ()
+							$viaCron.show ();
 						else // Hide instructions.
 							$viaCron.hide ();
 					});
 			}
-
 		else if (location.href.match (/page\=ws-plugin--s2member-pro-clickbank-buttons/))
 			{
 				$('div.ws-menu-page select[id]').filter ( /* Filter all select elements with an id. */function()
@@ -83,7 +81,6 @@ jQuery(document).ready (function($)
 						if /* Only if there is a problem with the actual values; because this causes interruptions. */ (value.match (/[^a-z_0-9,]/))
 							this.value = _all + $.trim ($.trim (value).replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 					});
-
 				ws_plugin__s2member_pro_clickbankButtonGenerate = /* Handles ClickBank Button Generation. */ function(button)
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '', labels = {};
@@ -96,7 +93,7 @@ jQuery(document).ready (function($)
 
 						var level = /* Just strip the button name to get the Level number. */ button.replace (/^level/, '');
 						var label = /* Labels may NOT contain any double-quotes. */ labels['level' + level].replace (/"/g, "");
-						var desc = $.trim ($('input#ws-plugin--s2member-pro-' + button + '-desc').val ().replace (/"/g, ""));
+						var desc = $.trim ($('input#ws-plugin--s2member-pro-' + button + '-desc').val ().replace (/"/g, "").replace (/&/g, "and"));
 
 						var prodType = $('select#ws-plugin--s2member-pro-' + button + '-type').val ().replace (/[^A-Z]/gi, '').toLowerCase ();
 						var prodItem = $('input#ws-plugin--s2member-pro-' + button + '-item-number').val ().replace (/[^A-Z0-9]/gi, '');
@@ -116,7 +113,6 @@ jQuery(document).ready (function($)
 								var regTerm = $('select#ws-plugin--s2member-pro-' + button + '-p3').val ().split ('-')[1].replace (/[^A-Z]/g, '');
 								var regRecur = '1'; // Yes, it IS recurring.
 							}
-
 						var cCaps = $.trim ($.trim ($('input#ws-plugin--s2member-pro-' + button + '-ccaps').val ()).replace (/^(-all|-al|-a|-)[;,]*/gi, '').replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 						cCaps = ($.trim ($('input#ws-plugin--s2member-pro-' + button + '-ccaps').val ()).match (/^(-all|-al|-a|-)[;,]*/i)) ? ((cCaps) ? '-all,' : '-all') + cCaps.toLowerCase () : cCaps.toLowerCase ();
 
@@ -133,7 +129,6 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nPlease type a Description for this Button.');
 								return false;
 							}
-
 						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" cbskin="" cbfid="" cbur="" cbf="auto" vtid="" level="' + esc_attr(level) + '" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCodeTemplateAttrs += ' tp="' + esc_attr(trialPeriod) + '" tt="' + esc_attr(trialTerm) + '" rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
@@ -144,11 +139,8 @@ jQuery(document).ready (function($)
 							{
 								this.focus (), this.select ();
 							});
-
 						return false;
 					};
-
-
 				ws_plugin__s2member_pro_clickbankCcapButtonGenerate = /* Handles ClickBank Button Generation. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
@@ -157,7 +149,7 @@ jQuery(document).ready (function($)
 
 						var shortCode = $('input#ws-plugin--s2member-pro-ccap-shortcode');
 
-						var desc = $.trim ($('input#ws-plugin--s2member-pro-ccap-desc').val ().replace (/"/g, ""));
+						var desc = $.trim ($('input#ws-plugin--s2member-pro-ccap-desc').val ().replace (/"/g, "").replace (/&/g, "and"));
 
 						var prodType = $('select#ws-plugin--s2member-pro-ccap-type').val ().replace (/[^A-Z]/gi, '').toLowerCase ();
 						var prodItem = $('input#ws-plugin--s2member-pro-ccap-item-number').val ().replace (/[^A-Z0-9]/gi, '');
@@ -169,7 +161,6 @@ jQuery(document).ready (function($)
 								var regTerm = $('select#ws-plugin--s2member-pro-ccap-term').val ().split ('-')[1].replace (/[^A-Z]/g, '');
 								var regRecur = /* No, it is NOT recurring. */ '0';
 							}
-
 						var cCaps = $.trim ($.trim ($('input#ws-plugin--s2member-pro-ccap-ccaps').val ()).replace (/^(-all|-al|-a|-)[;,]*/gi, '').replace (/[ \-]/g, '_').replace (/[^a-z_0-9,]/gi, '').toLowerCase ());
 						cCaps = ($.trim ($('input#ws-plugin--s2member-pro-ccap-ccaps').val ()).match (/^(-all|-al|-a|-)[;,]*/i)) ? ((cCaps) ? '-all,' : '-all') + cCaps.toLowerCase () : cCaps.toLowerCase ();
 
@@ -191,7 +182,6 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nPlease type a Description for this Button.');
 								return false;
 							}
-
 						shortCodeTemplateAttrs += 'cbp="' + esc_attr(prodItem) + '" cbskin="" cbfid="" cbur="" cbf="auto" vtid="" level="*" ccaps="' + esc_attr(cCaps) + '" desc="' + esc_attr(desc) + '" custom="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr ($_SERVER["HTTP_HOST"])); ?>"';
 						shortCodeTemplateAttrs += ' rp="' + esc_attr(regPeriod) + '" rt="' + esc_attr(regTerm) + '" rr="' + esc_attr(regRecur) + '"';
 						shortCode.val (shortCodeTemplate.replace (/%%attrs%%/, shortCodeTemplateAttrs));
@@ -202,10 +192,8 @@ jQuery(document).ready (function($)
 							{
 								this.focus (), this.select ();
 							});
-
 						return false;
 					};
-
 				ws_plugin__s2member_pro_clickbankSpButtonGenerate = /* Handles ClickBank Button Generation for Specific Post/Page Access. */ function()
 					{
 						var shortCodeTemplate = '[s2Member-Pro-ClickBank-Button %%attrs%% image="default" output="anchor" /]', shortCodeTemplateAttrs = '';
@@ -219,7 +207,7 @@ jQuery(document).ready (function($)
 						var leading = $('select#ws-plugin--s2member-pro-sp-leading-id').val ().replace (/[^0-9]/g, '');
 						var additionals = $('select#ws-plugin--s2member-pro-sp-additional-ids').val () || [];
 						var hours = $('select#ws-plugin--s2member-pro-sp-hours').val ().replace (/[^0-9]/g, '');
-						var desc = $.trim ($('input#ws-plugin--s2member-pro-sp-desc').val ().replace (/"/g, ''));
+						var desc = $.trim ($('input#ws-plugin--s2member-pro-sp-desc').val ().replace (/"/g, '').replace (/&/g, "and"));
 
 						if /* Must have a Product Item Number to work with. Otherwise, Button generation will fail. */ (!prodItem)
 							{
@@ -256,7 +244,6 @@ jQuery(document).ready (function($)
 
 						return false;
 					};
-
 				ws_plugin__s2member_pro_clickbankRegLinkGenerate = /* Handles ClickBank Link Generation. */ function()
 					{
 						var level = $('select#ws-plugin--s2member-pro-reg-link-level').val ().replace (/[^0-9]/g, '');
@@ -289,10 +276,8 @@ jQuery(document).ready (function($)
 							{
 								$link.show ().html ('<a href="' + esc_attr(response) + '" target="_blank" rel="external">' + esc_html(response) + '</a>'), $loading.hide ();
 							});
-
 						return false;
 					};
-
 				ws_plugin__s2member_pro_clickbankSpLinkGenerate = /* Handles ClickBank Link Generation. */ function()
 					{
 						var leading = $('select#ws-plugin--s2member-pro-sp-link-leading-id').val ().replace (/[^0-9]/g, '');
@@ -305,7 +290,6 @@ jQuery(document).ready (function($)
 								alert('— Oops, a slight problem: —\n\nPlease select a Leading Post/Page.\n\n*Tip* If there are no Posts/Pages in the menu, it\'s because you\'ve not configured s2Member for Specific Post/Page Access yet. See: s2Member -› Restriction Options -› Specific Post/Page Access.');
 								return false;
 							}
-
 						for (var i = 0, ids = leading; i < additionals.length; i++)
 							if (additionals[i] && additionals[i] !== leading)
 								ids += ',' + additionals[i];
@@ -314,7 +298,6 @@ jQuery(document).ready (function($)
 							{
 								$link.show ().html ('<a href="' + esc_attr(response) + '" target="_blank" rel="external">' + esc_html(response) + '</a>'), $loading.hide ();
 							});
-
 						return false;
 					};
 			}
