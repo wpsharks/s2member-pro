@@ -74,6 +74,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank.
 						// ClickBank will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank checkout forms.
 
+						$attr["desc"] = str_replace(array("&amp;", "&"), "and", $attr["desc"]); // Workaround for a known bug @ ClickBank.
+						// ClickBank will NOT properly parse `&` signs in URLs leading to (and returning from) ClickBank checkout forms.
+
 						if($attr["cbur"] && $attr["cbf"] === "auto" && !empty($_REQUEST["cbf"]))
 							$attr["cbf"] = esc_html((string)$_REQUEST["cbf"]);
 						else if(!$attr["cbur"] || $attr["cbf"] === "auto") $attr["cbf"] = "";
