@@ -60,7 +60,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 			{
 				$attr['seeking_type']     = array_unique(preg_split('/[|;,\s]+/', $attr['seeking_type'], NULL, PREG_SPLIT_NO_EMPTY));
 				$attr['required_type']    = array_unique(preg_split('/[|;,\s]+/', $attr['required_type'], NULL, PREG_SPLIT_NO_EMPTY));
-				$attr["required_value"]   = array_unique(preg_split('/[|;,\s]+/', $attr["required_value"], NULL, PREG_SPLIT_NO_EMPTY));
+				$attr['required_value']   = array_unique(preg_split('/[|;,\s]+/', $attr['required_value'], NULL, PREG_SPLIT_NO_EMPTY));
 				$attr['restriction_type'] = array_unique(preg_split('/[|;,\s]+/', $attr['restriction_type'], NULL, PREG_SPLIT_NO_EMPTY));
 
 				if(isset($attr['seeking_type']) && array_intersect($attr['seeking_type'], $valid_seeking_types))
