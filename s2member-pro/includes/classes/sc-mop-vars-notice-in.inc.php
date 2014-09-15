@@ -18,13 +18,14 @@ if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
 	exit ('Do not access this file directly.');
 
 /*
- * Working shortcode examples (as of Raam's changes on 2014-03-30 02:18:45 EDT):
+ * Working shortcode examples (as of Raam's changes on 2014-09-12 21:27:40 EDT):
  *
  * [s2MOP]You were trying to access a protected: %%SEEKING_TYPE%%[/s2MOP]
  * [s2MOP]You were trying to access content that requires a %%REQUIRED_TYPE%% that you don't have.[/s2MOP]
  * [s2MOP]You were trying to access content protected via s2Member: %%RESTRICTION_TYPE%% restrictions[/s2MOP]
  * [s2MOP seeking_type="post" required_type="level" restriction_type="post"]You were trying to access a restricted post with Post ID #%%SEEKING_POST_ID%% which requires that you be a Member at Level #%%REQUIRED_LEVEL%%[/s2MOP]
  * [s2MOP required_type="level"]"%%POST_TITLE%%" is a protected %%SEEKING_TYPE%% that requires Membership Level #%%REQUIRED_LEVEL%%[/s2MOP]
+ * [s2MOP required_type="ccap" required_value="free_gift"]This content is restricted to Custom Capability <code>free_gift</code>[/s2MOP]
  */
 
 if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
@@ -51,7 +52,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 			$valid_required_types    = array('level', 'ccap', 'sp');
 			$valid_seeking_types     = array('page', 'post', 'catg', 'ptag', 'file', 'ruri');
 			$valid_restriction_types = array('page', 'post', 'catg', 'ptag', 'file', 'ruri', 'ccap', 'sp', 'sys');
-			$attr                    = shortcode_atts(array('seeking_type' => '', 'required_type' => '', 'restriction_type' => ''), $attr, $shortcode);
+			$attr                    = shortcode_atts(array('seeking_type' => '', 'required_type' => '', 'required_value' => '', 'restriction_type' => ''), $attr, $shortcode);
 
 			# ---------------------------------------------------------------------------------------------------
 
@@ -59,17 +60,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 			{
 				$attr['seeking_type']     = array_unique(preg_split('/[|;,\s]+/', $attr['seeking_type'], NULL, PREG_SPLIT_NO_EMPTY));
 				$attr['required_type']    = array_unique(preg_split('/[|;,\s]+/', $attr['required_type'], NULL, PREG_SPLIT_NO_EMPTY));
+				$attr['required_value']   = array_unique(preg_split('/[|;,\s]+/', $attr['required_value'], NULL, PREG_SPLIT_NO_EMPTY));
 				$attr['restriction_type'] = array_unique(preg_split('/[|;,\s]+/', $attr['restriction_type'], NULL, PREG_SPLIT_NO_EMPTY));
 
-				if(isset($attr['seeking_type']) && array_intersect($attr['seeking_type'], $valid_seeking_types))
+				if(array_intersect($attr['seeking_type'], $valid_seeking_types))
 					if(empty($_g['_s2member_seeking']['type']) || !in_array($_g['_s2member_seeking']['type'], $attr['seeking_type'], TRUE))
 						return '';
 
-				if(isset($attr['required_type']) && array_intersect($attr['required_type'], $valid_required_types))
+				if(array_intersect($attr['required_type'], $valid_required_types)) {
 					if(empty($_g['_s2member_req']['type']) || !in_array($_g['_s2member_req']['type'], $attr['required_type'], TRUE))
 						return '';
 
-				if(isset($attr['restriction_type']) && array_intersect($attr['restriction_type'], $valid_restriction_types))
+					$required_type = $_g['_s2member_req']['type'];
+					if(count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$required_type], $attr['required_value'], TRUE))
+						return '';
+				}
+
+				if(array_intersect($attr['restriction_type'], $valid_restriction_types))
 					if(empty($_g['_s2member_res']['type']) || !in_array($_g['_s2member_res']['type'], $attr['restriction_type'], TRUE))
 						return '';
 			}
