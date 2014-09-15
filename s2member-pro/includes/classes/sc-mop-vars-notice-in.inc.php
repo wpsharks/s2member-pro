@@ -52,7 +52,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 			$valid_required_types    = array('level', 'ccap', 'sp');
 			$valid_seeking_types     = array('page', 'post', 'catg', 'ptag', 'file', 'ruri');
 			$valid_restriction_types = array('page', 'post', 'catg', 'ptag', 'file', 'ruri', 'ccap', 'sp', 'sys');
-			$attr                    = shortcode_atts(array('seeking_type' => '', 'required_type' => '', 'restriction_type' => ''), $attr, $shortcode);
+			$attr                    = shortcode_atts(array('seeking_type' => '', 'required_type' => '', 'required_value' => '', 'restriction_type' => ''), $attr, $shortcode);
 
 			# ---------------------------------------------------------------------------------------------------
 
@@ -63,19 +63,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 				$attr['required_value']   = array_unique(preg_split('/[|;,\s]+/', $attr['required_value'], NULL, PREG_SPLIT_NO_EMPTY));
 				$attr['restriction_type'] = array_unique(preg_split('/[|;,\s]+/', $attr['restriction_type'], NULL, PREG_SPLIT_NO_EMPTY));
 
-				if(isset($attr['seeking_type']) && array_intersect($attr['seeking_type'], $valid_seeking_types))
+				if(array_intersect($attr['seeking_type'], $valid_seeking_types))
 					if(empty($_g['_s2member_seeking']['type']) || !in_array($_g['_s2member_seeking']['type'], $attr['seeking_type'], TRUE))
 						return '';
 
-				if(isset($attr['required_type']) && array_intersect($attr['required_type'], $valid_required_types)) {
+				if(array_intersect($attr['required_type'], $valid_required_types)) {
 					if(empty($_g['_s2member_req']['type']) || !in_array($_g['_s2member_req']['type'], $attr['required_type'], TRUE))
 						return '';
 
-					if(isset($attr['required_value']) && ( count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$_g['_s2member_req']['type']], $attr['required_value'], TRUE)))
+					$required_type = $_g['_s2member_req']['type'];
+					if(count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$required_type], $attr['required_value'], TRUE))
 						return '';
 				}
 
-				if(isset($attr['restriction_type']) && array_intersect($attr['restriction_type'], $valid_restriction_types))
+				if(array_intersect($attr['restriction_type'], $valid_restriction_types))
 					if(empty($_g['_s2member_res']['type']) || !in_array($_g['_s2member_res']['type'], $attr['restriction_type'], TRUE))
 						return '';
 			}
