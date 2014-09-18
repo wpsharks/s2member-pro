@@ -94,7 +94,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_in'))
 
 				$user_permission_keys = array('role', 'ccaps');
 
-				$user_meta_keys = $wpdb->get_col("SELECT DISTINCT `meta_key` FROM `".$wpdb->usermeta."` WHERE (`".$wpdb->usermeta."`.`meta_key` NOT LIKE '".esc_sql(like_escape($wpdb->base_prefix))."%' OR `".$wpdb->usermeta."`.`meta_key` LIKE '".esc_sql(like_escape($wpdb->prefix))."%')");
+				$user_meta_keys = $wpdb->get_col("SELECT DISTINCT `meta_key` FROM `".$wpdb->usermeta."` WHERE (`".$wpdb->usermeta."`.`meta_key` NOT LIKE '".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape($wpdb->base_prefix))."%' OR `".$wpdb->usermeta."`.`meta_key` LIKE '".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape($wpdb->prefix))."%')");
 				$user_meta_keys = is_array($user_meta_keys) ? $user_meta_keys : array();
 
 				foreach($user_meta_keys as $_index => $_meta_key)
