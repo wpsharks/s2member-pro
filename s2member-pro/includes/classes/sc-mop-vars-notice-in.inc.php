@@ -67,7 +67,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 					if(empty($_g['_s2member_seeking']['type']) || !in_array($_g['_s2member_seeking']['type'], $attr['seeking_type'], TRUE))
 						return '';
 
-				if(array_intersect($attr['required_type'], $valid_required_types)) {
+				if(array_intersect($attr['required_type'], $valid_required_types))
+				{
 					if(empty($_g['_s2member_req']['type']) || !in_array($_g['_s2member_req']['type'], $attr['required_type'], TRUE))
 						return '';
 
@@ -75,7 +76,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 					if(count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$required_type], $attr['required_value'], TRUE))
 						return '';
 				}
-
 				if(array_intersect($attr['restriction_type'], $valid_restriction_types))
 					if(empty($_g['_s2member_res']['type']) || !in_array($_g['_s2member_res']['type'], $attr['restriction_type'], TRUE))
 						return '';
