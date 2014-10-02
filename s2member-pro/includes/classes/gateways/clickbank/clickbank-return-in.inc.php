@@ -57,7 +57,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 
 			if(!empty($_GET['s2member_pro_clickbank_return']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_username'])
 			{
-				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && ($_clickbank = $clickbank))
+				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars_v2_1()) && ($_clickbank = $clickbank))
 				{
 					$clickbank['s2member_log'][] = 'Return-Data received on: '.date('D M j, Y g:i:s a T');
 					$clickbank['s2member_log'][] = 's2Member POST vars verified with ClickBank.';
@@ -77,7 +77,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 
 						$clickbank['s2member_log'][] = 'Order API variables have been obtained from ClickBank.';
 
-						$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars(http_build_query($clickbank, NULL, '&'), $order['txnType']);
+						$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars_v2_1(http_build_query($clickbank, NULL, '&'), $order['txnType']);
 
 						if(!empty($s2vars['s2_p1']) && !empty($s2vars['s2_p3']) && $s2vars['s2_p1'] === '0 D')
 							// Initial Period. No Trial defaults to Regular Period.
