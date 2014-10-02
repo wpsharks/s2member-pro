@@ -71,8 +71,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 					$clickbank['s2vars'] = $s2vars; // So they appear in the log entry for this Notification.
 
-					if(strcasecmp($clickbank['customer']->firstName.' '.$clickbank['customer']->lastName, $clickbank['customer']->fullName) !== 0 && preg_match('/(?:[^ ]+)(?: +)(?:[^ ]+)/', $clickbank['customer']->fullName))
-						list ($clickbank['customer']->firstName, $clickbank['customer']->lastName) = preg_split('/ +/', $clickbank['customer']->fullName, 2);
+					if(strcasecmp($clickbank['customer']->billing->firstName.' '.$clickbank['customer']->billing->lastName, $clickbank['customer']->billing->fullName) !== 0 && preg_match('/(?:[^ ]+)(?: +)(?:[^ ]+)/', $clickbank['customer']->billing->fullName))
+						list ($clickbank['customer']->billing->firstName, $clickbank['customer']->billing->lastName) = preg_split('/ +/', $clickbank['customer']->billing->fullName, 2);
 
 					if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['transactionType']) && !$clickbank['lineItems'][0]->recurring)
 					{
@@ -93,9 +93,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['customer']->email;
-						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
+						$ipn['payer_email'] = $clickbank['customer']->billing->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->billing->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->billing->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -140,9 +140,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['customer']->email;
-						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
+						$ipn['payer_email'] = $clickbank['customer']->billing->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->billing->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->billing->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -180,9 +180,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['customer']->email;
-						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
+						$ipn['payer_email'] = $clickbank['customer']->billing->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->billing->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->billing->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -219,9 +219,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['customer']->email;
-						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
+						$ipn['payer_email'] = $clickbank['customer']->billing->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->billing->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->billing->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -258,9 +258,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['period1'] = $s2vars['s2_p1'];
 						$ipn['period3'] = $s2vars['s2_p3'];
 
-						$ipn['payer_email'] = $clickbank['customer']->email;
-						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
+						$ipn['payer_email'] = $clickbank['customer']->billing->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->billing->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->billing->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
