@@ -71,28 +71,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 				if($postvars['cbpop'] === $cbpop)
 					return $postvars;
 			}
-			else if(!empty($_REQUEST['s2member_pro_clickbank_notify']) && !empty($_REQUEST['cverify']))
+			else if(!empty($_REQUEST['s2member_pro_clickbank_notify']) && is_object($input = json_decode(file_get_contents('php://input'))))
 			{
-				$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
+				$encryption_iv          = base64_decode($input->iv);
+				$encrypted_notification = base64_decode($input->notification);
+				$key                    = substr(sha1($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_secret_key']), 0, 32);
+				$decrypted_notification = trim(trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $encrypted_notification, MCRYPT_MODE_CBC, $encryption_iv), "\0..\32"));
+				if(function_exists('mb_convert_encoding')) $decrypted_notification = mb_convert_encoding($decrypted_notification, 'UTF-8', $GLOBALS['WS_PLUGIN__']['s2member']['c']['mb_detection_order']);
 
-				foreach($postvars as $var => $value)
-					if(preg_match('/^s2member_/', $var))
-						unset($postvars[$var]);
-
-				$cverify = ''; // Initialize verification.
-
-				($keys = array_keys($postvars)).sort($keys);
-				foreach($keys as $key) // Go through keys.
-					if($key && !preg_match('/^(cverify)$/', $key))
-						$cverify .= $postvars[$key].'|';
-
-				$cverify .= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_secret_key'];
-
-				$mb      = function_exists('mb_convert_encoding') ? @mb_convert_encoding($cverify, 'UTF-8', $GLOBALS['WS_PLUGIN__']['s2member']['c']['mb_detection_order']) : $cverify;
-				$cverify = ($mb) ? $mb : $cverify; // Double check this, just in case conversion fails.
-				$cverify = strtoupper(substr(sha1($cverify), 0, 8));
-
-				if($postvars['cverify'] === $cverify)
+				if($decrypted_notification && ($postvars = (array)json_decode($decrypted_notification)))
 					return $postvars;
 			}
 			return FALSE;
