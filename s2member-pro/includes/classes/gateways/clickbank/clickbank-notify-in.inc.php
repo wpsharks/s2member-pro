@@ -215,7 +215,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['custom'] = $s2vars['s2_custom'];
 
 						$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']), 2, '.', ''); // @TODO
+						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']), 2, '.', ''); // @TODO Check if this is correct.
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
@@ -239,7 +239,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['lineItems'][0]->paymentPlan->rebillStatus.
-						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLETED$/i', $clickbank['lineItems'][0]->paymentPlan->rebillStatus) || $clickbank['lineItems'][0]->paymentPlan->paymentsRemaining <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
+						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLET(?:ED)?$/i', $clickbank['lineItems'][0]->paymentPlan->rebillStatus) || $clickbank['lineItems'][0]->paymentPlan->paymentsRemaining <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
 						|| (preg_match('/^(?:TEST_)?CANCEL-REBILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					)
 					{
