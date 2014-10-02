@@ -64,7 +64,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_v2_1_in'))
 					$clickbank['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$clickbank['s2member_log'][] = 's2Member POST vars verified with ClickBank.';
 
-					$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars($clickbank['cvendthru'], $clickbank['ctransaction']);
+					$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars_v2_1($clickbank['cvendthru'], $clickbank['ctransaction']);
 
 					if(isset ($s2vars['s2_p1'], $s2vars['s2_p3']) && $s2vars['s2_p1'] === '0 D') // No Trial defaults to Regular Period.
 						$s2vars['s2_p1'] = $s2vars['s2_p3']; // Initial Period. No Trial defaults to Regular Period.

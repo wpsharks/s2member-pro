@@ -71,28 +71,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 				if($postvars['cbpop'] === $cbpop)
 					return $postvars;
 			}
-			else if(!empty($_REQUEST['s2member_pro_clickbank_notify']) && !empty($_REQUEST['cverify']))
+			else if(!empty($_REQUEST['s2member_pro_clickbank_notify']) && is_object($input = json_decode(file_get_contents('php://input'))))
 			{
-				$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
+				$encryption_iv          = base64_decode($input->iv);
+				$encrypted_notification = base64_decode($input->notification);
+				$key                    = substr(sha1($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_secret_key']), 0, 32);
+				$decrypted_notification = trim(trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $encrypted_notification, MCRYPT_MODE_CBC, $encryption_iv), "\0..\32"));
+				if(function_exists('mb_convert_encoding')) $decrypted_notification = mb_convert_encoding($decrypted_notification, 'UTF-8', $GLOBALS['WS_PLUGIN__']['s2member']['c']['mb_detection_order']);
 
-				foreach($postvars as $var => $value)
-					if(preg_match('/^s2member_/', $var))
-						unset($postvars[$var]);
-
-				$cverify = ''; // Initialize verification.
-
-				($keys = array_keys($postvars)).sort($keys);
-				foreach($keys as $key) // Go through keys.
-					if($key && !preg_match('/^(cverify)$/', $key))
-						$cverify .= $postvars[$key].'|';
-
-				$cverify .= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_clickbank_secret_key'];
-
-				$mb      = function_exists('mb_convert_encoding') ? @mb_convert_encoding($cverify, 'UTF-8', $GLOBALS['WS_PLUGIN__']['s2member']['c']['mb_detection_order']) : $cverify;
-				$cverify = ($mb) ? $mb : $cverify; // Double check this, just in case conversion fails.
-				$cverify = strtoupper(substr(sha1($cverify), 0, 8));
-
-				if($postvars['cverify'] === $cverify)
+				if($decrypted_notification && ($postvars = (array)json_decode($decrypted_notification)))
 					return $postvars;
 			}
 			return FALSE;
@@ -159,13 +146,45 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 		 * @package s2Member\ClickBank
 		 * @since 111205
 		 *
+		 * @param string $query Expects the URL-encoded query string of s2Vars located in the `downloadUrl` property, including `_s2member_sig`.
+		 * @param string $type Optional. The type of ClickBank transaction. This deals with backward compatibility.
+		 *   For SALE transactions, do NOT accept the older format. For others, remain backward compatible.
+		 *
+		 * @return array Array of s2Vars. Possibly an empty array.
+		 */
+		public static function clickbank_parse_s2vars($query = '', $type = '')
+		{
+			if(strpos($query, '?') !== FALSE) // A full URL or URI?
+				$query = ltrim((string)strstr($query, '?'), '?');
+
+			wp_parse_str((string)$query, $s2vars);
+			$s2vars = c_ws_plugin__s2member_utils_strings::trim_deep($s2vars);
+
+			foreach($s2vars as $var => $value /* Pulls out `s2_|_s2member_sig` vars. */)
+				if(!in_array($var, array('cbskin', 'cbfid', 'cbur', 'cbf', 'tid', 'vtid'), TRUE)) // These may be included in a signature too.
+					if(!preg_match('/^(?:s2_|_s2member_sig)/', $var)) // These will always be included in a signature.
+						unset($s2vars[$var]);
+
+			$is_sale = preg_match('/^(?:TEST_)?SALE$/i', (string)$type);
+			if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, NULL, '&')))
+				return $s2vars; // Looks good. Return ``$s2vars``.
+
+			return array(); // Default empty array.
+		}
+
+		/**
+		 * Parses s2Vars passed through by ClickBank.
+		 *
+		 * @package s2Member\ClickBank
+		 * @since 111205
+		 *
 		 * @param string $cvendthru Expects the URL-encoded query string of s2Vars, including `_s2member_sig`.
 		 * @param string $type Optional. The type of ClickBank transaction. This deals with backward compatibility.
 		 *   For SALE transactions, do NOT accept the older format. For others, remain backward compatible.
 		 *
 		 * @return array Array of s2Vars. Possibly an empty array.
 		 */
-		public static function clickbank_parse_s2vars($cvendthru = '', $type = '')
+		public static function clickbank_parse_s2vars_v2_1($cvendthru = '', $type = '')
 		{
 			wp_parse_str((string)$cvendthru, $s2vars);
 			$s2vars = c_ws_plugin__s2member_utils_strings::trim_deep($s2vars);
