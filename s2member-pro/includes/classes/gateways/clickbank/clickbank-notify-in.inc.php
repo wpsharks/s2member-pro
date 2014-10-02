@@ -89,7 +89,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
-						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
+						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'], 2, '.', '');
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
@@ -123,7 +123,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['txn_type']  = 'subscr_signup';
 						$ipn['subscr_id'] = $s2vars['s2_subscr_id'];
-						$ipn['recurring'] = $clickbank['cfuturepayments'] > 1 ? '1' : '0'; // @TODO
+						$ipn['recurring'] = $clickbank['lineItems'][0]->paymentPlay->paymentsRemaining > 0 ? '1' : '0';
 
 						$ipn['txn_id'] = $clickbank['receipt'];
 
@@ -132,8 +132,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['period1'] = $s2vars['s2_p1'];
 						$ipn['period3'] = $s2vars['s2_p3'];
 
-						$ipn['mc_amount1'] = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
-						$ipn['mc_amount3'] = number_format($clickbank['crebillamnt'] / 100, 2, '.', ''); // @TODO
+						$ipn['mc_amount1'] = number_format($clickbank['totalOrderAmount'], 2, '.', '');
+						$ipn['mc_amount3'] = number_format($clickbank['lineItems'][0]->paymentPlay->rebillAmount, 2, '.', '');
 
 						$ipn['mc_gross'] = (preg_match('/^[1-9]/', $ipn['period1'])) ? $ipn['mc_amount1'] : $ipn['mc_amount3'];
 
@@ -176,7 +176,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
-						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
+						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'], 2, '.', '');
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
@@ -215,7 +215,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['custom'] = $s2vars['s2_custom'];
 
 						$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']) / 100, 2, '.', '');
+						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']), 2, '.', ''); // @TODO
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
@@ -238,8 +238,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
-					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['crebillstatus']. // @TODO
-						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLETED$/i', $clickbank['crebillstatus']) || $clickbank['cfuturepayments'] <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
+					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['lineItems'][0]->paymentPlay->rebillStatus.
+						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLETED$/i', $clickbank['lineItems'][0]->paymentPlay->rebillStatus) || $clickbank['lineItems'][0]->paymentPlay->paymentsRemaining <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
 						|| (preg_match('/^(?:TEST_)?CANCEL-REBILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					)
 					{
