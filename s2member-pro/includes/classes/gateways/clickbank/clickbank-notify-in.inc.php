@@ -59,22 +59,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 			{
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken by the sender.
 
-				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && ($_clickbank = $clickbank))
+				if(is_array($clickbank = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_postvars()) && strcasecmp($clickbank['role'], 'VENDOR') === 0 && ($_clickbank = $clickbank))
 				{
 					$clickbank['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$clickbank['s2member_log'][] = 's2Member POST vars verified with ClickBank.';
 
-					$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars($clickbank['cvendthru'], $clickbank['ctransaction']);
+					$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars($clickbank['lineItems'][0]->downloadUrl, $clickbank['transactionType']);
 
 					if(isset ($s2vars['s2_p1'], $s2vars['s2_p3']) && $s2vars['s2_p1'] === '0 D') // No Trial defaults to Regular Period.
 						$s2vars['s2_p1'] = $s2vars['s2_p3']; // Initial Period. No Trial defaults to Regular Period.
 
 					$clickbank['s2vars'] = $s2vars; // So they appear in the log entry for this Notification.
 
-					if(strcasecmp($clickbank['ccustfirstname'].' '.$clickbank['ccustlastname'], $clickbank['ccustfullname']) !== 0 && preg_match('/(?:[^ ]+)(?: +)(?:[^ ]+)/', $clickbank['ccustfullname']))
-						list ($clickbank['ccustfirstname'], $clickbank['ccustlastname']) = preg_split('/ +/', $clickbank['ccustfullname'], 2);
+					if(strcasecmp($clickbank['customer']->firstName.' '.$clickbank['customer']->lastName, $clickbank['customer']->fullName) !== 0 && preg_match('/(?:[^ ]+)(?: +)(?:[^ ]+)/', $clickbank['customer']->fullName))
+						list ($clickbank['customer']->firstName, $clickbank['customer']->lastName) = preg_split('/ +/', $clickbank['customer']->fullName, 2);
 
-					if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['ctransaction']) && preg_match('/^STANDARD$/i', $clickbank['cprodtype']))
+					if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['transactionType']) && !$clickbank['lineItems'][0]->recurring)
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `SALE/STANDARD` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `web_accept` ).';
@@ -112,7 +112,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
-					else if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']))
+					else if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `SALE/RECURRING` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_signup` ).';
@@ -160,7 +160,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
-					else if(preg_match('/^(?:TEST_)?BILL$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']))
+					else if(preg_match('/^(?:TEST_)?BILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `BILL/RECURRING` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_payment` ).';
@@ -199,7 +199,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
-					else if(preg_match('/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i', $clickbank['ctransaction'])) // Product Type irrelevant here; checked below.
+					else if(preg_match('/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i', $clickbank['transactionType'])) // Product Type irrelevant here; checked below.
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `RFND|CGBK|INSF` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `payment_status` ( `refunded|reversed` ).';
@@ -239,8 +239,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
 					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['crebillstatus'].
-						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']) && (preg_match('/^COMPLETED$/i', $clickbank['crebillstatus']) || $clickbank['cfuturepayments'] <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
-						|| (preg_match('/^(?:TEST_)?CANCEL-REBILL$/i', $clickbank['ctransaction']) && preg_match('/^RECURRING$/i', $clickbank['cprodtype']))
+						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLETED$/i', $clickbank['crebillstatus']) || $clickbank['cfuturepayments'] <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
+						|| (preg_match('/^(?:TEST_)?CANCEL-REBILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					)
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).';
