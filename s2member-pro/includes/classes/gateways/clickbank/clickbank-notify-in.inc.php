@@ -85,17 +85,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['txn_type'] = 'web_accept';
 
-						$ipn['txn_id'] = $clickbank['ctransreceipt'];
+						$ipn['txn_id'] = $clickbank['receipt'];
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
-						$ipn['mc_gross']    = number_format($clickbank['corderamount'] / 100, 2, '.', '');
-						$ipn['mc_currency'] = strtoupper($clickbank['ccurrency']);
+						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
+						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['ccustemail'];
-						$ipn['first_name']  = ucwords(strtolower($clickbank['ccustfirstname']));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['ccustlastname']));
+						$ipn['payer_email'] = $clickbank['customer']->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -123,26 +123,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['txn_type']  = 'subscr_signup';
 						$ipn['subscr_id'] = $s2vars['s2_subscr_id'];
-						$ipn['recurring'] = ($clickbank['cfuturepayments'] > 1) ? '1' : '0';
+						$ipn['recurring'] = $clickbank['cfuturepayments'] > 1 ? '1' : '0'; // @TODO
 
-						$ipn['txn_id'] = $clickbank['ctransreceipt'];
+						$ipn['txn_id'] = $clickbank['receipt'];
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
 						$ipn['period1'] = $s2vars['s2_p1'];
 						$ipn['period3'] = $s2vars['s2_p3'];
 
-						$ipn['mc_amount1'] = number_format($clickbank['corderamount'] / 100, 2, '.', '');
-						$ipn['mc_amount3'] = number_format($clickbank['crebillamnt'] / 100, 2, '.', '');
+						$ipn['mc_amount1'] = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
+						$ipn['mc_amount3'] = number_format($clickbank['crebillamnt'] / 100, 2, '.', ''); // @TODO
 
 						$ipn['mc_gross'] = (preg_match('/^[1-9]/', $ipn['period1'])) ? $ipn['mc_amount1'] : $ipn['mc_amount3'];
 
-						$ipn['mc_currency'] = strtoupper($clickbank['ccurrency']);
+						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['ccustemail'];
-						$ipn['first_name']  = ucwords(strtolower($clickbank['ccustfirstname']));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['ccustlastname']));
+						$ipn['payer_email'] = $clickbank['customer']->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -172,17 +172,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['txn_type']  = 'subscr_payment';
 						$ipn['subscr_id'] = $s2vars['s2_subscr_id'];
 
-						$ipn['txn_id'] = $clickbank['ctransreceipt'];
+						$ipn['txn_id'] = $clickbank['receipt'];
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
-						$ipn['mc_gross']    = number_format($clickbank['corderamount'] / 100, 2, '.', '');
-						$ipn['mc_currency'] = strtoupper($clickbank['ccurrency']);
+						$ipn['mc_gross']    = number_format($clickbank['totalOrderAmount'] / 100, 2, '.', '');
+						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['ccustemail'];
-						$ipn['first_name']  = ucwords(strtolower($clickbank['ccustfirstname']));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['ccustlastname']));
+						$ipn['payer_email'] = $clickbank['customer']->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -208,20 +208,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
 
-						$ipn['payment_status'] = (preg_match('/^(?:TEST_)?RFND$/', $clickbank['ctransaction'])) ? 'refunded' : 'reversed';
+						$ipn['payment_status'] = (preg_match('/^(?:TEST_)?RFND$/', $clickbank['transactionType'])) ? 'refunded' : 'reversed';
 
-						$ipn['parent_txn_id'] = (preg_match('/^RECURRING$/i', $clickbank['cprodtype']) && $s2vars['s2_subscr_id']) ? $s2vars['s2_subscr_id'] : $clickbank['ctransreceipt'];
+						$ipn['parent_txn_id'] = ($clickbank['lineItems'][0]->recurring && $s2vars['s2_subscr_id']) ? $s2vars['s2_subscr_id'] : $clickbank['receipt'];
 
 						$ipn['custom'] = $s2vars['s2_custom'];
 
 						$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['corderamount']) / 100, 2, '.', '');
-						$ipn['mc_currency'] = strtoupper($clickbank['ccurrency']);
+						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']) / 100, 2, '.', '');
+						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
-						$ipn['payer_email'] = $clickbank['ccustemail'];
-						$ipn['first_name']  = ucwords(strtolower($clickbank['ccustfirstname']));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['ccustlastname']));
+						$ipn['payer_email'] = $clickbank['customer']->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
@@ -238,7 +238,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 					}
-					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['crebillstatus'].
+					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['crebillstatus']. // @TODO
 						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLETED$/i', $clickbank['crebillstatus']) || $clickbank['cfuturepayments'] <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
 						|| (preg_match('/^(?:TEST_)?CANCEL-REBILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					)
@@ -258,9 +258,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['period1'] = $s2vars['s2_p1'];
 						$ipn['period3'] = $s2vars['s2_p3'];
 
-						$ipn['payer_email'] = $clickbank['ccustemail'];
-						$ipn['first_name']  = ucwords(strtolower($clickbank['ccustfirstname']));
-						$ipn['last_name']   = ucwords(strtolower($clickbank['ccustlastname']));
+						$ipn['payer_email'] = $clickbank['customer']->email;
+						$ipn['first_name']  = ucwords(strtolower($clickbank['customer']->firstName));
+						$ipn['last_name']   = ucwords(strtolower($clickbank['customer']->lastName));
 
 						$ipn['option_name1']      = ($s2vars['s2_referencing']) ? 'Referencing Customer ID' : 'Originating Domain';
 						$ipn['option_selection1'] = ($s2vars['s2_referencing']) ? $s2vars['s2_referencing'] : $_SERVER['HTTP_HOST'];
