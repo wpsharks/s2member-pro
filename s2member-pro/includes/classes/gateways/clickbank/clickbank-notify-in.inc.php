@@ -215,7 +215,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['custom'] = $s2vars['s2_custom'];
 
 						$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']), 2, '.', ''); // @TODO Check if this is correct.
+						$ipn['mc_gross']    = '-'.number_format(abs($clickbank['totalOrderAmount']), 2, '.', '');
 						$ipn['mc_currency'] = strtoupper($clickbank['currency']);
 						$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
