@@ -52,6 +52,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 
 				'order'   => 'DESC', 'orderby' => 'registered', 'number' => 25
 			);
+			$original_args = $args; // Useful in certain cases.
+			// e.g. `if(empty($original_args['search_columns']))`.
+
 			if(!empty($args['args']))
 			{
 				$args = wp_parse_args($args['args']);
