@@ -83,6 +83,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			}
 			unset($_key, $_value); // Housekeeping.
 
+			if(!$args['search_columns']) // Use defaults?
+				$args['search_columns'] = $default_args['search_columns'];
+
 			$args['who']         = '';
 			$args['count_total'] = TRUE;
 			$args['fields']      = 'all_with_meta';
@@ -91,6 +94,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			$args['offset'] = ($page - 1) * $args['number']; // Calculate dynamically.
 
 			$query = new WP_User_Query($args); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+
 			return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
 		}
 
