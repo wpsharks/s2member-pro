@@ -98,16 +98,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 
 			// Run search, returning only User IDs in the result
 			$search_query = new WP_User_Query($args); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
-			$user_ids = $search_query->results;
+			$user_ids     = $search_query->results;
 
 			// Also search s2Member Custom Fields, if necessary. Returns array of User IDs.
 			$search_query_s2custom = self::search_s2_custom_fields($args, $original_args);
 
 			if(!empty($search_query_s2custom))
+			{
 				$user_ids = array_merge($user_ids, $search_query_s2custom);
+				$user_ids = array_unique($user_ids);
+			}
 
-			$args['fields']      = 'all_with_meta';
-			$query = new WP_User_Query(array('fields'=>'all_with_meta', 'include'=>$user_ids)); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			$args['fields'] = 'all_with_meta';
+			$query          = new WP_User_Query(array('fields' => 'all_with_meta', 'include' => $user_ids)); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
 
 			return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
 		}
@@ -200,7 +203,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			}
 			elseif($s2custom_field_columns = preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns']))
 			{
-				foreach($s2custom_field_columns as $_column) {
+				foreach($s2custom_field_columns as $_column)
+				{
 					// There are s2Member Custom Field columns to search. Let's extract the field ids
 					preg_match('/(?:^|\W)s2member_custom_field_(?P<field_id>\w+)/', $_column, $matches);
 
