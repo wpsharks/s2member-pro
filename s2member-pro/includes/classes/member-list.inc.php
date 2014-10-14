@@ -43,7 +43,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			if(empty($_REQUEST[$p_var]) || ($page = (integer)$_REQUEST[$p_var]) < 1)
 				$page = 1; // Default page number.
 
-			$default_args = array(
+			$default_args  = array(
 				'blog_id' => $GLOBALS['blog_id'],
 
 				'role'    => '', 'meta_key' => '', 'meta_value' => '', 'meta_compare' => '', 'meta_query' => array(),
@@ -91,12 +91,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 
 			$args['who']         = '';
 			$args['count_total'] = TRUE;
-			$args['fields']      = 'all_with_meta';
+			$args['fields']      = 'ID';
 			$args['number']      = min($args['number'], apply_filters('ws_plugin__s2member_pro_member_list_max', 250, get_defined_vars()));
 			if($args['number'] < 1) $args['number'] = 1; // Make sure this is always >= 1.
 			$args['offset'] = ($page - 1) * $args['number']; // Calculate dynamically.
 
-			$query = new WP_User_Query($args); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			// Run search, returning only User IDs in the result.
+			$search_query = new WP_User_Query($args); // See: <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			$user_ids     = $search_query->get_results();
+
+			// Also search s2Member Custom Fields, if necessary. Returns array of User IDs.
+			$search_query_s2custom = self::search_s2_custom_fields($args, $original_args);
+
+			if(!empty($search_query_s2custom))
+			{
+				$user_ids = array_merge($user_ids, $search_query_s2custom);
+				$user_ids = array_unique($user_ids);
+			}
+			$args['fields'] = 'all_with_meta';
+			// See: <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			$query = new WP_User_Query(array('fields' => 'all_with_meta', 'include' => $user_ids));
 
 			return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
 		}
@@ -161,6 +175,67 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			unset($_i, $_show_dots);
 
 			return $pagination;
+		}
+
+		/**
+		 * Searches s2Member Custom Fields; an extension to the self::query() method.
+		 *
+		 * @param array $args Arguments passed to self::query() after self::query() merged the defaults
+		 * @param array $original_args Original arguments passed by the shortcode before self::query() merged the defaults
+		 *
+		 * @return array An array of User IDs
+		 */
+		protected static function search_s2_custom_fields($args, $original_args)
+		{
+			if(empty($args['search']))
+				return array(); // Nothing to do.
+
+			if(!empty($original_args['search_columns']) && !preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns']))
+				return array(); // Nothing to do.
+
+			$s2custom_fields_sql = '';
+			$include_user_ids    = array();
+
+			if(empty($original_args['search_columns']))
+			{
+				// Search all custom fields since there no search columns supplied
+				$s2custom_fields_sql = '.*';
+			}
+			elseif($s2custom_field_columns = preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns']))
+			{
+				foreach($s2custom_field_columns as $_column)
+				{
+					// There are s2Member Custom Field columns to search. Let's extract the field ids
+					preg_match('/(?:^|\W)s2member_custom_field_(?P<field_id>\w+)/', $_column, $matches);
+
+					if(!empty($matches['field_id']))
+					{
+						// Build a pipe-limited string of field ids to use as part of the SQL REGEXP
+						$s2custom_fields_sql .= preg_quote(trim($matches['field_id'])).'|';
+					}
+				}
+				// Strip trailing pipe character
+				$s2custom_fields_sql = rtrim($s2custom_fields_sql, '|');
+			}
+			if(!empty($s2custom_fields_sql))
+			{
+				// Build the regex to find users who have s2Member Custom Fields that contain the search term (or any value if no search term is provided)
+				$regex = '(^|\{)s\:[0-9]+\:"('.$s2custom_fields_sql.')";s\:[0-9]+\:"'.preg_quote($args['search']).'"'; // Example database data: a:1:{s:12:"country_code";s:3:"USA";}
+
+				// Run the database search
+				global $wpdb;
+				/** @var \wpdb $wpdb This line for IDEs that need a reference. */
+				$_users = $wpdb->get_results("SELECT `user_id` as `ID` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_custom_fields' AND `meta_value` REGEXP '".esc_sql($regex)."'");
+
+				// Did we find any matches?
+				if(is_array($_users) && count($_users) > 0)
+				{
+					// Build an array of User IDs to be included in the search results
+					foreach($_users as $_user)
+						$include_user_ids[] = $_user->ID;
+				}
+			}
+			return !empty($include_user_ids) ? $include_user_ids : array();
 		}
 	}
 }
