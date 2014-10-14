@@ -211,7 +211,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 					if(!empty($matches['field_id']))
 					{
 						// Build a pipe-limited string of field ids to use as part of the SQL REGEXP
-						$s2custom_fields_sql = $s2custom_fields_sql.preg_quote(trim($matches['field_id'])).'|';
+						$s2custom_fields_sql .= preg_quote(trim($matches['field_id'])).'|';
 					}
 				}
 				// Strip trailing pipe character
