@@ -43,7 +43,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			if(empty($_REQUEST[$p_var]) || ($page = (integer)$_REQUEST[$p_var]) < 1)
 				$page = 1; // Default page number.
 
-			$default_args = array(
+			$default_args  = array(
 				'blog_id' => $GLOBALS['blog_id'],
 
 				'role'    => '', 'meta_key' => '', 'meta_value' => '', 'meta_compare' => '', 'meta_query' => array(),
@@ -96,9 +96,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			if($args['number'] < 1) $args['number'] = 1; // Make sure this is always >= 1.
 			$args['offset'] = ($page - 1) * $args['number']; // Calculate dynamically.
 
-			// Run search, returning only User IDs in the result
-			$search_query = new WP_User_Query($args); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
-			$user_ids     = $search_query->results;
+			// Run search, returning only User IDs in the result.
+			$search_query = new WP_User_Query($args); // See: <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			$user_ids     = $search_query->get_results();
 
 			// Also search s2Member Custom Fields, if necessary. Returns array of User IDs.
 			$search_query_s2custom = self::search_s2_custom_fields($args, $original_args);
@@ -108,9 +108,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				$user_ids = array_merge($user_ids, $search_query_s2custom);
 				$user_ids = array_unique($user_ids);
 			}
-
 			$args['fields'] = 'all_with_meta';
-			$query          = new WP_User_Query(array('fields' => 'all_with_meta', 'include' => $user_ids)); // See <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			// See: <https://codex.wordpress.org/Class_Reference/WP_User_Query>
+			$query = new WP_User_Query(array('fields' => 'all_with_meta', 'include' => $user_ids));
 
 			return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
 		}
