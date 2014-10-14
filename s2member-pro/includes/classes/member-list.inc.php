@@ -217,7 +217,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				// Strip trailing pipe character
 				$s2custom_fields_sql = rtrim($s2custom_fields_sql, '|');
 			}
-
 			if(!empty($s2custom_fields_sql))
 			{
 				// Build the regex to find users who have s2Member Custom Fields that contain the search term (or any value if no search term is provided)
@@ -236,11 +235,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 						$include_user_ids[] = $_user->ID;
 				}
 			}
-
-			if(!empty($include_user_ids))
-				return $include_user_ids;
-			else
-				return array();
+			return !empty($include_user_ids) ? $include_user_ids : array();
 		}
 	}
 }
