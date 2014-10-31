@@ -59,7 +59,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 			)
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_registration_response'] = array(); // This holds the global response details.
-				$global_response                                                 = & $GLOBALS['ws_plugin__s2member_pro_stripe_registration_response'];
+				$global_response                                                 = &$GLOBALS['ws_plugin__s2member_pro_stripe_registration_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_registration']));
 				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
