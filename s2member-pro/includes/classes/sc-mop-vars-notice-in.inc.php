@@ -73,7 +73,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 						return '';
 
 					$required_type = $_g['_s2member_req']['type'];
-					if(count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$required_type], $attr['required_value'], TRUE))
+					if(!empty($attr['required_value']) && ( count($attr['required_type']) !== 1 || !in_array($_g['_s2member_req'][$required_type], $attr['required_value'], TRUE)))
 						return '';
 				}
 				if(array_intersect($attr['restriction_type'], $valid_restriction_types))
