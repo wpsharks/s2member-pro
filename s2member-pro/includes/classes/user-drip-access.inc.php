@@ -119,7 +119,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 				$access_expression = str_replace(array(' and ', ' or '), array(' && ', ' || '), $access_expression);
 
 				if($invalid_chars)
-					trigger_error('Syntax error: invalid chars. Please use only `A-Za-z0-9 _()` in the `access` parameter of s2Drip.', E_USER_ERROR);
+					trigger_error('Syntax error: invalid chars. Please use only `a-z0-9 _()` in the `access` parameter of s2Drip.', E_USER_ERROR);
 
 				if(!$access_expression || !preg_match('/\w+/', $access_expression))
 					trigger_error('Syntax error: no word chars in `access` parameter of s2Drip. Valid example: `level1 and ccap_music`.', E_USER_ERROR);
@@ -157,7 +157,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 						$drip = 'FALSE'; // After $to_day.
 				}
 			}
-
 			return apply_filters('ws_plugin__s2member_pro_user_can_access_drip_cb', $drip, get_defined_vars());
 		}
 	}
