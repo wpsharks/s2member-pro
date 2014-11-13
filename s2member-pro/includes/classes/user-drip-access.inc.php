@@ -157,7 +157,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 						$drip = 'FALSE'; // After $to_day.
 				}
 			}
-
 			return apply_filters('ws_plugin__s2member_pro_user_can_access_drip_cb', $drip, get_defined_vars());
 		}
 	}

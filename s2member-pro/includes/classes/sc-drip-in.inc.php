@@ -61,12 +61,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_drip_in'))
 		{
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_before_sc_drip', get_defined_vars());
-			unset
-			($__refs, $__v);
+			unset($__refs, $__v);
 
-			$attr = shortcode_atts(array('level'    => '0', 'access' => '',
-			                             'from_day' => '0', 'to_day' => '0'),
-			                       $attr, $shortcode);
+			$attr = shortcode_atts(
+				array(
+					'level'    => '0',
+					'access'   => '',
+					'from_day' => '0',
+					'to_day'   => '0',
+				), $attr, $shortcode);
 
 			if(!$attr['access'])
 				$attr['access'] = 'level'.$attr['level'];
