@@ -124,8 +124,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 						{
 							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
 							{
-								if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
-								   && ($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) >= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
+								if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures'] // Is this functionality enabled at all?
+								   && ($current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id)) + 1 >= $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_max_payment_failures']
 								) // If a site owner limits payment failures, trigger an EOT when/if the max failed payments threshold is reached for this subscription.
 								{
 									$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
@@ -162,8 +162,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+									c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response(array('x_method' => 'cancel', 'x_subscription_id' => $authnet['x_subscription_id']));
 								}
-								else
+								else // Bump the total number of failed payments by `1`; not at the limit yet.
 								{
 									$current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id);
 									update_user_option($user_id, 's2member_authnet_payment_failures', $current_payment_failures + 1);
