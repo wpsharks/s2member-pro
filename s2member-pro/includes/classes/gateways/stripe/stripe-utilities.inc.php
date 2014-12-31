@@ -402,7 +402,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					return (integer)$amount;
 
 				default: // In cents.
-					return (integer)number_format($amount * 100, 0);
+					return (integer)number_format($amount * 100, 0, '.', '');
 			}
 		}
 
