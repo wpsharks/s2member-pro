@@ -160,6 +160,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		if($post_vars["attr"]["tp"] && $cost_calculations["trial_total"] > 0)
 																			$paypal_set_xco["MAXAMT"] = $cost_calculations["trial_total"];
 																		else $paypal_set_xco["MAXAMT"] = $cost_calculations["total"];
+
+																		$paypal_set_xco["PAYMENTREQUEST_0_CURRENCYCODE"] = $cost_calculations["cur"];
 																	}
 																else // Otherwise, we use fields for a "Buy Now" purchase.
 																	{

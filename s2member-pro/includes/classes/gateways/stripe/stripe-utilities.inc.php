@@ -147,12 +147,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try // Attempt to charge the customer.
 			{
 				$charge = array(
-					'customer'              => $customer_id,
-					'description'           => $description, 'metadata' => $metadata,
-					'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-					'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
+					'customer'             => $customer_id,
+					'description'          => $description, 'metadata' => $metadata,
+					'amount'               => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
+					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
 				);
-				if(!trim($charge['statement_description'])) unset($charge['statement_description']);
+				if(!trim($charge['statement_descriptor'])) unset($charge['statement_descriptor']);
 
 				$charge = Stripe_Charge::create($charge);
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
@@ -202,14 +202,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				catch(exception $exception) // Else create one.
 				{
 					$plan = array(
-						'id'                    => $plan_id,
-						'name'                  => $name, 'metadata' => $metadata,
-						'amount'                => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-						'statement_description' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
-						'interval'              => 'day', 'interval_count' => $interval_days,
-						'trial_period_days'     => $trial_period_days ? $trial_period_days : $interval_days,
+						'id'                   => $plan_id,
+						'name'                 => $name, 'metadata' => $metadata,
+						'amount'               => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
+						'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+						'interval'             => 'day', 'interval_count' => $interval_days,
+						'trial_period_days'    => $trial_period_days ? $trial_period_days : $interval_days,
 					);
-					if(!trim($plan['statement_description'])) unset($plan['statement_description']);
+					if(!trim($plan['statement_descriptor'])) unset($plan['statement_descriptor']);
 
 					$plan = Stripe_Plan::create($plan);
 				}
