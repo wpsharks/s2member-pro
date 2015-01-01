@@ -133,10 +133,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string               $currency Three character currency code.
 		 * @param string               $description Description of the charge.
 		 * @param array                $metadata Any additional metadata.
+		 * @param array                $post_vars Pro Form post vars.
 		 *
 		 * @return Stripe_Charge|string Charge object; else error message.
 		 */
-		public static function create_customer_charge($customer_id, $amount, $currency, $description, $metadata = array())
+		public static function create_customer_charge($customer_id, $amount, $currency, $description, $metadata = array(), $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -262,10 +263,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $plan_id Subscription plan ID in Stripe.
 		 * @param array  $metadata Any additional metadata.
+		 * @param array  $post_vars Pro Form post vars.
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
-		public static function create_customer_subscription($customer_id, $plan_id, $metadata = array())
+		public static function create_customer_subscription($customer_id, $plan_id, $metadata = array(), $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
