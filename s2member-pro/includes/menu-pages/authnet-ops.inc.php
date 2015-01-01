@@ -281,6 +281,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%recurring/regular_cycle%%</code> = Example (<code>14.95 / Monthly</code>), or ... (<code>0 / non-recurring</code>); depending on the value of <code>%%recurring%%</code>.</li>'."\n";
 			echo '</ul>'."\n";
 
+			echo '<strong>Coupon Replacement Codes:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (i.e. the full Coupon Code).</li>'."\n";
+			echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
+			echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
+			echo '</ul>'."\n";
+
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
@@ -388,6 +395,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%user_login%%</code> = The Username associated with their account. The Customer created this during registration.</li>'."\n";
 			echo '<li><code>%%user_ip%%</code> = The Customer\'s original IP Address, during checkout/registration via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
 			echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '<strong>Coupon Replacement Codes:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (i.e. the full Coupon Code).</li>'."\n";
+			echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
+			echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Registration/Profile Fields are also supported in this email:</strong>'."\n";
@@ -500,6 +514,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
 			echo '</ul>'."\n";
 
+			echo '<strong>Coupon Replacement Codes:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (i.e. the full Coupon Code).</li>'."\n";
+			echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
+			echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
+			echo '</ul>'."\n";
+
 			echo '<strong>Custom Registration/Profile Fields are also supported in this email:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
@@ -604,6 +625,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%user_ip%%</code> = The Customer\'s IP Address, detected during checkout via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
 			echo '<li><code>%%item_number%%</code> = The Item Number. Ex: <code><em>sp:13,24,36:72</em></code> (translates to: <code><em>sp:comma-delimited IDs:expiration hours</em></code>).</li>'."\n";
 			echo '<li><code>%%item_name%%</code> = The Item Name (as provided by the <code>desc=""</code> attribute in your Shortcode, which briefly describes the Item Number).</li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '<strong>Coupon Replacement Codes:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%full_coupon_code%%</code> = A full Coupon Code — if one is accepted by your configuration of s2Member. This may indicate an Affiliate Coupon Code, which will include your Affiliate Suffix Chars too (i.e. the full Coupon Code).</li>'."\n";
+			echo '<li><code>%%coupon_code%%</code> = A Coupon Code — if one is accepted by your configuration of s2Member. This will NOT include any Affiliate Suffix Chars. This indicates the actual Coupon Code accepted by your configuration of s2Member (excluding any Affiliate ID).</li>'."\n";
+			echo '<li><code>%%coupon_affiliate_id%%</code> = This is the end of an Affiliate Coupon Code <em>(i.e. the referring affiliate\'s ID)</em>. This is only applicable if an Affiliate Coupon Code is accepted by your configuration of s2Member.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
