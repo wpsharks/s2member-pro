@@ -93,11 +93,11 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			// Defaults for the Pro Module.
 			'pro_signup_email_recipients'             => '"%%full_name%%" <%%payer_email%%>',
 			'pro_signup_email_subject'                => _x('Congratulations! (your membership has been approved)', 's2member-front', 's2member'),
-			'pro_signup_email_message'                => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: $%%%%initial%%%%\nRecurring charges: $%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_signup_email_message'                => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
 			'pro_sp_email_recipients'                 => '"%%full_name%%" <%%payer_email%%>',
 			'pro_sp_email_subject'                    => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
-			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: $%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
 			'pro_coupon_codes'                        => '', /* There are NO Coupon Codes by default. */
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
