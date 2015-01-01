@@ -168,6 +168,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Get a Stripe charge object instance.
+		 *
+		 * @param string $charge_id Charge ID in Stripe.
+		 *
+		 * @return Stripe_Charge|string Charge object; else error message.
+		 */
+		public static function get_charge($charge_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			try // Obtain charge object; if possible.
+			{
+				$charge = Stripe_Charge::retrieve($charge_id);
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
+
+				return $charge; // Stripe charge object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
 		 * Get a Stripe plan object instance.
 		 *
 		 * @param array $shortcode_attrs An array of shortcode attributes.
