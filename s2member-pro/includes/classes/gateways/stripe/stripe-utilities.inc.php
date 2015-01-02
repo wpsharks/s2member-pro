@@ -51,10 +51,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string  $fname Customer's first name (optional).
 		 * @param string  $lname Customer's last name (optional).
 		 * @param array   $metadata Any metadata (optional).
+		 * @param array   $post_vars Pro Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function get_customer($user_id = 0, $email = '', $fname = '', $lname = '', $metadata = array())
+		public static function get_customer($user_id = 0, $email = '', $fname = '', $lname = '', $metadata = array(), $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -62,26 +63,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
+			$metadata = array_merge(self::_additional_customer_metadata($post_vars), (array)$metadata);
+
 			try // Obtain existing customer object; else create a new one.
 			{
 				try // Attempt to find an existing customer; if that's possible.
 				{
 					if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
 						$customer = Stripe_Customer::retrieve($customer_id);
+
+					if(!empty($customer) && is_object($customer) && $metadata)
+					{
+						foreach($metadata as $_key => $_value)
+							$customer->metadata->{$_key} = $_value;
+						unset($_key, $_value); // Housekeeping.
+
+						$customer->save(); // Update.
+					}
 				}
 				catch(exception $exception)
 				{
-					// Fail silently; create a new customer below in this case.
+					// Fail silently.
 				}
 				if(empty($customer) || !is_object($customer))
 					$customer = Stripe_Customer::create(array(
 						                                    'email'       => $email,
 						                                    'description' => trim($fname.' '.$lname),
-						                                    'metadata'    => $metadata
+						                                    'metadata'    => $metadata,
 					                                    ));
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
-				return $customer; // Stripe customer object.
+				return $customer;
 			}
 			catch(exception $exception)
 			{
@@ -91,15 +103,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			}
 		}
 
+		public static function _additional_customer_metadata($post_vars = array())
+		{
+			$post_vars = (array)$post_vars;
+			$metadata  = array(); // Initialize.
+
+			if(isset($post_vars['first_name'], $post_vars['last_name']))
+				$metadata['name'] = trim($post_vars['first_name'].' '.$post_vars['last_name']);
+
+			if(isset($_SERVER['REMOTE_ADDR']))
+				$metadata['ip'] = $_SERVER['REMOTE_ADDR'];
+
+			return $metadata;
+		}
+
 		/**
 		 * Set a Stripe customer card/token.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $card_token Stripe token.
+		 * @param array  $post_vars Pro Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function set_customer_card_token($customer_id, $card_token)
+		public static function set_customer_card_token($customer_id, $card_token, $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -107,15 +134,36 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
+			$metadata     = self::_additional_customer_metadata($post_vars);
+			$card_details = self::_additional_customer_card_details($post_vars);
+
 			try // Attempt to update the customer's card/token.
 			{
 				$customer       = Stripe_Customer::retrieve($customer_id);
 				$customer->card = $card_token; // Update.
-				$customer       = $customer->save();
+
+				if($metadata) // Customer metadata?
+				{
+					foreach($metadata as $_key => $_value)
+						$customer->metadata->{$_key} = $_value;
+					unset($_key, $_value); // Housekeeping.
+				}
+				$customer->save(); // Update.
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
-				return $customer; // Stripe customer object.
+				if($card_details) // Additional details we should save?
+				{
+					$card = $customer->cards->data[0]; // Just one card!
+					/** @var Stripe_Card $card Reference for IDEs. */
+
+					foreach($card_details as $_key => $_value)
+						$card->{$_key} = $_value; // e.g. `address_zip`, etc.
+					unset($_key, $_value); // Housekeeping.
+
+					$card->save(); // Update.
+				}
+				return $customer;
 			}
 			catch(exception $exception)
 			{
@@ -123,6 +171,29 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				return self::error_message($exception);
 			}
+		}
+
+		public static function _additional_customer_card_details($post_vars = array())
+		{
+			$post_vars = (array)$post_vars;
+			$details   = array(); // Initialize.
+
+			if(isset($post_vars['first_name'], $post_vars['last_name']))
+				$details['name'] = trim($post_vars['first_name'].' '.$post_vars['last_name']);
+
+			if(isset($post_vars['city']))
+				$details['address_city'] = $post_vars['city'];
+
+			if(isset($post_vars['state']))
+				$details['address_state'] = $post_vars['state'];
+
+			if(isset($post_vars['zip']))
+				$details['address_zip'] = $post_vars['zip'];
+
+			if(isset($post_vars['country']))
+				$details['address_country'] = $post_vars['country'];
+
+			return $details;
 		}
 
 		/**
@@ -132,17 +203,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param integer|float|string $amount The amount to charge.
 		 * @param string               $currency Three character currency code.
 		 * @param string               $description Description of the charge.
-		 * @param array                $metadata Any additional metadata.
+		 * @param array                $metadata Any additional metadata (optional).
+		 * @param array                $post_vars Pro Form post vars (optional).
+		 * @param array                $cost_calculations Pro Form cost calculations (optional).
 		 *
 		 * @return Stripe_Charge|string Charge object; else error message.
 		 */
-		public static function create_customer_charge($customer_id, $amount, $currency, $description, $metadata = array())
+		public static function create_customer_charge($customer_id, $amount, $currency, $description, $metadata = array(), $post_vars = array(), $cost_calculations = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			$metadata = array_merge(self::_additional_charge_metadata($post_vars, $cost_calculations), (array)$metadata);
 
 			try // Attempt to charge the customer.
 			{
@@ -165,6 +240,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				return self::error_message($exception);
 			}
+		}
+
+		public static function _additional_charge_metadata($post_vars = array(), $cost_calculations = array())
+		{
+			$post_vars         = (array)$post_vars;
+			$cost_calculations = (array)$cost_calculations;
+			$metadata          = array(); // Initialize.
+
+			if(!empty($post_vars['coupon']))
+				$coupon['code'] = $post_vars['coupon'];
+
+			if(isset($cost_calculations['trial_tax'], $cost_calculations['trial_tax_per'])
+			   && isset($post_vars['attr']['tp'], $cost_calculations['trial_total'])
+			   && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0
+			) // Charge is for a trial amount in this case.
+			{
+				$tax_info['tax']     = $cost_calculations['trial_tax'];
+				$tax_info['tax_per'] = $cost_calculations['trial_tax_per'];
+			}
+			else if(isset($cost_calculations['tax'], $cost_calculations['tax_per']))
+			{
+				$tax_info['tax']     = $cost_calculations['tax'];
+				$tax_info['tax_per'] = $cost_calculations['tax_per'];
+			}
+			if(!empty($coupon)) // JSON encode this data.
+				$metadata['coupon'] = json_encode($coupon);
+
+			if(!empty($tax_info)) // JSON encode this data.
+				$metadata['tax_info'] = json_encode($tax_info);
+
+			return $metadata;
 		}
 
 		/**
@@ -261,17 +367,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $plan_id Subscription plan ID in Stripe.
-		 * @param array  $metadata Any additional metadata.
+		 * @param array  $metadata Any additional metadata (optional).
+		 * @param array  $post_vars Pro Form post vars (optional).
+		 * @param array  $cost_calculations Pro Form cost calculations (optional).
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
-		public static function create_customer_subscription($customer_id, $plan_id, $metadata = array())
+		public static function create_customer_subscription($customer_id, $plan_id, $metadata = array(), $post_vars = array(), $cost_calculations = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+
+			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
 
 			try // Attempt to create a new subscription for this customer.
 			{
@@ -289,6 +399,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				return self::error_message($exception);
 			}
+		}
+
+		public static function _additional_subscription_metadata($post_vars = array(), $cost_calculations = array())
+		{
+			$post_vars         = (array)$post_vars;
+			$cost_calculations = (array)$cost_calculations;
+			$metadata          = array(); // Initialize.
+
+			if(!empty($post_vars['coupon']))
+				$coupon['code'] = $post_vars['coupon'];
+
+			if(isset($cost_calculations['trial_tax'], $cost_calculations['trial_tax_per'])
+			   && isset($post_vars['attr']['tp'], $cost_calculations['trial_total'])
+			   && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0
+			) // Charge is for a trial amount in this case.
+			{
+				$tax_info['trial_tax']     = $cost_calculations['trial_tax'];
+				$tax_info['trial_tax_per'] = $cost_calculations['trial_tax_per'];
+			}
+			if(isset($cost_calculations['tax'], $cost_calculations['tax_per']))
+			{
+				$tax_info['tax']     = $cost_calculations['tax'];
+				$tax_info['tax_per'] = $cost_calculations['tax_per'];
+			}
+			if(!empty($coupon)) // JSON encode this data.
+				$metadata['coupon'] = json_encode($coupon);
+
+			if(!empty($tax_info)) // JSON encode this data.
+				$metadata['tax_info'] = json_encode($tax_info);
+
+			return $metadata;
 		}
 
 		/**
@@ -330,7 +471,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string  $customer_id Customer ID in Stripe.
 		 * @param string  $subscription_id Subscription ID in Stripe.
 		 *
-		 * @param boolean $at_period_end Defaults to a `TRUE` value.
+		 * @param boolean $at_period_end Defaults to a `TRUE` value (optional).
 		 *    If `TRUE`, cancellation is delayed until the end of the current period.
 		 *    If `FALSE`, cancellation is NOT delayed; i.e. it occurs immediately.
 		 *
@@ -851,7 +992,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array  $attr An array of Pro Form Attributes.
+		 * @param array  $attr An array of Pro Form Attributes (optional).
 		 * @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
 		 * @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
 		 * @param array  $process Optional. An array of additional processing routines to run here.

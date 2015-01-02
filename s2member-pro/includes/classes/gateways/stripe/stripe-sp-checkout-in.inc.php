@@ -88,13 +88,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						if(!$global_response)
 							if($cost_calculations['total'] > 0)
 							{
-								if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'])))
+								if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-								else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token'])))
+								else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token'], $post_vars)))
 									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-								else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'])))
+								else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
 									$global_response = array('response' => $stripe_charge, 'error' => TRUE);
 
 								else // We got what we needed here.

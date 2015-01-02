@@ -83,7 +83,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 									unset($_POST['s2member_pro_stripe_update']['card_token']); // These are good one-time only.
 									unset($_POST['s2member_pro_stripe_update']['card_token_summary']);
 
-									if(is_object($set_customer_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($cur__subscr_cid, $post_vars['card_token'])))
+									if(is_object($set_customer_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($cur__subscr_cid, $post_vars['card_token'], $post_vars)))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 
