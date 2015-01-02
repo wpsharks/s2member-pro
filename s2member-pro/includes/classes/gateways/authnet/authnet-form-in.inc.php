@@ -389,7 +389,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_update"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_update"]["card_expiration_month"] === (string)$month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
@@ -529,7 +529,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_sp_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_sp_checkout"]["card_expiration_month"] === (string)$month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
@@ -704,7 +704,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								$card_expiration_year_options = '<option value=""></option>'; // Start with an empty option value.
 
 								foreach(array("01" => _x ("01 January", "s2member-front", "s2member"), "02" => _x ("02 February", "s2member-front", "s2member"), "03" => _x ("03 March", "s2member-front", "s2member"), "04" => _x ("04 April", "s2member-front", "s2member"), "05" => _x ("05 May", "s2member-front", "s2member"), "06" => _x ("06 June", "s2member-front", "s2member"), "07" => _x ("07 July", "s2member-front", "s2member"), "08" => _x ("08 August", "s2member-front", "s2member"), "09" => _x ("09 September", "s2member-front", "s2member"), "10" => _x ("10 October", "s2member-front", "s2member"), "11" => _x ("11 November", "s2member-front", "s2member"), "12" => _x ("12 December", "s2member-front", "s2member")) as $month => $month_label)
-									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_checkout"]["card_expiration_month"] === $month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
+									$card_expiration_month_options .= '<option value="'.esc_attr($month).'"'.((@$_p["s2member_pro_authnet_checkout"]["card_expiration_month"] === (string)$month) ? ' selected="selected"' : '').'>'.esc_html($month_label).'</option>';
 								unset($month, $month_label); // Housekeeping.
 
 								for($i = 0, $year = date("Y"); $i < 50; $i++) // Current year; and then go 50 years into the future.
