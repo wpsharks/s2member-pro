@@ -108,11 +108,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$post_vars = (array)$post_vars;
 			$metadata  = array(); // Initialize.
 
-			if(isset($post_vars['first_name'], $post_vars['last_name']))
-				$metadata['name'] = trim($post_vars['first_name'].' '.$post_vars['last_name']);
+			if(!empty($post_vars['first_name']) || !empty($post_vars['last_name']))
+				$metadata['name'] = trim((string)@$post_vars['first_name'].' '.(string)@$post_vars['last_name']);
 
-			if(isset($_SERVER['REMOTE_ADDR']))
-				$metadata['ip'] = $_SERVER['REMOTE_ADDR'];
+			if(!empty($_SERVER['REMOTE_ADDR']))
+				$metadata['ip'] = (string)$_SERVER['REMOTE_ADDR'];
 
 			return $metadata;
 		}
@@ -178,20 +178,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$post_vars = (array)$post_vars;
 			$details   = array(); // Initialize.
 
-			if(isset($post_vars['first_name'], $post_vars['last_name']))
-				$details['name'] = trim($post_vars['first_name'].' '.$post_vars['last_name']);
+			if(!empty($post_vars['first_name']) || !empty($post_vars['last_name']))
+				$details['name'] = trim((string)@$post_vars['first_name'].' '.(string)@$post_vars['last_name']);
 
-			if(isset($post_vars['city']))
-				$details['address_city'] = $post_vars['city'];
+			if(!empty($post_vars['city']))
+				$details['address_city'] = (string)$post_vars['city'];
 
-			if(isset($post_vars['state']))
-				$details['address_state'] = $post_vars['state'];
+			if(!empty($post_vars['state']))
+				$details['address_state'] = (string)$post_vars['state'];
 
-			if(isset($post_vars['zip']))
-				$details['address_zip'] = $post_vars['zip'];
+			if(!empty($post_vars['zip']))
+				$details['address_zip'] = (string)$post_vars['zip'];
 
-			if(isset($post_vars['country']))
-				$details['address_country'] = $post_vars['country'];
+			if(!empty($post_vars['country']))
+				$details['address_country'] = (string)$post_vars['country'];
 
 			return $details;
 		}
