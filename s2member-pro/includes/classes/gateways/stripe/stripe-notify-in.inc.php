@@ -127,7 +127,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							if(!empty($event->data->object)
 							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
-							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', ''))
+							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', '')) > 0
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
