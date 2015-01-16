@@ -30,6 +30,6 @@
 * @package s2Member\API_Functions
 * @since 1.5
 */
-if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
+if(!defined('WPINC')) // MUST have WordPress.
 	exit("Do not access this file directly.");
 ?>

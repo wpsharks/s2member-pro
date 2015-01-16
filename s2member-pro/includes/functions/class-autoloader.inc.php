@@ -30,7 +30,7 @@
  * @package s2Member
  * @since 1.5
  */
-if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
+if(!defined('WPINC')) // MUST have WordPress.
 	exit('Do not access this file directly.');
 /*
 The __autoload function for s2Member Pro classes.

@@ -30,7 +30,7 @@
 * @package s2Member\Utilities
 * @since 111203
 */
-if (realpath (__FILE__) === realpath ($_SERVER["SCRIPT_FILENAME"]))
+if(!defined('WPINC')) // MUST have WordPress.
 	exit("Do not access this file directly.");
 
 if (!class_exists ("c_ws_plugin__s2member_pro_utils_captchas"))

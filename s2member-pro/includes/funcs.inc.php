@@ -30,7 +30,7 @@
  * @package s2Member
  * @since 1.0
  */
-if(realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME']))
+if(!defined('WPINC')) // MUST have WordPress.
 	exit('Do not access this file directly.');
 /*
 Include all of the functions that came with this plugin.
