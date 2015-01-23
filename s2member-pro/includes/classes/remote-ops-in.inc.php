@@ -269,7 +269,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					if(c_ws_plugin__s2member_user_access::user_access_role($user) !== 's2member_level'.(integer)$op['data']['s2member_level'])
 						$userdata['role'] = 's2member_level'.(integer)$op['data']['s2member_level'];
 				}
-				wp_update_user($userdata); // OK. Now send this array for an update.
+				wp_update_user(wp_slash($userdata)); // OK. Now send this array for an update.
 
 				$old_user = unserialize(serialize($user)); // Copy existing user obj.
 				$user     = new WP_User($user->ID); // Update our object instance.
