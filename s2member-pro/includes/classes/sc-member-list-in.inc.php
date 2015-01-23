@@ -86,7 +86,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 				'show_display_name' => 'yes',
 				'link_display_name' => '', // /members/%%nicename%%/
 
-				'show_fields'       => ''
+				'show_fields'       => '',
 			);
 			if(!empty($attr['orderby']) && in_array($attr['orderby'], array('login', 'nicename', 'email', 'url', 'display_name'), TRUE))
 				$defaults['order'] = 'ASC'; // A more logical default when dealing with alphabetic ordering.
@@ -127,7 +127,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"'.$_role.'"',
-							'compare' => 'LIKE'
+							'compare' => 'LIKE',
 						);
 					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
 						$args['meta_query']['relation'] = 'OR';
@@ -140,7 +140,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"s2member_level'.$_level.'"',
-							'compare' => 'LIKE'
+							'compare' => 'LIKE',
 						);
 					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
 						$args['meta_query']['relation'] = 'OR';
@@ -153,7 +153,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"access_s2member_ccap_'.$_ccap.'"',
-							'compare' => 'LIKE'
+							'compare' => 'LIKE',
 						);
 					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
 						$args['meta_query']['relation'] = 'OR';
