@@ -115,6 +115,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						$_user_login     = $_user_login_key !== FALSE && !empty($_csv_data[$_user_login_key]) ? $_csv_data[$_user_login_key] : '';
 						unset($_user_login_key); // Housekeeping.
 
+						$_user_pass_key = array_search('user_pass', $headers);
+						$_user_pass     = $_user_pass_key !== FALSE && !empty($_csv_data[$_user_pass_key]) ? $_csv_data[$_user_pass_key] : '';
+						unset($_user_pass_key); // Housekeeping.
+
 						$_user_email_key = array_search('user_email', $headers);
 						$_user_email     = $_user_email_key !== FALSE && !empty($_csv_data[$_user_email_key]) ? $_csv_data[$_user_email_key] : '';
 						unset($_user_email_key); // Housekeeping.
@@ -205,7 +209,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 								unset($_wp_update_user['user_login'], $_wp_update_user['user_pass']);
 
-							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
+							if(!wp_update_user(wp_slash($_wp_update_user)))
 							{
 								$errors[] = 'Line #'.$line.'. User ID# <code>'.esc_html($_user_id).'</code> could NOT be updated. Unknown error, please try again.';
 								continue; // Skip this line.
@@ -249,18 +253,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 								}
 							unset($_email_login_validation); // Housekeeping.
 
-							if(!($user_id = wp_insert_user(array('user_login' => $_user_login, 'user_email' => $_user_email))) || is_wp_error($user_id))
+							if(!($_user_id = wp_insert_user(wp_slash(array('user_login' => $_user_login, 'user_pass' => $_user_pass ? $_user_pass : wp_generate_password(12, FALSE), 'user_email' => $_user_email)))) || is_wp_error($_user_id))
 							{
 								$errors[] = 'Line #'.$line.'. Unknown insertion error, please try again.';
 								continue; // Skip this line.
 							}
-							$_wp_update_user = array();
+							$_wp_update_user = array('ID' => $_user_id);
 							foreach($user_keys as $_user_key)
 								if(($_user_data_key = array_search($_user_key, $headers)) !== FALSE && isset($_csv_data[$_user_data_key]))
 									$_wp_update_user[$_user_key] = $_csv_data[$_user_data_key];
 							unset($_user_key, $_user_data_key); // Housekeeping.
 
-							if(!wp_update_user(add_magic_quotes($_wp_update_user)))
+							if(!wp_update_user(wp_slash($_wp_update_user)))
 							{
 								$errors[] = 'Line #'.$line.'. Post insertion update failed on User ID# <code>'.esc_html($_user_id).'</code>. Unknown error, please try again.';
 								continue; // Skip this line.
