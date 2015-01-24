@@ -104,9 +104,12 @@ div.s2member-pro-authnet-form-section-title
 	border-width : 0 0 1px 0;
 	font-family  : 'Domine', 'Georgia', serif;
 }
-div.s2member-pro-authnet-form-coupon-section-title
+div.s2member-pro-authnet-form-coupon-div > label > span::before
 {
-	background : url('<?php echo $i; ?>/coupon-icon.png') no-repeat center right;
+	vertical-align : middle;
+	margin         : 0 5px 0 0;
+	display        : inline-block;
+	content        : url('<?php echo $i; ?>/coupon-icon.png');
 }
 div.s2member-pro-authnet-form-registration-section-title
 {
@@ -239,9 +242,9 @@ div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-coupon-div
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-coupon-div input[type="button"]
 {
-	width          : 25%;
 	margin         : 0;
-	padding        : 6px;
+	width          : 25%;
+	float          : right;
 	vertical-align : middle;
 }
 div.s2member-pro-authnet-form-section > div.s2member-pro-authnet-form-ajax-tax-div > div,

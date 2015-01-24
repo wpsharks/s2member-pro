@@ -106,6 +106,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
 
+				$_coupon['is_gift'] = FALSE; // Hard-coded coupons are never gifts.
+
 				$coupons[$_coupon['code']] = $_coupon; // Add this coupon to the array now.
 			}
 			unset($_line, $_coupon_parts, $_coupon); // Housekeeping.
@@ -209,35 +211,273 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			return $list;
 		}
 
-		/**
-		 * Checks to see if a Coupon Code was supplied, and if so; what does it provide?
-		 *
-		 * @package s2Member\PayPal
-		 * @since 1.5
-		 *
-		 * @param array  $attr An array of Pro Form Attributes.
-		 * @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
-		 * @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
-		 * @param array  $process Optional. An array of additional processing routines to run here.
-		 *   One or more of these values: `affiliates-1px-response|affiliates-silent-post|notifications`.
-		 *
-		 * @return array|string Original array, with prices and description modified when/if a Coupon Code is accepted.
-		 *   Or, if ``$return === 'response'``, return a string response, indicating status.
-		 */
-		public function check($attr, $coupon_code, $return = 'attr', $process = array())
+		public function apply($attr, $coupon_code = '', $return = 'attr', $process = array())
 		{
-			$current_time = time(); // UTC time.
-			$valid_coupon = NULL; // Default value.
+			$attr        = (array)$attr; // Force an array value.
+			$process     = (array)$process; // Force an array value.
+			$coupon_code = $coupon_code ? $coupon_code : $attr['coupon'];
+			$coupon_code = trim((string)$coupon_code); // Force string value.
 
+			if($coupon_code) // Only if we do have a coupon code.
+				if(($coupon = $this->valid_coupon($coupon_code, $attr)))
+				{
+					$coupon_applies = FALSE;
+					$ta             = $attr['ta'];
+					$ra             = $attr['ra'];
+					$desc           = $attr['desc'];
+
+					$cs = c_ws_plugin__s2member_utils_cur::symbol($attr['cc']);
+					$tx = c_ws_plugin__s2member_pro_taxes::may_apply() ? ' '._x('+ tax', 's2member-front', 's2member') : '';
+					$ps = _x('%', 's2member-front percentage-symbol', 's2member');
+
+					$full_coupon_code = $coupon_code; // Initialize.
+					$affiliate_id     = ''; // Initialize; this starts as empty.
+					if(strlen($_affiliate_suffix_chars = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_affiliate_coupon_code_suffix_chars']))
+						if(preg_match('/^(.+?)'.preg_quote($_affiliate_suffix_chars, '/').'([0-9]+)$/i', $coupon_code, $_m))
+							list($full_coupon_code, $coupon_code, $affiliate_id) = $_m;
+					unset($_affiliate_suffix_chars, $_m); // Housekeeping.
+
+					if($coupon['flat_discount']) // If it's a flat-rate coupon.
+					{
+						if($attr['sp'] && (!$coupon['directive'] || $coupon['directive'] === 'ra-only'))
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'] - $coupon['flat_discount'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.$ra.$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.$ra.$tx);
+						}
+						else if(!$attr['sp'] && $attr['tp'] && $coupon['directive'] === 'ta-only')
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'] - $coupon['flat_discount'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && $attr['tp'] && $coupon['directive'] === 'ra-only')
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'] - $coupon['flat_discount'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && $attr['tp'] && !$coupon['directive'])
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'] - $coupon['flat_discount'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'] - $coupon['flat_discount'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && !$attr['tp'] && $coupon['directive'] === 'ra-only')
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'] - $coupon['flat_discount'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+						}
+						else if(!$attr['sp'] && !$attr['tp'] && !$coupon['directive'])
+						{
+							$coupon_applies = TRUE;
+
+							$ta = number_format($attr['ta'] - $coupon['flat_discount'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$ra = number_format($attr['ra'] - $coupon['flat_discount'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), $cs.number_format($coupon['flat_discount'], 2, '.', ''), $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+						}
+						else // Otherwise, we need a default response to display.
+							$response = _x('<div>Sorry, your discount code is not applicable.</div>', 's2member-front', 's2member');
+					}
+					else if($coupon['percentage_discount']) // Else if it's a percentage.
+					{
+						if($attr['sp'] && (!$coupon['directive'] || $coupon['directive'] === 'ra-only'))
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'] - $p, 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.$ra.$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.$ra.$tx);
+						}
+						else if(!$attr['sp'] && $attr['tp'] && $coupon['directive'] === 'ta-only')
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'] - $p, 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'], 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && $attr['tp'] && $coupon['directive'] === 'ra-only')
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'] - $p, 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && $attr['tp'] && !$coupon['directive'])
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'] - $p, 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'] - $p, 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s, then %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s, then %s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ta, $attr['tp'].' '.$attr['tt']).$tx, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']));
+						}
+						else if(!$attr['sp'] && !$attr['tp'] && $coupon['directive'] === 'ra-only')
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'], 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'] - $p, 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+						}
+						else if(!$attr['sp'] && !$attr['tp'] && !$coupon['directive'])
+						{
+							$coupon_applies = TRUE;
+
+							$p  = ($attr['ta'] / 100) * $coupon['percentage_discount'];
+							$ta = number_format($attr['ta'] - $p, 2, '.', '');
+							$ta = $ta >= 0.00 ? $ta : '0.00';
+
+							$p  = ($attr['ra'] / 100) * $coupon['percentage_discount'];
+							$ra = number_format($attr['ra'] - $p, 2, '.', '');
+							$ra = $ra >= 0.00 ? $ra : '0.00';
+
+							$desc     = sprintf(_x('Discount: %s off. (Now: %s)', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+							$response = sprintf(_x('<div>Discount: <strong>%s off</strong>. (Now: <strong>%s</strong>)</div>', 's2member-front', 's2member'), number_format($coupon['percentage_discount'], 0).$ps, $cs.c_ws_plugin__s2member_utils_time::amount_period_term($ra, $attr['rp'].' '.$attr['rt'], $attr['rr']).$tx);
+						}
+						else // Otherwise, we need a default response to display.
+							$response = _x('<div>Sorry, your discount code is not applicable.</div>', 's2member-front', 's2member');
+					}
+					else // Else there was no discount applied at all.
+						$response = sprintf(_x('<div>Discount: <strong>%s0.00 off</strong>.</div>', 's2member-front', 's2member'), $cs);
+
+					if($coupon_applies) // Apply the coupon here; if applicable.
+					{
+						$attr['ta']   = $ta; // Apply new amount for the initial/period.
+						$attr['ra']   = $ra; // Apply new amount for the regular/recurring period.
+						$attr['desc'] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', 's2member-front', 's2member'), $desc, $attr['desc']);
+
+						if($affiliate_id && empty($_COOKIE['idev']) && (in_array('affiliates-silent-post', $process) || in_array('affiliates-1px-response', $process)))
+							foreach(preg_split('/['."\r\n\t".']+/', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_affiliate_coupon_code_tracking_urls'], NULL, PREG_SPLIT_NO_EMPTY) as $_url)
+							{
+								if(($_url = preg_replace('/%%full_coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($full_coupon_code)), $_url)))
+									if(($_url = preg_replace('/%%coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($coupon_code)), $_url)))
+										if(($_url = preg_replace('/%%(?:coupon_affiliate_id|affiliate_id)%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($affiliate_id)), $_url)))
+											if(($_url = preg_replace('/%%user_ip%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER['REMOTE_ADDR'])), $_url)))
+												if(($_url = trim(preg_replace('/%%(.+?)%%/i', '', $_url))) /* Cleanup any remaining Replacement Codes. */)
+												{
+													if(!($_r = 0) && ($_url = preg_replace('/^silent-php\|/i', '', $_url, 1, $_r)) && $_r && in_array('affiliates-silent-post', $process))
+														c_ws_plugin__s2member_utils_urls::remote($_url, FALSE, array('blocking' => FALSE)); // Post silently via PHP. Relies on IP tracking.
+
+													else if(!($_r = 0) && ($_url = preg_replace('/^img-1px\|/i', '', $_url, 1, $_r)) && $_r && in_array('affiliates-1px-response', $process))
+														if(!empty($response) && $return === 'response') // Now, we MUST also have a `$response`, and MUST be returning `$response`.
+															$response .= "\n".'<img src="'.esc_attr($_url).'" style="width:0; height:0; border:0;" alt="" />';
+												}
+							}
+						unset($_url, $_r); // Just a little housekeeping here. Unset these variables.
+					}
+				}
+				else $response = _x('<div>Sorry, your discount code is N/A, invalid or expired.</div>', 's2member-front', 's2member');
+
+			$attr['_coupon_applies']      = isset($coupon_applies) && $coupon_applies ? '1' : '0';
+			$attr['_coupon_code']         = isset($coupon_applies, $coupon_code) && $coupon_applies ? $coupon_code : '';
+			$attr['_full_coupon_code']    = isset($coupon_applies, $full_coupon_code) && $coupon_applies ? $full_coupon_code : '';
+			$attr['_coupon_affiliate_id'] = isset($coupon_applies, $affiliate_id) && $coupon_applies && empty($_COOKIE['idev']) ? $affiliate_id : '';
+
+			return $return === 'response' ? (!empty($response) ? $response : '') : $attr;
+		}
+
+		public function valid_coupon($coupon_code, $attr)
+		{
 			global $wpdb; // Global DB reference.
 			/** @var $wpdb \wpdb Reference for IDEs. */
 
 			global $current_user; // Global user reference.
 			/** @var $current_user \WP_User for IDEs. */
 
-			$coupon_code = $this->n_code($coupon_code);
+			$current_time = time(); // UTC timestamp.
 
-			if($coupon_code && !$valid_coupon) foreach($this->coupons as $_coupon)
+			if(!($coupon_code = trim((string)$coupon_code)))
+				return array(); // Not possible.
+
+			if(strlen($_affiliate_suffix_chars = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_affiliate_coupon_code_suffix_chars']))
+				if(preg_match('/^(.+?)'.preg_quote($_affiliate_suffix_chars, '/').'([0-9]+)$/i', $coupon_code, $_m))
+					$coupon_code = $_m[1]; // Validate the underlying coupon code only.
+			unset($_affiliate_suffix_chars, $_m); // Housekeeping.
+
+			if(!($coupon_code = $this->n_code($coupon_code)))
+				return array(); // Not valid at all :-)
+
+			$attr = (array)$attr; // Force array value.
+
+			foreach($this->coupons as $_coupon) // Iterate coupons.
 			{
 				if($coupon_code !== $_coupon['code'])
 					continue; // Not a match here.
@@ -247,23 +487,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
 							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
-									$valid_coupon = $_coupon; // It's discount time! :-)
-				break; // It is either valid or it's not.
+									return $_coupon; // It's discount time! :-)
+				return array(); // Not valid at this time.
 			}
 			unset($_coupon); // Housekeeping.
 
-			if($coupon_code && !$valid_coupon && ($_coupon = $this->get_gift($coupon_code)))
+			if(($_coupon = $this->get_gift($coupon_code))) // It's a gift code?
 			{
 				if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
 					if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
 						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
 							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
-									$valid_coupon = $_coupon; // It's discount time! :-)
+									return $_coupon; // It's discount time! :-)
+				return array(); // Not valid at this time.
 			}
 			unset($_coupon); // Housekeeping.
 
-			// @TODO
+			return array(); // Not valid at this time.
 		}
 
 		public function get_gift($coupon_code)
@@ -293,7 +534,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			for($_i = 1, $gifts = array(); $_i <= $quantity; $_i++)
 			{
 				$_gift_code         = $this->n_code(c_ws_plugin__s2member_utils_encryption::uunnci_key_20_max());
-				$gifts[$_gift_code] = array_merge($this->coupons[$coupon_code], array('code' => $_gift_code));
+				$gifts[$_gift_code] = array_merge($this->coupons[$coupon_code], array('code' => $_gift_code, 'is_gift' => TRUE));
 				add_option($this->gift_option_key($_gift_code), $gifts[$_gift_code], '', 'no');
 			}
 			unset($_i, $_gift_code); // Housekeeping.
@@ -358,7 +599,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			if(!($coupon_code = trim((string)$coupon_code)))
 				return ''; // Not possible.
 
-			return strtoupper(preg_replace('/[_\-]+/', '', $coupon_code));
+			return strtoupper(preg_replace('/\-+/', '', $coupon_code));
 		}
 	}
 }
