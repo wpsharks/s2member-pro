@@ -63,7 +63,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 					$_coupon['singulars'] = !empty($_coupon_parts[4]) ? strtolower($_coupon_parts[4]) : 'all';
 					$_coupon['singulars'] = $_coupon['singulars'] !== 'all' ? preg_split('/['."\r\n\t".'\s;,]+/', trim(preg_replace('/[^0-9,]/', '', $_coupon['singulars']), ',')) : array('all');
 
-					$_coupon['max_uses'] = !empty($_coupon_parts[5]) ? (integer)$_coupon_parts[5] : 0;
+					$_coupon['users'] = !empty($_coupon_parts[5]) ? strtolower($_coupon_parts[5]) : 'all';
+					$_coupon['users'] = $_coupon['users'] !== 'all' ? preg_split('/['."\r\n\t".'\s;,]+/', trim(preg_replace('/[^0-9,]/', '', $_coupon['users']), ',')) : array('all');
+
+					$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
 
 					$this->coupons[] = (object)$_coupon; // Add this coupon to the array now.
 
