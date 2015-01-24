@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$args         = array_merge($default_args, (array)$args);
 			$args         = array_intersect_key($args, $default_args);
 
-			$this->coupons = $this->list_to_coupons($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes']);
+			$this->list_to_coupons($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes']);
 		}
 
 		public function list_to_coupons($list, $update = TRUE)
@@ -106,7 +106,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
 
-				$coupons[] = $_coupon; // Add this coupon to the array now.
+				$coupons[$_coupon['code']] = $_coupon; // Add this coupon to the array now.
 			}
 			unset($_line, $_coupon_parts, $_coupon); // Housekeeping.
 
@@ -226,30 +226,79 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 		 */
 		public function check($attr, $coupon_code, $return = 'attr', $process = array())
 		{
+			$current_time = time(); // UTC time.
+			$valid_coupon = NULL; // Default value.
+
 			global $wpdb; // Global DB reference.
 			/** @var $wpdb \wpdb Reference for IDEs. */
 
 			global $current_user; // Global user reference.
 			/** @var $current_user \WP_User for IDEs. */
 
-			$current_time = time(); // UTC timestamp.
-			$valid_coupon = NULL; // Defaults to a `NULL` value.
+			$coupon_code = $this->n_code($coupon_code);
 
-			if(($coupon_code = $this->n_code($coupon_code)))
-				foreach($this->coupons as $_coupon)
-				{
-					if($coupon_code !== $_coupon['code'])
-						continue; // Not a match here.
+			if($coupon_code && !$valid_coupon) foreach($this->coupons as $_coupon)
+			{
+				if($coupon_code !== $_coupon['code'])
+					continue; // Not a match here.
 
-					if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
-						if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
-							if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
-								if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
-									if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
-										$valid_coupon = $_coupon; // It's discount time! :-)
-					break; // It is either valid or it's not.
-				}
+				if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
+					if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
+						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
+							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
+								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
+									$valid_coupon = $_coupon; // It's discount time! :-)
+				break; // It is either valid or it's not.
+			}
 			unset($_coupon); // Housekeeping.
+
+			if($coupon_code && !$valid_coupon && ($_coupon = $this->get_gift($coupon_code)))
+			{
+				if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
+					if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
+						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
+							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
+								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
+									$valid_coupon = $_coupon; // It's discount time! :-)
+			}
+			unset($_coupon); // Housekeeping.
+
+			// @TODO
+		}
+
+		public function get_gift($coupon_code)
+		{
+			if(!($coupon_code = trim((string)$coupon_code)))
+				return array(); // Not possible.
+
+			$gift = get_option($this->gift_option_key($coupon_code));
+
+			return is_array($gift) && !empty($gift['code']) ? $gift : array();
+		}
+
+		public function generate_gifts_based_on($coupon_code, $quantity = 1)
+		{
+			if(!($coupon_code = trim((string)$coupon_code)))
+				return array(); // Not possible.
+
+			if(!($coupon_code = $this->n_code($coupon_code)))
+				return array(); // Not possible.
+
+			if(empty($this->coupons[$coupon_code]))
+				return array(); // Not possible.
+
+			if(!($quantity = (integer)$quantity) || $quantity < 1)
+				return array(); // Not possible.
+
+			for($_i = 1, $gifts = array(); $_i <= $quantity; $_i++)
+			{
+				$_gift_code         = $this->n_code(c_ws_plugin__s2member_utils_encryption::uunnci_key_20_max());
+				$gifts[$_gift_code] = array_merge($this->coupons[$coupon_code], array('code' => $_gift_code));
+				add_option($this->gift_option_key($_gift_code), $gifts[$_gift_code], '', 'no');
+			}
+			unset($_i, $_gift_code); // Housekeeping.
+
+			return $gifts;
 		}
 
 		public function get_uses($coupon_code)
@@ -285,7 +334,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			if(!($coupon_code = trim((string)$coupon_code)))
 				return ''; // Not possible.
 
-			return 's2member_cpc_uses_'.$this->n_code_hash($coupon_code);
+			return 's2m_cpc_uses_'.$this->n_code_hash($coupon_code); // 53 chars + DB prefix.
+		}
+
+		public function gift_option_key($coupon_code)
+		{
+			if(!($coupon_code = trim((string)$coupon_code)))
+				return ''; // Not possible.
+
+			return 's2m_cpc_gift_'.$this->n_code_hash($coupon_code); // 53 chars + DB prefix.
+		}
+
+		public function n_code_hash($coupon_code)
+		{
+			if(!($coupon_code = trim((string)$coupon_code)))
+				return ''; // Not possible.
+
+			return hash('sha1', $this->n_code($coupon_code)); // 40 chars.
 		}
 
 		public function n_code($coupon_code)
@@ -294,14 +359,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				return ''; // Not possible.
 
 			return strtoupper(preg_replace('/[_\-]+/', '', $coupon_code));
-		}
-
-		public function n_code_hash($coupon_code)
-		{
-			if(!($coupon_code = trim((string)$coupon_code)))
-				return ''; // Not possible.
-
-			return hash('crc32b', $this->n_code($coupon_code)); // 8 chars.
 		}
 	}
 }
