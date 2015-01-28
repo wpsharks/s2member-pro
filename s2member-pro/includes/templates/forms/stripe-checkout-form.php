@@ -38,18 +38,15 @@ if(!defined('WPINC')) // MUST have WordPress.
 
 	<!-- Coupon Code ( this will ONLY be displayed if your Shortcode has this attribute: accept_coupons="1" ). -->
 	<div id="s2member-pro-stripe-checkout-form-coupon-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-coupon-section s2member-pro-stripe-checkout-form-coupon-section">
-		<div id="s2member-pro-stripe-checkout-form-coupon-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-checkout-form-section-title s2member-pro-stripe-form-coupon-section-title s2member-pro-stripe-checkout-form-coupon-section-title">
-			<?php echo _x("Coupon Code", "s2member-front", "s2member"); ?>
-		</div>
 		<div id="s2member-pro-stripe-checkout-form-coupon-response-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-coupon-response-div s2member-pro-stripe-checkout-form-coupon-response-div">
 			%%coupon_response%% <!-- A Coupon response (w/Discounts) will be displayed here; based on the Coupon Code that was entered. -->
 		</div>
 		<div id="s2member-pro-stripe-checkout-form-coupon-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-coupon-div s2member-pro-stripe-checkout-form-coupon-div">
 			<label for="s2member-pro-stripe-checkout-coupon" id="s2member-pro-stripe-checkout-form-coupon-label" class="s2member-pro-stripe-form-coupon-label s2member-pro-stripe-checkout-form-coupon-label">
-				<span><?php echo _x("Have a Coupon Code?", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x("Gift or Coupon Code?", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_stripe_checkout[coupon]" id="s2member-pro-stripe-checkout-coupon" class="s2member-pro-stripe-coupon s2member-pro-stripe-checkout-coupon form-control" value="%%coupon_value%%" tabindex="1" />
 			</label>
-			<input type="button" id="s2member-pro-stripe-checkout-coupon-apply" class="s2member-pro-stripe-coupon-apply s2member-pro-stripe-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply Coupon", "s2member-front", "s2member")); ?>" tabindex="-1" />
+			<input type="button" id="s2member-pro-stripe-checkout-coupon-apply" class="s2member-pro-stripe-coupon-apply s2member-pro-stripe-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply", "s2member-front", "s2member")); ?>" tabindex="-1" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>
@@ -81,7 +78,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		</div>
 		<div id="s2member-pro-stripe-checkout-form-username-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-username-div s2member-pro-stripe-checkout-form-username-div">
 			<label for="s2member-pro-stripe-checkout-username" id="s2member-pro-stripe-checkout-form-username-label" class="s2member-pro-stripe-form-username-label s2member-pro-stripe-checkout-form-username-label">
-				<span><?php echo _x("Username (lowercase letters and/or numbers)", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x("Username (lowercase alphanumeric)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_stripe_checkout[username]" id="s2member-pro-stripe-checkout-username" class="s2member-pro-stripe-username s2member-pro-stripe-checkout-username form-control" value="%%username_value%%" tabindex="40" />
 			</label>
 		</div>

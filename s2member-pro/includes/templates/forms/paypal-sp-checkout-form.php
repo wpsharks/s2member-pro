@@ -38,18 +38,15 @@ if(!defined('WPINC')) // MUST have WordPress.
 
 	<!-- Coupon Code ( this will ONLY be displayed if your Shortcode has this attribute: accept_coupons="1" ). -->
 	<div id="s2member-pro-paypal-sp-checkout-form-coupon-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-coupon-section s2member-pro-paypal-sp-checkout-form-coupon-section">
-		<div id="s2member-pro-paypal-sp-checkout-form-coupon-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-coupon-section-title s2member-pro-paypal-sp-checkout-form-coupon-section-title">
-			<?php echo _x("Coupon Code", "s2member-front", "s2member"); ?>
-		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-coupon-response-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-coupon-response-div s2member-pro-paypal-sp-checkout-form-coupon-response-div">
 			%%coupon_response%% <!-- A Coupon response (w/Discounts) will be displayed here; based on the Coupon Code that was entered. -->
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-coupon-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-coupon-div s2member-pro-paypal-sp-checkout-form-coupon-div">
 			<label for="s2member-pro-paypal-sp-checkout-coupon" id="s2member-pro-paypal-sp-checkout-form-coupon-label" class="s2member-pro-paypal-form-coupon-label s2member-pro-paypal-sp-checkout-form-coupon-label">
-				<span><?php echo _x("Have a Coupon Code?", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x("Gift or Coupon Code?", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_paypal_sp_checkout[coupon]" id="s2member-pro-paypal-sp-checkout-coupon" class="s2member-pro-paypal-coupon s2member-pro-paypal-sp-checkout-coupon form-control" value="%%coupon_value%%" tabindex="1" />
 			</label>
-			<input type="button" id="s2member-pro-paypal-sp-checkout-coupon-apply" class="s2member-pro-paypal-coupon-apply s2member-pro-paypal-sp-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply Coupon", "s2member-front", "s2member")); ?>" tabindex="-1" />
+			<input type="button" id="s2member-pro-paypal-sp-checkout-coupon-apply" class="s2member-pro-paypal-coupon-apply s2member-pro-paypal-sp-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply", "s2member-front", "s2member")); ?>" tabindex="-1" />
 		</div>
 		<div style="clear:both;"></div>
 	</div>
@@ -110,7 +107,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-card-verification-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-card-verification-div s2member-pro-paypal-sp-checkout-form-card-verification-div">
 			<label for="s2member-pro-paypal-sp-checkout-card-verification" id="s2member-pro-paypal-sp-checkout-form-card-verification-label" class="s2member-pro-paypal-form-card-verification-label s2member-pro-paypal-sp-checkout-form-card-verification-label">
-				<span><?php echo _x("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x("need help?", "s2member-front", "s2member"); ?></a></span><br />
+				<span><?php echo _x("Card Verification Code", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x("need help?", "s2member-front", "s2member"); ?></a></span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_sp_checkout[card_verification]" id="s2member-pro-paypal-sp-checkout-card-verification" class="s2member-pro-paypal-card-verification s2member-pro-paypal-sp-checkout-card-verification form-control" value="%%card_verification_value%%" tabindex="130" />
 			</label>
 		</div>

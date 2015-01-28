@@ -51,7 +51,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		</div>
 		<div id="s2member-pro-paypal-update-form-card-verification-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-card-verification-div s2member-pro-paypal-update-form-card-verification-div">
 			<label for="s2member-pro-paypal-update-card-verification" id="s2member-pro-paypal-update-form-card-verification-label" class="s2member-pro-paypal-form-card-verification-label s2member-pro-paypal-update-form-card-verification-label">
-				<span><?php echo _x("Card Verification Code (3-4 digits)", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x("need help?", "s2member-front", "s2member"); ?></a></span><br />
+				<span><?php echo _x("Card Verification Code", "s2member-front", "s2member"); ?> * <a href="http://en.wikipedia.org/wiki/Card_security_code" target="_blank" tabindex="-1" rel="external nofollow"><?php echo _x("need help?", "s2member-front", "s2member"); ?></a></span><br />
 				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_paypal_update[card_verification]" id="s2member-pro-paypal-update-card-verification" class="s2member-pro-paypal-card-verification s2member-pro-paypal-update-card-verification form-control" value="%%card_verification_value%%" tabindex="40" />
 			</label>
 		</div>

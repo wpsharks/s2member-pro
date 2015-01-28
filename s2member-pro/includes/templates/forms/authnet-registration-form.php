@@ -62,7 +62,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		</div>
 		<div id="s2member-pro-authnet-registration-form-username-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-username-div s2member-pro-authnet-registration-form-username-div">
 			<label for="s2member-pro-authnet-registration-username" id="s2member-pro-authnet-registration-form-username-label" class="s2member-pro-authnet-form-username-label s2member-pro-authnet-registration-form-username-label">
-				<span><?php echo _x ("Username (lowercase letters and/or numbers)", "s2member-front", "s2member"); ?> *</span><br />
+				<span><?php echo _x ("Username (lowercase alphanumeric)", "s2member-front", "s2member"); ?> *</span><br />
 				<input type="text" aria-required="true" maxlength="60" autocomplete="off" name="s2member_pro_authnet_registration[username]" id="s2member-pro-authnet-registration-username" class="s2member-pro-authnet-username s2member-pro-authnet-registration-username form-control" value="%%username_value%%" tabindex="40" />
 			</label>
 		</div>
