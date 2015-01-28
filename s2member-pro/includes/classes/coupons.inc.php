@@ -49,11 +49,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 		public function __construct($args = array())
 		{
-			$default_args = array(); // Defaults.
+			$default_args = array('update' => TRUE); // Defaults.
 			$args         = array_merge($default_args, (array)$args);
 			$args         = array_intersect_key($args, $default_args);
 
-			$this->list_to_coupons($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes']);
+			$this->list_to_coupons($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes'], $args['update']);
 		}
 
 		public function list_to_coupons($list, $update = TRUE)
@@ -105,6 +105,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				$_coupon['users'] = $_coupon['users'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['users']), NULL, PREG_SPLIT_NO_EMPTY)) : array();
 
 				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
+
+				if(strpos((string)$update, 'counters') !== FALSE && isset($_coupon_parts[7]))
+					$this->update_uses($_coupon['code'], $_coupon_parts[7]);
 
 				$_coupon['is_gift'] = FALSE; // Hard-coded coupons are never gifts.
 
@@ -550,7 +553,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			return (integer)get_option($this->uses_option_key($coupon_code));
 		}
 
-		public function update_uses($coupon_code)
+		public function update_uses($coupon_code, $to = NULL)
 		{
 			if(!($coupon_code = trim((string)$coupon_code)))
 				return; // Not possible.
@@ -558,8 +561,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$uses_option_key = $this->uses_option_key($coupon_code);
 
 			if(($current_uses = get_option($uses_option_key)) === FALSE)
-				add_option($uses_option_key, 1, '', 'no');
-			else update_option($uses_option_key, $current_uses + 1);
+				add_option($uses_option_key, isset($to) ? (integer)$to : 1, '', 'no');
+			else update_option($uses_option_key, isset($to) ? (integer)$to : $current_uses + 1);
 		}
 
 		public function delete_uses($coupon_code)
@@ -600,6 +603,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				return ''; // Not possible.
 
 			return strtoupper(preg_replace('/\-+/', '', $coupon_code));
+		}
+
+		public static function after_update_all_options()
+		{
+			if(is_admin() && !empty($_REQUEST['page']) && $_REQUEST['page'] === 'ws-plugin--s2member-pro-coupon-codes' && !empty($_POST['ws_plugin__s2member_options_save']))
+			{
+				$coupons                                                     = new c_ws_plugin__s2member_pro_coupons(array('update' => 'counters'));
+				$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes'] = $coupons->list;
+			}
 		}
 	}
 }

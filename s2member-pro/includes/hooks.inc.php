@@ -72,6 +72,8 @@ add_filter('ws_plugin__s2member_during_scripting_page_during_left_sections_displ
 add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_api_constants');
 add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_api_constants');
 
+add_action('ws_plugin__s2member_after_update_all_options', 'c_ws_plugin__s2member_pro_coupons::after_update_all_options');
+
 add_filter('ws_plugin__s2member_recaptcha_keys', 'c_ws_plugin__s2member_pro_utils_captchas::recaptcha_keys', 10, 2);
 
 add_filter('ws_plugin__s2member_login_redirect', 'c_ws_plugin__s2member_pro_login_redirects::login_redirect', 11, 2);
