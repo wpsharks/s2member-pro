@@ -61,11 +61,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="(Pro Form) Coupon Code Configuration" default-state="open">'."\n";
+			echo '<div class="ws-menu-page-group" title="Pro Form Coupon Code Configuration" default-state="open">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-coupon-codes-section">'."\n";
 			echo '<h3>Coupon Code Configuration File (optional, to provide discounts)</h3>'."\n";
-			echo '<p>Currently, this is <em>ONLY</em> compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. Coupon Codes allow you to provide discounts <em>(through a special promotion)</em>. A Customer may enter a Coupon Code at checkout, and depending on the Code they enter, a discount may be applied <em>(based on your configuration below)</em>.</p>'."\n";
+			echo '<p>Coupons are compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. Coupons allow you to provide discounts through a special promotion. A Customer may enter a Coupon Code at checkout, and depending on the Code they enter, a discount may be applied <em>(based on your configuration below)</em>.</p>'."\n";
 			echo '<p>You can have an unlimited number of Coupon Codes. Coupon Codes can be configured to provide a flat-rate discount, or a percentage-based discount. It is possible to force specific Coupon Codes to expire automatically, on a particular date in the future. It is possible to specify which charge(s) a specific Coupon Code applies to <em>(e.g. the Initial/Trial Amount only, the Regular Amount only, or both; including all Recurring fees)</em>. In addition, it is also possible to limit the use of a particular Coupon Code to a particular Post or Page ID; where a particular Pro Form Shortcode is made available to Customers. You\'ll find several configuration examples below.</p>'."\n";
 
 			if(in_array('stripe', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_gateways_enabled']))
@@ -81,51 +81,73 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
+			echo '<table class="coupons-table">'."\n";
+			echo '<thead>'."\n";
+			echo '<tr>'."\n";
+			echo '<th class="-code"><i class="fa fa-barcode"></i> Code</td>'."\n";
+			echo '<th class="-discount"><i class="fa fa-cart-arrow-down"></i> Discount</td>'."\n";
+			echo '<th class="-active_time"><i class="fa fa-calendar"></i> Active</td>'."\n";
+			echo '<th class="-expires_time"><i class="fa fa-clock-o"></i> Expires</td>'."\n";
+			echo '<th class="-directive"><i class="fa fa-cog"></i> Directive</td>'."\n";
+			echo '<th class="-singulars"><i class="fa fa-sitemap"></i> Post/Page IDs</td>'."\n";
+			echo '<th class="-users"><i class="fa fa-users"></i> User IDs</td>'."\n";
+			echo '<th class="-max_uses"><i class="fa fa-gavel"></i> Max Uses</td>'."\n";
+			echo '<th class="-uses"><i class="fa fa-line-chart"></i> Uses Counter</td>'."\n";
+			echo '<th class="-actions">&nbsp;</td>'."\n";
+			echo '</tr>'."\n";
+			echo '</thead>'."\n";
+			echo '<tbody>'."\n";
+			$_coupons = new c_ws_plugin__s2member_pro_coupons();
+			foreach($_coupons->coupons as $_coupon)
+			{
+				echo '<tr>'."\n";
+				echo '<td class="-code"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['code']).'" /></td>'."\n";
+				echo '<td class="-discount"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['discount'] ? $_coupon['discount'] : '').'" /></td>'."\n";
+				echo '<td class="-active_time"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['active_time'] ? date('m/d/Y', $_coupon['active_time']) : '').'" /></td>'."\n";
+				echo '<td class="-expires_time"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['expires_time'] ? date('m/d/Y', $_coupon['expires_time']) : '').'" /></td>'."\n";
+				echo '<td class="-directive"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['directive'] ? $_coupon['directive'] : '').'" /></td>'."\n";
+				echo '<td class="-singulars"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['singulars'] ? implode(',', $_coupon['singulars']) : '').'" /></td>'."\n";
+				echo '<td class="-users"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['users'] ? implode(',', $_coupon['users']) : '').'" /></td>'."\n";
+				echo '<td class="-max_uses"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['max_uses'] ? $_coupon['max_uses'] : '').'" /></td>'."\n";
+				echo '<td class="-uses"><input type="text" spellcheck="false" value="'.esc_attr($_coupons->get_uses($_coupon['code'])).'" /></td>'."\n";
+				echo '<td class="-actions"><a href="#" class="-up" title="Move Up" tabindex="-1"><i class="fa fa-chevron-circle-up"></i></a><a href="#" class="-down" title="Move Down" tabindex="-1"><i class="fa fa-chevron-circle-down"></i></a><a href="#" class="-delete" title="Delete" tabindex="-1"><i class="fa fa-times-circle"></i></a></td>'."\n";
+				echo '</tr>'."\n";
+			}
+			unset($_coupons, $_coupon); // Housekeeping.
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
 
-			echo '<textarea name="ws_plugin__s2member_pro_coupon_codes" id="ws-plugin--s2member-pro-coupon-codes" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_coupon_codes"]).'</textarea><br />'."\n";
-
-			echo 'One Coupon Code per line please, using a pipe (<code>|</code>) delimitation as seen below.'."\n";
+			echo '<div><input type="hidden" name="ws_plugin__s2member_pro_coupon_codes" id="ws-plugin--s2member-pro-coupon-codes" value="" />'."\n";
+			echo '<div class="coupon-add"><a href="#" title="Add Coupon"><i class="fa fa-plus-square"></i> Add Coupon</a></div>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-			echo 'Here are a few basic Coupon Code examples you can follow:<br />'."\n";
+			echo '<h3>Legend for the Above Configuration Fields</h3>'."\n";
 
-			echo '<ul>'."\n"; // Explaining Coupon Codes by example.
-			echo '<li><code>SAVE-10|10%</code> <em>(saves the Customer 10%)</em></li>'."\n";
-			echo '<li><code>SAVE-20|20%</code> <em>(saves the Customer 20%)</em></li>'."\n";
-			echo '<li><code>2$OFF|2.00</code> <em>($2.00 off the normal price)</em></li>'."\n";
-			echo '<li><code>EASTER|5.00</code> <em>($5.00 off the normal price)</em></li>'."\n";
-			echo '<li><code>CHRISTMAS|5.00|12/31/2020</code> <em>($5.00 off, expires Dec 31st, 2020)</em></li>'."\n";
-			echo '<li><code>CHRISTMAS-25|25%|01/01/2021</code> <em>(25% off, expires Jan 1st, 2021)</em></li>'."\n";
-			echo '<li><code>100%OFF|100%</code> <em>(100% FREE access @ <strong>$0.00</strong>)</em></li>'."\n";
+			echo '<ul style="list-style:none; margin:0; padding:0;">'."\n"; // Explaining Coupon Codes by example.
+			echo '<li style="list-style:none;"><strong><i class="fa fa-barcode"></i> Code</strong>&nbsp;&nbsp;&nbsp; e.g. <code>SAVE-100</code> <em>This is what a customer will enter to acquire a discount.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-cart-arrow-down"></i> Discount</strong>&nbsp;&nbsp;&nbsp; e.g. <code>100.00</code> (flat-rate) or <code>100%</code> (percentage-based) <em>How much of a discount will you offer?</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-calendar"></i> Active</strong>&nbsp;&nbsp;&nbsp; e.g. <code>12/01/2020</code> <em>When will the coupon become active? If empty, it becomes active immediately. If you fill this in, please use <code>MM/DD/YYYY</code> format.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-clock-o"></i> Expires</strong>&nbsp;&nbsp;&nbsp; e.g. <code>12/31/2020</code> <em>When will the coupon expire? If empty, it never expires. If you fill this in, please use <code>MM/DD/YYYY</code> format.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-cog"></i> Directive</strong>&nbsp;&nbsp;&nbsp; e.g. <code>ta-only</code> or <code>ra-only</code> <em>By default (i.e. if this is empty), s2Member will apply the discount to all amounts, including any Regular/Recurring fees. However, you may configure Coupon Codes that will only apply to (ta) Trial Amounts, or (ra) Regular Amounts. If this is empty, the discount applies to all amounts, including any Regular/Recurring fees.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-sitemap"></i> Post/Page IDs</strong>&nbsp;&nbsp;&nbsp; e.g. <code>123</code> or <code>1,9983,223</code> <em>By default (i.e. if this is empty), s2Member accepts Coupon Codes on any Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code>. However, you may configure Coupon Codes that only work on specific Post or Page IDs. This can be entered as a single Post/Page ID, or as a comma-delimited list of multiple IDs.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-users"></i> User IDs</strong>&nbsp;&nbsp;&nbsp; e.g. <code>456</code> or <code>8,673,93</code> <em>By default (i.e. if this is empty), s2Member accepts Coupon Codes from any User, whether they are logged-in or not. However, you may configure Coupon Codes that only work for specific WordPress User IDs. This can be entered as a single WordPress User ID, or as a comma-delimited list of multiple IDs. <strong>Note:</strong> adding this limitation requires that a user be logged-in when they use the Coupon Code.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-gavel"></i> Max Uses</strong>&nbsp;&nbsp;&nbsp; e.g. <code>1000</code> <em>By default (i.e. if this is empty), a Coupon Code can be used any number of times, or until it expires. However, you can set a limit on the number of times that a Coupon Code can be used to complete checkout by any number of customers overall. If you fill this in, when the limit is reached, because X number of customers used the Coupon Code to complete checkout, the Coupon will automatically expire. <strong>Note:</strong> setting this to <code>0</code> is the same as leaving it empty; i.e. if you set this to <code>0</code>, the Coupon Code can be used any number of times, or until it expires. No difference.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-line-chart"></i> Uses Counter</strong>&nbsp;&nbsp;&nbsp; e.g. <code>0</code> <em>s2Member updates this field automatically, incrementing it by <code>1</code> each time the Coupon Code is used to complete checkout. However, you can reset this to <code>0</code> (or any other number) if you so desire.</em></li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-			echo '<em>By default, s2Member will apply the discount to ALL amounts, including any Regular/Recurring fees.<br />'."\n";
-			echo '* However, you may configure Coupon Codes that will ONLY apply to (ta) Trial Amounts, or (ra) Regular Amounts.</em>'."\n";
-
-			echo '<ul>'."\n"; // Explaining this by example.
-			echo '<li><code>SAVE-10|10%||ta-only</code> <em>(10% off an Initial/Trial Amount; the ta="" attribute in your Shortcode)</em></li>'."\n";
-			echo '<li><code>SAVE-15|15%||ra-only</code> <em>(15% off the Regular Amount(s); the ra="" attribute in your Shortcode)</em></li>'."\n";
-			echo '<li><code>XMAS|5.00|12/31/2021|ra-only</code> <em>($5 off Regular Amount(s); the ra="" attribute in your Shortcode)</em></li>'."\n";
-			echo '<li><code>5PER|5%|12/31/2021|all</code> <em>(5% off All Amounts; this is the default behavior "all")</em></li>'."\n";
-			echo '</ul>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			echo '<em>By default, s2Member accepts Coupon Codes on any Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code>.<br />'."\n";
-			echo '* However, you may configure Coupon Codes that ONLY work on specific Post or Page IDs, as seen below.</em>'."\n";
-
-			echo '<ul>'."\n"; // Explaining this by example.
-			echo '<li><code>SAVE-10|10%|||123</code> <em>(10% off; works only on Post or Page ID #<code>123</code>)</em></li>'."\n";
-			echo '<li><code>SAVE-15|15%||ra-only|123</code> <em>(15% off Regular Amount(s); works only on Post or Page ID #<code>123</code>)</em></li>'."\n";
-			echo '<li><code>XMAS|5.00|12/31/2021|ra-only|123,456</code> <em>($5 off Regular Amount(s); works only on Post or Page IDs <code>123</code>,<code>456</code>)</em></li>'."\n";
-			echo '<li><code>5PER|5%|12/31/2021|all|all</code> <em>(5% off All Amounts; works on all Posts/Pages; this is the default behavior "all")</em></li>'."\n";
-			echo '</ul>'."\n";
-
-			echo '<em>Remember, you still need a Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code></em><br />'."\n";
+			echo '<p>'."\n";
+			echo '<em><strong>REMINDER:</strong> you need a Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code></em><br />'."\n";
 			echo '<em>* s2Member ONLY accepts Coupons on Pro Forms with Shortcode Attribute: <code>accept_coupons="1"</code></em>'."\n";
+			echo '</p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<p>'."\n";
+			echo '<em><strong>TIP:</strong> your changes to the configuration above (including deletions) will not take affect until you click <strong>Save All Changes</strong> down below.</em>'."\n";
+			echo '</p>'."\n";
 
 			echo '</td>'."\n";
 
@@ -136,7 +158,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="(Pro Form) Affiliate Coupon Codes">'."\n";
+			echo '<div class="ws-menu-page-group" title="Pro Form Affiliate Coupon Codes">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-affiliate-coupon-codes-section">'."\n";
 			echo '<h3>Affiliate Coupon Codes (optional, for affiliate tracking systems)</h3>'."\n";
