@@ -258,7 +258,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
 			echo '<p><strong>SECURITY NOTE:</strong> s2Member does not guard access to the Gift/Redemption codes unless you tell it to; i.e. the Post/Page that contains this Shortcode should be protected using s2Member Restriction Options of your choosing.</p>'."\n";
-			echo '<p><strong>CHECKOUT COMPATIBILITY NOTE:</strong> Customers that purchase access to Gift/Redemption Codes do NOT need to have an account. This means that you can sell access using s2Member\'s Specific Post/Page Access functionality (most popular). You can also sell access to Gift/Redemption Codes using any of s2Member\'s Membership Level Access functionality, or by selling Custom Capabilities to new and/or existing users. You simply generate Pro Forms w/ s2Member and then lead a Customer to the Post/Page where you have <code>[s2Member-Gift-Codes /]</code> for them.</p>'."\n";
+			echo '<p><strong>CHECKOUT COMPATIBILITY NOTE:</strong> Customers that purchase access to Gift/Redemption Codes do NOT need to have an account. This means that you can sell access using <strong>s2Member\'s Specific Post/Page Access</strong> functionality <strong>(easiest way to sell Gift/Redemption Codes)</strong>. You can also sell access to Gift/Redemption Codes using any of s2Member\'s Membership Level Access functionality, or by selling Custom Capabilities to new and/or existing users. You simply generate Pro Forms w/ s2Member and then lead a Customer to the Post/Page where you have <code>[s2Member-Gift-Codes /]</code> for them.</p>'."\n";
 
 			echo '</div>'."\n";
 

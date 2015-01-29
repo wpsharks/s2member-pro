@@ -66,13 +66,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes_in'))
 			do_action('c_ws_plugin__s2member_pro_before_sc_gift_codes', get_defined_vars());
 			unset($__refs, $__v);
 
-			$default_attr     = array(
+			$default_attr = array(
 				'quantity'  => '1',
 				'discount'  => '100%',
 				'directive' => '',
 				'singulars' => '',
 				'one_click' => '',
 			);
+			if(isset($attr['singular']) && !isset($attr['singulars']))
+				$attr['singulars'] = $attr['singular'];
 			$attr             = shortcode_atts($default_attr, $attr, $shortcode);
 			$attr['quantity'] = (string)min($attr['quantity'], apply_filters('ws_plugin__s2member_pro_gifts_max_quantity', 1000));
 

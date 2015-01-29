@@ -349,8 +349,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if($attr["exp"] < 1)
 											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration (in hours). Must be >= 1.', "s2member-admin", "s2member"), "error" => true);
 
-										else if($attr["exp"] > 43800)
-											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration (in hours). Must be <= 43800.', "s2member-admin", "s2member"), "error" => true);
+										else if($attr["exp"] > 438291)
+											$response = array("response" => _x('Invalid form configuration. Invalid "exp" attribute. Specific Post/Page Expiration (in hours). Must be <= 438291.', "s2member-admin", "s2member"), "error" => true);
 
 										else if(!$attr["sp_ids_exp"] || !is_string($attr["sp_ids_exp"]))
 											$response = array("response" => _x('Invalid form configuration. Missing "sp_ids_exp" internal attribute. Please check Shortcode Attributes.', "s2member-admin", "s2member"), "error" => true);
