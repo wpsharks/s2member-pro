@@ -67,8 +67,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes_in'))
 			unset($__refs, $__v);
 
 			$default_attr     = array(
-				'quantity'  => '0',
-				'discount'  => '',
+				'quantity'  => '1',
+				'discount'  => '100%',
 				'directive' => '',
 				'singulars' => '',
 				'one_click' => '',

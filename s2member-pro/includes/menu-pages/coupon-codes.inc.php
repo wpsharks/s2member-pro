@@ -61,7 +61,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Pro Form Coupon Code Configuration" default-state="open">'."\n";
+			echo '<div class="ws-menu-page-group" title="Pro Form Coupon Code Configuration">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-coupon-codes-section">'."\n";
 			echo '<h3>Coupon Code Configuration File (optional, to provide discounts)</h3>'."\n";
@@ -162,7 +162,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-affiliate-coupon-codes-section">'."\n";
 			echo '<h3>Affiliate Coupon Codes (optional, for affiliate tracking systems)</h3>'."\n";
-			echo '<p>Currently, this is ONLY compatible with Pro Forms for PayPal Pro and Authorize.Net, which are enabled by the s2Member Pro Module. Coupon Codes allow you to provide discounts <em>(through a special promotion)</em>. <strong>Affiliate Coupon Codes</strong> make it possible for your affiliates to receive credit for sales they refer, using one of your Coupon Codes <em>(which you may have configured in the section above)</em>.</p>'."\n";
+			echo '<p>Coupons are compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. Coupon Codes allow you to provide discounts through a special promotion. <strong>Affiliate Coupon Codes</strong> make it possible for your affiliates to receive credit for sales they refer, using one of your Coupon Codes <em>(which you may have configured in the section above)</em>.</p>'."\n";
 			echo '<p>Here\'s how it works. You tell your affiliates about one or more of the Coupon Codes that you accept <em>(which you may have configured in the section above)</em>. Each of your affiliates can add their affiliate ID onto the end of any valid Coupon Code, like this: <code>COUPON-CODE'.esc_html($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_affiliate_coupon_code_suffix_chars"]).'123</code>; where <code>COUPON-CODE</code> is the valid Coupon Code that you\'ve configured, and <code>123</code> is the affiliate\'s ID <em>(see also, Suffix Chars below)</em>. If a Customer comes to your site, and they use a Coupon Code with an affiliate ID on the end of it; your affiliate will be <strong>tracked</strong> automatically by s2Member. If this Customer actually completes the sale, the referring affiliate will be credited with whatever commission your affiliate program offers.</p>'."\n";
 			echo '<p><strong>Prerequisites.</strong> Your affiliate tracking system MUST provide you with a Tracking URL that s2Member can connect to silently behind-the-scene <em>(sometimes referred to as a cURL Tracking Logger)</em>. The Standard edition of <a href="http://www.s2member.com/idev-affiliate" target="_blank" rel="external">iDevAffiliate</a> meets this requirement, and it\'s our recommendation to use the cURL Tracking Logger provided by iDevAffiliate. Or, if you\'re using another affiliate system that offers a URL s2Member can load as a 1px IMG in the Customer\'s browser after a Coupon Code is applied, that\'s fine too. In either case, this URL should ONLY <strong>track</strong> a potential Customer upon entering a Coupon Code, and NOT credit an affiliate with a commission. Credit is given to an affiliate through other forms of integration which you may or may not have configured yet. Please see: <code>s2Member -› API Tracking</code>.</p>'."\n";
 			echo '<p><strong><a href="http://www.s2member.com/idev-affiliate" target="_blank" rel="external">iDevAffiliate</a> <em>(recommended)</em>:</strong> You can obtain an Affiliate Tracking URL inside your iDevAffiliate dashboard. See: <code>iDevAffiliate -› Setup &amp; Tools -› Advanced Developer Tools -› Custom Functions -› cURL Tracking Log</code>. s2Member only needs the Tracking URL itself <em>(and NOT all of the PHP code that iDevAffiliate provides)</em>. Your iDevAffiliate Tracking URL <em>( including the <code>SILENT-PHP|</code> prefix described below)</em> should contain s2Member\'s <code><em class="ws-menu-page-hilite">%%</em></code> Replacement Codes, like this: <code>SILENT-PHP|http://example.com/idevaffiliate.php?ip_address=<em class="ws-menu-page-hilite">%%user_ip%%</em>&id=<em class="ws-menu-page-hilite">%%coupon_affiliate_id%%</em></code></p>'."\n";
@@ -223,6 +223,43 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+
+			echo '<div class="ws-menu-page-group" title="Pro Form Gift/Redemption Codes">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-gift-codes-section">'."\n";
+			echo '<h3>Gift/Redemption Codes (optional, for dynamic coupon code generation)</h3>'."\n";
+			echo '<p>Coupons are compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. s2Member Pro also comes with a shortcode: <code>[s2Member-Gift-Codes /]</code>. This can be used to auto-generate Coupon Codes (aka: Gift Codes, aka: Redemption Codes). Auto-generated Gift/Redemption Codes are unique for each Post/Page ID in WordPress (i.e. the Post/Page that you insert <code>[s2Member-Gift-Codes /]</code> into). They are also unique for each user that gains access to that Post/Page. This makes it very easy for you to insert something like <code>[s2Member-Gift-Codes discount="100%" quantity="10" /]</code> into a Post or Page, and then sell access to that Post/Page with s2Member. In this way, you are selling a customer a set of 10 Gift/Redemption Codes that they can share with others in their group, or with a specific gift recipient they have in mind <i class="fa fa-smile-o"></i></p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<h3 style="margin-top:1em;"><code style="font-weight:400;">[s2Member-Gift-Codes /]</code> (Shortcode Attributes Explained)</h3>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<ul style="list-style:none; margin:0; padding:0;">'."\n";
+			echo '<li style="list-style:none;"><i class="fa fa-tasks"></i> <code>quantity="1"</code> e.g. <code>quantity="10"</code>, this can be up to <code>1000</code>. <em>This is the number of Gift/Redemption Codes that should be generated and then listed on the Post/Page where the shortcode is being used.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><i class="fa fa-cart-arrow-down"></i> <code>discount="100%"</code> e.g. <code>100.00</code> (flat-rate) or <code>100%</code> (percentage-based) <em>How much of a discount will each Gift/Redemption Code provide? This defaults to <code>100%</code> (most common use case).</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><i class="fa fa-cog"></i> <code>directive=""</code> e.g. <code>ta-only</code> or <code>ra-only</code> <em>By default (i.e. if this is empty), s2Member will apply the discount to all amounts, including any Regular/Recurring fees. However, you may configure Gift/Redemption Codes that will only apply to (ta) Trial Amounts, or (ra) Regular Amounts. If this is empty, the discount applies to all amounts, including any Regular/Recurring fees.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><i class="fa fa-sitemap"></i> <code>singulars=""</code> e.g. <code>123</code> or <code>1,9983,223</code> <em>By default (i.e. if this is empty), s2Member accepts Gift/Redemption Codes on any Pro Form with Shortcode Attribute: <code>accept_coupons="1"</code>. However, you may configure Gift/Redemption Codes that only work on specific Post or Page IDs. This can be entered as a single Post/Page ID, or as a comma-delimited list of multiple IDs.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><i class="fa fa-link"></i> <code>one_click=""</code> e.g. <code>/redeem/</code> <em>By default (i.e. if this is empty), s2Member simply lists each Gift/Redemption Code for the customer. The customer can copy/paste each code and send it to a recipient of their choosing. However, if you provide a full URL, or a relative path in this attribute, each Gift/Redemption Code will be clickable. Making it possible for the customer to copy a preformatted link which leads to a Post/Page where each code can be redeemed. <strong>Note:</strong> this URL (or relative path) should lead to a Post/Page where a Pro Form has been implemented, and where the Pro Form has Shortcode Attribute: <code>accept_coupons="1"</code>. <strong>Tip:</strong> if you fill this in, it\'s reasonable to assume that you have a specific Post/Page set up where Gift/Redemption Codes should be used. You may want to consider adding the ID for that Post/Page to the <code>singulars=""</code>, thereby forcing all Gift/Redemption Coupons to be used in the location you specify here.</em></li>'."\n";
+			echo '</ul>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<p><strong>SECURITY NOTE:</strong> s2Member does not guard access to the Gift/Redemption codes unless you tell it to; i.e. the Post/Page that contains this Shortcode should be protected using s2Member Restriction Options of your choosing.</p>'."\n";
+			echo '<p><strong>CHECKOUT COMPATIBILITY NOTE:</strong> Customers that purchase access to Gift/Redemption Codes must have an account (i.e. a User ID). This means that you can sell access using any of s2Member\'s Buy Now or Subscription-based functionality. You simply generate Pro Forms w/ s2Member and then lead a Customer to the Post/Page where you have <code>[s2Member-Gift-Codes /]</code> for them. However, there is one limitation to be aware of. s2Member\'s Specific Post/Page functionality (where a customer is not required to register and create an account), is not compatible with Gift/Redemption Codes; i.e. you cannot sell access to Gift/Redemption Codes using s2Member\'s Specific Post/Page functionality at this time. Please use Membership Level Access, or Custom Capabilities. The customer needs to have a User ID in WordPress after completing checkout.</p>'."\n";
+
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";

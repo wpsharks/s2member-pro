@@ -534,9 +534,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$args         = array_intersect_key($args, $default_args);
 
 			$quantity  = (integer)$args['quantity'];
-			$discount  = trim((string)$args['discount']);
-			$directive = trim((string)$args['directive']);
-			$singulars = trim((string)$args['singulars']);
+			$discount  = str_replace('|', '', trim((string)$args['discount']));
+			$directive = str_replace('|', '', trim((string)$args['directive']));
+			$singulars = str_replace('|', '', trim((string)$args['singulars']));
 
 			if(!($quantity = (integer)$quantity) || $quantity < 1)
 				return array(); // Not possible.
