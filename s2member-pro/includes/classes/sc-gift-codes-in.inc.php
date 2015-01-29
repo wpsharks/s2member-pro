@@ -78,21 +78,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes_in'))
 
 			$hashable_attr = $attr;
 			unset($hashable_attr['one_click']);
-			$attr_crc32b = hash('crc32b', serialize($hashable_attr));
 
-			$user    = wp_get_current_user(); // Must be logged-in.
-			$post_id = is_singular() ? get_the_ID() : 0;
+			$post_id         = is_singular() ? get_the_ID() : 0;
+			$user            = wp_get_current_user(); // Current user.
+			$sp_access_value = $post_id ? c_ws_plugin__s2member_sp_access::sp_access($post_id, 'read-only') : '';
 
-			if($user && $user->ID && $post_id && $attr_crc32b)
+			if($post_id && (($sp_access_value && is_string($sp_access_value)) || $user->ID))
 			{
-				$coupons_class             = new c_ws_plugin__s2member_pro_coupons();
-				$user_option_key_for_gifts = 's2member_gift_codes_'.$post_id.'_'.$attr_crc32b;
+				$gifts         = array(); // Initialize.
+				$coupons_class = new c_ws_plugin__s2member_pro_coupons();
 
-				if(!is_array($gifts = get_user_option($user_option_key_for_gifts, $user->ID)))
+				if($sp_access_value && is_string($sp_access_value))
 				{
-					$gifts = $coupons_class->generate_gifts($attr); // Generate new gifts.
-					$wpdb->query("DELETE FROM `".$wpdb->usermeta."` WHERE `meta_key` LIKE '%".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape('s2member_gift_codes_'.$post_id.'_'))."%'");
-					update_user_option($user->ID, $user_option_key_for_gifts, $gifts); // Store the new gifts.
+					$sp_hash              = md5($sp_access_value);
+					$attr_hash            = hash('crc32b', serialize($hashable_attr));
+					$option_key_for_gifts = 's2m_gcs_'.$post_id.'_'.$sp_hash.'_'.$attr_hash;
+
+					if(!is_array($gifts = get_option($option_key_for_gifts)))
+					{
+						$gifts = $coupons_class->generate_gifts($attr); // Generate new gifts.
+						$wpdb->query("DELETE FROM `".$wpdb->options."` WHERE `option_name` LIKE '%".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape('s2m_gcs_'.$post_id.'_'.$sp_hash.'_'))."%'");
+						add_option($user->ID, $option_key_for_gifts, $gifts, '', 'no'); // Store the new gifts.
+					}
+				}
+				else if($user->ID) // Do we have a user ID?
+				{
+					$attr_hash                 = md5(serialize($hashable_attr));
+					$user_option_key_for_gifts = 's2m_gcs_'.$post_id.'_'.$attr_hash;
+
+					if(!is_array($gifts = get_user_option($user_option_key_for_gifts, $user->ID)))
+					{
+						$gifts = $coupons_class->generate_gifts($attr); // Generate new gifts.
+						$wpdb->query("DELETE FROM `".$wpdb->usermeta."` WHERE `user_id` = '".esc_sql($user->ID)."' AND `meta_key` LIKE '%".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape('s2m_gcs_'.$post_id.'_'))."%'");
+						update_user_option($user->ID, $user_option_key_for_gifts, $gifts); // Store the new gifts.
+					}
 				}
 				if($gifts) // Do we have gifts to display?
 				{
