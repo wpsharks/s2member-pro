@@ -106,7 +106,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
 
-				if(strpos((string)$update, 'counters') !== FALSE && isset($_coupon_parts[7]))
+				if($update && strpos((string)$update, 'counters') !== FALSE && isset($_coupon_parts[7]))
 					$this->update_uses($_coupon['code'], $_coupon_parts[7]);
 
 				$_coupon['is_gift'] = FALSE; // Hard-coded coupons are never gifts.
@@ -199,6 +199,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				else $list .= '|'; // Unspecified in this case.
 
 				# Line ending; always.
+
+				// `code|discount|dates|directive|singulars|users|max uses`.
 
 				$list .= "\n"; // One coupon per line.
 			}
@@ -520,27 +522,39 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			return is_array($gift) && !empty($gift['code']) ? $gift : array();
 		}
 
-		public function generate_gifts_based_on($coupon_code, $quantity = 1)
+		public function generate_gifts($args)
 		{
-			if(!($coupon_code = trim((string)$coupon_code)))
-				return array(); // Not possible.
+			$default_args = array(
+				'quantity'  => 0,
+				'discount'  => '',
+				'directive' => '',
+				'singulars' => '',
+			);
+			$args         = array_merge($default_args, $args);
+			$args         = array_intersect_key($args, $default_args);
 
-			if(!($coupon_code = $this->n_code($coupon_code)))
-				return array(); // Not possible.
-
-			if(empty($this->coupons[$coupon_code]))
-				return array(); // Not possible.
+			$quantity  = (integer)$args['quantity'];
+			$discount  = trim((string)$args['discount']);
+			$directive = trim((string)$args['directive']);
+			$singulars = trim((string)$args['singulars']);
 
 			if(!($quantity = (integer)$quantity) || $quantity < 1)
 				return array(); // Not possible.
 
-			for($_i = 1, $gifts = array(); $_i <= $quantity; $_i++)
+			for($_i = 0, $gifts = array(); $_i < $quantity; $_i++)
 			{
-				$_gift_code         = $this->n_code(c_ws_plugin__s2member_utils_encryption::uunnci_key_20_max());
-				$gifts[$_gift_code] = array_merge($this->coupons[$coupon_code], array('code' => $_gift_code, 'is_gift' => TRUE));
+				$_gift_code = c_ws_plugin__s2member_utils_encryption::uunnci_key_20_max();
+				$_gift_code = $this->n_code('GC'.str_pad($_gift_code, 20, '0', STR_PAD_LEFT));
+				$_gift_list = $_gift_code.'|'.$discount.'||'.$directive.'|'.$singulars.'||1';
+				// `code|discount|dates|directive|singulars|users|max uses`.
+
+				$_gift              = $this->list_to_coupons($_gift_list, FALSE);
+				$_gift              = array_merge(array_pop($_gift), array('is_gift' => TRUE));
+				$gifts[$_gift_code] = $_gift; // A coupon code that's a gift.
+
 				add_option($this->gift_option_key($_gift_code), $gifts[$_gift_code], '', 'no');
 			}
-			unset($_i, $_gift_code); // Housekeeping.
+			unset($_i, $_gift_code, $_gift_list, $_gift); // Housekeeping.
 
 			return $gifts;
 		}
