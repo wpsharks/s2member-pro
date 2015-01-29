@@ -43,7 +43,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		</div>
 		<div id="s2member-pro-paypal-sp-checkout-form-coupon-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-coupon-div s2member-pro-paypal-sp-checkout-form-coupon-div">
 			<label for="s2member-pro-paypal-sp-checkout-coupon" id="s2member-pro-paypal-sp-checkout-form-coupon-label" class="s2member-pro-paypal-form-coupon-label s2member-pro-paypal-sp-checkout-form-coupon-label">
-				<span><?php echo _x("Gift or Coupon Code?", "s2member-front", "s2member"); ?></span><br />
+				<span><?php echo _x("Gift, Coupon, or Redemption Code?", "s2member-front", "s2member"); ?></span><br />
 				<input type="text" maxlength="100" autocomplete="off" name="s2member_pro_paypal_sp_checkout[coupon]" id="s2member-pro-paypal-sp-checkout-coupon" class="s2member-pro-paypal-coupon s2member-pro-paypal-sp-checkout-coupon form-control" value="%%coupon_value%%" tabindex="1" />
 			</label>
 			<input type="button" id="s2member-pro-paypal-sp-checkout-coupon-apply" class="s2member-pro-paypal-coupon-apply s2member-pro-paypal-sp-checkout-coupon-apply btn btn-default" value="<?php echo esc_attr(_x("Apply", "s2member-front", "s2member")); ?>" tabindex="-1" />

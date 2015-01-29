@@ -31,36 +31,35 @@
  * @since 140328
  */
 if(!defined('WPINC')) // MUST have WordPress.
-	exit("Do not access this file directly.");
+	exit('Do not access this file directly.');
 
-if(!class_exists("c_ws_plugin__s2member_pro_sc_drip"))
+if(!class_exists('c_ws_plugin__s2member_pro_sc_drip'))
+{
+	/**
+	 * [s2Drip] Shortcode.
+	 *
+	 * @package s2Member\Shortcodes
+	 * @since 140328
+	 */
+	class c_ws_plugin__s2member_pro_sc_drip
 	{
 		/**
 		 * [s2Drip] Shortcode.
 		 *
 		 * @package s2Member\Shortcodes
 		 * @since 140328
+		 *
+		 * @attaches-to ``add_shortcode('s2Drip');``
+		 *
+		 * @param array  $attr An array of Attributes.
+		 * @param string $content Content inside the Shortcode.
+		 * @param string $shortcode The actual Shortcode name itself.
+		 *
+		 * @return string Return-value of inner routine.
 		 */
-		class c_ws_plugin__s2member_pro_sc_drip
+		public static function shortcode($attr = array(), $content = '', $shortcode = '')
 		{
-			/**
-			 * [s2Drip] Shortcode.
-			 *
-			 * @package s2Member\Shortcodes
-			 * @since 140328
-			 *
-			 * @attaches-to ``add_shortcode("s2Drip");``
-			 *
-			 * @param array $attr An array of Attributes.
-			 * @param string   $content Content inside the Shortcode.
-			 * @param string   $shortcode The actual Shortcode name itself.
-			 *
-			 * @return inner Return-value of inner routine.
-			 */
-			public static function shortcode($attr = FALSE, $content = FALSE, $shortcode = FALSE)
-				{
-					return c_ws_plugin__s2member_pro_sc_drip_in::shortcode($attr, $content, $shortcode);
-				}
+			return c_ws_plugin__s2member_pro_sc_drip_in::shortcode($attr, $content, $shortcode);
 		}
 	}
-?>
+}
