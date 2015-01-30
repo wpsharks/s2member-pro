@@ -272,7 +272,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_names']) ? '<input type="hidden" id="s2member-pro-stripe-registration-names-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password']) ? '<input type="hidden" id="s2member-pro-stripe-registration-password-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_registration[attr]" id="s2member-pro-stripe-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-registration-form.php')) ? TEMPLATEPATH.'/stripe-registration-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-registration-form.php')) ? get_stylesheet_directory().'/stripe-registration-form.php' : $custom_template;
