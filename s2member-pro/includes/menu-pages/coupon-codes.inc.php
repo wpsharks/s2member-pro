@@ -230,9 +230,42 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<div class="ws-menu-page-group" title="Pro Form Gift/Redemption Codes">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-gift-codes-section">'."\n";
-			echo '<iframe width="560" height="315" src="https://www.youtube.com/embed/T3N_vygowbM" frameborder="0" allowscriptaccess="always" allowfullscreen="true" style="float:right; margin:0 0 20px 20px; width:300px; height:200px;"></iframe>' . "\n";
+			echo '<iframe width="560" height="315" src="https://www.youtube.com/embed/T3N_vygowbM" frameborder="0" allowscriptaccess="always" allowfullscreen="true" style="float:right; margin:0 0 20px 20px; width:300px; height:200px;"></iframe>'."\n";
 			echo '<h3>Gift/Redemption Codes (optional, for dynamic coupon code generation)</h3>'."\n";
-			echo '<p>Coupons are compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. s2Member Pro also comes with a shortcode: <code>[s2Member-Gift-Codes /]</code>. This can be used to auto-generate Coupon Codes (aka: Gift Codes, aka: Redemption Codes). Auto-generated Gift/Redemption Codes are unique for each Post/Page ID in WordPress (i.e. the Post/Page that you insert <code>[s2Member-Gift-Codes /]</code> into). They are also unique for each user that gains access to that Post/Page. This makes it very easy for you to insert something like <code>[s2Member-Gift-Codes discount="100%" quantity="10" /]</code> into a Post or Page, and then sell access to that Post/Page with s2Member. In this way, you are selling a customer a set of 10 Gift/Redemption Codes that they can share with others in their group, or with a specific gift recipient they have in mind <i class="fa fa-smile-o"></i></p>'."\n";
+			echo '<p>Coupons are compatible with Pro Forms for Stripe, PayPal Pro and Authorize.Net. s2Member Pro also comes with a shortcode: <code>[s2Member-Gift-Codes /]</code>. This can be used to auto-generate Coupon Codes (aka: Gift Codes, aka: Redemption Codes). Auto-generated Gift/Redemption Codes are unique for each Post/Page ID in WordPress (i.e. the Post/Page that you insert <code>[s2Member-Gift-Codes /]</code> into). They are also unique for each user that gains access to that Post/Page. This makes it very easy for you to insert something like <code>[s2Member-Gift-Codes discount="100%" quantity="10" /]</code> into a Post or Page, and then sell access to that Post/Page with s2Member. In this way, you are selling a customer a set of 10 Gift/Redemption Codes that they can share with others in their group, or with a specific gift recipient they have in mind <i class="fa fa-smile-o"></i> For a full tutorial on using the Gift/Redemption Codes, please see the <a href="https://www.youtube.com/watch?v=T3N_vygowbM" target="_blank">Video Tutorial</a> embedded to the right.</p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<h3 style="margin-top:1em;"><code style="font-weight:400;">[s2Member-Gift-Codes /]</code> (Copy/Paste Examples)</h3>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<p style="margin:0;">Generates 10 Gift/Redemption Codes that provide a 100% discount:</p>'."\n";
+			echo '<code class="highlight-shortcodes">[s2Member-Gift-Codes discount="100%" quantity="10" /]</code>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<p style="margin:0;">Generates 100 Gift/Redemption Codes that provide a $50 discount. Can only be redeemed from a Pro Form on Page ID <code>334</code>:</p>'."\n";
+			echo '<code class="highlight-shortcodes">[s2Member-Gift-Codes discount="50.00" quantity="100" singulars="334" /]</code>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<p style="margin:0;">Generates 1 Gift/Redemption Code that provides a $75 discount on an initial/trial period only.</p>'."\n";
+			echo '<code class="highlight-shortcodes">[s2Member-Gift-Codes discount="75.00" quantity="1" directive="ta-only" /]</code>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
@@ -260,6 +293,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 
 			echo '<p><strong>SECURITY NOTE:</strong> s2Member does not guard access to the Gift/Redemption codes unless you tell it to; i.e. the Post/Page that contains this Shortcode should be protected using s2Member Restriction Options of your choosing.</p>'."\n";
 			echo '<p><strong>CHECKOUT COMPATIBILITY NOTE:</strong> Customers that purchase access to Gift/Redemption Codes do NOT need to have an account. This means that you can sell access using <strong>s2Member\'s Specific Post/Page Access</strong> functionality <strong>(easiest way to sell Gift/Redemption Codes)</strong>. You can also sell access to Gift/Redemption Codes using any of s2Member\'s Membership Level Access functionality, or by selling Custom Capabilities to new and/or existing users. You simply generate Pro Forms w/ s2Member and then lead a Customer to the Post/Page where you have <code>[s2Member-Gift-Codes /]</code> for them.</p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<p class="ws-menu-page-warning-hilite" style="padding:1em;"><strong>WARNING:</strong> Gift/Redemption Codes are unique for each Post/Page that contains the shortcode, and they are also unique for each User that gains access to it. However, changing the Shortcode Attributes will cause a new set of Gift/Redemption Codes to be generated. This is to ensure that all of the Gift/Redemption Codes meet the specifications that you\'ve configured with the Shortcode. So please take note; you should NOT change the Shortcode Attributes once you have already started selling access to the Post/Page that contains them. During your own tests it is fine to tweak things here and there, just be careful about leaving a Post/Page several months, and the suddenly deciding to change some of the <code>[s2Member-Gift-Codes /]</code> Attributes. If you need to generate a new list, please create a new Post/Page and retire the old one.</p>'."\n";
 
 			echo '</div>'."\n";
 
