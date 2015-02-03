@@ -28,7 +28,7 @@
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Shortcodes
- * @since 150129
+ * @since 150203
  */
 if(!defined('WPINC')) // MUST have WordPress.
 	exit('Do not access this file directly.');
@@ -39,7 +39,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes'))
 	 * [s2Member-Gift-Codes] Shortcode.
 	 *
 	 * @package s2Member\Shortcodes
-	 * @since 150129
+	 * @since 150203
 	 */
 	class c_ws_plugin__s2member_pro_sc_gift_codes
 	{
@@ -47,7 +47,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes'))
 		 * [s2Member-Gift-Codes] Shortcode.
 		 *
 		 * @package s2Member\Shortcodes
-		 * @since 150129
+		 * @since 150203
 		 *
 		 * @attaches-to ``add_shortcode('s2Member-Gift-Codes');``
 		 *
