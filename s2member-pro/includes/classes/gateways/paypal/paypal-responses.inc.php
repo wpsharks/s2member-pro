@@ -676,16 +676,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"]) && ($_response = wpmu_validate_user_signup($s["username"], $s["email"])) && is_wp_error($_errors = $_response["errors"]) && $_errors->get_error_message())
 											$response = array("response" => $_errors->get_error_message(), "error" => true);
 
-										else if((empty($s["password1"]) || !is_string($s["password1"])) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && (empty($s["password1"]) || !is_string($s["password1"])))
 											$response = array("response" => _x('Missing Password. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(strlen($s["password1"]) < 6 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && strlen($s["password1"]) < 6)
 											$response = array("response" => _x('Invalid Password. Must be at least 6 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(strlen($s["password1"]) > 20 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && strlen($s["password1"]) > 20)
 											$response = array("response" => _x('Invalid Password. Max length is 20 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if((empty($s["password2"]) || $s["password2"] !== $s["password1"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && (empty($s["password2"]) || $s["password2"] !== $s["password1"]))
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s["custom_fields"]) ? $s["custom_fields"] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s["attr"]["level"], "registration", TRUE))))
@@ -788,16 +788,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!is_user_logged_in() && is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s["username"], $s["email"]) && ($_response = wpmu_validate_user_signup($s["username"], $s["email"])) && is_wp_error($_errors = $_response["errors"]) && $_errors->get_error_message())
 											$response = array("response" => $_errors->get_error_message(), "error" => true);
 
-										else if(!is_user_logged_in() && (empty($s["password1"]) || !is_string($s["password1"])) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && !is_user_logged_in() && (empty($s["password1"]) || !is_string($s["password1"])))
 											$response = array("response" => _x('Missing Password. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!is_user_logged_in() && strlen($s["password1"]) < 6 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && !is_user_logged_in() && strlen($s["password1"]) < 6)
 											$response = array("response" => _x('Invalid Password. Must be at least 6 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!is_user_logged_in() && strlen($s["password1"]) > 20 && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && !is_user_logged_in() && strlen($s["password1"]) > 20)
 											$response = array("response" => _x('Invalid Password. Max length is 20 characters. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!is_user_logged_in() && (empty($s["password2"]) || $s["password2"] !== $s["password1"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"])
+										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_password"] && !is_user_logged_in() && (empty($s["password2"]) || $s["password2"] !== $s["password1"]))
 											$response = array("response" => _x('Password fields do NOT match. Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(!is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s["custom_fields"]) ? $s["custom_fields"] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s["attr"]["level"] === "*" ? "auto-detection" : $s["attr"]["level"], "registration", TRUE))))
