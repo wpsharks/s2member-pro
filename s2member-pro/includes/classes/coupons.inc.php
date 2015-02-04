@@ -425,8 +425,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 					if($coupon_applies) // Apply the coupon here; if applicable.
 					{
-						$attr['ta']   = $ta; // Apply new amount for the initial/period.
-						$attr['ra']   = $ra; // Apply new amount for the regular/recurring period.
+						$attr['ta']   = $ta < 0.50 ? '0.00' : $ta; // Apply new amount for the initial/period.
+						$attr['ra']   = $ra < 0.50 ? '0.00' : $ra; // Apply new amount for the regular/recurring period.
 						$attr['desc'] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', 's2member-front', 's2member'), $desc, $attr['desc']);
 
 						if($affiliate_id && empty($_COOKIE['idev']) && (in_array('affiliates-silent-post', $process) || in_array('affiliates-1px-response', $process)))
