@@ -229,7 +229,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 								$custom_fields .= '<label for="s2member-pro-stripe-registration-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-stripe-registration-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-stripe-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-stripe-registration-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 								$custom_fields .= '<span'.((preg_match('/^(checkbox|pre_checkbox)$/', $field['type'])) ? ' style="display:none;"' : '').'>'.$field['label'].(($field['required'] === 'yes') ? ' *' : '').'</span></label>'.((preg_match('/^(checkbox|pre_checkbox)$/', $field['type'])) ? '' : '<br />')."\n";
-								$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, 's2member_pro_stripe_registration[custom_fields][', 's2member-pro-stripe-registration-custom-reg-field-', 's2member-pro-stripe-custom-reg-field-'.$field_id_class.' s2member-pro-stripe-registration-custom-reg-field-'.$field_id_class, '', ($tabindex = $tabindex + 1), '', $_p, @$_p['s2member_pro_stripe_registration']['custom_fields'][$field_var], 'registration');
+								$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, 's2member_pro_stripe_registration[custom_fields][', 's2member-pro-stripe-registration-custom-reg-field-', 's2member-pro-stripe-custom-reg-field-'.$field_id_class.' s2member-pro-stripe-registration-custom-reg-field-'.$field_id_class, '', ($tabindex = $tabindex + 1), '', @$_p['s2member_pro_stripe_registration'], @$_p['s2member_pro_stripe_registration']['custom_fields'][$field_var], 'registration');
 
 								$custom_fields .= '</div>'."\n";
 							}
@@ -499,7 +499,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 								$custom_fields .= '<label for="s2member-pro-stripe-checkout-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-stripe-checkout-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-stripe-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-stripe-checkout-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 								$custom_fields .= '<span'.((preg_match('/^(checkbox|pre_checkbox)$/', $field['type'])) ? ' style="display:none;"' : '').'>'.$field['label'].(($field['required'] === 'yes') ? ' *' : '').'</span></label>'.((preg_match('/^(checkbox|pre_checkbox)$/', $field['type'])) ? '' : '<br />')."\n";
-								$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, 's2member_pro_stripe_checkout[custom_fields][', 's2member-pro-stripe-checkout-custom-reg-field-', 's2member-pro-stripe-custom-reg-field-'.$field_id_class.' s2member-pro-stripe-checkout-custom-reg-field-'.$field_id_class, '', ($tabindex = $tabindex + 1), '', $_p, @$_p['s2member_pro_stripe_checkout']['custom_fields'][$field_var], 'registration');
+								$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, 's2member_pro_stripe_checkout[custom_fields][', 's2member-pro-stripe-checkout-custom-reg-field-', 's2member-pro-stripe-custom-reg-field-'.$field_id_class.' s2member-pro-stripe-checkout-custom-reg-field-'.$field_id_class, '', ($tabindex = $tabindex + 1), '', @$_p['s2member_pro_stripe_checkout'], @$_p['s2member_pro_stripe_checkout']['custom_fields'][$field_var], 'registration');
 
 								$custom_fields .= '</div>'."\n";
 							}
