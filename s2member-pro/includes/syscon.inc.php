@@ -99,7 +99,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_sp_email_subject'                    => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
 			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n( link expires in %%%%sp_access_exp%%%% )\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
-			'pro_coupon_codes'                        => '', /* There are NO Coupon Codes by default. */
+			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
 			'pro_affiliate_coupon_code_tracking_urls' => '', // A line-delimited list of Coupon Code tracking URLs.
 			'pro_affiliate_coupon_code_suffix_chars'  => '-A:', // Chars indicating an Affiliate Coupon Code suffix.
@@ -113,7 +113,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
 			'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_secret_key' => '', 'pro_stripe_sandbox' => '0',
-			'pro_stripe_api_statement_description'    => '', 'pro_stripe_api_validate_zipcode' => '0',
+			'pro_stripe_api_statement_description'    => '', 'pro_stripe_api_validate_zipcode' => '0', 'pro_stripe_api_accept_bitcoin' => '0',
 			'pro_stripe_api_image'                    => str_ireplace(array('http:', 'https:'), '', $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url']).'/images/stripe-square.png',
 
 			'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',

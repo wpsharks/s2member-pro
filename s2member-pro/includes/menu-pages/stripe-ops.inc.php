@@ -118,6 +118,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-accept-bitcoin">'."\n";
+			echo 'Accept Bitcoin via Stripe?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" id="ws-plugin--s2member-pro-stripe-api-accept-bitcoin">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do NOT accept Bitcoin (default Stripe behavior)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>Yes, accept Bitcoin (enabled for "Buy Now" only; i.e., recurring charges not possible at this time)</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
 			echo 'Stripe Image Branding:'."\n";
 			echo '</label>'."\n";
