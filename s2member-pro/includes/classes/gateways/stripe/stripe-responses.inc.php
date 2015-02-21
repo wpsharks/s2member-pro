@@ -539,7 +539,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap('administrator') /* NOT for Administrators. */)
 						$response = array('response' => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', 's2member-admin', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -608,7 +608,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
@@ -678,7 +678,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s['custom_fields']) ? $s['custom_fields'] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s['attr']['level'] === '*' ? 'auto-detection' : $s['attr']['level'], 'registration', TRUE))))
 						$response = array('response' => array_shift($custom_field_validation_errors), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Method. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())

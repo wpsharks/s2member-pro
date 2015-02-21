@@ -80,10 +80,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 							{
 								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($cur__subscr_cid, $cur__subscr_id)) && !preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 								{
-									unset($_POST['s2member_pro_stripe_update']['card_token']); // These are good one-time only.
-									unset($_POST['s2member_pro_stripe_update']['card_token_summary']);
+									unset($_POST['s2member_pro_stripe_update']['source_token']); // These are good one-time only.
+									unset($_POST['s2member_pro_stripe_update']['source_token_summary']);
 
-									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['card_token'], $post_vars)))
+									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['source_token'], $post_vars)))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 

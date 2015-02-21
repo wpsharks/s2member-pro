@@ -84,12 +84,12 @@ if(!defined('WPINC')) // MUST have WordPress.
 		<div id="s2member-pro-stripe-sp-checkout-form-billing-method-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-sp-checkout-form-section-title s2member-pro-stripe-form-billing-method-section-title s2member-pro-stripe-sp-checkout-form-billing-method-section-title">
 			<?php echo _x("Billing Method", "s2member-front", "s2member"); ?>
 		</div>
-		<div id="s2member-pro-stripe-sp-checkout-form-card-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-card-token-div s2member-pro-stripe-sp-checkout-form-card-token-div">
-			<button id="s2member-pro-stripe-sp-checkout-form-card-token-button" class="s2member-pro-stripe-form-card-token-button s2member-pro-stripe-sp-checkout-form-card-token-button" type="button">
+		<div id="s2member-pro-stripe-sp-checkout-form-source-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-source-token-div s2member-pro-stripe-sp-checkout-form-source-token-div">
+			<button id="s2member-pro-stripe-sp-checkout-form-source-token-button" class="s2member-pro-stripe-form-source-token-button s2member-pro-stripe-sp-checkout-form-source-token-button" type="button">
 				<i><?php echo _x("[+]", "s2member-front", "s2member"); ?></i> <span><?php echo _x("Add Billing Method", "s2member-front", "s2member"); ?></span>
 			</button>
-			<div id="s2member-pro-stripe-sp-checkout-form-card-token-summary" class="s2member-pro-stripe-form-card-token-summary s2member-pro-stripe-sp-checkout-form-card-token-summary">
-				%%card_token_summary%%
+			<div id="s2member-pro-stripe-sp-checkout-form-source-token-summary" class="s2member-pro-stripe-form-source-token-summary s2member-pro-stripe-sp-checkout-form-source-token-summary">
+				%%source_token_summary%%
 			</div>
 		</div>
 		<div style="clear:both;"></div>

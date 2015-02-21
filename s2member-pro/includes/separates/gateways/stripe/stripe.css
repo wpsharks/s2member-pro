@@ -164,10 +164,10 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div label
 	cursor      : pointer;
 	font-weight : normal;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:focus,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:active
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:hover,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:focus,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:active
 {
 	margin         : 0;
 	width          : 100%;
@@ -187,7 +187,7 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	cursor         : pointer;
 	background     : rgba(0, 0, 0, 0.05);
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:before
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:before
 {
 	content    : '';
 	float      : right;
@@ -195,28 +195,28 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	height     : 26px;
 	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:focus,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:active
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:focus,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:active
 {
 	opacity : 0.5;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > i,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button > i,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button > span
 {
 	opacity    : 0.8;
 	font-style : normal;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover > i,
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button:hover > span
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:hover > i,
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:hover > span
 {
 	opacity : 1;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-card-token-button > span
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button > span
 {
 	text-decoration : none;
 	border-bottom   : 1px dotted;
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div div.s2member-pro-stripe-form-card-token-summary
+div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div div.s2member-pro-stripe-form-source-token-summary
 {
 	font-weight : bold;
 	text-align  : center;

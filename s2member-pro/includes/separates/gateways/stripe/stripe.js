@@ -53,7 +53,7 @@ jQuery(document).ready( // DOM ready.
 
 				taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, ajaxTaxDiv,
 				optionsSection, optionsSelect, descSection, couponSection, couponApplyButton, registrationSection, customFieldsSection,
-				billingMethodSection, handleBillingMethod, cardTokenButton, cardTokenSummary, cardTokenInput, cardTokenSummaryInput, billingAddressSection, captchaSection,
+				billingMethodSection, handleBillingMethod, sourceTokenButton, sourceTokenSummary, sourceTokenInput, sourceTokenSummaryInput, billingAddressSection, captchaSection,
 				submissionSection, submissionButton, submissionNonceVerification;
 
 			preloadAjaxLoader = new Image(), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
@@ -215,16 +215,16 @@ jQuery(document).ready( // DOM ready.
 			else if(($upForm = $('form#s2member-pro-stripe-update-form')).length === 1)
 			{
 				billingMethodSection = 'div#s2member-pro-stripe-update-form-billing-method-section',
-					cardTokenButton = billingMethodSection + ' button#s2member-pro-stripe-update-form-card-token-button',
-					cardTokenSummary = billingMethodSection + ' div#s2member-pro-stripe-update-form-card-token-summary',
+					sourceTokenButton = billingMethodSection + ' button#s2member-pro-stripe-update-form-source-token-button',
+					sourceTokenSummary = billingMethodSection + ' div#s2member-pro-stripe-update-form-source-token-summary',
 
 					billingAddressSection = 'div#s2member-pro-stripe-update-form-billing-address-section',
 
 					captchaSection = 'div#s2member-pro-stripe-update-form-captcha-section',
 
 					submissionSection = 'div#s2member-pro-stripe-update-form-submission-section',
-					cardTokenInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_update[card_token]') + '"]',
-					cardTokenSummaryInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_update[card_token_summary]') + '"]',
+					sourceTokenInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_update[source_token]') + '"]',
+					sourceTokenSummaryInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_update[source_token_summary]') + '"]',
 					submissionButton = submissionSection + ' button#s2member-pro-stripe-update-submit';
 
 				$(submissionButton).removeAttr('disabled'),
@@ -232,9 +232,9 @@ jQuery(document).ready( // DOM ready.
 
 				handleBillingMethod = function(eventTrigger /* eventTrigger is passed by jQuery for DOM events. */)
 				{
-					var cardToken = $(cardTokenInput).val(/* Card token from Stripe. */);
+					var sourceToken = $(sourceTokenInput).val(/* Card token from Stripe. */);
 
-					if(cardToken/* They have now supplied a credit card? */)
+					if(sourceToken/* They have now supplied a credit card? */)
 					{
 						$(billingMethodSection).show(), // Show billing method section.
 							$(billingMethodSection + ' > div.s2member-pro-stripe-update-form-div').show(),
@@ -254,7 +254,7 @@ jQuery(document).ready( // DOM ready.
 						}
 						if(eventTrigger) $(submissionSection + ' button#s2member-pro-stripe-update-submit').focus();
 					}
-					else if(!cardToken/* Else there is no Billing Method supplied. */)
+					else if(!sourceToken/* Else there is no Billing Method supplied. */)
 					{
 						$(billingMethodSection).show(), // Show billing method section.
 							$(billingMethodSection + ' > div.s2member-pro-stripe-update-form-div').show(),
@@ -267,9 +267,9 @@ jQuery(document).ready( // DOM ready.
 				};
 				handleBillingMethod(); // Handle billing method immediately to deal with fields already filled in.
 
-				$(cardTokenButton).on('click', function() // Stripe integration.
+				$(sourceTokenButton).on('click', function() // Stripe integration.
 				{
-					var getCardToken = StripeCheckout.configure
+					var getSourceToken = StripeCheckout.configure
 					({
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 						 bitcoin        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_accept_bitcoin"]); ?>' == '1',
@@ -280,19 +280,19 @@ jQuery(document).ready( // DOM ready.
 						 allowRememberMe: true, // Allow Stripe to remember the customer.
 						 token          : function(token)
 						 {
-							 $(cardTokenInput).val(token.id), $(cardTokenSummaryInput).val(buildCardTokenTextSummary(token)),
-								 $(cardTokenSummary).html(ws_plugin__s2member_escHtml(buildCardTokenTextSummary(token))),
+							 $(sourceTokenInput).val(token.id), $(sourceTokenSummaryInput).val(buildSourceTokenTextSummary(token)),
+								 $(sourceTokenSummary).html(ws_plugin__s2member_escHtml(buildSourceTokenTextSummary(token))),
 								 handleBillingMethod(); // Adjust billing methods fields now also.
 						 }
 					 });
-					getCardToken.open(); // Open Stripe overlay.
+					getSourceToken.open(); // Open Stripe overlay.
 				});
 				$upForm.on('submit', function(/* Form validation. */)
 				{
 					var context = this, label = '', error = '', errors = '',
 						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
 
-					if(!$(cardTokenInput).val())
+					if(!$(sourceTokenInput).val())
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
 						return false;
@@ -345,8 +345,8 @@ jQuery(document).ready( // DOM ready.
 						customFieldsSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-custom-fields-section',
 
 						billingMethodSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-billing-method-section',
-						cardTokenButton = billingMethodSection + ' button#s2member-pro-stripe-' + coTypeWithDashes + '-form-card-token-button',
-						cardTokenSummary = billingMethodSection + ' div#s2member-pro-stripe-' + coTypeWithDashes + '-form-card-token-summary',
+						sourceTokenButton = billingMethodSection + ' button#s2member-pro-stripe-' + coTypeWithDashes + '-form-source-token-button',
+						sourceTokenSummary = billingMethodSection + ' div#s2member-pro-stripe-' + coTypeWithDashes + '-form-source-token-summary',
 
 						billingAddressSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-billing-address-section',
 						ajaxTaxDiv = billingAddressSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-ajax-tax-div',
@@ -354,8 +354,8 @@ jQuery(document).ready( // DOM ready.
 						captchaSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-captcha-section',
 
 						submissionSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-submission-section',
-						cardTokenInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[card_token]') + '"]',
-						cardTokenSummaryInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[card_token_summary]') + '"]',
+						sourceTokenInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[source_token]') + '"]',
+						sourceTokenSummaryInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[source_token_summary]') + '"]',
 						submissionNonceVerification = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-nonce',
 						submissionButton = submissionSection + ' button#s2member-pro-stripe-' + coTypeWithDashes + '-submit';
 					/*
@@ -503,13 +503,13 @@ jQuery(document).ready( // DOM ready.
 					handleBillingMethod = function(eventTrigger /* eventTrigger is passed by jQuery for DOM events. */)
 					{
 						if($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-payment-not-required-or-not-possible').length)
-							$(cardTokenInput).val('free'); // No payment required in this VERY special case.
+							$(sourceTokenInput).val('free'); // No payment required in this VERY special case.
 
-						var cardToken = $(cardTokenInput).val(/* Card token from Stripe. */);
+						var sourceToken = $(sourceTokenInput).val(/* Card token from Stripe. */);
 
-						if(cardToken/* They have now supplied a credit card? */)
+						if(sourceToken/* They have now supplied a credit card? */)
 						{
-							if(cardToken === 'free' /* Special card token value. */)
+							if(sourceToken === 'free' /* Special card token value. */)
 							{
 								$(billingMethodSection).hide(), // Hide billing method section.
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').hide(),
@@ -521,7 +521,7 @@ jQuery(document).ready( // DOM ready.
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div :input').attr(ariaTrue);
 							}
-							if(cardToken !== 'free' && taxMayApply/* If tax may apply, we need to collect a tax location. */)
+							if(sourceToken !== 'free' && taxMayApply/* If tax may apply, we need to collect a tax location. */)
 							{
 								$(billingAddressSection).show(), // Show billing address section.
 									$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
@@ -535,7 +535,7 @@ jQuery(document).ready( // DOM ready.
 							}
 							if(eventTrigger) $(submissionSection + ' button#s2member-pro-stripe-' + coTypeWithDashes + '-submit').focus();
 						}
-						else if(!cardToken/* Else there is no Billing Method supplied. */)
+						else if(!sourceToken/* Else there is no Billing Method supplied. */)
 						{
 							$(billingMethodSection).show(), // Show billing method section.
 								$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
@@ -548,9 +548,9 @@ jQuery(document).ready( // DOM ready.
 					};
 					handleBillingMethod(); // Handle billing method immediately to deal with fields already filled in.
 
-					$(cardTokenButton).on('click', function() // Stripe integration.
+					$(sourceTokenButton).on('click', function() // Stripe integration.
 					{
-						var getCardToken = StripeCheckout.configure
+						var getSourceToken = StripeCheckout.configure
 						({
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 bitcoin        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_accept_bitcoin"]); ?>' == '1',
@@ -561,12 +561,12 @@ jQuery(document).ready( // DOM ready.
 							 allowRememberMe: true, // Allow Stripe to remember the customer.
 							 token          : function(token)
 							 {
-								 $(cardTokenInput).val(token.id), $(cardTokenSummaryInput).val(buildCardTokenTextSummary(token)),
-									 $(cardTokenSummary).html(ws_plugin__s2member_escHtml(buildCardTokenTextSummary(token))),
+								 $(sourceTokenInput).val(token.id), $(sourceTokenSummaryInput).val(buildSourceTokenTextSummary(token)),
+									 $(sourceTokenSummary).html(ws_plugin__s2member_escHtml(buildSourceTokenTextSummary(token))),
 									 handleBillingMethod(); // Adjust billing methods fields now also.
 							 }
 						 });
-						getCardToken.open(); // Open Stripe overlay.
+						getSourceToken.open(); // Open Stripe overlay.
 					});
 					$coForm.on('submit', function(/* Form validation. */)
 					{
@@ -577,7 +577,7 @@ jQuery(document).ready( // DOM ready.
 								$password1 = $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-password1[aria-required="true"]'),
 								$password2 = $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-password2');
 
-							if(!$(cardTokenInput).val())
+							if(!$(sourceTokenInput).val())
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
 								return false;
@@ -620,7 +620,7 @@ jQuery(document).ready( // DOM ready.
 					});
 				})($coForm);
 			}
-			var buildCardTokenTextSummary = function(token)
+			var buildSourceTokenTextSummary = function(token)
 			{
 				if(typeof token !== 'object') return '';
 

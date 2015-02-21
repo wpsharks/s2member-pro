@@ -79,8 +79,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('checkout', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						unset($_POST['s2member_pro_stripe_checkout']['card_token']); // These are good one-time only.
-						unset($_POST['s2member_pro_stripe_checkout']['card_token_summary']);
+						unset($_POST['s2member_pro_stripe_checkout']['source_token']); // These are good one-time only.
+						unset($_POST['s2member_pro_stripe_checkout']['source_token_summary']);
 
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
@@ -141,7 +141,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars)))
+									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) ? $cost_calculations['trial_total'] : $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
@@ -163,8 +163,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars))
 									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if((empty($stripe_customer_w_card_token) || !is_object($stripe_customer_w_card_token))
-									        && !is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars))
+									else if((empty($stripe_customer_with_source) || !is_object($stripe_customer_with_source))
+									        && !is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars))
 									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
@@ -270,7 +270,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars)))
+									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) ? $cost_calculations['trial_total'] : $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
@@ -292,8 +292,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars))
 									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if((empty($stripe_customer_w_card_token) || !is_object($stripe_customer_w_card_token))
-									        && !is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars))
+									else if((empty($stripe_customer_with_source) || !is_object($stripe_customer_with_source))
+									        && !is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars))
 									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
@@ -431,7 +431,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars)))
+									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
@@ -509,7 +509,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['card_token'], $post_vars)))
+									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars)))
 										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
