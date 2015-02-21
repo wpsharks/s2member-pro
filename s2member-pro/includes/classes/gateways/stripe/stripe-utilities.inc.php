@@ -118,15 +118,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Set a Stripe customer card/token.
+		 * Set a Stripe customer source.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
-		 * @param string $card_token Stripe token.
+		 * @param string $source_token Stripe source card/bank/bitcoin token.
 		 * @param array  $post_vars Pro Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function set_customer_card_token($customer_id, $card_token, $post_vars = array())
+		public static function set_customer_source($customer_id, $source_token, $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -134,13 +134,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
-			$metadata     = self::_additional_customer_metadata($post_vars);
-			$card_details = self::_additional_customer_card_details($post_vars);
+			$metadata       = self::_additional_customer_metadata($post_vars);
+			$source_details = self::_additional_customer_source_details($post_vars);
 
-			try // Attempt to update the customer's card/token.
+			try // Attempt to update the customer's source token.
 			{
-				$customer       = Stripe_Customer::retrieve($customer_id);
-				$customer->card = $card_token; // Update.
+				$customer         = Stripe_Customer::retrieve($customer_id);
+				$customer->source = $source_token; // Update.
 
 				if($metadata) // Customer metadata?
 				{
@@ -152,16 +152,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
-				if($card_details) // Additional details we should save?
+				if($source_details) // Additional details we should save?
 				{
-					$card = $customer->cards->data[0]; // Just one card!
-					/** @var Stripe_Card $card Reference for IDEs. */
+					$source = $customer->sources->data[0]; // Just one source.
+					/** @var Stripe_Card|Stripe_BitcoinReceiver|Stripe_Transfer $source */
 
-					foreach($card_details as $_key => $_value)
-						$card->{$_key} = $_value; // e.g. `address_zip`, etc.
+					foreach($source_details as $_key => $_value)
+						$source->{$_key} = $_value; // e.g. `address_zip`, etc.
 					unset($_key, $_value); // Housekeeping.
 
-					$card->save(); // Update.
+					$source->save(); // Update.
 				}
 				return $customer;
 			}
@@ -173,7 +173,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			}
 		}
 
-		public static function _additional_customer_card_details($post_vars = array())
+		public static function _additional_customer_source_details($post_vars = array())
 		{
 			$post_vars = (array)$post_vars;
 			$details   = array(); // Initialize.

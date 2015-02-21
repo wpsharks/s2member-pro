@@ -83,7 +83,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 									unset($_POST['s2member_pro_stripe_update']['card_token']); // These are good one-time only.
 									unset($_POST['s2member_pro_stripe_update']['card_token_summary']);
 
-									if(is_object($set_customer_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($cur__subscr_cid, $post_vars['card_token'], $post_vars)))
+									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['card_token'], $post_vars)))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 
@@ -92,7 +92,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
 										) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
-									else $global_response = array('response' => $set_customer_card_token, 'error' => TRUE);
+									else $global_response = array('response' => $set_customer_source, 'error' => TRUE);
 								}
 								else $global_response = array('response' => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 							}
