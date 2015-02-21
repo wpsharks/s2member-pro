@@ -99,16 +99,16 @@ jQuery(document).ready( // DOM ready.
 					if((errors = $.trim(errors)))
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
-						return false;
+						return false; // Error; cannot continue in this scenario.
 					}
 					else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
-						return false;
+						return false; // Error; cannot continue in this scenario.
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));
-					return true;
+					return true; // Allow submission.
 				});
 			}
 			/*
@@ -185,28 +185,28 @@ jQuery(document).ready( // DOM ready.
 						if((errors = $.trim(errors)))
 						{
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
-							return false;
+							return false; // Error; cannot continue in this scenario.
 						}
 						else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
 						{
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
-							return false;
+							return false; // Error; cannot continue in this scenario.
 						}
 						else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
 						{
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
-							return false;
+							return false; // Error; cannot continue in this scenario.
 						}
 						else if($recaptchaResponse.length && !$recaptchaResponse.val())
 						{
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
-							return false;
+							return false; // Error; cannot continue in this scenario.
 						}
 						$(optionsSelect).attr(disabled); // Not an option selection.
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));
-					return true;
+					return true; // Allow submission.
 				});
 			}
 			/*
@@ -232,9 +232,9 @@ jQuery(document).ready( // DOM ready.
 
 				handleBillingMethod = function(eventTrigger /* eventTrigger is passed by jQuery for DOM events. */)
 				{
-					var sourceToken = $(sourceTokenInput).val(/* Card token from Stripe. */);
+					var sourceToken = $(sourceTokenInput).val(/* Source token from Stripe. */);
 
-					if(sourceToken/* They have now supplied a credit card? */)
+					if(sourceToken/* They have now supplied a source token? */)
 					{
 						$(billingMethodSection).show(), // Show billing method section.
 							$(billingMethodSection + ' > div.s2member-pro-stripe-update-form-div').show(),
@@ -272,7 +272,7 @@ jQuery(document).ready( // DOM ready.
 					var getSourceToken = StripeCheckout.configure
 					({
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
-						 bitcoin        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_accept_bitcoin"]); ?>' == '1',
+						 // bitcoin        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_accept_bitcoin"]); ?>' == '1',
 						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
 						 image          : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>',
 						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
@@ -295,7 +295,7 @@ jQuery(document).ready( // DOM ready.
 					if(!$(sourceTokenInput).val())
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
-						return false;
+						return false; // Error; cannot continue in this scenario.
 					}
 					$(':input', context)
 						.each(function(/* Go through them all together. */)
@@ -311,16 +311,16 @@ jQuery(document).ready( // DOM ready.
 					if((errors = $.trim(errors)))
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
-						return false;
+						return false; // Error; cannot continue in this scenario.
 					}
 					else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					{
 						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
-						return false;
+						return false; // Error; cannot continue in this scenario.
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));
-					return true;
+					return true; // Allow submission.
 				});
 			}
 			/*
@@ -505,11 +505,11 @@ jQuery(document).ready( // DOM ready.
 						if($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-payment-not-required-or-not-possible').length)
 							$(sourceTokenInput).val('free'); // No payment required in this VERY special case.
 
-						var sourceToken = $(sourceTokenInput).val(/* Card token from Stripe. */);
+						var sourceToken = $(sourceTokenInput).val(/* Source token from Stripe. */);
 
-						if(sourceToken/* They have now supplied a credit card? */)
+						if(sourceToken/* They have now supplied a source token? */)
 						{
-							if(sourceToken === 'free' /* Special card token value. */)
+							if(sourceToken === 'free' /* Special source token value. */)
 							{
 								$(billingMethodSection).hide(), // Hide billing method section.
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').hide(),
@@ -580,7 +580,7 @@ jQuery(document).ready( // DOM ready.
 							if(!$(sourceTokenInput).val())
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
-								return false;
+								return false; // Error; cannot continue in this scenario.
 							}
 							$(':input', context)
 								.each(function(/* Go through them all together. */)
@@ -595,28 +595,28 @@ jQuery(document).ready( // DOM ready.
 							if((errors = $.trim(errors)))
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
-								return false;
+								return false; // Error; cannot continue in this scenario.
 							}
 							else if($password1.length && $.trim($password1.val()) !== $.trim($password2.val()))
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
-								return false;
+								return false; // Error; cannot continue in this scenario.
 							}
 							else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
-								return false;
+								return false; // Error; cannot continue in this scenario.
 							}
 							else if($recaptchaResponse.length && !$recaptchaResponse.val())
 							{
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
-								return false;
+								return false; // Error; cannot continue in this scenario.
 							}
 							$(optionsSelect).attr(disabled); // Not an option selection.
 						}
 						$(couponApplyButton).attr(disabled),
 							$(submissionButton).attr(disabled), ws_plugin__s2member_animateProcessing($(submissionButton));
-						return true;
+						return true; // Allow submission.
 					});
 				})($coForm);
 			}
@@ -629,6 +629,8 @@ jQuery(document).ready( // DOM ready.
 
 				if(token.type === 'card' && token.card)
 					return token.card.brand + ': xxxx-xxxx-xxxx-' + token.card.last4;
+
+				console.log(token); // So we can catch the type.
 
 				return 'Token: ' + token.id;
 			};
