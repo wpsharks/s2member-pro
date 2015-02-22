@@ -131,11 +131,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						$attr["default_country_code"] = /* This MUST be in uppercase format. */ strtoupper($attr["default_country_code"]);
 						$attr["success"] = /* Normalize ampersands. */ c_ws_plugin__s2member_utils_urls::n_amps($attr["success"]);
 
-						$attr["accept"] = (trim($attr["accept"])) ? preg_split("/[;,]+/", preg_replace("/[\r\n\t\s]+/", "", strtolower($attr["accept"]))) : array();
-						$attr["accept"] = (!in_array("paypal", $attr["accept"])) ? array_merge($attr["accept"], array("paypal")) : $attr["accept"];
+						$attr['accept'] = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
+						$attr['accept'] = !in_array('paypal', $attr['accept']) ? array_merge($attr['accept'], array('paypal')) : $attr['accept'];
 
-						$attr["accept_via_paypal"] = (trim($attr["accept_via_paypal"])) ? preg_split("/[;,]+/", preg_replace("/[\r\n\t\s]+/", "", strtolower($attr["accept_via_paypal"]))) : array();
-						$attr["accept_via_paypal"] = (!in_array("paypal", $attr["accept_via_paypal"])) ? array_merge($attr["accept_via_paypal"], array("paypal")) : $attr["accept_via_paypal"];
+						$attr['accept_via_paypal'] = trim($attr['accept_via_paypal']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept_via_paypal'])))) : array();
+						$attr['accept_via_paypal'] = !in_array('paypal', $attr['accept_via_paypal']) ? array_merge($attr['accept_via_paypal'], array('paypal')) : $attr['accept_via_paypal'];
 
 						$attr["coupon"] = (!empty($_GET["s2p-coupon"])) ? trim(strip_tags(stripslashes($_GET["s2p-coupon"]))) : $attr["coupon"];
 
