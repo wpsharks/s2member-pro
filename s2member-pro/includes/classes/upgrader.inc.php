@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Upgrader
@@ -93,7 +93,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 						if(!empty($_p["ws_plugin__s2member_pro_upgrade"]) && $error && strpos($error, "#0004") !== false /* ``WP_Filesystem()`` failed? */ && $credentials_form)
 							{
 								$wizard = '<div class="error fade">'."\n";
-								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank">s2Member Pro Module</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
+								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank">s2Member Pro Add-on</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
 								$wizard .= '</div>';
 
 								$wizard .= /* Form to collect credentials. */ $credentials_form."\n";
@@ -101,7 +101,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 						else // Otherwise, we just need to collect their s2Member.com Username/Password combination.
 							{
 								$wizard = '<div class="error fade">'."\n";
-								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank">s2Member Pro Module</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
+								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank">s2Member Pro Add-on</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
 								$wizard .= '<form method="post" action="'.esc_attr($_SERVER["REQUEST_URI"]).'" style="margin: 5px 0 5px 0;" onsubmit="jQuery (\'input#ws-plugin--s2member-pro-upgrade-submit\', this).attr (\'disabled\', \'disabled\').val (\'Upgrading... (please wait)\');">'."\n";
 								$wizard .= '<input type="hidden" name="ws_plugin__s2member_pro_upgrade" id="ws-plugin--s2member-pro-upgrade" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-upgrade")).'" />'."\n";
 
@@ -136,7 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 							{
 								if(@set_time_limit(0) !== "nill" && @ini_set("memory_limit", apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT)) !== "nill" && c_ws_plugin__s2member_pro_upgrader::abbr_bytes(@ini_get("memory_limit")) >= c_ws_plugin__s2member_pro_upgrader::abbr_bytes(apply_filters("admin_memory_limit", WP_MAX_MEMORY_LIMIT)))
 									{
-										if(!empty($_p["ws_plugin__s2member_pro_upgrade_username"]) && !empty($_p["ws_plugin__s2member_pro_upgrade_password"]) && is_array($s2_pro_upgrade = maybe_unserialize(c_ws_plugin__s2member_utils_urls::remote(add_query_arg(urlencode_deep(array("s2_pro_upgrade" => array("username" => (string)$_p["ws_plugin__s2member_pro_upgrade_username"], "password" => (string)$_p["ws_plugin__s2member_pro_upgrade_password"], "version" => WS_PLUGIN__S2MEMBER_PRO_VERSION))), c_ws_plugin__s2member_readmes::parse_readme_value("Pro Module / Auto-Update URL", dirname(dirname(dirname(__FILE__)))."/readme.txt"))))) && !empty($s2_pro_upgrade["zip"]) && !empty($s2_pro_upgrade["ver"]))
+										if(!empty($_p["ws_plugin__s2member_pro_upgrade_username"]) && !empty($_p["ws_plugin__s2member_pro_upgrade_password"]) && is_array($s2_pro_upgrade = maybe_unserialize(c_ws_plugin__s2member_utils_urls::remote(add_query_arg(urlencode_deep(array("s2_pro_upgrade" => array("username" => (string)$_p["ws_plugin__s2member_pro_upgrade_username"], "password" => (string)$_p["ws_plugin__s2member_pro_upgrade_password"], "version" => WS_PLUGIN__S2MEMBER_PRO_VERSION))), c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Auto-Update URL", dirname(dirname(dirname(__FILE__)))."/readme.txt"))))) && !empty($s2_pro_upgrade["zip"]) && !empty($s2_pro_upgrade["ver"]))
 											{
 												set_transient(md5("ws_plugin__s2member_pro_upgrade_credentials"), array("username" => (string)$_p["ws_plugin__s2member_pro_upgrade_username"], "password" => (string)$_p["ws_plugin__s2member_pro_upgrade_password"]), 5184000);
 

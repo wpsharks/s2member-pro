@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Menu_Pages
@@ -64,8 +64,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 			echo '<div class="ws-menu-page-group" title="Other Payment Gateways (optional)" default-state="open">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-other-gateways-section">'."\n";
-			echo '<h3>Other Payment Gateways (enable / disable)</h3>'."\n";
-			echo '<p>s2Member recommends PayPal Pro as the best available option for payment processing. However, s2Member has also been integrated with the additional Payment Gateways listed below. If you wish to take advantage of these additional Gateway integrations, you must enable them explicitly from this page. Once enabled, options will become available in your s2Member Menu on the left-hand side. s2Member has the ability to operate with as many Gateways integrations as you like. If you\'d like to use them all, you can! Just remember, for each Payment Gateway that you integrate, you must configure the options for that Gateway, and you must use s2Member\'s Button Generator to create WordPress Shortcodes that go into your Membership Options Page <em>(aka: your Signup Page)</em>.</p>'."\n";
+			echo '<h3>Other Payment Gateways (enable/disable)</h3>'."\n";
+			echo '<p>s2Member Pro has been integrated with the additional Payment Gateways listed below. If you wish to take advantage of these additional Payment Gateway integrations, you will need to enable them explicitly from this page. Once enabled, please refresh the page. New options will become available in your s2Member Menu on the left-hand side.</p>'."\n";
+			echo '<p>s2Member has the ability to operate with as many Payment Gateway integrations as you like. If you\'d like to use them all, you can! Please remember, for each Payment Gateway that you integrate, you will need to configure the options for that Payment Gateway. You\'ll then use s2Member\'s Pro-Form/Button Generators to create WordPress Shortcodes that go into your Membership Options Page <em>(aka: your Signup Page)</em>.</p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";

@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\ClickBank
@@ -282,7 +282,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
-					$clickbank['s2member_log'][] = 'Unable to verify POST vars. This is most likely related to an invalid ClickBank configuration. Please check: s2Member -› ClickBank Options.';
+					$clickbank['s2member_log'][] = 'Unable to verify POST vars. This is most likely related to an invalid ClickBank configuration. Please check: s2Member ⥱ ClickBank Options.';
 					$clickbank['s2member_log'][] = 'If you\'re absolutely SURE that your ClickBank configuration is valid, you may want to run some tests on your server, just to be sure $_POST variables are populated, and that your server is able to connect to ClickBank over an HTTPS connection.';
 					$clickbank['s2member_log'][] = 's2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.';
 					$clickbank['s2member_log'][] = print_r($_REQUEST, TRUE)."\n\n".print_r(json_decode(file_get_contents('php://input')), TRUE); // Recording data for analysis and debugging.

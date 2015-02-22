@@ -1,6 +1,6 @@
 <?php
 /**
- * Stripe Pro Form responses.
+ * Stripe Pro-Form responses.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -36,7 +36,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 {
 	/**
-	 * Stripe Pro Form responses.
+	 * Stripe Pro-Form responses.
 	 *
 	 * @package s2Member\Stripe
 	 * @since 140617
@@ -49,7 +49,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -80,7 +80,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -111,7 +111,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -142,7 +142,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -173,7 +173,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -206,7 +206,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */
@@ -229,7 +229,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */
@@ -345,7 +345,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e., the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -473,7 +473,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e., the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -511,8 +511,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param string $form The type of Pro Form being submitted.
-		 * @param array  $s An array of data submitted through the Pro Form.
+		 * @param string $form The type of Pro-Form being submitted.
+		 * @param array  $s An array of data submitted through the Pro-Form.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */

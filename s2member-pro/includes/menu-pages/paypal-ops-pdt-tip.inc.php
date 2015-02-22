@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Menu_Pages
@@ -45,7 +45,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_pdt_tip"))
 	{
 		public function __construct()
 		{
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>*PayPal Pro Tip*</strong> The tip above, is ALSO true for PayPal Pro integration. There are no conflicts with Auto-Return/PDT.</em></p>'."\n" : '';
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>PayPal Pro:</strong> The tip above (for PayPal Payments Standard) is also true for PayPal Pro integration.</em></p>'."\n" : '';
 		}
 	}
 }

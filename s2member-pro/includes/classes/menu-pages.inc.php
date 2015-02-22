@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -44,7 +44,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 		class c_ws_plugin__s2member_pro_menu_pages
 			{
 				/**
-				* Identifies the s2Member Pro Module.
+				* Identifies the s2Member Pro Add-on.
 				*
 				* @package s2Member\Menu_Pages
 				* @since 1.5
@@ -53,7 +53,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 				*
 				* @param array $plugin_meta Expects an array of meta details for the ``$plugin_file``.
 				* @param string $plugin_file Expects a string holding the basename of the plugin.
-				* 	We need to look for a match to the s2Member Pro Module in this variable.
+				* 	We need to look for a match to the s2Member Pro Add-on in this variable.
 				* @return array Array of meta details for the plugin.
 				*/
 				public static function module_identifier ($plugin_meta = FALSE, $plugin_file = FALSE)
@@ -84,7 +84,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 						return $add_divider; // Now add the divider.
 					}
 				/**
-				* Add the Pro Module Import/Export page here.
+				* Add the Pro Add-on Import/Export page here.
 				*
 				* @package s2Member\Menu_Pages
 				* @since 1.5
@@ -122,7 +122,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_menu_pages"))
 						return $add_divider; // Now add the divider.
 					}
 				/**
-				* Add the Pro Module info page here.
+				* Add the Pro Add-on info page here.
 				*
 				* @package s2Member\Menu_Pages
 				* @since 1.5

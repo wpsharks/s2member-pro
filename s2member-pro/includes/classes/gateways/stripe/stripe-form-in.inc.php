@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -92,7 +92,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			$options           = array(); // Initialize options to an empty array.
 			$option_selections = ''; // Initialize w/ no options.
 
-			if($content && ($content = strip_tags($content))) // This allows for nested Pro Form Shortcodes as options.
+			if($content && ($content = strip_tags($content))) // This allows for nested Pro-Form Shortcodes as options.
 				$content = str_replace('s2Member-Pro-Stripe-Form ', 's2Member-Pro-Stripe-xFormOption ', $content);
 
 			if($content && ($content_options = do_shortcode($content)))
@@ -129,7 +129,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$option_selections .= '<option value="'.esc_attr($_option_id).'"'.(!empty($_option['selected']) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
 				unset($_option_id, $_option); // Housekeeping.
 			}
-			$attr = shortcode_atts(array('ids' => '0', 'exp' => '72', 'level' => (@$attr['register'] ? '0' : '1'), 'ccaps' => '', 'desc' => '', 'cc' => 'USD', 'custom' => $_SERVER['HTTP_HOST'], 'ta' => '0', 'tp' => '0', 'tt' => 'D', 'ra' => '0.50', 'rp' => '1', 'rt' => 'M', 'rr' => '1', 'rrt' => '', 'modify' => '0', 'cancel' => '0', 'unsub' => '0', 'sp' => '0', 'register' => '0', 'update' => '0', 'accept' => 'bitcoin', 'coupon' => '', 'accept_coupons' => '0', 'default_country_code' => 'US', 'captcha' => '', 'template' => '', 'success' => ''), $attr);
+			$attr = shortcode_atts(array('ids' => '0', 'exp' => '72', 'level' => (@$attr['register'] ? '0' : '1'), 'ccaps' => '', 'desc' => '', 'cc' => 'USD', 'custom' => $_SERVER['HTTP_HOST'], 'ta' => '0', 'tp' => '0', 'tt' => 'D', 'ra' => '0.50', 'rp' => '1', 'rt' => 'M', 'rr' => '1', 'rrt' => '', 'modify' => '0', 'cancel' => '0', 'unsub' => '0', 'sp' => '0', 'register' => '0', 'update' => '0', 'accept' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin'] ? 'bitcoin' : '', 'coupon' => '', 'accept_coupons' => '0', 'default_country_code' => 'US', 'captcha' => '', 'template' => '', 'success' => ''), $attr);
 
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rt']                   = strtoupper($attr['rt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
@@ -144,10 +144,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			$attr['coupon']               = (!empty($_GET['s2p-coupon'])) ? trim(strip_tags(stripslashes($_GET['s2p-coupon']))) : $attr['coupon'];
 			$attr['singular']             = get_the_ID(); // Collect the Singular ID for this Post/Page.
 
-			$attr['accept'] = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
-
+			$attr['accept']      = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
 			$is_buy_now          = $attr['sp'] || $attr['rr'] === 'BN' || (!$attr['tp'] && !$attr['rr']) ? TRUE : FALSE;
-			$is_bitcoin_accepted = $is_buy_now && $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin'] && in_array('bitcoin', $attr['accept'], TRUE);
+			$is_bitcoin_accepted = $is_buy_now && in_array('bitcoin', $attr['accept'], TRUE);
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', get_defined_vars());

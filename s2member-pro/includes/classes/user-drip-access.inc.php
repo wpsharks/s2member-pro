@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\User_Drip_Access
@@ -81,7 +81,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 		 * @since 140514 Enhancing `[s2Drip]` shortcode.
 		 *
 		 * @param string       $access Required; conditional expression with access_s2member_ capabilities
-		 *    (i.e. leveln, ccap_name), e.g. `level2` or `level3 and (ccap_music or ccap_videos)`.
+		 *    (i.e., leveln, ccap_name), e.g., `level2` or `level3 and (ccap_music or ccap_videos)`.
 		 *    Note that `and`, `or` MUST be used in place of `&&`, `||` due to sanitation routines.
 		 *    The `$access` string may contain only `[A-Za-z0-9 _()]`.
 		 *
@@ -114,7 +114,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 				if(!is_array($all_access_cap_times = self::$all_access_cap_times = c_ws_plugin__s2member_access_cap_times::get_access_cap_times($user_id)))
 					$all_access_cap_times = self::$all_access_cap_times = array();
 
-				$access_expression = strtolower($access); // e.g. 'level1 and ccap_music'
+				$access_expression = strtolower($access); // e.g., 'level1 and ccap_music'
 				$access_expression = trim(preg_replace('/[^a-z0-9 _()]/', '', $access_expression, -1, $invalid_chars));
 				$access_expression = str_replace(array(' and ', ' or '), array(' && ', ' || '), $access_expression);
 

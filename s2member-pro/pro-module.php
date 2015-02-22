@@ -22,12 +22,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member
@@ -119,15 +119,15 @@ else if(is_admin()) //  Admin compatibility errors.
 {
 	if(!version_compare(PHP_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need PHP v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION.\'+ to use the s2Member Pro Module.</p></div>\';'));
+		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need PHP v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION.\'+ to use the s2Member Pro Add-on.</p></div>\';'));
 	}
 	else if(!version_compare(get_bloginfo('version'), WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need WordPress v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION.\'+ to use the s2Member Pro Module.</p></div>\';'));
+		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need WordPress v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION.\'+ to use the s2Member Pro Add-on.</p></div>\';'));
 	}
 	else if(!defined('WS_PLUGIN__S2MEMBER_VERSION') || !defined('WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION') || !version_compare(WS_PLUGIN__S2MEMBER_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>In order to load the s2Member Pro Module, you need the <a href="\'.c_ws_plugin__s2member_readmes::parse_readme_value(\'Plugin URI\').\'" target="_blank">s2Member Framework</a>, v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.\'+. It\\\'s free.</p></div>\';'));
+		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="\'.c_ws_plugin__s2member_readmes::parse_readme_value(\'Plugin URI\').\'" target="_blank">s2Member Framework</a>, v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.\'+. It\\\'s free.</p></div>\';'));
 	}
 	else if(!version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '>=') && file_exists(dirname(__FILE__).'/includes/classes/upgrader.inc.php'))
 	{

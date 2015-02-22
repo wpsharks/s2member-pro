@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -51,7 +51,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string  $fname Customer's first name (optional).
 		 * @param string  $lname Customer's last name (optional).
 		 * @param array   $metadata Any metadata (optional).
-		 * @param array   $post_vars Pro Form post vars (optional).
+		 * @param array   $post_vars Pro-Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
@@ -122,7 +122,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $source_token Stripe source card/bank/bitcoin token.
-		 * @param array  $post_vars Pro Form post vars (optional).
+		 * @param array  $post_vars Pro-Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
@@ -158,7 +158,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					/** @var Stripe_Card|Stripe_BitcoinReceiver|Stripe_Transfer $source */
 
 					foreach($source_details as $_key => $_value)
-						$source->{$_key} = $_value; // e.g. `address_zip`, etc.
+						$source->{$_key} = $_value; // e.g., `address_zip`, etc.
 					unset($_key, $_value); // Housekeeping.
 
 					$source->save(); // Update.
@@ -204,8 +204,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string               $currency Three character currency code.
 		 * @param string               $description Description of the charge.
 		 * @param array                $metadata Any additional metadata (optional).
-		 * @param array                $post_vars Pro Form post vars (optional).
-		 * @param array                $cost_calculations Pro Form cost calculations (optional).
+		 * @param array                $post_vars Pro-Form post vars (optional).
+		 * @param array                $cost_calculations Pro-Form cost calculations (optional).
 		 *
 		 * @return Stripe_Charge|string Charge object; else error message.
 		 */
@@ -368,8 +368,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $plan_id Subscription plan ID in Stripe.
 		 * @param array  $metadata Any additional metadata (optional).
-		 * @param array  $post_vars Pro Form post vars (optional).
-		 * @param array  $cost_calculations Pro Form cost calculations (optional).
+		 * @param array  $post_vars Pro-Form post vars (optional).
+		 * @param array  $cost_calculations Pro-Form cost calculations (optional).
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
@@ -473,7 +473,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @param boolean $at_period_end Defaults to a `TRUE` value (optional).
 		 *    If `TRUE`, cancellation is delayed until the end of the current period.
-		 *    If `FALSE`, cancellation is NOT delayed; i.e. it occurs immediately.
+		 *    If `FALSE`, cancellation is NOT delayed; i.e., it occurs immediately.
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
@@ -777,7 +777,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Handles the return of Tax for Pro Forms, via AJAX; through a JSON object.
+		 * Handles the return of Tax for Pro-Forms, via AJAX; through a JSON object.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
@@ -992,7 +992,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array  $attr An array of Pro Form Attributes (optional).
+		 * @param array  $attr An array of Pro-Form Attributes (optional).
 		 * @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
 		 * @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
 		 * @param array  $process Optional. An array of additional processing routines to run here.

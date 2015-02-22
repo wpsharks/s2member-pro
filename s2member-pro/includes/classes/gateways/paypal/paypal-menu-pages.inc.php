@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -57,7 +57,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				*/
 				public static function paypal_admin_options ($add_paypal_buttons_page = TRUE, $vars = FALSE)
 					{
-						add_submenu_page ($vars["menu"], "s2Member Pro / PayPal Pro Forms", "PayPal Pro-Forms", "create_users", "ws-plugin--s2member-pro-paypal-forms", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_forms_page");
+						add_submenu_page ($vars["menu"], "s2Member Pro / PayPal Pro-Forms", "PayPal Pro-Forms", "create_users", "ws-plugin--s2member-pro-paypal-forms", "c_ws_plugin__s2member_pro_paypal_menu_pages::paypal_forms_page");
 
 						return $add_paypal_buttons_page; // Now add the PayPal Buttons.
 					}
@@ -215,7 +215,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 						return /* Return for uniformity. */;
 					}
 				/**
-				* Builds the Pro Forms page for this Payment Gateway.
+				* Builds the Pro-Forms page for this Payment Gateway.
 				*
 				* @package s2Member\Menu_Pages
 				* @since 1.5
@@ -225,10 +225,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				public static function paypal_forms_page ()
 					{
 						if (c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors ()) // Report error if PayPal Options are not yet configured.
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro Form(s).<br /><br />*NOTE: If you\'re ONLY planning to use Free Registration Forms (i.e. you\'re NOT going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member ⥱ PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro-Form(s).<br /><br />*NOTE: If you\'re ONLY planning to use Free Registration Forms (i.e., you\'re NOT going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.', true);
 
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_business"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_merchant_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_username"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_password"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_signature"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <code>s2Member -› PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, Merchant ID, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro Form(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <code>s2Member ⥱ PayPal Options</code> first. Once all of your PayPal Options are configured; including your Email Address, Merchant ID, API Username, Password, and Signature; return to this page &amp; generate your PayPal Pro-Form(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/paypal-forms.inc.php";
 

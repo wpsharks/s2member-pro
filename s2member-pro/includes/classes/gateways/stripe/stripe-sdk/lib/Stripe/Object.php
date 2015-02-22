@@ -4,12 +4,12 @@ class Stripe_Object implements ArrayAccess
 {
   /**
    * @var Stripe_Util_Set Attributes that should not be sent to the API because
-   *    they're not updatable (e.g. API key, ID).
+   *    they're not updatable (e.g., API key, ID).
    */
   public static $permanentAttributes;
   /**
    * @var Stripe_Util_Set Attributes that are nested but still updatable from
-   *    the parent class's URL (e.g. metadata).
+   *    the parent class's URL (e.g., metadata).
    */
   public static $nestedUpdatableAttributes;
 
@@ -164,7 +164,7 @@ class Stripe_Object implements ArrayAccess
   {
     $this->_apiKey = $apiKey;
 
-    // Wipe old state before setting new.  This is useful for e.g. updating a
+    // Wipe old state before setting new.  This is useful for e.g., updating a
     // customer, where there is no persistent card parameter.  Mark those values
     // which don't persist as transient
     if ($partial) {

@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_menu_pages"))
 				public static function google_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_google_merchant_key"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› Google Options</code> first. Once all of your Google Options have been configured, return to this page &amp; generate your Google Wallet Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member ⥱ Google Options</code> first. Once all of your Google Options have been configured, return to this page &amp; generate your Google Wallet Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/google-buttons.inc.php";
 

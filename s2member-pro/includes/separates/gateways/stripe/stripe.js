@@ -18,12 +18,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -65,8 +65,8 @@ jQuery(document).ready( // DOM ready.
 			   || $('form.s2member-pro-stripe-registration-form').length > 1 || $('form.s2member-pro-stripe-update-form').length > 1
 			   || $('form.s2member-pro-stripe-sp-checkout-form').length > 1 || $('form.s2member-pro-stripe-checkout-form').length > 1)
 			{
-				return alert('Detected more than one s2Member Pro Form.\n\nPlease use only ONE s2Member Pro Form Shortcode on each Post/Page.' +
-				             ' Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
+				return alert('Detected more than one s2Member Pro-Form.\n\nPlease use only ONE s2Member Pro-Form Shortcode on each Post/Page.' +
+				             ' Attempting to serve more than one Pro-Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
 			}
 			/*
 			 Cancellation form handler.
@@ -328,10 +328,10 @@ jQuery(document).ready( // DOM ready.
 			 */
 			else if(($coForm = $('form#s2member-pro-stripe-sp-checkout-form')).length === 1 || ($coForm = $('form#s2member-pro-stripe-checkout-form')).length === 1)
 			{
-				(function($coForm)// Handles both types of checkout forms; i.e. Specific Post/Page and also Checkout/Modification forms.
+				(function($coForm)// Handles both types of checkout forms; i.e., Specific Post/Page and also Checkout/Modification forms.
 				{
 					var coTypeWithDashes = $coForm[0].id.replace(/^s2member\-pro\-stripe\-/, '').replace(/\-form$/, ''),
-						coTypeWithUnderscores = coTypeWithDashes.replace(/[^a-z0-9]/gi, '_'); // e.g. `sp_checkout`.
+						coTypeWithUnderscores = coTypeWithDashes.replace(/[^a-z0-9]/gi, '_'); // e.g., `sp_checkout`.
 
 					optionsSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-options-section',
 						optionsSelect = optionsSection + ' select#s2member-pro-stripe-' + coTypeWithDashes + '-options',

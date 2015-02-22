@@ -2,7 +2,7 @@
 $op["op"] = "get_user"; // The Remote Operation.
 
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
-	// See: `s2Member -› API / Scripting -› Remote Operations API -› API Key`
+	// See: `s2Member ⥱ API / Scripting ⥱ Remote Operations API ⥱ API Key`
 
 $op["data"] = array(
 	"user_id" => "123", // A User ID to query the database for.

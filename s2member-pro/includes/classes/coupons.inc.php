@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Coupons
@@ -153,7 +153,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				else $list .= '|'; // Unspecified in this case.
 
-				# Dates; i.e. `dates` or individual times.
+				# Dates; i.e., `dates` or individual times.
 
 				if(isset($_coupon['dates']))
 					$list .= str_replace('|', '', trim((string)$_coupon['dates'])).'|';
@@ -164,14 +164,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				else $list .= '|'; // Unspecified in this case.
 
-				# Coupon directive; i.e. how does it apply.
+				# Coupon directive; i.e., how does it apply.
 
 				if(isset($_coupon['directive']))
 					$list .= str_replace('|', '', trim((string)$_coupon['directive'])).'|';
 
 				else $list .= '|'; // Unspecified in this case.
 
-				# Coupon singulars; i.e. particular post IDs where it's applicable.
+				# Coupon singulars; i.e., particular post IDs where it's applicable.
 
 				if(isset($_coupon['singulars']) && is_array($_coupon['singulars']))
 					$list .= str_replace('|', '', implode(',', $_coupon['singulars'])).'|';
@@ -181,7 +181,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				else $list .= '|'; // Unspecified in this case.
 
-				# Coupon users; i.e. particular user IDs where it's applicable.
+				# Coupon users; i.e., particular user IDs where it's applicable.
 
 				if(isset($_coupon['users']) && is_array($_coupon['users']))
 					$list .= str_replace('|', '', implode(',', $_coupon['users'])).'|';
@@ -191,7 +191,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				else $list .= '|'; // Unspecified in this case.
 
-				# Coupon users; i.e. particular user IDs where it's applicable.
+				# Coupon users; i.e., particular user IDs where it's applicable.
 
 				if(isset($_coupon['max_uses']))
 					$list .= str_replace('|', '', trim((string)$_coupon['max_uses'])).'|';

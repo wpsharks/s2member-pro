@@ -22,12 +22,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member
@@ -68,7 +68,7 @@ if(defined('MEMBERSHIP_LEVELS') && is_numeric(MEMBERSHIP_LEVELS))
 	if(MEMBERSHIP_LEVELS >= $GLOBALS['WS_PLUGIN__']['s2member']['c']['min_levels'] && MEMBERSHIP_LEVELS <= $GLOBALS['WS_PLUGIN__']['s2member']['c']['max_levels'])
 		$GLOBALS['WS_PLUGIN__']['s2member']['c']['levels'] = (int)MEMBERSHIP_LEVELS;
 /*
-Add some new default options for the Pro Module.
+Add some new default options for the Pro Add-on.
 */
 if(!function_exists('ws_plugin__s2member_pro_default_options'))
 {
@@ -90,7 +90,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 	function ws_plugin__s2member_pro_default_options($default_options = array())
 	{
 		$pro_default_options = array(
-			// Defaults for the Pro Module.
+			// Defaults for the Pro Add-on.
 			'pro_signup_email_recipients'             => '"%%full_name%%" <%%payer_email%%>',
 			'pro_signup_email_subject'                => _x('Congratulations! (your membership has been approved)', 's2member-front', 's2member'),
 			'pro_signup_email_message'                => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
@@ -128,7 +128,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 	}
 }
 /*
-Check/validate default options for the Pro Module.
+Check/validate default options for the Pro Add-on.
 */
 if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 {
