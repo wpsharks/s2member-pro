@@ -128,9 +128,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" id="ws-plugin--s2member-pro-stripe-api-accept-bitcoin">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do NOT accept Bitcoin (default Stripe behavior)</option>'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do not accept Bitcoin (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>Yes, accept Bitcoin (enabled for "Buy Now" only; i.e., recurring charges not possible at this time)</option>'."\n";
-			echo '</select>'."\n";
+			echo '</select><br />'."\n";
+			echo '<p class="ws-menu-page-hilite">Turning this on requires that you <a href="https://dashboard.stripe.com/account/bitcoin/enable" target="_blank" rel="external">enable the live Bitcoin API on your account</a></p>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -195,7 +196,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_pro_stripe_api_validate_zipcode" id="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do NOT validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do not validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
 			echo '</select>'."\n";
 			echo '</td>'."\n";

@@ -144,6 +144,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			$attr['coupon']               = (!empty($_GET['s2p-coupon'])) ? trim(strip_tags(stripslashes($_GET['s2p-coupon']))) : $attr['coupon'];
 			$attr['singular']             = get_the_ID(); // Collect the Singular ID for this Post/Page.
 
+			$is_buy_now = $attr['sp'] || $attr['rr'] === 'BN' || (!$attr['tp'] && !$attr['rr']) ? TRUE : FALSE;
+
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', get_defined_vars());
 			unset($__refs, $__v); // Ditch these temporary vars.
@@ -269,8 +271,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				else $opt_in = ''; // Not applicable.
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_registration[nonce]" id="s2member-pro-stripe-registration-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-registration')).'" />';
-				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_names']) ? '<input type="hidden" id="s2member-pro-stripe-registration-names-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password']) ? '<input type="hidden" id="s2member-pro-stripe-registration-password-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_names'] ? '<input type="hidden" id="s2member-pro-stripe-registration-names-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'] ? '<input type="hidden" id="s2member-pro-stripe-registration-password-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_registration[attr]" id="s2member-pro-stripe-registration-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-registration-form.php')) ? TEMPLATEPATH.'/stripe-registration-form.php' : '';
@@ -417,9 +419,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_sp_checkout[nonce]" id="s2member-pro-stripe-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-sp-checkout')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token_summary']).'" />';
-				$hidden_inputs .= (!$attr['accept_coupons']) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (!c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply()) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00) ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $is_buy_now ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now" value="1" />' : '';
+				$hidden_inputs .= !c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= ($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[attr]" id="s2member-pro-stripe-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : '';
@@ -545,10 +548,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token_summary']).'" />';
-				$hidden_inputs .= (!$attr['accept_coupons']) ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password']) ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (!c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply()) ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00) ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $is_buy_now ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now" value="1" />' : '';
+				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= ($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00 ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';
