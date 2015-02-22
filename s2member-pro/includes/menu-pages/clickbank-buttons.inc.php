@@ -78,7 +78,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 				echo '</th>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<p>ClickBank Product Type: <select id="ws-plugin--s2member-pro-level'.$n.'-type">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/clickbank-product-types.php"))).'</select>'."\n";
 				echo '<p>ClickBank Product Item #: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-item-number" value="" size="5" /> <a href="#" onclick="alert(\'This MUST correlate with a Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a> &nbsp;&nbsp;&nbsp; <input type="button" value="Generate Button Code" onclick="ws_plugin__s2member_pro_clickbankButtonGenerate(\'level'.$n.'\');" /></p>'."\n";
 				echo '<p id="ws-plugin--s2member-pro-level'.$n.'-term-line">Fixed-Term Access: <select id="ws-plugin--s2member-pro-level'.$n.'-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/clickbank-fixed-terms.php"))).'</select> <a href="#" onclick="alert(\'For Standard Products, a Fixed-Term allows s2Member to configure the Auto-EOT (End Of Term) Time after checkout is completed through ClickBank.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
@@ -92,7 +92,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 				echo '<tr>'."\n";
 
 				echo '<td colspan="2">'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/clickbank-checkout-button-shortcode.php")));
 				$ws_plugin__s2member_pro_temp_s = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
@@ -138,7 +138,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '</th>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>No configuration necessary.</p>'."\n";
 			echo '</form>'."\n";
 			echo '</td>'."\n";
@@ -147,7 +147,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td colspan="2">'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/clickbank-cancellation-button-shortcode.php")));
 			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-cancellation-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
@@ -186,7 +186,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 				echo '</th>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<p>ClickBank Product Type: <select id="ws-plugin--s2member-pro-ccap-type">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/clickbank-ccap-product-types.php"))).'</select>'."\n";
 				echo '<p>ClickBank Product Item #: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-item-number" value="" size="5" /> <a href="#" onclick="alert(\'This MUST correlate with a Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a> &nbsp;&nbsp;&nbsp; <input type="button" value="Generate Button Code" onclick="ws_plugin__s2member_pro_clickbankCcapButtonGenerate();" /></p>'."\n";
 				echo '<p>Fixed-Term Access: <select id="ws-plugin--s2member-pro-ccap-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/clickbank-ccap-fixed-terms.php"))).'</select> <a href="#" onclick="alert(\'Independent Custom Capabilities will exist on the Customer\\\'s account forever, or until an EOT (End Of Term) occurs on their primary Subscription with you, if one exists.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
@@ -199,7 +199,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 				echo '<tr>'."\n";
 
 				echo '<td colspan="2">'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/clickbank-ccaps-checkout-button-shortcode.php")));
 				$ws_plugin__s2member_pro_temp_s = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
@@ -227,7 +227,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>Paid Membership Level#: <select id="ws-plugin--s2member-pro-reg-link-level">'."\n";
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 				echo '<option value="'.$n.'">s2Member Level #'.$n.'</option>'."\n";
@@ -268,7 +268,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '</th>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>ClickBank Product Item #: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-sp-item-number" value="" size="5" /> <a href="#" onclick="alert(\'This MUST correlate with a Product that you\\\'ve configured in your ClickBank account.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
 			echo '<p><select id="ws-plugin--s2member-pro-sp-hours">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/clickbank-sp-hours.php"))).'</select></p>'."\n";
 
@@ -299,7 +299,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td colspan="2">'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/clickbank-sp-checkout-button-shortcode.php")));
 			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%item%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
@@ -326,7 +326,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p><select id="ws-plugin--s2member-pro-sp-link-leading-id">'."\n";
 			echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>'."\n";

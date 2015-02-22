@@ -78,7 +78,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 				echo '</th>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<p id="ws-plugin--s2member-pro-level'.$n.'-trial-line">I\'ll offer the first <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-trial-period" value="0" size="6" /> <select id="ws-plugin--s2member-pro-level'.$n.'-trial-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/ccbill-membership-trial-terms.php"))).'</select> @ $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-trial-amount" value="0.00" size="4" /></p>'."\n";
 				echo '<p><span id="ws-plugin--s2member-pro-level'.$n.'-trial-then">Then, </span>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-amount" value="2.95" size="4" /> / <select id="ws-plugin--s2member-pro-level'.$n.'-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/ccbill-membership-regular-terms.php"))).'</select></p>'."\n";
 				echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-desc" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level".$n."_label"]).' / description and pricing details here." size="73" /></p>'."\n";
@@ -91,7 +91,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 				echo '<tr>'."\n";
 
 				echo '<td colspan="2">'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/ccbill-checkout-button-shortcode.php")));
 				$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($n)), $ws_plugin__s2member_pro_temp_s);
@@ -136,7 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '</th>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>No configuration necessary.</p>'."\n";
 			echo '</form>'."\n";
 			echo '</td>'."\n";
@@ -145,7 +145,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td colspan="2">'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/ccbill-cancellation-button-shortcode.php")));
 			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-cancellation-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
@@ -184,7 +184,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 				echo '</th>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<p>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-amount" value="2.95" size="4" /> / <select id="ws-plugin--s2member-pro-ccap-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/options/ccbill-membership-ccap-terms.php"))).'</select> <a href="#" onclick="alert(\'Note. ccBill does NOT allow a purchase to last beyond 1 year. So although s2Member will allow the Customer ongoing access to Independent Custom Capabilities (details above); the checkout form at ccBill will unfortunately show (1 year, or 365 days), due to ccBill limitations. Again, this does NOT affect Customer access. It only affects the presentation of the checkout form. Please read the section above for details regarding Independent Custom Capabilities.\'); return false;" tabindex="-1">[?]</a></p>'."\n";
 				echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-desc" value="Description and pricing details here." size="73" /></p>'."\n";
 				echo '<p>Custom Capabilities (comma-delimited) <a href="#" onclick="alert(\'Optional. This is VERY advanced.\\nSee: s2Member ⥱ API Scripting ⥱ Custom Capabilities.\\n\\n*ADVANCED TIP: You can specifiy a list of Custom Capabilities that will be (Added) with this purchase. Or, you could tell s2Member to (Remove All) Custom Capabilities that may or may not already exist for a particular Member, and (Add) only the new ones that you specify. To do this, just start your list of Custom Capabilities with `-all`.\\n\\nSo instead of just (Adding) Custom Capabilities:\\nmusic,videos,archives,gifts\\n\\nYou could (Remove All) that may already exist, and then (Add) new ones:\\n-all,calendar,forums,tools\\n\\nOr to just (Remove All) and (Add) nothing:\\n-all\'); return false;" tabindex="-1">[?]</a> <input type="text" maxlength="125" autocomplete="off" id="ws-plugin--s2member-pro-ccap-ccaps" size="40" /></p>'."\n";
@@ -196,7 +196,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 				echo '<tr>'."\n";
 
 				echo '<td colspan="2">'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/ccbill-ccaps-checkout-button-shortcode.php")));
 				$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
@@ -223,7 +223,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>Paid Membership Level#: <select id="ws-plugin--s2member-pro-reg-link-level">'."\n";
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 				echo '<option value="'.$n.'">s2Member Level #'.$n.'</option>'."\n";
@@ -264,7 +264,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '</th>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p><select id="ws-plugin--s2member-pro-sp-leading-id">'."\n";
 			echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>'."\n";
@@ -294,7 +294,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td colspan="2">'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/ccbill-sp-checkout-button-shortcode.php")));
 			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
@@ -320,7 +320,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_ccbill_buttons"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p><select id="ws-plugin--s2member-pro-sp-link-leading-id">'."\n";
 			echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>'."\n";

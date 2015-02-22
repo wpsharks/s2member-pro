@@ -71,7 +71,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-registration-form-shortcode.php')));
 			$ws_plugin__s2member_pro_temp_s = preg_replace('/%%level%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
@@ -104,7 +104,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<p id="ws-plugin--s2member-pro-level'.$n.'-trial-line">I\'ll offer the first <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-trial-period" value="0" size="6" /> <select id="ws-plugin--s2member-pro-level'.$n.'-trial-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/options/stripe-membership-trial-terms.php'))).'</select> @ $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-trial-amount" value="0.00" size="4" /></p>'."\n";
 				echo '<p><span id="ws-plugin--s2member-pro-level'.$n.'-trial-then">Then, </span>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-amount" value="0.50" size="4" /> / <select id="ws-plugin--s2member-pro-level'.$n.'-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/options/stripe-membership-regular-terms.php'))).'</select></p>'."\n";
 				echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-level'.$n.'-desc" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['level'.$n.'_label']).' / description and pricing details here." size="68" /></p>'."\n";
@@ -117,7 +117,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-checkout-form-shortcode.php')));
 				$ws_plugin__s2member_pro_temp_s = preg_replace('/%%level%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($n)), $ws_plugin__s2member_pro_temp_s);
@@ -150,7 +150,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p>Modification: <select id="ws-plugin--s2member-pro-modification-level">'."\n";
 
@@ -177,7 +177,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-checkout-form-shortcode.php')));
 			$ws_plugin__s2member_pro_temp_s = preg_replace('/%%level%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr('1')), $ws_plugin__s2member_pro_temp_s);
@@ -213,7 +213,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 				echo '<p>I want to charge: $<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-amount" value="0.50" size="4" /> / <select id="ws-plugin--s2member-pro-ccap-term">'.trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/options/stripe-membership-ccap-terms.php'))).'</select></p>'."\n";
 				echo '<p>Description: <input type="text" autocomplete="off" id="ws-plugin--s2member-pro-ccap-desc" value="Description and pricing details here." size="68" /></p>'."\n";
@@ -226,7 +226,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form onsubmit="return false;">'."\n";
+				echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 				echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 				$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-ccaps-checkout-form-shortcode.php')));
 				$ws_plugin__s2member_pro_temp_s = preg_replace('/%%custom%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['HTTP_HOST'])), $ws_plugin__s2member_pro_temp_s);
@@ -252,7 +252,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-update-form-shortcode.php')));
 			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-update-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
@@ -278,7 +278,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-cancellation-form-shortcode.php')));
 			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-cancellation-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
@@ -303,7 +303,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<p>Paid Membership Level#: <select id="ws-plugin--s2member-pro-reg-link-level">'."\n";
 			for($n = 1; $n <= $GLOBALS['WS_PLUGIN__']['s2member']['c']['levels']; $n++) echo '<option value="'.$n.'">s2Member Level #'.$n.'</option>'."\n";
 			echo '</select></p>'."\n";
@@ -338,7 +338,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p><select id="ws-plugin--s2member-pro-sp-leading-id">'."\n";
 			echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>'."\n";
@@ -368,7 +368,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
 			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__)).'/templates/shortcodes/stripe-sp-checkout-form-shortcode.php')));
 			$ws_plugin__s2member_pro_temp_s = preg_replace('/%%custom%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['HTTP_HOST'])), $ws_plugin__s2member_pro_temp_s);
@@ -394,7 +394,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form onsubmit="return false;">'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
 
 			echo '<p><select id="ws-plugin--s2member-pro-sp-link-leading-id">'."\n";
 			echo '<option value="">&mdash; Select a Leading Post/Page that you\'ve protected &mdash;</option>'."\n";

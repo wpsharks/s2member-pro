@@ -88,7 +88,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<tr>'."\n";
 
 				echo '<td>'."\n";
-				echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form">'."\n";
+				echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form" autocomplete="off">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_import_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 				echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
@@ -125,7 +125,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 					echo '<tr>'."\n";
 
 					echo '<td>'."\n";
-					echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form">'."\n";
+					echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form" autocomplete="off">'."\n";
 					echo '<input type="hidden" name="ws_plugin__s2member_pro_import_simple_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 					echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
@@ -183,7 +183,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 					echo '<tr>'."\n";
 
 					echo '<td>'."\n";
-					echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form">'."\n";
+					echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_users_form" id="ws-plugin--s2member-pro-import-users-form" autocomplete="off">'."\n";
 					echo '<input type="hidden" name="ws_plugin__s2member_pro_import_simple_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 					echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
@@ -223,7 +223,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<p class="info"><em><strong>Advanced:</strong> This exporter uses an entirely different format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
 				echo '<p class="warning"><em><strong>Important Warning:</strong> The export you receive from this Advanced Tool is not compatible with the default s2Member User Import system. This tool uses an entirely different format; i.e., files exported here are in the Advanced Import Tool format. If you plan to reimport and/or mass update existing Users/Members based on these Advanced files, you must use the Advanced Import Tool to do so. Attempting to import an Advanced Export file with the Default Import Tool may result in User database table corruption.</em></p>'."\n";
 
-				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form">'."\n";
+				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form" autocomplete="off">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_export_users" id="ws-plugin--s2member-pro-export-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-export-users")).'" />'."\n";
 
 				echo '<table class="form-table">'."\n";
@@ -312,7 +312,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-exportation-section">'."\n";
 				echo '<h3>User/Member Exportation (download CSV export files)</h3>'."\n";
 
-				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form">'."\n";
+				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form" autocomplete="off">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_export_simple_users" id="ws-plugin--s2member-pro-export-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-export-users")).'" />'."\n";
 
 				echo '<table class="form-table">'."\n";
@@ -411,7 +411,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_ops_form" id="ws-plugin--s2member-pro-import-ops-form">'."\n";
+			echo '<form method="post" enctype="multipart/form-data" name="ws_plugin__s2member_pro_import_ops_form" id="ws-plugin--s2member-pro-import-ops-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_import_ops" id="ws-plugin--s2member-pro-import-ops" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-ops")).'" />'."\n";
 			echo '<input type="file" name="ws_plugin__s2member_pro_import_ops_file" id="ws-plugin--s2member-pro-import-ops-file" />&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" />'."\n";
 			echo '</form>'."\n";

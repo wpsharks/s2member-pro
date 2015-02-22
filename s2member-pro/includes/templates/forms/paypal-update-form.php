@@ -5,7 +5,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
-<form id="s2member-pro-paypal-update-form" class="s2member-pro-paypal-form s2member-pro-paypal-update-form" method="post" action="%%action%%">
+<form id="s2member-pro-paypal-update-form" class="s2member-pro-paypal-form s2member-pro-paypal-update-form" method="post" action="%%action%%" autocomplete="off">
 
 	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-paypal-update-form-response-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-update-form-section s2member-pro-paypal-form-response-section s2member-pro-paypal-update-form-response-section">

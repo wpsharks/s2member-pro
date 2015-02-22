@@ -5,7 +5,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 
 <div id="s2p-form"></div><!-- This is for hash anchors; do NOT remove please. -->
 
-<form id="s2member-pro-authnet-checkout-form" class="s2member-pro-authnet-form s2member-pro-authnet-checkout-form" method="post" action="%%action%%">
+<form id="s2member-pro-authnet-checkout-form" class="s2member-pro-authnet-form s2member-pro-authnet-checkout-form" method="post" action="%%action%%" autocomplete="off">
 
 	<!-- Response Section (this is auto-filled after form submission). -->
 	<div id="s2member-pro-authnet-checkout-form-response-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-response-section s2member-pro-authnet-checkout-form-response-section">

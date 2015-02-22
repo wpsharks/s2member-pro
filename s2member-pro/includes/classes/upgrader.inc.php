@@ -102,7 +102,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 							{
 								$wizard = '<div class="error fade">'."\n";
 								$wizard .= '<p>Your <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank">s2Member Pro Add-on</a> must be updated to v'.WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION.'+.<br />Please log in at <a href="'.esc_attr(c_ws_plugin__s2member_readmes::parse_readme_value("Pro Add-on / Home Page")).'" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
-								$wizard .= '<form method="post" action="'.esc_attr($_SERVER["REQUEST_URI"]).'" style="margin: 5px 0 5px 0;" onsubmit="jQuery (\'input#ws-plugin--s2member-pro-upgrade-submit\', this).attr (\'disabled\', \'disabled\').val (\'Upgrading... (please wait)\');">'."\n";
+								$wizard .= '<form method="post" action="'.esc_attr($_SERVER["REQUEST_URI"]).'" style="margin: 5px 0 5px 0;" onsubmit="jQuery (\'input#ws-plugin--s2member-pro-upgrade-submit\', this).attr (\'disabled\', \'disabled\').val (\'Upgrading... (please wait)\');" autocomplete="off">'."\n";
 								$wizard .= '<input type="hidden" name="ws_plugin__s2member_pro_upgrade" id="ws-plugin--s2member-pro-upgrade" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-upgrade")).'" />'."\n";
 
 								$wizard .= apply_filters("ws_plugin__s2member_pro_upgrade_wizard_instructions", '<p><strong>Or upgrade automatically. Provide your login details for s2Member.com</strong>.</p>'."\n", get_defined_vars());

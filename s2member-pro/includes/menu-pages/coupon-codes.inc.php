@@ -58,7 +58,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
-			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form">'."\n";
+			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
 			echo '<div class="ws-menu-page-group" title="Pro-Form Coupon Code Configuration">'."\n";
