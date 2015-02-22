@@ -65,23 +65,23 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
 				if(!$enable_advanced_tools)
-					echo '<p><i class="fa fa-eye"></i> <a href="'.esc_attr(add_query_arg('enable_advanced_tools', '1')).'">click here to ENABLE the Advanced Import/Export Tools</a> <i class="fa fa-eye"></i></p>';
-				else echo '<p><i class="fa fa-eye-slash"></i> <a href="'.esc_attr(add_query_arg('enable_advanced_tools', '0')).'">click here to DISABLE the Advanced Import/Export Tools</a> <i class="fa fa-eye-slash"></i></p>';
+					echo '<p><i class="fa fa-eye"></i> <a href="'.esc_attr(add_query_arg('enable_advanced_tools', '1')).'">click here to enable the Advanced Import/Export Tools</a> <i class="fa fa-eye"></i></p>';
+				else echo '<p><i class="fa fa-eye-slash"></i> <a href="'.esc_attr(add_query_arg('enable_advanced_tools', '0')).'">click here to disable the Advanced Import/Export Tools</a> <i class="fa fa-eye-slash"></i></p>';
 			}
 			/*
 			 * Advanced version.
 			 */
 			if($enable_advanced_tools)
 			{
-				echo '<div class="ws-menu-page-group" title="Advanced :: User/Member CSV Importation"'.((isset($_POST["ws_plugin__s2member_pro_import_users"])) ? ' default-state="open"' : '').'>'."\n";
+				echo '<div class="ws-menu-page-group" title="Advanced User/Member CSV Importation"'.((isset($_POST["ws_plugin__s2member_pro_import_users"])) ? ' default-state="open"' : '').'>'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-importation-section">'."\n";
 				echo '<h3>User/Member Importation (upload file / or direct input)</h3>'."\n";
-				echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you MUST follow the <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">examples given here</a>. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
-				echo '<p><em><strong>*No Email Notification*</strong> This import routine works silently. Users/Members will NOT be contacted by s2Member; that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
-				echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>*PHP v5.3+ recommended*</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
-				echo '<p class="info"><em><strong class="ws-menu-page-hilite">*ADVANCED (PLEASE READ)*</strong> This importer uses an ENTIRELY DIFFERENT format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
-				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> Please do NOT attempt to import a file that you originally exported with the default s2Member User Export system (it is not compatible). This tool uses an entirely different format; i.e., the Advanced Export Tool format is required here. Importing with the wrong format may result in User database table corruption.</em></p>'."\n";
+				echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you must follow the <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">examples given here</a>. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
+				echo '<p><em><strong>No Email Notification:</strong> This import routine works silently. Users/Members will not be contacted by s2Member—that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
+				echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>PHP v5.3+ recommended:</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
+				echo '<p class="info"><em><strong>Advanced:</strong> This importer uses an entirely different format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
+				echo '<p class="warning"><em><strong>Important Warning:</strong> Please do not attempt to import a file that you originally exported with the default s2Member User Export system; it is not compatible. This tool uses an entirely different format; i.e., the Advanced Export Tool format is required here. Importing with the wrong format may result in User database table corruption.</em></p>'."\n";
 
 				echo '<table class="form-table">'."\n";
 				echo '<tbody>'."\n";
@@ -116,9 +116,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 					echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-importation-section">'."\n";
 					echo '<h3>User/Member Importation (upload file / or direct input)</h3>'."\n";
-					echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you MUST follow the examples given below. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. You\'ll also need to make sure that all of your data fields are in the proper order, based on the examples given below. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
-					echo '<p><em><strong>*No Email Notification*</strong> This import routine works silently. Users/Members will NOT be contacted by s2Member; that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
-					echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>*PHP v5.3+ recommended*</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
+					echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you must follow the examples given below. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. You\'ll also need to make sure that all of your data fields are in the proper order, based on the examples given below. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
+					echo '<p><em><strong>No Email Notification:</strong> This import routine works silently. Users/Members will not be contacted by s2Member—that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
+					echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>PHP v5.3+ recommended:</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
 
 					echo '<table class="form-table">'."\n";
 					echo '<tbody>'."\n";
@@ -136,7 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 					echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-					echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e., <code>""</code>).<br /><br />'."\n";
+					echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does not belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e., <code>""</code>).<br /><br />'."\n";
 
 					echo 'Example: <code>"","Username","First Name","Last Name","Display Name","Email"</code><br /><br />'."\n";
 
@@ -174,9 +174,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 					echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-importation-section">'."\n";
 					echo '<h3>User/Member Importation (upload file / or direct input)</h3>'."\n";
-					echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you MUST follow the examples given below. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. You\'ll also need to make sure that all of your data fields are in the proper order, based on the examples given below. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
-					echo '<p><em><strong>*No Email Notification*</strong> This import routine works silently. Users/Members will NOT be contacted by s2Member; that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
-					echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>*PHP v5.3+ recommended*</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
+					echo '<p>Import files can be uploaded in CSV format, or you can copy/paste data into the form field provided. In either case, you must follow the examples given below. Please double-check your data before clicking the Import button. Make sure that all data fields are properly encapsulated by double-quotes, and separated by commas. You\'ll also need to make sure that all of your data fields are in the proper order, based on the examples given below. After importing Users/Members, you can inspect your work by going to: <code>WordPress ⥱ Users</code>.</p>'."\n";
+					echo '<p><em><strong>No Email Notification:</strong> This import routine works silently. Users/Members will not be contacted by s2Member—that is, unless you have another plugin installed that conflicts with s2Member\'s ability to perform the Import properly. You should always test one or two accounts before importing a large number of Users all at once. If you want Users/Members to be contacted, you can add them manually, by going to <code>WordPress ⥱ Users ⥱ Add New</code>, and selecting one of the s2Member Roles from the drop-down menu.</em></p>'."\n";
+					echo (version_compare(PHP_VERSION, "5.3", "<")) ? '<p><em><strong>PHP v5.3+ recommended:</strong> In order for s2Member to properly import CSV files containing escape sequences, PHP v5.3 or higher is required. While s2Member may be able to parse import files in most cases, PHP v5.3 provides the best stability.</em></p>'."\n" : '';
 
 					echo '<table class="form-table">'."\n";
 					echo '<tbody>'."\n";
@@ -192,7 +192,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 					echo 'One User/Member per line please. Here is a quick example:<br />'."\n";
 					echo '<code>"ID","Username","Password","First Name","Last Name","Display Name","Email"</code><br /><br />'."\n";
 
-					echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does NOT belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e., <code>""</code>).<br /><br />'."\n";
+					echo 'If you fill the ID field, the Import routine will update an account matching the ID you specify (so long as the account ID does not belong to an Administrator, this is for security). When importing new Users/Members, you can leave the ID field empty Don\'t remove it, just leave it empty(i.e., <code>""</code>).<br /><br />'."\n";
 
 					echo 'Example: <code>"","Username","Password","First Name","Last Name","Display Name","Email"</code>'."\n";
 
@@ -216,12 +216,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 			 */
 			if($enable_advanced_tools)
 			{
-				echo '<div class="ws-menu-page-group" title="Advanced :: User/Member CSV Exportation">'."\n";
+				echo '<div class="ws-menu-page-group" title="Advanced User/Member CSV Exportation">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-user-exportation-section">'."\n";
 				echo '<h3>User/Member Exportation (download CSV export files)</h3>'."\n";
-				echo '<p class="info"><em><strong class="ws-menu-page-hilite">*ADVANCED (PLEASE READ)*</strong> This exporter uses an ENTIRELY DIFFERENT format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
-				echo '<p class="warning"><em><strong class="ws-menu-page-hilite">*IMPORTANT WARNING*</strong> The export you receive from this Advanced Tool is NOT compatible with the default s2Member User Import system. This tool uses an entirely different format; i.e., files exported here are in the Advanced Import Tool format. If you plan to reimport and/or mass update existing Users/Members based on these Advanced files, you MUST use the Advanced Import Tool to do so. Attempting to import an Advanced Export file with the Default Import Tool may result in User database table corruption.</em></p>'."\n";
+				echo '<p class="info"><em><strong>Advanced:</strong> This exporter uses an entirely different format. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.</em></p>'."\n";
+				echo '<p class="warning"><em><strong>Important Warning:</strong> The export you receive from this Advanced Tool is not compatible with the default s2Member User Import system. This tool uses an entirely different format; i.e., files exported here are in the Advanced Import Tool format. If you plan to reimport and/or mass update existing Users/Members based on these Advanced files, you must use the Advanced Import Tool to do so. Attempting to import an Advanced Export file with the Default Import Tool may result in User database table corruption.</em></p>'."\n";
 
 				echo '<form method="post" name="ws_plugin__s2member_pro_export_users_form" id="ws-plugin--s2member-pro-export-users-form">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_export_users" id="ws-plugin--s2member-pro-export-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-export-users")).'" />'."\n";
@@ -242,7 +242,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<td>'."\n";
 				echo '<select name="ws_plugin__s2member_pro_export_users_format" id="ws-plugin--s2member-pro-export-users-format">'."\n";
 				echo '<option value="" selected="selected">Default (CSV, perfectly formatted for easy re-importation)</option>'."\n";
-				echo '<option value="readable">Easy-Read (CSV w/ improved readability; CANNOT be re-imported)</option>'."\n";
+				echo '<option value="readable">Easy-Read (CSV w/ improved readability; cannot be re-imported)</option>'."\n";
 				echo '</select><br />'."\n";
 				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
@@ -290,7 +290,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 				echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-				echo '<em>Please note. Export files do NOT contain Passwords. Passwords are stored by WordPress with one-way encryption. In other words, it\'s not possible for s2Member to include them in the export file. However, this does NOT create a problem, because when/if you re-import existing Users/Members with the Password field empty, s2Member will simply keep the existing Password that is already on file. For further information, please read all Import instructions, regarding Passwords.</em>'."\n";
+				echo '<em>Please note. Export files do not contain Passwords. Passwords are stored by WordPress with one-way encryption. In other words, it\'s not possible for s2Member to include them in the export file. However, this does not create a problem, because when/if you re-import existing Users/Members with the Password field empty, s2Member will simply keep the existing Password that is already on file. For further information, please read all Import instructions, regarding Passwords.</em>'."\n";
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
@@ -331,7 +331,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<td>'."\n";
 				echo '<select name="ws_plugin__s2member_pro_export_users_format" id="ws-plugin--s2member-pro-export-users-format">'."\n";
 				echo '<option value="" selected="selected">Default (CSV, perfectly formatted for easy re-importation)</option>'."\n";
-				echo '<option value="readable">Easy-Read (CSV w/ improved readability; CANNOT be re-imported)</option>'."\n";
+				echo '<option value="readable">Easy-Read (CSV w/ improved readability; cannot be re-imported)</option>'."\n";
 				echo '</select><br />'."\n";
 				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
@@ -379,7 +379,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 
 				echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-				echo '<em>Please note. Export files do NOT contain Passwords. Passwords are stored by WordPress with one-way encryption. In other words, it\'s not possible for s2Member to include them in the export file. However, this does NOT create a problem, because when/if you re-import existing Users/Members with the Password field empty, s2Member will simply keep the existing Password that is already on file. For further information, please read all Import instructions, regarding Passwords.</em>'."\n";
+				echo '<em>Please note. Export files do not contain Passwords. Passwords are stored by WordPress with one-way encryption. In other words, it\'s not possible for s2Member to include them in the export file. However, this does not create a problem, because when/if you re-import existing Users/Members with the Password field empty, s2Member will simply keep the existing Password that is already on file. For further information, please read all Import instructions, regarding Passwords.</em>'."\n";
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
