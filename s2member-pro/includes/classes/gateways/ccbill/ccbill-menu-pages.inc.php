@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_menu_pages"))
 				public static function ccbill_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_dl_user"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_dl_pass"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_salt_key"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member ⥱ ccBill Options</code> first. Once all of your cBill Options have been configured, return to this page &amp; generate your ccBill Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <strong>s2Member ⥱ ccBill Options</strong> first. Once all of your cBill Options have been configured, return to this page &amp; generate your ccBill Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/ccbill-buttons.inc.php";
 

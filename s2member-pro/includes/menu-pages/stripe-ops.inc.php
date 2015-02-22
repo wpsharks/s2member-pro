@@ -91,7 +91,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings ⥱ API Keys</code>.'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings ⥱ API Keys</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -108,7 +108,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <code>Account Settings ⥱ API Keys</code>.'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings ⥱ API Keys</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -280,7 +280,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
 			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Webhook/IPN Integration (required)</h3>'."\n";
-			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><code>Account Settings ⥱ Webhooks</code></p>'."\n";
+			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings ⥱ Webhooks</strong></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(home_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
 			echo '<div class="info" style="margin-bottom:0;">'."\n";
 			echo '<p>If you are currently in Test/Sandbox mode (i.e., you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
@@ -530,7 +530,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-ccap-confirmation-email-section">'."\n";
 			echo '<h3>Capability Confirmation Email (required, but the default works fine)</h3>'."\n";
-			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <code>Dashboard ⥱ s2Member ⥱ Stripe Forms ⥱ Capability (Buy Now)</code>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard ⥱ s2Member ⥱ Stripe Forms ⥱ Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
@@ -648,7 +648,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-confirmation-email-section">'."\n";
 			echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro-Form integrations</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <code>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <strong>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 

@@ -165,7 +165,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">'."\n";
 			echo '<h3>ClickBank IPN "Instant Payment Notifications" (required)</h3>'."\n";
-			echo '<p><strong>1.</strong> Log into your ClickBank account and navigate to this section:<br /><code>Account Settings ⥱ My Site ⥱ Advanced Tools</code></p>'."\n";
+			echo '<p><strong>1.</strong> Log into your ClickBank account and navigate to this section:<br /><strong>Account Settings ⥱ My Site ⥱ Advanced Tools</strong></p>'."\n";
 			echo '<p><strong>2.</strong> Edit your IPN settings &amp; generate a Secret Key.</strong></p>'."\n";
 			echo '<p><strong>3.</strong> You\'ll need your IPN v2.1 URL, which is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=2.1")).'</code> (or <code>=1</code>; same thing)</p>'."\n";
 			echo '<p>Or, you can choose to use v6. Your v6 IPN URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=6")).'</code></p>'."\n";
@@ -474,7 +474,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-ccap-confirmation-email-section">'."\n";
 			echo '<h3>Capability Confirmation Email (required, but the default works fine)</h3>'."\n";
-			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <code>Dashboard ⥱ s2Member ⥱ ClickBank Buttons ⥱ Capability (Buy Now)</code>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard ⥱ s2Member ⥱ ClickBank Buttons ⥱ Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
@@ -584,7 +584,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-sp-confirmation-email-section">'."\n";
 			echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they return from a successful purchase at ClickBank, for Specific Post/Page Access. (see: <code>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</code>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they return from a successful purchase at ClickBank, for Specific Post/Page Access. (see: <strong>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with instructions, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 

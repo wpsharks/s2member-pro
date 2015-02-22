@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_menu_pages"))
 				public static function authnet_forms_page ()
 					{
 						if (c_ws_plugin__s2member_pro_authnet_responses::authnet_form_api_validation_errors ()) // Report error if Authorize.Net Options are not yet configured.
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member ⥱ Authorize.Net Options</code> first. Once all of your Authorize.Net Options are configured, return to this page &amp; generate your Authorize.net Form(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <strong>s2Member ⥱ Authorize.Net Options</strong> first. Once all of your Authorize.Net Options are configured, return to this page &amp; generate your Authorize.net Form(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/authnet-forms.inc.php";
 

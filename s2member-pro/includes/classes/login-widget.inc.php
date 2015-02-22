@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		public function c_ws_plugin__s2member_pro_login_widget()
 		{
 			$widget_ops  = array('classname'   => 'colors', // Default widget options.
-			                     'description' => 'Displays a Login Form if NOT logged in. Or a Profile Summary when a User/Member is logged in.');
+			                     'description' => 'Displays a Login Form if not logged in. Or a Profile Summary when a User/Member is logged in.');
 			$control_ops = array('width' => 400, 'id_base' => 'ws_plugin__s2member_pro_login_widget');
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
@@ -238,7 +238,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			/*
 			Ok, here is where we need to handle the widget control form. This allows a user to further customize the widget.
 			*/
-			echo '<label for="'.esc_attr($this->get_field_id('title')).'"><strong>Public Title</strong> (when NOT logged in)</label><br />'."\n";
+			echo '<label for="'.esc_attr($this->get_field_id('title')).'"><strong>Public Title</strong> (when not logged in)</label><br />'."\n";
 			echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id('title')).'" name="'.esc_attr($this->get_field_name('title')).'" value="'.format_to_edit($options['title']).'" class="widefat" /><br /><br />'."\n";
 
 			echo '<label for="'.esc_attr($this->get_field_id('login_redirect')).'">Redirection After Login</label><br />'."\n";
@@ -257,13 +257,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id('profile_title')).'" name="'.esc_attr($this->get_field_name('profile_title')).'" value="'.format_to_edit($options['profile_title']).'" class="widefat" /><br /><br />'."\n";
 
 			echo '<label for="'.esc_attr($this->get_field_id('display_gravatar')).'">Display Gravatar Image?</label><br />'."\n";
-			echo '<select id="'.esc_attr($this->get_field_id('display_gravatar')).'" name="'.esc_attr($this->get_field_name('display_gravatar')).'" class="widefat"><option value="1"'.(($options['display_gravatar']) ? ' selected="selected"' : '').'>Yes, display Gravatar</option><option value="0"'.((!$options['display_gravatar']) ? ' selected="selected"' : '').'>No, do NOT display</option></select><br /><br />'."\n";
+			echo '<select id="'.esc_attr($this->get_field_id('display_gravatar')).'" name="'.esc_attr($this->get_field_name('display_gravatar')).'" class="widefat"><option value="1"'.(($options['display_gravatar']) ? ' selected="selected"' : '').'>Yes, display Gravatar</option><option value="0"'.((!$options['display_gravatar']) ? ' selected="selected"' : '').'>No, do not display</option></select><br /><br />'."\n";
 
 			echo '<label for="'.esc_attr($this->get_field_id('link_gravatar')).'">Link To Gravatar.com?</label><br />'."\n";
-			echo '<select id="'.esc_attr($this->get_field_id('link_gravatar')).'" name="'.esc_attr($this->get_field_name('link_gravatar')).'" class="widefat"><option value="1"'.(($options['link_gravatar']) ? ' selected="selected"' : '').'>Yes, apply link</option><option value="0"'.((!$options['link_gravatar']) ? ' selected="selected"' : '').'>No, do NOT apply</option></select><br /><br />'."\n";
+			echo '<select id="'.esc_attr($this->get_field_id('link_gravatar')).'" name="'.esc_attr($this->get_field_name('link_gravatar')).'" class="widefat"><option value="1"'.(($options['link_gravatar']) ? ' selected="selected"' : '').'>Yes, apply link</option><option value="0"'.((!$options['link_gravatar']) ? ' selected="selected"' : '').'>No, do not apply</option></select><br /><br />'."\n";
 
 			echo '<label for="'.esc_attr($this->get_field_id('display_name')).'">Display User\'s Name?</label><br />'."\n";
-			echo '<select id="'.esc_attr($this->get_field_id('display_name')).'" name="'.esc_attr($this->get_field_name('display_name')).'" class="widefat"><option value="1"'.(($options['display_name']) ? ' selected="selected"' : '').'>Yes, display User\'s name</option><option value="0"'.((!$options['display_name']) ? ' selected="selected"' : '').'>No, do NOT display</option></select><br /><br />'."\n";
+			echo '<select id="'.esc_attr($this->get_field_id('display_name')).'" name="'.esc_attr($this->get_field_name('display_name')).'" class="widefat"><option value="1"'.(($options['display_name']) ? ' selected="selected"' : '').'>Yes, display User\'s name</option><option value="0"'.((!$options['display_name']) ? ' selected="selected"' : '').'>No, do not display</option></select><br /><br />'."\n";
 
 			echo '<label for="'.esc_attr($this->get_field_id('my_account_url')).'">My Account (enter URL, or just use <code>%%automatic%%</code>)</label><br />'."\n";
 			echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id('my_account_url')).'" name="'.esc_attr($this->get_field_name('my_account_url')).'" value="'.format_to_edit($options['my_account_url']).'" class="widefat" /><br />'."\n";
@@ -282,7 +282,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			echo '<textarea id="'.esc_attr($this->get_field_id('logged_in_code')).'" name="'.esc_attr($this->get_field_name('logged_in_code')).'" rows="1" cols="1" class="widefat" style="height:50px;">'.format_to_edit($options['logged_in_code']).'</textarea>'."\n";
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<div style="margin:15px 0 15px 0; height:1px; line-height:1px; background:#CCCCCC;"></div>'."\n" : '';
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<em>Or include this widget dynamically via PHP:<br />'.c_ws_plugin__s2member_utils_strings::highlight_php('<?php echo s2member_pro_login_widget(); ?>').'<br /><small>See: <code>s2Member ⥱ API Scripting ⥱ Pro Login Widget</code></small></em>'."\n" : '';
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<em>Or include this widget dynamically via PHP:<br />'.c_ws_plugin__s2member_utils_strings::highlight_php('<?php echo s2member_pro_login_widget(); ?>').'<br /><small>See: <strong>s2Member ⥱ API Scripting ⥱ Pro Login Widget</strong></small></em>'."\n" : '';
 
 			do_action('ws_plugin__s2member_pro_login_widget_after_form', get_defined_vars(), $this);
 
