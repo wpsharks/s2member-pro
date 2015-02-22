@@ -89,8 +89,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
 			echo '<p class="submit"><input type="submit" value="Save Changes, (then refresh)" /></p>'."\n";
 
 			echo '</form>'."\n";

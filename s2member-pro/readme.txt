@@ -40,6 +40,7 @@ Plugin Name: s2Member® Pro Add-on
 Forum URI: http://www.s2member.com/forums/
 Plugin URI: http://www.s2member.com/pro/
 Privacy URI: http://www.s2member.com/privacy/
+Changelog URI: http://www.s2member.com/changelog/
 Video Tutorials: http://www.s2member.com/videos/
 Knowledge Base: http://www.s2member.com/kb/
 Newsletter: http://www.s2member.com/r/subscribe/
