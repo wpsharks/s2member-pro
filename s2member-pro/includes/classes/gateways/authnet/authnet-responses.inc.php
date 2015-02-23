@@ -1,6 +1,6 @@
 <?php
 /**
-* Authorize.Net Pro Form responses.
+* Authorize.Net Pro-Form responses.
 *
 * Copyright: © 2009-2011
 * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\AuthNet
@@ -36,7 +36,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 	{
 		/**
-		* Authorize.Net Pro Form responses.
+		* Authorize.Net Pro-Form responses.
 		*
 		* @package s2Member\AuthNet
 		* @since 1.5
@@ -49,7 +49,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return array An array of response details.
 				*/
 				public static function authnet_cancellation_response($attr = FALSE)
@@ -78,7 +78,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return array An array of response details.
 				*/
 				public static function authnet_update_response($attr = FALSE)
@@ -107,7 +107,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return array An array of response details.
 				*/
 				public static function authnet_registration_response($attr = FALSE)
@@ -136,7 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return array An array of response details.
 				*/
 				public static function authnet_sp_checkout_response($attr = FALSE)
@@ -165,7 +165,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return array An array of response details.
 				*/
 				public static function authnet_checkout_response($attr = FALSE)
@@ -196,7 +196,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return null|array Null if there are no errors, else a response array.
 				*/
 				public static function authnet_form_api_validation_errors($attr = FALSE)
@@ -220,7 +220,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @return null|array Null if there are no errors, else a response array.
 				*/
 				public static function authnet_form_attr_validation_errors($attr = FALSE)
@@ -503,8 +503,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param string $form The type of Pro Form being submitted.
-				* @param array $s An array of data submitted through the Pro Form.
+				* @param string $form The type of Pro-Form being submitted.
+				* @param array $s An array of data submitted through the Pro-Form.
 				* @return null|array Null if there are no errors, else a response array.
 				*/
 				public static function authnet_form_submission_validation_errors($form = FALSE, $s = FALSE)

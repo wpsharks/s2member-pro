@@ -18,12 +18,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\PayPal
@@ -36,7 +36,7 @@ jQuery(document).ready (function($)
 		preloadAjaxLoader = new Image (), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
 
 		if($('form.s2member-pro-paypal-registration-form').length > 1 || $('form.s2member-pro-paypal-checkout-form').length > 1 || $('form.s2member-pro-paypal-sp-checkout-form').length > 1)
-			return alert('Detected more than one s2Member Pro Form.\n\nPlease use only ONE s2Member Pro Form Shortcode on each Post/Page. Attempting to serve more than one Pro Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
+			return alert('Detected more than one s2Member Pro-Form.\n\nPlease use only ONE s2Member Pro-Form Shortcode on each Post/Page. Attempting to serve more than one Pro-Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
 
 		if (($clForm = $('form#s2member-pro-paypal-cancellation-form')).length === 1)
 			{

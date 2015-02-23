@@ -2,7 +2,7 @@
 $op["op"] = "delete_user"; // The Remote Operation you're calling upon.
 
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
-	// See: `s2Member -› API / Scripting -› Remote Operations API -› API Key`
+	// See: `s2Member ⥱ API / Scripting ⥱ Remote Operations API ⥱ API Key`
 
 $op["data"] = array(
 	// You must supply one of these values.

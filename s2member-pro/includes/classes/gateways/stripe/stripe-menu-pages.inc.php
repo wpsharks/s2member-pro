@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Menu_Pages
@@ -60,7 +60,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_menu_pages'))
 		{
 			add_submenu_page($vars['menu'], '', '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', 'create_users', '#');
 			add_submenu_page($vars['menu'], 's2Member Pro / Stripe Options', 'Stripe Options', 'create_users', 'ws-plugin--s2member-pro-stripe-ops', 'c_ws_plugin__s2member_pro_stripe_menu_pages::stripe_ops_page');
-			add_submenu_page($vars['menu'], 's2Member Pro / Stripe Pro Forms', 'Stripe Pro-Forms', 'create_users', 'ws-plugin--s2member-pro-stripe-forms', 'c_ws_plugin__s2member_pro_stripe_menu_pages::stripe_forms_page');
+			add_submenu_page($vars['menu'], 's2Member Pro / Stripe Pro-Forms', 'Stripe Pro-Forms', 'create_users', 'ws-plugin--s2member-pro-stripe-forms', 'c_ws_plugin__s2member_pro_stripe_menu_pages::stripe_forms_page');
 
 			return $add_divider; // Now add the divider.
 		}
@@ -128,7 +128,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_menu_pages'))
 		public static function stripe_forms_page()
 		{
 			if(c_ws_plugin__s2member_pro_stripe_responses::stripe_form_api_validation_errors()) // Report error if Stripe Options are not yet configured.
-				c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <code>s2Member -› Stripe Options</code> first. Once all of your Stripe Options are configured, return to this page &amp; generate your Stripe Form(s).', TRUE);
+				c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <strong>s2Member ⥱ Stripe Options</strong> first. Once all of your Stripe Options are configured, return to this page &amp; generate your Stripe Form(s).', TRUE);
 
 			include_once dirname(dirname(dirname(dirname(__FILE__)))).'/menu-pages/stripe-forms.inc.php';
 		}

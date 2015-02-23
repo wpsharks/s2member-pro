@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Gateways
@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_gateways'))
 		 */
 		public static function available_gateways() // Payment Gateways available.
 		{
-			$gateways = array('alipay' => '<strong>AliPay</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now transactions only.', 'stripe' => '<strong>Stripe</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'authnet' => '<strong>Authorize.Net</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'ccbill' => '<strong>ccBill</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'clickbank' => '<strong>ClickBank</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'google' => '<strong>Google Wallet</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'paypal' => '<strong>PayPal Website Payments Pro</strong> <em>(w/ Pro Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.');
+			$gateways = array('alipay' => '<strong>AliPay</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now transactions only.', 'stripe' => '<strong>Stripe + Bitcoin</strong> <em>(w/ Pro-Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'authnet' => '<strong>Authorize.Net</strong> <em>(w/ Pro-Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'ccbill' => '<strong>ccBill</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'clickbank' => '<strong>ClickBank</strong> <em>(w/ Buttons)</em><br />&uarr; supports Buy Now &amp; Recurring Products.', 'google' => '<strong>Google Wallet</strong> <em>(w/ Buttons)</em><br />&uarr; <a href="http://www.s2member.com/r/google-wallet-retirement/" target="_blank" rel="external">retired by Google</a> March 2nd, 2015.', 'paypal' => '<strong>PayPal Website Payments Pro</strong> <em>(w/ Pro-Forms)</em><br />&uarr; supports Buy Now &amp; Recurring Products.');
 
 			return apply_filters('ws_plugin__s2member_pro_available_gateways', $gateways, get_defined_vars());
 		}

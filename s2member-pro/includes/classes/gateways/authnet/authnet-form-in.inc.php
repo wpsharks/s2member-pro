@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\AuthNet
@@ -83,13 +83,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						do_action("ws_plugin__s2member_pro_before_sc_authnet_form", get_defined_vars ());
 						unset($__refs, $__v);
 
-						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */ (true);
+						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro-Form. */ (true);
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep ((array)$attr);
 						$options = array(); // Initialize options to an empty array.
 						$option_selections = ''; // Initialize w/ no options.
 
-						if($content && ($content = strip_tags($content))) // This allows for nested Pro Form Shortcodes as options.
+						if($content && ($content = strip_tags($content))) // This allows for nested Pro-Form Shortcodes as options.
 							$content = str_replace('s2Member-Pro-AuthNet-Form ', 's2Member-Pro-AuthNet-xFormOption ', $content);
 
 						if($content && ($content_options = do_shortcode($content)))

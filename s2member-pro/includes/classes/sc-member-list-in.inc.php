@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Shortcodes
@@ -129,7 +129,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 							'value'   => '"'.$_role.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
+					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
 						$args['meta_query']['relation'] = 'OR';
 
 					unset($_role); // Housekeeping.
@@ -142,7 +142,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 							'value'   => '"s2member_level'.$_level.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
+					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
 						$args['meta_query']['relation'] = 'OR';
 
 					unset($_level); // Housekeeping.
@@ -155,7 +155,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 							'value'   => '"access_s2member_ccap_'.$_ccap.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e. `AND`).
+					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
 						$args['meta_query']['relation'] = 'OR';
 
 					unset($_ccap); // Housekeeping.
@@ -237,7 +237,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 		/**
 		 * Allows for customization over the search variable.
 		 *
-		 * @return string Search variable name; e.g. `s2-s` (default value).
+		 * @return string Search variable name; e.g., `s2-s` (default value).
 		 */
 		public static function s_var()
 		{
@@ -247,7 +247,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 		/**
 		 * Allows for customization over the page variable.
 		 *
-		 * @return string Page variable name; e.g. `s2-p` (default value).
+		 * @return string Page variable name; e.g., `s2-p` (default value).
 		 */
 		public static function p_var()
 		{

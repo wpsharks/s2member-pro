@@ -1,6 +1,6 @@
 <?php
 /**
- * Stripe Pro Form responses.
+ * Stripe Pro-Form responses.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -36,7 +36,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 {
 	/**
-	 * Stripe Pro Form responses.
+	 * Stripe Pro-Form responses.
 	 *
 	 * @package s2Member\Stripe
 	 * @since 140617
@@ -49,7 +49,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -80,7 +80,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -111,7 +111,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -142,7 +142,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -173,7 +173,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return array An array of response details.
 		 */
@@ -206,7 +206,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */
@@ -229,7 +229,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array $attr An array of Pro Form Attributes.
+		 * @param array $attr An array of Pro-Form Attributes.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */
@@ -345,7 +345,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e., the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -473,7 +473,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be >= 0.00.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 0.00 && $attr['ra'] < 0.50)
-						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e. the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount (when greater than 0.00), must be >= 0.50; i.e., the minimum amount that Stripe will charge is 0.50', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['ra'] > 999999.99)
 						$response = array('response' => _x('Invalid form configuration. Invalid "ra" attribute. The Regular Amount. Must be <= 999999.99.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -511,8 +511,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param string $form The type of Pro Form being submitted.
-		 * @param array  $s An array of data submitted through the Pro Form.
+		 * @param string $form The type of Pro-Form being submitted.
+		 * @param array  $s An array of data submitted through the Pro-Form.
 		 *
 		 * @return null|array Null if there are no errors, else a response array.
 		 */
@@ -539,7 +539,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap('administrator') /* NOT for Administrators. */)
 						$response = array('response' => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', 's2member-admin', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -579,10 +579,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if((empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(strlen($s['password1']) < 6 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if((empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if((empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
@@ -608,16 +608,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -666,10 +666,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && (empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && strlen($s['password1']) < 6 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if(!is_user_logged_in() && (empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
@@ -678,16 +678,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s['custom_fields']) ? $s['custom_fields'] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s['attr']['level'] === '*' ? 'auto-detection' : $s['attr']['level'], 'registration', TRUE))))
 						$response = array('response' => array_shift($custom_field_validation_errors), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
-					else if(empty($s['card_token']) || !is_string($s['card_token']))
+					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Method. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))

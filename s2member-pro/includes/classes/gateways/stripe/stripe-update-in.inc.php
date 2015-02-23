@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -44,7 +44,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 	class c_ws_plugin__s2member_pro_stripe_update_in
 	{
 		/**
-		 * Handles processing of Pro Form billing updates.
+		 * Handles processing of Pro-Form billing updates.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
@@ -80,10 +80,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 							{
 								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($cur__subscr_cid, $cur__subscr_id)) && !preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 								{
-									unset($_POST['s2member_pro_stripe_update']['card_token']); // These are good one-time only.
-									unset($_POST['s2member_pro_stripe_update']['card_token_summary']);
+									unset($_POST['s2member_pro_stripe_update']['source_token']); // These are good one-time only.
+									unset($_POST['s2member_pro_stripe_update']['source_token_summary']);
 
-									if(is_object($set_customer_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($cur__subscr_cid, $post_vars['card_token'], $post_vars)))
+									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['source_token'], $post_vars)))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 
@@ -92,7 +92,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
 										) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
 									}
-									else $global_response = array('response' => $set_customer_card_token, 'error' => TRUE);
+									else $global_response = array('response' => $set_customer_source, 'error' => TRUE);
 								}
 								else $global_response = array('response' => _x('<strong>Unable to update.</strong> You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 							}

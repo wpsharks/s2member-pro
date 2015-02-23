@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -51,7 +51,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string  $fname Customer's first name (optional).
 		 * @param string  $lname Customer's last name (optional).
 		 * @param array   $metadata Any metadata (optional).
-		 * @param array   $post_vars Pro Form post vars (optional).
+		 * @param array   $post_vars Pro-Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
@@ -118,15 +118,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Set a Stripe customer card/token.
+		 * Set a Stripe customer source.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
-		 * @param string $card_token Stripe token.
-		 * @param array  $post_vars Pro Form post vars (optional).
+		 * @param string $source_token Stripe source card/bank/bitcoin token.
+		 * @param array  $post_vars Pro-Form post vars (optional).
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function set_customer_card_token($customer_id, $card_token, $post_vars = array())
+		public static function set_customer_source($customer_id, $source_token, $post_vars = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -134,13 +134,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
-			$metadata     = self::_additional_customer_metadata($post_vars);
-			$card_details = self::_additional_customer_card_details($post_vars);
+			$metadata       = self::_additional_customer_metadata($post_vars);
+			$source_details = self::_additional_customer_source_details($post_vars);
 
-			try // Attempt to update the customer's card/token.
+			try // Attempt to update the customer's source token.
 			{
-				$customer       = Stripe_Customer::retrieve($customer_id);
-				$customer->card = $card_token; // Update.
+				$customer         = Stripe_Customer::retrieve($customer_id);
+				$customer->source = $source_token; // Update.
 
 				if($metadata) // Customer metadata?
 				{
@@ -152,16 +152,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
-				if($card_details) // Additional details we should save?
+				if($source_details) // Additional details we should save?
 				{
-					$card = $customer->cards->data[0]; // Just one card!
-					/** @var Stripe_Card $card Reference for IDEs. */
+					$source = $customer->sources->data[0]; // Just one source.
+					/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
 
-					foreach($card_details as $_key => $_value)
-						$card->{$_key} = $_value; // e.g. `address_zip`, etc.
-					unset($_key, $_value); // Housekeeping.
+					if($source instanceof Stripe_Card)
+					{
+						foreach($source_details as $_key => $_value)
+							$source->{$_key} = $_value;
+						unset($_key, $_value);
 
-					$card->save(); // Update.
+						$source->save(); // Update.
+					}
+					else if($source instanceof Stripe_BitcoinReceiver)
+					{
+						foreach($source_details as $_key => $_value)
+							$source->metadata->{$_key} = $_value;
+						unset($_key, $_value);
+
+						$source->save(); // Update.
+					}
 				}
 				return $customer;
 			}
@@ -173,7 +184,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			}
 		}
 
-		public static function _additional_customer_card_details($post_vars = array())
+		public static function _additional_customer_source_details($post_vars = array())
 		{
 			$post_vars = (array)$post_vars;
 			$details   = array(); // Initialize.
@@ -204,8 +215,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string               $currency Three character currency code.
 		 * @param string               $description Description of the charge.
 		 * @param array                $metadata Any additional metadata (optional).
-		 * @param array                $post_vars Pro Form post vars (optional).
-		 * @param array                $cost_calculations Pro Form cost calculations (optional).
+		 * @param array                $post_vars Pro-Form post vars (optional).
+		 * @param array                $cost_calculations Pro-Form cost calculations (optional).
 		 *
 		 * @return Stripe_Charge|string Charge object; else error message.
 		 */
@@ -368,8 +379,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $plan_id Subscription plan ID in Stripe.
 		 * @param array  $metadata Any additional metadata (optional).
-		 * @param array  $post_vars Pro Form post vars (optional).
-		 * @param array  $cost_calculations Pro Form cost calculations (optional).
+		 * @param array  $post_vars Pro-Form post vars (optional).
+		 * @param array  $cost_calculations Pro-Form cost calculations (optional).
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
@@ -473,7 +484,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @param boolean $at_period_end Defaults to a `TRUE` value (optional).
 		 *    If `TRUE`, cancellation is delayed until the end of the current period.
-		 *    If `FALSE`, cancellation is NOT delayed; i.e. it occurs immediately.
+		 *    If `FALSE`, cancellation is NOT delayed; i.e., it occurs immediately.
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
@@ -770,14 +781,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if((float)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'] > 0)
 				return TRUE;
 
-			else if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates'])
+			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates'])
 				return TRUE;
 
 			return FALSE;
 		}
 
 		/**
-		 * Handles the return of Tax for Pro Forms, via AJAX; through a JSON object.
+		 * Handles the return of Tax for Pro-Forms, via AJAX; through a JSON object.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
@@ -846,15 +857,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param int|string $zip Optional. The Postal/Zip Code where the Customer is billed.
 		 * @param string     $currency Optional. Expects a 3 character Currency Code.
 		 * @param string     $desc Optional. Description of the sale.
+		 * @param boolean    $is_bitcoin A Bitcoin transaction?
 		 *
 		 * @return array Array of calculations.
 		 */
-		public static function cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '')
+		public static function cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '', $is_bitcoin = FALSE)
 		{
 			$state   = strtoupper(c_ws_plugin__s2member_pro_utilities::full_state($state, ($country = strtoupper($country))));
 			$rates   = apply_filters('ws_plugin__s2member_pro_tax_rates_before_cost_calculation', strtoupper($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates']), get_defined_vars());
 			$default = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'];
 			$ps      = _x('%', 's2member-front percentage-symbol', 's2member');
+
+			if($is_bitcoin) // Ignore all of these if it's a Bitcoin transaction.
+				$rates = $default = $state = $country = $zip = ''; // Not applicable at this time.
 
 			$trial_tax = $tax = $trial_tax_per = $tax_per = $trial_total = $total = NULL; // Initialize.
 			foreach(array('trial_sub_total' => $trial_sub_total, 'sub_total' => $sub_total) as $this_key => $this_sub_total)
@@ -992,7 +1007,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @package s2Member\Stripe
 		 * @since 140617
 		 *
-		 * @param array  $attr An array of Pro Form Attributes (optional).
+		 * @param array  $attr An array of Pro-Form Attributes (optional).
 		 * @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
 		 * @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
 		 * @param array  $process Optional. An array of additional processing routines to run here.

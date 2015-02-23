@@ -11,14 +11,18 @@ abstract class Stripe
    */
   public static $apiBase = 'https://api.stripe.com';
   /**
+   * @var string The base URL for the Stripe API uploads endpoint.
+   */
+  public static $apiUploadBase = 'https://uploads.stripe.com';
+  /**
    * @var string|null The version of the Stripe API to use for requests.
    */
-  public static $apiVersion = null;
+  public static $apiVersion = '2015-02-18';
   /**
    * @var boolean Defaults to true.
    */
   public static $verifySslCerts = true;
-  const VERSION = '1.16.0';
+  const VERSION = '1.18.0';
 
   /**
    * @return string The API key used for requests.

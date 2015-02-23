@@ -53,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				'order'   => 'DESC', 'orderby' => 'registered', 'number' => 25
 			);
 			$original_args = $args; // Useful in certain cases.
-			// e.g. `if(empty($original_args['search_columns']))`.
+			// e.g., `if(empty($original_args['search_columns']))`.
 
 			if(!empty($args['args']))
 			{
@@ -158,7 +158,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				$search_regex_frag = preg_quote($args['search']);
 				$search_regex_frag = str_replace('"', '', $search_regex_frag);
 				$search_regex_frag = str_replace('\\*', '[^"]*', $search_regex_frag);
-				$regex             = '(^|\{)s\:[0-9]+\:"('.$matching_custom_fields_regex_frag.')";s\:[0-9]+\:"'.$search_regex_frag.'"'; // e.g. `a:1:{s:12:"country_code";s:3:"USA";}`.
+				$regex             = '(^|\{)s\:[0-9]+\:"('.$matching_custom_fields_regex_frag.')";s\:[0-9]+\:"'.$search_regex_frag.'"'; // e.g., `a:1:{s:12:"country_code";s:3:"USA";}`.
 				$_users            = $wpdb->get_results("SELECT `user_id` as `ID` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_custom_fields' AND `meta_value` REGEXP '".esc_sql($regex)."'");
 
 				if($_users && is_array($_users))

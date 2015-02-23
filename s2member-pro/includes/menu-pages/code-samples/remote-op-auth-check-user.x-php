@@ -2,7 +2,7 @@
 $op["op"] = "auth_check_user"; // The Remote Operation.
 
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
-	// See: `s2Member -› API / Scripting -› Remote Operations API -› API Key`
+	// See: `s2Member ⥱ API / Scripting ⥱ Remote Operations API ⥱ API Key`
 
 $op["data"] = array(
 	"user_login" => "johndoe22", // Required. Username to query the database for.
@@ -14,7 +14,7 @@ $post_data = stream_context_create (array("http" => array("method" => "POST", "h
 $result = trim (file_get_contents ("http://www.example.com/?s2member_pro_remote_op=1", false, $post_data));
 
 if (!empty($result) && !preg_match ("/^Error\:/i", $result) && is_array($user = @unserialize ($result)))
-	echo "Successfully authenticated (i.e. Username/Password is valid). User ID: " . $user["ID"];
+	echo "Successfully authenticated (i.e., Username/Password is valid). User ID: " . $user["ID"];
 else
 	echo "API error reads: " . $result;
 ?>
