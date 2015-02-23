@@ -524,7 +524,7 @@ jQuery(document).ready( // DOM ready.
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div :input').attr(ariaTrue);
 							}
-							if(sourceToken !== 'free' && sourceToken.indexOf('btcrcv_') !== 0 && taxMayApply/* If tax may apply. */)
+							if(sourceToken !== 'free' && taxMayApply && sourceToken.indexOf('btcrcv_') !== 0)
 							{
 								$(billingAddressSection).show(), // Show billing address section.
 									$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
@@ -554,15 +554,19 @@ jQuery(document).ready( // DOM ready.
 					$(sourceTokenButton).on('click', function() // Stripe integration.
 					{
 						var acceptBitcoin = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0 && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-bitcoin-accepted').length > 0,
-							acceptBitcoinAmountInCents = acceptBitcoin ? parseInt($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val()) : 0;
+							acceptBitcoinAmountInCents = acceptBitcoin ? parseInt($.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val())) : 0,
+							acceptBitcoinCurrency = acceptBitcoin ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-currency').val()).toUpperCase() : 'USD',
+							acceptBitcoinDesc = acceptBitcoin ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-desc').val()) : '';
 
-						if(acceptBitcoin && (isNaN(acceptBitcoinAmountInCents) || acceptBitcoinAmountInCents <= 0))
-							acceptBitcoin = false, acceptBitcoinAmountInCents = 0; // Not possible.
+						if(acceptBitcoin && (isNaN(acceptBitcoinAmountInCents) || acceptBitcoinAmountInCents <= 0)) // Not possible.
+							acceptBitcoin = false, acceptBitcoinAmountInCents = 0, acceptBitcoinCurrency = '', acceptBitcoinDesc = '';
 
 						var getSourceToken = StripeCheckout.configure
 						({
-							 bitcoin: acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
-							 amount : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
+							 bitcoin    : acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
+							 amount     : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
+							 currency   : acceptBitcoin ? acceptBitcoinCurrency : undefined, // Needed only when accepting Bitcoin.
+							 description: acceptBitcoin ? acceptBitcoinDesc : undefined, // Needed only when accepting Bitcoin.
 
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
@@ -643,7 +647,7 @@ jQuery(document).ready( // DOM ready.
 					return token.card.brand + ': xxxx-xxxx-xxxx-' + token.card.last4;
 
 				if(token.type === 'bitcoin_receiver' && token.inbound_address)
-					return 'Bitcoin: ' + token.inbound_address;
+					return 'Bitcoin to: ' + token.inbound_address;
 
 				return 'Token: ' + token.id;
 			};

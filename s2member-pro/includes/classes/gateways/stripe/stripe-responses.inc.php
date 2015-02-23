@@ -579,10 +579,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if((empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(strlen($s['password1']) < 6 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if((empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if((empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
@@ -611,13 +611,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
@@ -666,10 +666,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && (empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && strlen($s['password1']) < 6 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if(!is_user_logged_in() && (empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
@@ -681,13 +681,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(empty($s['source_token']) || !is_string($s['source_token']))
 						$response = array('response' => _x('Missing Billing Method. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['state']) || !is_string($s['state'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing State/Province. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['country']) || !is_string($s['country'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Country. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply())
+					else if((empty($s['zip']) || !is_string($s['zip'])) && c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() && stripos($s['source_token'], 'btcrcv_') !== 0)
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))

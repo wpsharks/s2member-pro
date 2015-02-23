@@ -155,13 +155,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				if($source_details) // Additional details we should save?
 				{
 					$source = $customer->sources->data[0]; // Just one source.
-					/** @var Stripe_Card|Stripe_BitcoinReceiver|Stripe_Transfer $source */
+					/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
 
-					foreach($source_details as $_key => $_value)
-						$source->{$_key} = $_value; // e.g., `address_zip`, etc.
-					unset($_key, $_value); // Housekeeping.
+					if($source instanceof Stripe_Card)
+					{
+						foreach($source_details as $_key => $_value)
+							$source->{$_key} = $_value;
+						unset($_key, $_value);
 
-					$source->save(); // Update.
+						$source->save(); // Update.
+					}
+					else if($source instanceof Stripe_BitcoinReceiver)
+					{
+						foreach($source_details as $_key => $_value)
+							$source->metadata->{$_key} = $_value;
+						unset($_key, $_value);
+
+						$source->save(); // Update.
+					}
 				}
 				return $customer;
 			}

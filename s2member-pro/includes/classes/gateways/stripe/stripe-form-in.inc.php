@@ -376,6 +376,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$is_buy_now_amount           = $is_buy_now && $cp_buy_now_attr['ra'] > 0 ? number_format($cp_buy_now_attr['ra'], 2, '.', '') : '0.00';
 				$is_buy_now_currency         = $is_buy_now ? $cp_buy_now_attr['cc'] : ''; // Note that Bitcoin can only be charged in USD at the present time.
 				$is_buy_now_amount_in_cents  = $is_buy_now && $is_buy_now_amount > 0 ? (string)c_ws_plugin__s2member_pro_stripe_utilities::dollar_amount_to_cents($is_buy_now_amount, $is_buy_now_currency) : '0';
+				$is_buy_now_desc             = $is_buy_now ? $cp_buy_now_attr['desc'] : ''; // This description is used for Bitcoin transaction; description for receiver.
 				$is_buy_now_bitcoin_accepted = $is_buy_now && $is_buy_now_amount_in_cents > 0 && $is_buy_now_currency === 'USD' && in_array('bitcoin', $cp_buy_now_attr['accept'], TRUE);
 
 				$country_default_by_currency = !@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'USD' ? 'US' : '';
@@ -434,6 +435,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= $is_buy_now_amount <= 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= $is_buy_now_amount > 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-amount" value="'.esc_attr($is_buy_now_amount).'" />' : '';
 				$hidden_inputs .= $is_buy_now_amount_in_cents > 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-amount-in-cents" value="'.esc_attr($is_buy_now_amount_in_cents).'" />' : '';
+				$hidden_inputs .= $is_buy_now_currency ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-currency" value="'.esc_attr($is_buy_now_currency).'" />' : '';
+				$hidden_inputs .= $is_buy_now_desc ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-desc" value="'.esc_attr($is_buy_now_desc).'" />' : '';
 				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[attr]" id="s2member-pro-stripe-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
@@ -494,6 +497,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$is_buy_now_amount           = $is_buy_now && $cp_buy_now_attr['ra'] > 0 ? number_format($cp_buy_now_attr['ra'], 2, '.', '') : '0.00';
 				$is_buy_now_currency         = $is_buy_now ? $cp_buy_now_attr['cc'] : ''; // Note that Bitcoin can only be charged in USD at the present time.
 				$is_buy_now_amount_in_cents  = $is_buy_now && $is_buy_now_amount > 0 ? (string)c_ws_plugin__s2member_pro_stripe_utilities::dollar_amount_to_cents($is_buy_now_amount, $is_buy_now_currency) : '0';
+				$is_buy_now_desc             = $is_buy_now ? $cp_buy_now_attr['desc'] : ''; // This description is used for Bitcoin transaction; description for receiver.
 				$is_buy_now_bitcoin_accepted = $is_buy_now && $is_buy_now_amount_in_cents > 0 && $is_buy_now_currency === 'USD' && in_array('bitcoin', $cp_buy_now_attr['accept'], TRUE);
 
 				$country_default_by_currency = !@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'USD' ? 'US' : '';
@@ -582,6 +586,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= $cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= $is_buy_now_amount > 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-amount" value="'.esc_attr($is_buy_now_amount).'" />' : '';
 				$hidden_inputs .= $is_buy_now_amount_in_cents > 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-amount-in-cents" value="'.esc_attr($is_buy_now_amount_in_cents).'" />' : '';
+				$hidden_inputs .= $is_buy_now_currency ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-currency" value="'.esc_attr($is_buy_now_currency).'" />' : '';
+				$hidden_inputs .= $is_buy_now_desc ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-desc" value="'.esc_attr($is_buy_now_desc).'" />' : '';
 				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 

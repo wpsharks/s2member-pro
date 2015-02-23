@@ -71,10 +71,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			if(in_array('stripe', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_gateways_enabled']))
 			{
 				echo '<div class="info">'."\n";
-				echo '<p><strong>* Stripe Coupons (PLEASE NOTE):</strong> coupons MUST be configured with s2Member and <strong>NOT via the Stripe Dashboard please</strong>. s2Member Pro-Forms currently do NOT support Stripe-generated coupon codes; only those configured here with s2Member. Please see configuration options below.</p>'."\n";
+				echo '<p><strong>* Stripe:</strong> Coupons <em>must</em> be configured with s2Member and <strong>not via the Stripe Dashboard</strong>. s2Member Pro-Forms currently do <em>not</em> support Stripe-generated coupon codes; only those configured here with s2Member.</p>'."\n";
 				echo '</div>'."\n";
 			}
-			echo '<p><strong>Prerequisites:</strong> In order to display a "Coupon Code" field on your Checkout Form you MUST add this special Shortcode Attribute to your s2Member Pro-Form Shortcode(s): <code>accept_coupons="1"</code>. If you would like to force-feed a default Coupon Code <em>(optional)</em>, you can add this special Shortcode attribute: <code>coupon="[your default code]"</code>. Or, instead of <code>coupon="[your default code]"</code>, you could pass <code>?s2p-coupon=[your default code]</code> in the query string of a URL leading to a Checkout Form.</p>'."\n";
+			echo '<p><strong>Required Shortcode Attribute:</strong> In order to display a "Coupon Code" field on your Checkout Form you <em>must</em> add this special Shortcode Attribute to your s2Member Pro-Form Shortcode(s): <code>accept_coupons="1"</code>. If you would like to force-feed a default Coupon Code <em>(optional)</em>, you can add this special Shortcode attribute: <code>coupon="[your default code]"</code>. Or, instead of <code>coupon="[your default code]"</code>, you could pass <code>?s2p-coupon=[your default code]</code> in the query string of a URL leading to a Checkout Form.</p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";

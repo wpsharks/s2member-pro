@@ -135,7 +135,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do not accept Bitcoin (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>Yes, accept Bitcoin (enabled for "Buy Now" only; i.e., recurring charges not possible at this time)</option>'."\n";
 			echo '</select><br />'."\n";
-			echo '<p>Turning this on requires that you <a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank" rel="external">enable the live Bitcoin API on your account</a></p>'."\n";
+			echo '<em>Works for "Buy Now" transactions in USD only; i.e., other currency conversions not supported by Stripe at this time.</em><br />'."\n";
+			echo 'Turning this on requires that you <a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank" rel="external">enable the live Bitcoin API on your account</a>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";

@@ -357,7 +357,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = $post_vars['password1'];
+								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = @$post_vars['password1'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_first_name'] = $post_vars['first_name'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_last_name']  = $post_vars['last_name'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_opt_in']     = @$post_vars['custom_fields']['opt_in'];
@@ -385,7 +385,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_pass']  = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
-								$has_custom_password       = $post_vars['password1'] && $post_vars['password1'] === $create_user['user_pass'];
+								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
 
 								if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
 								    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
@@ -555,7 +555,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = $post_vars['password1'];
+								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = @$post_vars['password1'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_first_name'] = $post_vars['first_name'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_last_name']  = $post_vars['last_name'];
 								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_opt_in']     = @$post_vars['custom_fields']['opt_in'];
@@ -583,7 +583,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_pass']  = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
-								$has_custom_password       = $post_vars['password1'] && $post_vars['password1'] === $create_user['user_pass'];
+								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
 
 								if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
 								    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
