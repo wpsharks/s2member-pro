@@ -774,7 +774,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_default_tax" id="ws-plugin--s2member-pro-default-tax" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax']).'" /><br />'."\n";
-			echo 'This can be a flat tax <code>(1.75)</code>, or a percentage <code>( 7.0% )</code>.'."\n";
+			echo 'This can be a flat tax <code>(1.75)</code>, or a percentage <code>(7.0%)</code>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -802,6 +802,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
+
+			echo '<p class="warning"><em><strong>Bitcoin:</strong> At this time, due to technical limitations (and conflicting laws), <strong>taxes you configure here are not applied to payments made in Bitcoin</strong>. If you intend to accept Bitcoin via Stripe, and you want to charge tax, please adjust the final purchase price; i.e., change the overall price so that it includes/covers any applicable tax that you plan to charge. See also: <a href="https://bitcoin.tax/faq" target="_blank" rel="external">https://bitcoin.tax/faq</a></em></p>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";

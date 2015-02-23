@@ -680,7 +680,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_default_tax" id="ws-plugin--s2member-pro-default-tax" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_default_tax"]).'" /><br />'."\n";
-			echo 'This can be a flat tax <code>(1.75)</code>, or a percentage <code>( 7.0% )</code>.'."\n";
+			echo 'This can be a flat tax <code>(1.75)</code>, or a percentage <code>(7.0%)</code>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
