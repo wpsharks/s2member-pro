@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 150203
-Stable tag: 150203
+Version: 150223
+Stable tag: 150223
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -131,7 +131,7 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v150203 =
+= v150223 =
 
 (Maintenance Release) Upgrade immediately.
 
