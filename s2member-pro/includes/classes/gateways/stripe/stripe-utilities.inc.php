@@ -770,7 +770,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if((float)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'] > 0)
 				return TRUE;
 
-			else if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates'])
+			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates'])
 				return TRUE;
 
 			return FALSE;
@@ -846,15 +846,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param int|string $zip Optional. The Postal/Zip Code where the Customer is billed.
 		 * @param string     $currency Optional. Expects a 3 character Currency Code.
 		 * @param string     $desc Optional. Description of the sale.
+		 * @param boolean    $is_bitcoin A Bitcoin transaction?
 		 *
 		 * @return array Array of calculations.
 		 */
-		public static function cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '')
+		public static function cost($trial_sub_total = '', $sub_total = '', $state = '', $country = '', $zip = '', $currency = '', $desc = '', $is_bitcoin = FALSE)
 		{
 			$state   = strtoupper(c_ws_plugin__s2member_pro_utilities::full_state($state, ($country = strtoupper($country))));
 			$rates   = apply_filters('ws_plugin__s2member_pro_tax_rates_before_cost_calculation', strtoupper($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_tax_rates']), get_defined_vars());
 			$default = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_default_tax'];
 			$ps      = _x('%', 's2member-front percentage-symbol', 's2member');
+
+			if($is_bitcoin) // Ignore all of these if it's a Bitcoin transaction.
+				$rates = $default = $state = $country = $zip = ''; // Not applicable at this time.
 
 			$trial_tax = $tax = $trial_tax_per = $tax_per = $trial_total = $total = NULL; // Initialize.
 			foreach(array('trial_sub_total' => $trial_sub_total, 'sub_total' => $sub_total) as $this_key => $this_sub_total)

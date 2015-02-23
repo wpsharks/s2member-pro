@@ -134,19 +134,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rt']                   = strtoupper($attr['rt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rr']                   = strtoupper($attr['rr']); // Must be provided in upper-case format. Numerical, or BN value. Only after running shortcode_atts().
+			$attr['cc']                   = strtoupper($attr['cc']); // Must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['ccaps']                = strtolower($attr['ccaps']); // Custom Capabilities must be typed in lower-case format. Only after running shortcode_atts().
 			$attr['ccaps']                = str_replace(' ', '', $attr['ccaps']); // Custom Capabilities should not have spaces.
-			$attr['rr']                   = ($attr['rt'] === 'L') ? 'BN' : $attr['rr']; // Lifetime Subscriptions require Buy Now. Only after running shortcode_atts().
-			$attr['rr']                   = ($attr['level'] === '*') ? 'BN' : $attr['rr']; // Independent Ccaps require Buy Now. Only after running shortcode_atts().
-			$attr['rr']                   = (!$attr['tp'] && !$attr['rr']) ? 'BN' : $attr['rr']; // No Trial / non-recurring. Only after running shortcode_atts().
+			$attr['rr']                   = $attr['rt'] === 'L' ? 'BN' : $attr['rr']; // Lifetime Subscriptions require Buy Now. Only after running shortcode_atts().
+			$attr['rr']                   = $attr['level'] === '*' ? 'BN' : $attr['rr']; // Independent Ccaps require Buy Now. Only after running shortcode_atts().
+			$attr['rr']                   = !$attr['tp'] && !$attr['rr'] ? 'BN' : $attr['rr']; // No Trial / non-recurring. Only after running shortcode_atts().
 			$attr['default_country_code'] = strtoupper($attr['default_country_code']); // This MUST be in uppercase format.
 			$attr['success']              = c_ws_plugin__s2member_utils_urls::n_amps($attr['success']); // Normalize ampersands.
-			$attr['coupon']               = (!empty($_GET['s2p-coupon'])) ? trim(strip_tags(stripslashes($_GET['s2p-coupon']))) : $attr['coupon'];
+			$attr['coupon']               = !empty($_GET['s2p-coupon']) ? trim(strip_tags(stripslashes($_GET['s2p-coupon']))) : $attr['coupon'];
 			$attr['singular']             = get_the_ID(); // Collect the Singular ID for this Post/Page.
-
-			$attr['accept']      = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
-			$is_buy_now          = $attr['sp'] || $attr['rr'] === 'BN' || (!$attr['tp'] && !$attr['rr']) ? TRUE : FALSE;
-			$is_bitcoin_accepted = $is_buy_now && in_array('bitcoin', $attr['accept'], TRUE);
+			$attr['accept']               = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', get_defined_vars());
@@ -366,15 +364,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			{
 				$_p                 = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
 				$attr['sp_ids_exp'] = 'sp:'.$attr['ids'].':'.$attr['exp']; // Combined `sp:ids:expiration hours`.
-				$attr['coupon']     = (!empty($_p['s2member_pro_stripe_sp_checkout']['coupon'])) ? $_p['s2member_pro_stripe_sp_checkout']['coupon'] : $attr['coupon'];
+				$attr['coupon']     = !empty($_p['s2member_pro_stripe_sp_checkout']['coupon']) ? $_p['s2member_pro_stripe_sp_checkout']['coupon'] : $attr['coupon'];
 				$response           = c_ws_plugin__s2member_pro_stripe_responses::stripe_sp_checkout_response($attr);
-				$_p                 = ($response['response'] && !$response['error']) ? array() : $_p;
+				$_p                 = $response['response'] && !$response['error'] ? array() : $_p;
 
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'USD') ? 'US' : '';
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'CAD') ? 'CA' : $country_default_by_currency;
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'GBP') ? 'GB' : $country_default_by_currency;
+				$tax_may_apply = c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply(); // Tax may apply?
+				$cp_attr       = $cp_buy_now_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon']);
+				// ↑ The discounted amounts, but before any tax calculations occur during checkout.
+
+				$is_buy_now                  = TRUE; // Always true for Specific Post/Page Access transactions.
+				$is_buy_now_amount           = $is_buy_now && $cp_buy_now_attr['ra'] > 0 ? number_format($cp_buy_now_attr['ra'], 2, '.', '') : '0.00';
+				$is_buy_now_currency         = $is_buy_now ? $cp_buy_now_attr['cc'] : ''; // Note that Bitcoin can only be charged in USD at the present time.
+				$is_buy_now_amount_in_cents  = $is_buy_now && $is_buy_now_amount > 0 ? (string)c_ws_plugin__s2member_pro_stripe_utilities::dollar_amount_to_cents($is_buy_now_amount, $is_buy_now_currency) : '0';
+				$is_buy_now_bitcoin_accepted = $is_buy_now && $is_buy_now_amount_in_cents > 0 && $is_buy_now_currency === 'USD' && in_array('bitcoin', $cp_buy_now_attr['accept'], TRUE);
+
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'USD' ? 'US' : '';
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'CAD' ? 'CA' : $country_default_by_currency;
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_sp_checkout']['country'] && $attr['cc'] === 'GBP' ? 'GB' : $country_default_by_currency;
 				$country_default_by_currency = apply_filters('ws_plugin__s2member_pro_stripe_default_country', $country_default_by_currency, get_defined_vars());
-				$default_country_v           = ($attr['default_country_code']) ? $attr['default_country_code'] : $country_default_by_currency;
+				$default_country_v           = $attr['default_country_code'] ? $attr['default_country_code'] : $country_default_by_currency;
 
 				$country_options = '<option value=""></option>'; // Start with an empty option value.
 				foreach(preg_split('/['."\r\n".']+/', file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/iso-3166-1.txt')) as $country)
@@ -422,10 +430,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token_summary']).'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= $is_buy_now ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now" value="1" />' : '';
-				$hidden_inputs .= $is_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-bitcoin-accepted" value="1" />' : '';
-				$hidden_inputs .= !c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= ($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$tax_may_apply ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $is_buy_now_amount <= 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $is_buy_now_amount > 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-amount" value="'.esc_attr($is_buy_now_amount).'" />' : '';
+				$hidden_inputs .= $is_buy_now_amount_in_cents > 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-amount-in-cents" value="'.esc_attr($is_buy_now_amount_in_cents).'" />' : '';
+				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[attr]" id="s2member-pro-stripe-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : '';
@@ -465,17 +474,33 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			else // Signups and Modifications.
 			{
 				$_p                         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
-				$attr['level_ccaps_eotper'] = ($attr['rr'] === 'BN' && $attr['rt'] !== 'L') ? $attr['level'].':'.$attr['ccaps'].':'.$attr['rp'].' '.$attr['rt'] : $attr['level'].':'.$attr['ccaps'];
+				$attr['level_ccaps_eotper'] = $attr['rr'] === 'BN' && $attr['rt'] !== 'L' ? $attr['level'].':'.$attr['ccaps'].':'.$attr['rp'].' '.$attr['rt'] : $attr['level'].':'.$attr['ccaps'];
 				$attr['level_ccaps_eotper'] = rtrim($attr['level_ccaps_eotper'], ':'); // Clean any trailing separators from this string.
-				$attr['coupon']             = (!empty($_p['s2member_pro_stripe_checkout']['coupon'])) ? $_p['s2member_pro_stripe_checkout']['coupon'] : $attr['coupon'];
+				$attr['coupon']             = !empty($_p['s2member_pro_stripe_checkout']['coupon']) ? $_p['s2member_pro_stripe_checkout']['coupon'] : $attr['coupon'];
 				$response                   = c_ws_plugin__s2member_pro_stripe_responses::stripe_checkout_response($attr);
-				$_p                         = ($response['response'] && !$response['error']) ? array() : $_p;
+				$_p                         = $response['response'] && !$response['error'] ? array() : $_p;
 
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'USD') ? 'US' : '';
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'CAD') ? 'CA' : $country_default_by_currency;
-				$country_default_by_currency = (!@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'GBP') ? 'GB' : $country_default_by_currency;
+				$tax_may_apply = c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply(); // Tax may apply?
+				$cp_attr       = $cp_buy_now_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon']);
+				// ↑ The discounted amounts, but before any tax calculations occur during checkout.
+
+				if($cp_buy_now_attr['ra'] <= 0 && $cp_buy_now_attr['tp'] && $cp_buy_now_attr['ta'] > 0)
+				{
+					$cp_buy_now_attr['tp'] = '0'; // Ditch the trial period completely.
+					$cp_buy_now_attr['ra'] = $cp_buy_now_attr['ta']; // Use as regular amount.
+					$cp_buy_now_attr['ta'] = '0.00'; // Ditch this calculation now.
+				}
+				$is_buy_now                  = $cp_buy_now_attr['rr'] === 'BN' || (!$cp_buy_now_attr['tp'] && !$cp_buy_now_attr['rr']);
+				$is_buy_now_amount           = $is_buy_now && $cp_buy_now_attr['ra'] > 0 ? number_format($cp_buy_now_attr['ra'], 2, '.', '') : '0.00';
+				$is_buy_now_currency         = $is_buy_now ? $cp_buy_now_attr['cc'] : ''; // Note that Bitcoin can only be charged in USD at the present time.
+				$is_buy_now_amount_in_cents  = $is_buy_now && $is_buy_now_amount > 0 ? (string)c_ws_plugin__s2member_pro_stripe_utilities::dollar_amount_to_cents($is_buy_now_amount, $is_buy_now_currency) : '0';
+				$is_buy_now_bitcoin_accepted = $is_buy_now && $is_buy_now_amount_in_cents > 0 && $is_buy_now_currency === 'USD' && in_array('bitcoin', $cp_buy_now_attr['accept'], TRUE);
+
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'USD' ? 'US' : '';
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'CAD' ? 'CA' : $country_default_by_currency;
+				$country_default_by_currency = !@$_p['s2member_pro_stripe_checkout']['country'] && $attr['cc'] === 'GBP' ? 'GB' : $country_default_by_currency;
 				$country_default_by_currency = apply_filters('ws_plugin__s2member_pro_stripe_default_country', $country_default_by_currency, get_defined_vars());
-				$default_country_v           = ($attr['default_country_code']) ? $attr['default_country_code'] : $country_default_by_currency;
+				$default_country_v           = $attr['default_country_code'] ? $attr['default_country_code'] : $country_default_by_currency;
 
 				$country_options = '<option value=""></option>'; // Start with an empty option value.
 				foreach(preg_split('/['."\r\n".']+/', file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/iso-3166-1.txt')) as $country)
@@ -552,11 +577,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token_summary']).'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= $is_buy_now ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now" value="1" />' : '';
-				$hidden_inputs .= $is_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-bitcoin-accepted" value="1" />' : '';
 				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= !c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply() ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
-				$hidden_inputs .= ($cp_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'])) && $cp_attr['ta'] <= 0.00 && $cp_attr['ra'] <= 0.00 ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= !$tax_may_apply ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-payment-not-required-or-not-possible" value="1" />' : '';
+				$hidden_inputs .= $is_buy_now_amount > 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-amount" value="'.esc_attr($is_buy_now_amount).'" />' : '';
+				$hidden_inputs .= $is_buy_now_amount_in_cents > 0 ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-amount-in-cents" value="'.esc_attr($is_buy_now_amount_in_cents).'" />' : '';
+				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';

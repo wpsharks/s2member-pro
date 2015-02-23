@@ -62,7 +62,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 				$global_response                                             = &$GLOBALS['ws_plugin__s2member_pro_stripe_checkout_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_checkout']));
-				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
+				$post_vars['attr'] = !empty($post_vars['attr']) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 				$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_stripe_checkout_post_attr', $post_vars['attr'], get_defined_vars());
 
 				$post_vars['name']     = trim($post_vars['first_name'].' '.$post_vars['last_name']);
@@ -79,11 +79,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('checkout', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						unset($_POST['s2member_pro_stripe_checkout']['source_token']); // These are good one-time only.
-						unset($_POST['s2member_pro_stripe_checkout']['source_token_summary']);
+						unset($_POST['s2member_pro_stripe_checkout']['source_token']); // Good one-time only.
+						unset($_POST['s2member_pro_stripe_checkout']['source_token_summary']); // Good one-time only.
 
+						$is_bitcoin        = !empty($post_vars['source_token']) && stripos($post_vars['source_token'], 'btcrcv_') === 0;
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
-						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
+						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc'], $is_bitcoin);
 
 						if($cost_calculations['total'] <= 0 && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)
 						{

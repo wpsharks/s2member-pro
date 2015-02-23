@@ -271,14 +271,16 @@ jQuery(document).ready( // DOM ready.
 				{
 					var getSourceToken = StripeCheckout.configure
 					({
-						 bitcoin        : false, // Not accepted for recurring billing. Thus, not applicable when updating billing information.
+						 bitcoin: false, // Accept Bitcoin as a funding source in this instance?
+
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
 						 image          : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>',
 						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
 						 email          : typeof S2MEMBER_CURRENT_USER_EMAIL === 'string' ? S2MEMBER_CURRENT_USER_EMAIL : '',
 						 allowRememberMe: true, // Allow Stripe to remember the customer.
-						 token          : function(token)
+
+						 token: function(token) // Callback handler.
 						 {
 							 $(sourceTokenInput).val(token.id), $(sourceTokenSummaryInput).val(buildSourceTokenTextSummary(token)),
 								 $(sourceTokenSummary).html(ws_plugin__s2member_escHtml(buildSourceTokenTextSummary(token))),
@@ -455,9 +457,10 @@ jQuery(document).ready( // DOM ready.
 								state = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-state').val()),
 								country = $.trim($(billingAddressSection + ' select#s2member-pro-stripe-' + coTypeWithDashes + '-country').val()),
 								zip = $.trim($(billingAddressSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-zip').val()),
-								thisTaxLocation = state + '|' + country + '|' + zip; // Three part location.
+								thisTaxLocation = state + '|' + country + '|' + zip, // Three part location.
+								isBitcoin = $.trim($(sourceTokenInput).val()).indexOf('btcrcv_') === 0;
 
-							if(state && country && zip && thisTaxLocation && (!cTaxLocation || cTaxLocation !== thisTaxLocation))
+							if(state && country && zip && thisTaxLocation && !isBitcoin && (!cTaxLocation || cTaxLocation !== thisTaxLocation))
 							{
 								clearTimeout(cTaxTimeout), cTaxTimeout = 0,
 									cTaxLocation = thisTaxLocation; // Set current location.
@@ -486,7 +489,7 @@ jQuery(document).ready( // DOM ready.
 									};
 								$(ajaxTaxDiv).html(calculating), cTaxTimeout = setTimeout(ajaxTaxHandler, ((eventTrigger && eventTrigger.keyCode) ? 1000 : 100));
 							}
-							else if(!state || !country || !zip || !thisTaxLocation)
+							else if(!state || !country || !zip || !thisTaxLocation || isBitcoin)
 							{
 								clearTimeout(cTaxTimeout), cTaxTimeout = 0,
 									cTaxLocation = ''; // Reset the current location.
@@ -503,7 +506,7 @@ jQuery(document).ready( // DOM ready.
 					handleBillingMethod = function(eventTrigger /* eventTrigger is passed by jQuery for DOM events. */)
 					{
 						if($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-payment-not-required-or-not-possible').length)
-							$(sourceTokenInput).val('free'); // No payment required in this VERY special case.
+							$(sourceTokenInput).val('free'); // No payment required in this very special case.
 
 						var sourceToken = $(sourceTokenInput).val(/* Source token from Stripe. */);
 
@@ -521,7 +524,7 @@ jQuery(document).ready( // DOM ready.
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
 									$(billingMethodSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div :input').attr(ariaTrue);
 							}
-							if(sourceToken !== 'free' && taxMayApply/* If tax may apply, we need to collect a tax location. */)
+							if(sourceToken !== 'free' && sourceToken.indexOf('btcrcv_') !== 0 && taxMayApply/* If tax may apply. */)
 							{
 								$(billingAddressSection).show(), // Show billing address section.
 									$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').show(),
@@ -550,17 +553,25 @@ jQuery(document).ready( // DOM ready.
 
 					$(sourceTokenButton).on('click', function() // Stripe integration.
 					{
+						var acceptBitcoin = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0 && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-bitcoin-accepted').length > 0,
+							acceptBitcoinAmountInCents = acceptBitcoin ? parseInt($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val()) : 0;
+
+						if(acceptBitcoin && (isNaN(acceptBitcoinAmountInCents) || acceptBitcoinAmountInCents <= 0))
+							acceptBitcoin = false, acceptBitcoinAmountInCents = 0; // Not possible.
+
 						var getSourceToken = StripeCheckout.configure
 						({
-							 key    : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
-							 bitcoin: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_accept_bitcoin"]); ?>' == '1'
-							                && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-bitcoin-accepted').length,
+							 bitcoin: acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
+							 amount : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
+
+							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
 							 image          : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>',
 							 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
 							 email          : $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(),
 							 allowRememberMe: true, // Allow Stripe to remember the customer.
-							 token          : function(token)
+
+							 token: function(token) // Callback handler.
 							 {
 								 $(sourceTokenInput).val(token.id), $(sourceTokenSummaryInput).val(buildSourceTokenTextSummary(token)),
 									 $(sourceTokenSummary).html(ws_plugin__s2member_escHtml(buildSourceTokenTextSummary(token))),
@@ -631,7 +642,8 @@ jQuery(document).ready( // DOM ready.
 				if(token.type === 'card' && token.card)
 					return token.card.brand + ': xxxx-xxxx-xxxx-' + token.card.last4;
 
-				console.log(token); // So we can catch the type.
+				if(token.type === 'bitcoin_receiver' && token.inbound_address)
+					return 'Bitcoin: ' + token.inbound_address;
 
 				return 'Token: ' + token.id;
 			};
