@@ -135,8 +135,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do not accept Bitcoin (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>Yes, accept Bitcoin (enabled for "Buy Now" only; i.e., recurring charges not possible at this time)</option>'."\n";
 			echo '</select><br />'."\n";
-			echo '<em>Works for "Buy Now" transactions in USD only; i.e., other currency conversions not supported by Stripe at this time.</em><br />'."\n";
+			echo 'Works for "Buy Now" transactions in USD only; i.e., other currency conversions not supported by Stripe at this time.<br />'."\n";
 			echo 'Turning this on requires that you <a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank" rel="external">enable the live Bitcoin API on your account</a>'."\n";
+			echo '<p><em><strong>Tip:</strong> This setting for Bitcoin is a global flag that enables Bitcoin for all Pro-Forms that offer a "Buy Now" item. However, you can also enable/disable Bitcoin in a specific Pro-Form (regardless of your configuration here), by adding the Shortcode Attribute <code>accept="bitcoin"</code> (to enable Bitcoin) or <code>accept=""</code> (to disable Bitcoin). For further details, please see: <strong>s2Member ⥱ Stripe Pro-Forms ⥱ Shortcode Attributes (Explained)</strong></em></p>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
