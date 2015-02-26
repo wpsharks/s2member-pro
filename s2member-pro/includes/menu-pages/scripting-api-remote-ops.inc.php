@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Menu_Pages
@@ -56,7 +56,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_remote_ops_api"))
 				echo '<div class="ws-menu-page-hr"></div>'."\n";
 
 				echo '<h4>Remote Operations API: <strong>Your secret API Key</strong></h4>'."\n";
-				echo '<form method="post" name="ws_plugin__s2member_options_form" id="ws-plugin--s2member-options-form" onsubmit="if(!confirm(\'Are you sure? Please note that changing your API Key will delete the previous key.\')) return false;">'."\n";
+				echo '<form method="post" name="ws_plugin__s2member_options_form" id="ws-plugin--s2member-options-form" onsubmit="if(!confirm(\'Are you sure? Please note that changing your API Key will delete the previous key.\')) return false;" autocomplete="off">'."\n";
 				echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 				echo '<a href="#" onclick="ws_plugin__s2member_generateSecurityKey(\'#ws-plugin--s2member-pro-remote-ops-key\'); return false;" title="Insert an auto-generated key (recommended).">auto-generate a new key?</a>'."\n";
 				echo '<table style="width:100%;"><tr><td><input type="text" autocomplete="off" name="ws_plugin__s2member_pro_remote_ops_key" id="ws-plugin--s2member-pro-remote-ops-key" value="'.format_to_edit(c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen()).'" style="width:99%;" /></td><td><input type="submit" value="Update API Key" /></td></tr></table>'."\n";
@@ -90,7 +90,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_remote_ops_api"))
 				echo '<div class="ws-menu-page-hr"></div>'."\n";
 
 				echo '<p><strong>TIP:</strong> In addition to this documentation, you may also want to have a look at the <a href="http://www.s2member.com/codex/" target="_blank" rel="external">s2Member Codex</a>.<br />'."\n";
-				echo '<strong>See Also:</strong> <a href="http://www.s2member.com/codex/stable/s2member/api_constants/package-summary/" target="_blank" rel="external">s2Member Codex -› API Constants</a>, and <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-summary/" target="_blank" rel="external">s2Member Codex -› API Functions</a>.</p>'."\n";
+				echo '<strong>See Also:</strong> <a href="http://www.s2member.com/codex/stable/s2member/api_constants/package-summary/" target="_blank" rel="external">s2Member Codex ⥱ API Constants</a>, and <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-summary/" target="_blank" rel="external">s2Member Codex ⥱ API Functions</a>.</p>'."\n";
 				echo '</div>'."\n";
 
 				echo '</div>'."\n";

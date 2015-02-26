@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\Stripe
@@ -44,7 +44,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 	class c_ws_plugin__s2member_pro_stripe_sp_checkout_in
 	{
 		/**
-		 * Handles processing of Pro Forms for Specific Post/Page checkout.
+		 * Handles processing of Pro-Forms for Specific Post/Page checkout.
 		 *
 		 * @package s2Member\Stripe
 		 * @since 140617
@@ -64,7 +64,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 				$global_response                                                = &$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_sp_checkout']));
-				$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
+				$post_vars['attr'] = !empty($post_vars['attr']) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 				$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_stripe_sp_checkout_post_attr', $post_vars['attr'], get_defined_vars());
 
 				$post_vars['name']  = trim($post_vars['first_name'].' '.$post_vars['last_name']);
@@ -79,11 +79,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('sp-checkout', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						unset($_POST['s2member_pro_stripe_sp_checkout']['card_token']); // These are good one-time only.
-						unset($_POST['s2member_pro_stripe_sp_checkout']['card_token_summary']);
+						unset($_POST['s2member_pro_stripe_sp_checkout']['source_token']); // Good one-time only.
+						unset($_POST['s2member_pro_stripe_sp_checkout']['source_token_summary']); // Good one-time only.
 
+						$is_bitcoin        = !empty($post_vars['source_token']) && stripos($post_vars['source_token'], 'btcrcv_') === 0;
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
-						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc']);
+						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc'], $is_bitcoin);
 
 						if(!$global_response)
 							if($cost_calculations['total'] > 0)
@@ -91,7 +92,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 								if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(get_current_user_id(), $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-								else if(!is_object($stripe_customer = $stripe_customer_w_card_token = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_card_token($stripe_customer->id, $post_vars['card_token'], $post_vars)))
+								else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars)))
 									$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
 								else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))

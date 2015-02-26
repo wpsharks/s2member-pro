@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\Menu_Pages
@@ -59,7 +59,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_menu_pages"))
 					{
 						add_submenu_page ($vars["menu"], "", '<span style="display:block; margin:1px 0 1px -5px; padding:0; height:1px; line-height:1px; background:#CCCCCC;"></span>', "create_users", "#");
 						add_submenu_page ($vars["menu"], "s2Member Pro / Authorize.Net Options", "Auth.Net Options", "create_users", "ws-plugin--s2member-pro-authnet-ops", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_ops_page");
-						add_submenu_page ($vars["menu"], "s2Member Pro / Authorize.Net Pro Forms", "Auth.Net Pro-Forms", "create_users", "ws-plugin--s2member-pro-authnet-forms", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_forms_page");
+						add_submenu_page ($vars["menu"], "s2Member Pro / Authorize.Net Pro-Forms", "Auth.Net Pro-Forms", "create_users", "ws-plugin--s2member-pro-authnet-forms", "c_ws_plugin__s2member_pro_authnet_menu_pages::authnet_forms_page");
 
 						return $add_divider; // Now add the divider.
 					}
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_menu_pages"))
 				public static function authnet_forms_page ()
 					{
 						if (c_ws_plugin__s2member_pro_authnet_responses::authnet_form_api_validation_errors ()) // Report error if Authorize.Net Options are not yet configured.
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <code>s2Member -› Authorize.Net Options</code> first. Once all of your Authorize.Net Options are configured, return to this page &amp; generate your Authorize.net Form(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <strong>s2Member ⥱ Authorize.Net Options</strong> first. Once all of your Authorize.Net Options are configured, return to this page &amp; generate your Authorize.net Form(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/authnet-forms.inc.php";
 

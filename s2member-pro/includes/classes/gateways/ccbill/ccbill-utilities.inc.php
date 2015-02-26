@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\ccBill
@@ -74,7 +74,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param string $currency_code Expects a 3 character Currency Code.
-				* @return int|str A numeric string with a ccBill Currency Number. Defaults to `840` *( i.e. `USD` )*.
+				* @return int|str A numeric string with a ccBill Currency Number. Defaults to `840` *( i.e., `USD` )*.
 				*/
 				public static function ccbill_currency_numr ($currency_code = FALSE)
 					{
@@ -91,7 +91,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_ccbill_utilities"))
 				* @since 1.5
 				*
 				* @param int|string $currency_numr Expects a valid ccBill Currency Number, numeric.
-				* @return string A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e. `840` )*.
+				* @return string A 3 character Currency Code, for use with s2Member. Defaults to `USD` *( i.e., `840` )*.
 				*/
 				public static function ccbill_currency_code ($currency_numr = FALSE)
 					{

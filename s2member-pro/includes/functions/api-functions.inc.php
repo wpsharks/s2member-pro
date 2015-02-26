@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\API_Functions
@@ -39,7 +39,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  * This function will return the HTML output from the widget function call.
  *   Example usage: ``<!php echo s2member_pro_login_widget(); !>``
  *
- * The ``$options`` parameter (array) is completely optional *(i.e. NOT required)*.
+ * The ``$options`` parameter (array) is completely optional *(i.e., NOT required)*.
  * It can be passed in as an array of options; overriding some or all of these defaults:
  *
  *   o ``'title' => 'Membership Login'``
@@ -49,7 +49,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *   Full Signup URL, or use `%%automatic%%` for the Membership Options Page. If you leave this blank, it will not be shown.
  *
  *   o ``'login_redirect' => ''``
- *   Empty ( i.e. `''` ) = Login Welcome Page, `%%previous%%` = Previous Page, `%%home%%` = Home Page, or use a full URL of your own.
+ *   Empty ( i.e., `''` ) = Login Welcome Page, `%%previous%%` = Previous Page, `%%home%%` = Home Page, or use a full URL of your own.
  *
  *   o ``'logged_out_code' => ''``
  *   HTML/PHP code to display when logged out. May also contain WP Shortcodes if you like.
@@ -70,7 +70,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *   HTML/PHP code to display when logged in. May also contain WP Shortcodes if you like.
  *
  *   o ``'logout_redirect' => '%%home%%'``
- *   Empty ( i.e. `''` ) = Login Screen, `%%previous%%` = Previous Page, `%%home%%` = Home Page, or use a full URL of your own.
+ *   Empty ( i.e., `''` ) = Login Screen, `%%previous%%` = Previous Page, `%%home%%` = Home Page, or use a full URL of your own.
  *
  *   o ``'my_account_url' => '%%automatic%%'``
  *   Full URL of your own, or use `%%automatic%%` for the Login Welcome Page. Leave empty to not show this at all.
@@ -78,7 +78,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *   o ``'my_profile_url' => '%%automatic%%'``
  *   Full URL of your own, or use `%%automatic%%` for a JavaScript popup. Leave empty to not show this at all.
  *
- * The ``$args`` parameter (array) is also completely optional *(i.e. NOT required)*.
+ * The ``$args`` parameter (array) is also completely optional *(i.e., NOT required)*.
  * It can be passed in as an array of options: overriding some or all of these defaults:
  *
  *   o ``'before_widget' => ''``

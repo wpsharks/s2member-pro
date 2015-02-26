@@ -19,12 +19,12 @@
  *   See: {@link http://www.s2member.com/prices/}
  *
  * Unless you have our prior written consent, you must NOT directly or indirectly license,
- * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+ * sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
  * or make an offer to do any of these things. All of these things are strictly
- * prohibited with part (2) of the s2Member Pro Module.
+ * prohibited with part (2) of the s2Member Pro Add-on.
  *
  * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
- * (i.e. new features, bug fixes, updates, improvements); along with full access
+ * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
  * @package s2Member\API_Functions
@@ -115,7 +115,7 @@ if(!function_exists('s2member_pro_paypal_rbp_for_user'))
  * @return array Array elements: `last_billing_time`, `next_billing_time` (both as UTC Unix timestamps);
  *   else an empty array if no Recurring Billing Profile exists.
  *
- * If one or more times (e.g. `last_billing_time`, `next_billing_time`) are irrelevant (i.e. there was no payment received yet; or there are no future payments to receive);
+ * If one or more times (e.g., `last_billing_time`, `next_billing_time`) are irrelevant (i.e., there was no payment received yet; or there are no future payments to receive);
  *   that time will default to a value of `0` indicating it's irrelevant and/or not applicable.
  *
  * @note If your PayPal Pro account uses the Payflow™ Edition API, please use {@link s2member_pro_payflow_rbp_times_for_user()} instead.
@@ -194,7 +194,7 @@ if(!function_exists('s2member_pro_payflow_rbp_for_user'))
  * @return array Array elements: `last_billing_time`, `next_billing_time` (both as UTC Unix timestamps);
  *   else an empty array if no Recurring Billing Profile exists.
  *
- * If one or more times (e.g. `last_billing_time`, `next_billing_time`) are irrelevant (i.e. there was no payment received yet; or there are no future payments to receive);
+ * If one or more times (e.g., `last_billing_time`, `next_billing_time`) are irrelevant (i.e., there was no payment received yet; or there are no future payments to receive);
  *   that time will default to a value of `0` indicating it's irrelevant and/or not applicable.
  */
 if(!function_exists('s2member_pro_payflow_rbp_times_for_user'))

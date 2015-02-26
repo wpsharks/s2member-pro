@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\AuthNet
@@ -588,7 +588,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						return false;
 					}
 				/**
-				* Handles the return of Tax for Pro Forms, via AJAX; through a JSON object.
+				* Handles the return of Tax for Pro-Forms, via AJAX; through a JSON object.
 				*
 				* @package s2Member\AuthNet
 				* @since 1.5
@@ -783,7 +783,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				* @package s2Member\AuthNet
 				* @since 1.5
 				*
-				* @param array $attr An array of Pro Form Attributes.
+				* @param array $attr An array of Pro-Form Attributes.
 				* @param string $coupon_code Optional. A possible Coupon Code supplied by the Customer.
 				* @param string $return Optional. Return type. One of `response|attr`. Defaults to `attr`.
 				* @param array $process Optional. An array of additional processing routines to run here.

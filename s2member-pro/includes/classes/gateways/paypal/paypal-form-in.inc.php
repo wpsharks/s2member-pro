@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\PayPal
@@ -83,13 +83,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form", get_defined_vars());
 						unset($__refs, $__v);
 
-						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro Form. */(true);
+						c_ws_plugin__s2member_no_cache::no_cache_constants /* No caching on pages that contain a Pro-Form. */(true);
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
 						$options = array(); // Initialize options to an empty array.
 						$option_selections = ''; // Initialize w/ no options.
 
-						if($content && ($content = strip_tags($content))) // This allows for nested Pro Form Shortcodes as options.
+						if($content && ($content = strip_tags($content))) // This allows for nested Pro-Form Shortcodes as options.
 							$content = str_replace('s2Member-Pro-PayPal-Form ', 's2Member-Pro-PayPal-xFormOption ', $content);
 
 						if($content && ($content_options = do_shortcode($content)))
@@ -131,11 +131,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						$attr["default_country_code"] = /* This MUST be in uppercase format. */ strtoupper($attr["default_country_code"]);
 						$attr["success"] = /* Normalize ampersands. */ c_ws_plugin__s2member_utils_urls::n_amps($attr["success"]);
 
-						$attr["accept"] = (trim($attr["accept"])) ? preg_split("/[;,]+/", preg_replace("/[\r\n\t\s]+/", "", strtolower($attr["accept"]))) : array();
-						$attr["accept"] = (!in_array("paypal", $attr["accept"])) ? array_merge($attr["accept"], array("paypal")) : $attr["accept"];
+						$attr['accept'] = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
+						$attr['accept'] = !in_array('paypal', $attr['accept']) ? array_merge($attr['accept'], array('paypal')) : $attr['accept'];
 
-						$attr["accept_via_paypal"] = (trim($attr["accept_via_paypal"])) ? preg_split("/[;,]+/", preg_replace("/[\r\n\t\s]+/", "", strtolower($attr["accept_via_paypal"]))) : array();
-						$attr["accept_via_paypal"] = (!in_array("paypal", $attr["accept_via_paypal"])) ? array_merge($attr["accept_via_paypal"], array("paypal")) : $attr["accept_via_paypal"];
+						$attr['accept_via_paypal'] = trim($attr['accept_via_paypal']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept_via_paypal'])))) : array();
+						$attr['accept_via_paypal'] = !in_array('paypal', $attr['accept_via_paypal']) ? array_merge($attr['accept_via_paypal'], array('paypal')) : $attr['accept_via_paypal'];
 
 						$attr["coupon"] = (!empty($_GET["s2p-coupon"])) ? trim(strip_tags(stripslashes($_GET["s2p-coupon"]))) : $attr["coupon"];
 
@@ -260,7 +260,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 															$custom_fields .= '<label for="s2member-pro-paypal-registration-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-paypal-registration-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 															$custom_fields .= '<span'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? ' style="display:none;"' : '').'>'.$field["label"].(($field["required"] === "yes") ? ' *' : '').'</span></label>'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? '' : '<br />')."\n";
-															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_registration[custom_fields][", "s2member-pro-paypal-registration-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-registration-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, @$_p["s2member_pro_paypal_registration"]["custom_fields"][$field_var], "registration");
+															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_registration[custom_fields][", "s2member-pro-paypal-registration-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-registration-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", @$_p["s2member_pro_paypal_registration"], @$_p["s2member_pro_paypal_registration"]["custom_fields"][$field_var], "registration");
 
 															$custom_fields .= '</div>'."\n";
 														}
@@ -296,7 +296,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-registration-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-registration-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_registration[custom_fields][opt_in]" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-registration-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="300" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_registration[custom_fields][opt_in]" id="s2member-pro-paypal-registration-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-registration-form-custom-reg-field-opt-in" value="1"'.(((empty($_p["s2member_pro_paypal_registration"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_registration"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="300" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 
@@ -589,7 +589,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_sp_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="400" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_sp_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-sp-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p["s2member_pro_paypal_sp_checkout"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_sp_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="400" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 
@@ -766,7 +766,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 															$custom_fields .= '<label for="s2member-pro-paypal-checkout-custom-reg-field-'.esc_attr($field_id_class).'" id="s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-label" class="s2member-pro-paypal-form-custom-reg-field-'.$field_id_class.'-label s2member-pro-paypal-checkout-form-custom-reg-field-'.$field_id_class.'-label">'."\n";
 															$custom_fields .= '<span'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? ' style="display:none;"' : '').'>'.$field["label"].(($field["required"] === "yes") ? ' *' : '').'</span></label>'.((preg_match("/^(checkbox|pre_checkbox)$/", $field["type"])) ? '' : '<br />')."\n";
-															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_checkout[custom_fields][", "s2member-pro-paypal-checkout-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-checkout-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", $_p, @$_p["s2member_pro_paypal_checkout"]["custom_fields"][$field_var], "registration");
+															$custom_fields .= c_ws_plugin__s2member_custom_reg_fields::custom_field_gen(__FUNCTION__, $field, "s2member_pro_paypal_checkout[custom_fields][", "s2member-pro-paypal-checkout-custom-reg-field-", "s2member-pro-paypal-custom-reg-field-".$field_id_class." s2member-pro-paypal-checkout-custom-reg-field-".$field_id_class, "", ($tabindex = $tabindex + 1), "", @$_p["s2member_pro_paypal_checkout"], @$_p["s2member_pro_paypal_checkout"]["custom_fields"][$field_var], "registration");
 
 															$custom_fields .= '</div>'."\n";
 														}
@@ -802,7 +802,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$opt_in = '<div id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-custom-reg-field-opt-in-div s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-div">'."\n";
 
 										$opt_in .= '<label for="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-label" class="s2member-pro-paypal-form-custom-reg-field-opt-in-label s2member-pro-paypal-checkout-form-custom-reg-field-opt-in-label">'."\n";
-										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="500" />'."\n";
+										$opt_in .= '<input type="checkbox" name="s2member_pro_paypal_checkout[custom_fields][opt_in]" id="s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" class="s2member-pro-paypal-form-custom-reg-field-opt-in s2member-pro-paypal-checkout-form-custom-reg-field-opt-in" value="1"'.(((empty($_p["s2member_pro_paypal_checkout"]) && $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in"] == 1) || @$_p["s2member_pro_paypal_checkout"]["custom_fields"]["opt_in"]) ? ' checked="checked"' : '').' tabindex="500" />'."\n";
 										$opt_in .= $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["custom_reg_opt_in_label"]."\n";
 										$opt_in .= '</label>'."\n";
 

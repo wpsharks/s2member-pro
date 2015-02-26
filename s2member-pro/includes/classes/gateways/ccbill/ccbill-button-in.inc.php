@@ -19,12 +19,12 @@
 * 	See: {@link http://www.s2member.com/prices/}
 *
 * Unless you have our prior written consent, you must NOT directly or indirectly license,
-* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Module;
+* sub-license, sell, resell, or provide for free; part (2) of the s2Member Pro Add-on;
 * or make an offer to do any of these things. All of these things are strictly
-* prohibited with part (2) of the s2Member Pro Module.
+* prohibited with part (2) of the s2Member Pro Add-on.
 *
 * Your purchase of s2Member Pro includes free lifetime upgrades via s2Member.com
-* (i.e. new features, bug fixes, updates, improvements); along with full access
+* (i.e., new features, bug fixes, updates, improvements); along with full access
 * to our video tutorial library: {@link http://www.s2member.com/videos/}
 *
 * @package s2Member\ccBill
@@ -152,7 +152,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_button_in"))
 								$code = preg_replace("/%%images%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]."/images")), $code);
 								$code = preg_replace("/%%wpurl%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr(home_url())), $code);
 
-								if /* This is NOT a Recurring Subscription (i.e. an Initial/Trial Period is NOT possible). */(!$attr["rr"])
+								if /* This is NOT a Recurring Subscription (i.e., an Initial/Trial Period is NOT possible). */(!$attr["rr"])
 									$vars = array("clientAccnum" => $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_id"], "clientSubacc" => (($attr["sub_account"]) ? $attr["sub_account"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_client_sid"]), "formName" => (($attr["form"]) ? $attr["form"] : $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_ccbill_form_name"]), "formPrice" => $attr["ra"], "formPeriod" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_per_term_2_days($attr["rp"], $attr["rt"]), "currencyCode" => c_ws_plugin__s2member_pro_ccbill_utilities::ccbill_currency_numr($attr["cc"]), "s2_p1" => "0 D", "s2_p3" => $attr["rp"]." ".$attr["rt"], "s2_desc" => $attr["desc"], "s2_invoice" => $attr["level_ccaps_eotper"], "s2_custom" => $attr["custom"], "s2_customer_ip" => $_SERVER["REMOTE_ADDR"]);
 
 								else // Otherwise, we need to include both an Initial and Regular/Recurring period. This will ALWAYS recur.

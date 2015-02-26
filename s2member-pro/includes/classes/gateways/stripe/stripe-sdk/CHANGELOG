@@ -1,3 +1,36 @@
+=== 1.18.0 2015-01-21
+
+* Support making bitcoin charges through BitcoinReceiver source object
+
+=== 1.17.5 2014-12-23
+
+* Adding support for creating file uploads.
+
+=== 1.17.4 2014-12-15
+
+* Saving objects fetched with a custom key now works (thanks @JustinHook & @jpasilan)
+* Added methods for reporting charges as safe or fraudulent and for specifying the reason for refunds
+
+=== 1.17.3 2014-11-06
+
+* Better handling of HHVM support for SSL certificate blacklist checking.
+
+=== 1.17.2 2014-09-23
+
+* Coupons now are backed by a `Stripe_Coupon` instead of `Stripe_Object`, and support updating metadata
+* Running operations (`create`, `retrieve`, `all`) on upcoming invoice items now works
+
+=== 1.17.1 2014-07-31
+
+* Requests now send Content-Type header
+
+=== 1.17.0 2014-07-29
+
+* Application Fee refunds now a list instead of array
+* HHVM now works
+* Small bug fixes (thanks @bencromwell & @fastest963)
+* __toString now returns the name of the object in addition to its JSON representation
+
 === 1.16.0 2014-06-17
 
 * Add metadata for refunds and disputes
@@ -122,7 +155,7 @@
 
 === 1.7.4 2012-08-21
 
-* Bugfix so that Stripe objects (e.g. Customer, Charge objects) used
+* Bugfix so that Stripe objects (e.g., Customer, Charge objects) used
   in API calls are transparently converted to their object IDs
 
 === 1.7.3 2012-08-15
