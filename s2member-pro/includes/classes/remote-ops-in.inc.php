@@ -120,10 +120,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 		{
 			if(!empty($op['op']) && $op['op'] === 'auth_check_user' && !empty($op['data']) && is_array($op['data']))
 			{
-				if(!empty($op['data']['user_login']) && !empty($op['data']['user_pass']) && ($_user = wp_authenticate($op['data']['user_login'], $op['data']['user_pass'])) && !empty($_user->ID))
-					$user = $_user;
+				if(!empty($op['data']['user_ip']) && is_string($op['data']['user_ip']))
+					$GLOBALS['s2member_pro_remote_op_auth_check_user_ip'] = $op['data']['user_ip'];
 
-				else return 'Error: Failed to authenticate this User. Unable to authenticate User/Member with data supplied (i.e., Username/Password invalid).';
+				if(empty($op['data']['user_login']) || empty($op['data']['user_pass'])
+				   || !($user = wp_authenticate($op['data']['user_login'], $op['data']['user_pass']))
+				   || is_wp_error($user) || empty($user->ID)
+				) return 'Error: Failed to authenticate this User. Unable to authenticate User/Member with data supplied (i.e., Username/Password invalid).';
 
 				if(is_multisite() && !is_user_member_of_blog($user->ID))
 					return 'Error: Failed to authenticate this User (i.e., the supplied Username is not a part of this Blog).';
@@ -153,7 +156,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 						return c_ws_plugin__s2member_pro_remote_ops_in::modify_user(array_merge($op, array('op' => 'modify_user')));
 
 				$GLOBALS['ws_plugin__s2member_registration_vars'] = array();
-				$v                                                = & $GLOBALS['ws_plugin__s2member_registration_vars'];
+				$v                                                = &$GLOBALS['ws_plugin__s2member_registration_vars'];
 
 				$v['ws_plugin__s2member_custom_reg_field_user_login'] = (string)@$op['data']['user_login'];
 				$v['ws_plugin__s2member_custom_reg_field_user_email'] = (string)@$op['data']['user_email'];
