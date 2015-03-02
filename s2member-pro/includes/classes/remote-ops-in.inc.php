@@ -61,7 +61,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				if(!empty($op['data']['user_id']) && ($_user = new WP_User((integer)$op['data']['user_id'])) && !empty($_user->ID))
 					$user = $_user;
 
-				else if(!empty($op['data']['user_login']) && ($_user = new WP_User((string)$op['data']['user_login'])) && !empty($_user->ID))
+				else if(!empty($op['data']['user_login']) && ($_user = new WP_User(0, (string)$op['data']['user_login'])) && !empty($_user->ID))
 					$user = $_user;
 
 				else if(!empty($op['data']['user_email']) && ($_user = get_user_by('email', (string)$op['data']['user_email'])) && !empty($_user->ID))
