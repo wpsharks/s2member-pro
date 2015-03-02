@@ -86,37 +86,68 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			}
 			unset($_key, $_value); // Housekeeping.
 
+			/* ---------------------------------------------------------- */
+
 			if(strlen($args['search']) >= 2 && strpos($args['search'], '*') === FALSE && strpos($args['search'], '"') === FALSE)
 				$args['search'] = '*'.$args['search'].'*';
 
 			if(!$args['search_columns']) // Use defaults?
 				$args['search_columns'] = $default_args['search_columns'];
 
+			$search_s2_custom_fields = TRUE; // Default value.
+
+			if(empty($args['search']))
+				$search_s2_custom_fields = FALSE;
+
+			else if(!empty($original_args['search_columns'])
+			        && !preg_match('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns'])
+			) $search_s2_custom_fields = FALSE;
+
+			/* ---------------------------------------------------------- */
+
 			$args['who']         = '';
 			$args['count_total'] = TRUE;
-			$args['fields']      = 'ID';
+			$args['fields']      = 'all_with_meta';
 			$args['number']      = min($args['number'], apply_filters('ws_plugin__s2member_pro_member_list_max', 250, get_defined_vars()));
 			if($args['number'] < 1) $args['number'] = 1; // Make sure this is always >= 1.
 			$args['offset'] = ($page - 1) * $args['number']; // Calculate dynamically.
 
-			$user_ids_query                 = new WP_User_Query($args);
-			$user_ids                       = $user_ids_query->get_results();
-			$user_ids_from_s2_custom_fields = self::search_s2_custom_fields($args, $original_args);
+			/* ---------------------------------------------------------- */
 
-			if(!empty($user_ids_from_s2_custom_fields))
+			if($search_s2_custom_fields)
 			{
-				$user_ids = array_merge($user_ids, $user_ids_from_s2_custom_fields);
-				$user_ids = array_unique($user_ids);
+				$user_id_args            = $args;
+				$user_id_args['fields']  = 'ID';
+				$user_id_args['orderby'] = 'ID';
+				$user_id_args['order']   = 'ASC';
+				unset($user_id_args['number'], $user_id_args['offset']);
+
+				$user_ids_query                 = new WP_User_Query($user_id_args);
+				$user_ids                       = $user_ids_query->get_results();
+				$user_ids_from_s2_custom_fields = self::search_s2_custom_fields($user_id_args, $original_args);
+
+				if(!empty($user_ids_from_s2_custom_fields))
+				{
+					$user_ids = array_merge($user_ids, $user_ids_from_s2_custom_fields);
+					$user_ids = array_unique($user_ids);
+				}
+				if(!$user_ids) // The search is already known to be empty?
+					return array('query' => $user_ids_query, 'pagination' => self::paginate($page, 0, $args['number']));
+
+				$user_id_args            = $args;
+				$user_id_args['include'] = $user_ids;
+				$user_id_args['fields']  = 'all_with_meta';
+				unset($user_id_args['search'], $user_id_args['search_columns']);
+				$user_ids_query = new WP_User_Query($user_id_args);
+
+				return array('query' => $user_ids_query, 'pagination' => self::paginate($page, (integer)$user_ids_query->get_total(), $user_id_args['number']));
 			}
-			if(!$user_ids) // The search is already known to be empty?
-				return array('query' => $user_ids_query, 'pagination' => self::paginate($page, 0, $args['number']));
+			else // Use default behavior. This is much faster.
+			{
+				$query = new WP_User_Query($args); // Use args as configured already.
 
-			$args['include'] = $user_ids;
-			$args['fields']  = 'all_with_meta';
-			unset($args['search'], $args['search_columns']);
-			$query = new WP_User_Query(array('fields' => 'all_with_meta', 'include' => $user_ids));
-
-			return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
+				return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
+			}
 		}
 
 		/**
