@@ -408,6 +408,9 @@ jQuery(document).ready( // DOM ready.
 						$(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(S2MEMBER_CURRENT_USER_EMAIL).attr(ariaFalseDis),
 							$(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-username').val(S2MEMBER_CURRENT_USER_LOGIN).attr(ariaFalseDis);
 
+						if(coTypeWithDashes === 'sp-checkout') // Specific Post/Page Access requires an email address.
+							$(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').attr(ariaTrue).removeAttr('disabled');
+
 						$(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div').hide(),
 							$(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div :input').attr(ariaFalseDis);
 
