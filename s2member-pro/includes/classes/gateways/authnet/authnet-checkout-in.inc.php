@@ -456,7 +456,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																			}
 																		if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																			{
-																				$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
+																				$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = @$post_vars["password1"]; // Fake this for registration configuration.
 																				$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = $post_vars["first_name"]; // Fake this for registration configuration.
 																				$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = $post_vars["last_name"]; // Fake this for registration configuration.
 																				$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = @$post_vars["custom_fields"]["opt_in"]; // Fake this too.
@@ -480,7 +480,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																				$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																				$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																			}
-																		if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
+																		if(!empty($post_vars["password1"]) && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																			{
 																				if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
 																					{
@@ -495,6 +495,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																						if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																							wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
+
+																						//file_put_contents(WP_CONTENT_DIR.'/debug.log', print_r($ipn, TRUE)."\n".print_r($custom_success_url, TRUE)."\n\n", FILE_APPEND);
 																					}
 																				else // Else, an error reponse should be given.
 																					{
@@ -519,6 +521,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																						if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																							wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
+
+																						//file_put_contents(WP_CONTENT_DIR.'/debug.log', print_r($ipn, TRUE)."\n".print_r($custom_success_url, TRUE)."\n\n", FILE_APPEND);
 																					}
 																				else // Else, an error reponse should be given.
 																					{
@@ -712,7 +716,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	}
 																if(!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 																	{
-																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
+																		$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = @$post_vars["password1"]; // Fake this for registration configuration.
 																		$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = $post_vars["first_name"]; // Fake this for registration configuration.
 																		$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = $post_vars["last_name"]; // Fake this for registration configuration.
 																		$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = @$post_vars["custom_fields"]["opt_in"]; // Fake this too.
@@ -736,7 +740,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																		$create_user["user_pass"] = wp_generate_password(); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
 																		$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 																	}
-																if($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
+																if(!empty($post_vars["password1"]) && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
 																			{
