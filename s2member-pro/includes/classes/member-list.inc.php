@@ -100,7 +100,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				$search_s2_custom_fields = FALSE;
 
 			else if(!empty($original_args['search_columns'])
-			        && !preg_match('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns'])
+			        && !preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns'])
 			) $search_s2_custom_fields = FALSE;
 
 			/* ---------------------------------------------------------- */
