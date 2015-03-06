@@ -343,10 +343,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
-				$custom_template = $custom_template && stripos($custom_template, '%%source_token%%') !== FALSE ? $custom_template : ''; // Custom template must be up-to-date.
+				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
+				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+					$custom_template_contents = ''; // Custom template must be up-to-date.
 
-				$code = trim(file_get_contents($custom_template ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-update-form.php'));
-				$code = trim(!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
+				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-update-form.php'));
+				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
@@ -447,10 +449,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
-				$custom_template = $custom_template && stripos($custom_template, '%%source_token%%') !== FALSE ? $custom_template : ''; // Custom template must be up-to-date.
+				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
+				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+					$custom_template_contents = ''; // Custom template must be up-to-date.
 
-				$code = trim(file_get_contents($custom_template ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-sp-checkout-form.php'));
-				$code = trim(!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
+				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-sp-checkout-form.php'));
+				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
@@ -598,10 +602,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
-				$custom_template = $custom_template && stripos($custom_template, '%%source_token%%') !== FALSE ? $custom_template : ''; // Custom template must be up-to-date.
+				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
+				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+					$custom_template_contents = ''; // Custom template must be up-to-date.
 
-				$code = trim(file_get_contents($custom_template ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-checkout-form.php'));
-				$code = trim(!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
+				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-checkout-form.php'));
+				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
