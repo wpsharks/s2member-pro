@@ -100,7 +100,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes_in'))
 					{
 						$gifts = $coupons_class->generate_gifts($attr); // Generate new gifts.
 						$wpdb->query("DELETE FROM `".$wpdb->options."` WHERE `option_name` LIKE '%".esc_sql(c_ws_plugin__s2member_utils_strings::like_escape('s2m_gcs_'.$post_id.'_'.$sp_hash.'_'))."%'");
-						add_option($user->ID, $option_key_for_gifts, $gifts, '', 'no'); // Store the new gifts.
+						add_option($option_key_for_gifts, $gifts, '', 'no'); // Store the new gifts.
 					}
 				}
 				else if($user->ID) // Do we have a user ID?
