@@ -62,7 +62,7 @@ else $s_val = ""; // No query yet.
 										else $_field_value = (string)$_field_value;
 
 										$_field_label = esc_html($_field_label);
-										$_field_value = wp_rel_nofollow(make_clickable(esc_html($_field_value)));
+										$_field_value = stripslashes(wp_rel_nofollow(make_clickable(esc_html($_field_value))));
 										if(is_numeric($_field_value) && strlen($_field_value) === 10) // Convert timestamps to a date string.
 											$_field_value = date_i18n(get_option("date_format")." ".get_option("time_format"), (integer)$_field_value, TRUE);
 
