@@ -356,7 +356,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_buttons"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-shortcode-attrs-section">'."\n";
 			echo '<h3>Shortcode Attributes (Explained In Full Detail)</h3>'."\n";
-			echo '<p>When you generate a Button Code, s2Member will make a <a href="http://codex.wordpress.org/Shortcode_API#Overview" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Button Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>'."\n";
+			echo '<p>When you generate a Button Code, s2Member will make a <a href="http://s2member.com/r/shortcode-reference/" target="_blank" rel="external">Shortcode</a> available to you. Like most Shortcodes for WordPress, s2Member reads Attributes in your Shortcode. These Attributes will be pre-configured by one of s2Member\'s Button Generators automatically; so there really is nothing more you need to do. However, many site owners like to know exactly how these Shortcode Attributes work. Below, is a brief overview of each possible Shortcode Attribute.</p>'."\n";
 
 			echo '<table class="form-table" style="margin-top:0;">'."\n";
 			echo '<tbody>'."\n";

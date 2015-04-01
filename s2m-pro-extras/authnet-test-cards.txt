@@ -18,7 +18,7 @@
 		38000000000006
 
 * All test cards require Authorize.Net® Test Account integration:
-http://www.s2member.com/authorize.net-test-accounts
+http://s2member.com/r/authorize-net-test-accounts/
 
 * s2Member must be configured for Authorize.Net® Test/Sandbox Mode.
 In your Dashboard, see: `s2Member ⥱ Authorize.Net® Options`.

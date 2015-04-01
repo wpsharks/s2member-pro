@@ -244,7 +244,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<option value="" selected="selected">Default (CSV, perfectly formatted for easy re-importation)</option>'."\n";
 				echo '<option value="readable">Easy-Read (CSV w/ improved readability; cannot be re-imported)</option>'."\n";
 				echo '</select><br />'."\n";
-				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
+				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://s2member.com/r/openoffice/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
@@ -264,7 +264,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<option value="0" selected="selected">Default (no, I will choose UTF-8 encoding when I open the file)</option>'."\n";
 				echo '<option value="1">Yes (add a UTF-8 Byte Order Marker so that UTF-8 encoding is always in use for this file)</option>'."\n";
 				echo '</select><br />'."\n";
-				echo '<em>If <code>Yes</code>—please open CSV files with Numbers (Mac) or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
+				echo '<em>If <code>Yes</code>—please open CSV files with Numbers (Mac) or <a href="http://s2member.com/r/openoffice/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
@@ -333,7 +333,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<option value="" selected="selected">Default (CSV, perfectly formatted for easy re-importation)</option>'."\n";
 				echo '<option value="readable">Easy-Read (CSV w/ improved readability; cannot be re-imported)</option>'."\n";
 				echo '</select><br />'."\n";
-				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
+				echo '<em>Open CSV files with Notepad, TextEdit (Mac), Numbers (Mac), MS Excel, or <a href="http://s2member.com/r/openoffice/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
@@ -353,7 +353,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<option value="0" selected="selected">Default (no, I will choose UTF-8 encoding when I open the file)</option>'."\n";
 				echo '<option value="1">Yes (add a UTF-8 Byte Order Marker so that UTF-8 encoding is always in use for this file)</option>'."\n";
 				echo '</select><br />'."\n";
-				echo '<em>If <code>Yes</code>—please open CSV files with Numbers (Mac) or <a href="http://www.openoffice.org/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
+				echo '<em>If <code>Yes</code>—please open CSV files with Numbers (Mac) or <a href="http://s2member.com/r/openoffice/" target="_blank" rel="external">OpenOffice</a> (recommended).</em>';
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";

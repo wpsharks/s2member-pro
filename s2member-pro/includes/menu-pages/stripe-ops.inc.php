@@ -805,7 +805,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
-			echo '<p class="warning"><em><strong>Bitcoin:</strong> At this time, due to technical limitations (and conflicting laws), <strong>taxes you configure here are not applied to payments made in Bitcoin</strong>. If you intend to accept Bitcoin via Stripe, and you want to charge tax, please adjust the final purchase price; i.e., change the overall price so that it includes/covers any applicable tax that you plan to charge. See also: <a href="https://bitcoin.tax/faq" target="_blank" rel="external">https://bitcoin.tax/faq</a></em></p>'."\n";
+			echo '<p class="warning"><em><strong>Bitcoin:</strong> At this time, due to technical limitations (and conflicting laws), <strong>taxes you configure here are not applied to payments made in Bitcoin</strong>. If you intend to accept Bitcoin via Stripe, and you want to charge tax, please adjust the final purchase price; i.e., change the overall price so that it includes/covers any applicable tax that you plan to charge. See also: <a href="http://s2member.com/r/bitcoin-tax-faq/" target="_blank" rel="external">http://s2member.com/r/bitcoin-tax-faq/</a></em></p>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
