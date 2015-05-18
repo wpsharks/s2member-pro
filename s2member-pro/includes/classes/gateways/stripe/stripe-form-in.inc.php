@@ -430,8 +430,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				else $opt_in = ''; // Not applicable.
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_sp_checkout[nonce]" id="s2member-pro-stripe-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-sp-checkout')).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token']).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_sp_checkout']['source_token_summary']).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token'] : '').'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token_summary'] : '').'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= !$tax_may_apply ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-tax-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= $is_buy_now_amount <= 0 ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
@@ -582,8 +582,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				else $opt_in = ''; // Not applicable.
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token']).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_checkout']['source_token_summary']).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token'] : '').'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token_summary'] : '').'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= !$tax_may_apply ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
