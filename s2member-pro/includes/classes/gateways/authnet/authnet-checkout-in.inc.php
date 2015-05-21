@@ -162,7 +162,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	}
 
 																$_authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'aim');
 																$_authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -200,7 +200,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_total_occurrences"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "9999") : "1";
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'arb');
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -346,7 +346,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																	}
 
 																$_authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$_authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'aim');
 																$_authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -384,7 +384,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_total_occurrences"] = ($post_vars["attr"]["rr"]) ? (($post_vars["attr"]["rrt"]) ? $post_vars["attr"]["rrt"] : "9999") : "1";
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'arb');
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -567,7 +567,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'aim');
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -664,7 +664,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																$authnet["x_currency_code"] = $cost_calculations["cur"];
 
 																$authnet["x_card_num"] = preg_replace("/[^0-9]/", "", $post_vars["card_number"]);
-																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"]);
+																$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date($post_vars["card_expiration"], 'arb');
 																$authnet["x_card_code"] = $post_vars["card_verification"];
 
 																#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
@@ -801,4 +801,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 					}
 			}
 	}
-?>
