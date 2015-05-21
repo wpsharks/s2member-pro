@@ -532,15 +532,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				* @since 1.5
 				*
 				* @param string $exp Expects a credit card expiration date in `mm/yyyy` format.
-				* @param string $api Defaults to `aim` (for `mm-yyyy` format). Set to `arb` for `yyyy-mm` instead.
+				* @param string $api One of `aim` (for `mm-yyyy` format). Set to `arb` for `yyyy-mm` instead.
 				* @return string A credit card expiration date in a format for Authorize.Net.
 				*/
-				public static function authnet_exp_date($exp = FALSE, $api = 'aim')
+				public static function authnet_exp_date($exp = '', $api = 'aim')
 					{
 						list($mm, $yyyy) = preg_split("/\//", $exp, 2);
 
 						if($api === 'arb') // Different for ARB API calls.
 							return trim($yyyy."-".$mm, "- \t\n\r\0\x0B");
+
 						return trim($mm."-".$yyyy, "- \t\n\r\0\x0B");
 					}
 				/**

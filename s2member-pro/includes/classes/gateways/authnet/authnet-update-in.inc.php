@@ -90,7 +90,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_update_in"))
 																		$authnet["x_last_name"] = $user->last_name;
 
 																		$authnet["x_card_num"] = preg_replace ("/[^0-9]/", "", $post_vars["card_number"]);
-																		$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date ($post_vars["card_expiration"]);
+																		$authnet["x_exp_date"] = c_ws_plugin__s2member_pro_authnet_utilities::authnet_exp_date ($post_vars["card_expiration"], 'arb');
 																		$authnet["x_card_code"] = $post_vars["card_verification"];
 
 																		#if (in_array($post_vars["card_type"], array("Maestro", "Solo")))
