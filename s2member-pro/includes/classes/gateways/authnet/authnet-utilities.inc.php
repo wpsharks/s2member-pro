@@ -59,7 +59,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						global /* For Multisite support. */ $current_site, $current_blog;
 
 						$url = "https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? "test.authorize.net" : "secure.authorize.net")."/gateway/transact.dll";
-						$url = apply_filters('c_ws_plugin__s2member_pro_authnet_aim_endpoint_url', $url, get_defined_vars());
+						$url = apply_filters('ws_plugin__s2member_pro_authnet_aim_endpoint_url', $url, get_defined_vars());
 
 						$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
 
@@ -155,7 +155,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 						global /* For Multisite support. */ $current_site, $current_blog;
 
 						$url = "https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? "apitest.authorize.net" : "api.authorize.net")."/xml/v1/request.api";
-						$url = apply_filters('c_ws_plugin__s2member_pro_authnet_arb_endpoint_url', $url, get_defined_vars());
+						$url = apply_filters('ws_plugin__s2member_pro_authnet_arb_endpoint_url', $url, get_defined_vars());
 
 						$post_vars = (is_array($post_vars)) ? $post_vars : array(); // Must be in array format.
 
