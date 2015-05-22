@@ -27,6 +27,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 	 */
 	class c_ws_plugin__s2member_pro_member_list
 	{
+		public static $search_columns_for_filter = array();
+		public static function _search_columns_filter()
+		{
+			return self::$search_columns_for_filter;
+		}
+
 		/**
 		 * Members List; WP User Query wrapper.
 		 *
@@ -47,7 +53,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				'blog_id' => $GLOBALS['blog_id'],
 
 				'role'    => '', 'meta_key' => '', 'meta_value' => '', 'meta_compare' => '', 'meta_query' => array(),
-				'search'  => '', 'search_columns' => array('ID', 'user_login', 'user_email', 'user_url', 'user_nicename'),
+				'search'  => '', 'search_columns' => array('ID', 'user_login', 'user_email', 'user_url', 'user_nicename', 'display_name'),
 				'include' => array(), 'exclude' => array(),
 
 				'order'   => 'DESC', 'orderby' => 'registered', 'number' => 25
@@ -122,9 +128,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				$user_id_args['order']   = 'ASC';
 				unset($user_id_args['number'], $user_id_args['offset']);
 
+				self::$search_columns_for_filter = $user_id_args['search_columns'];
+				add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
+
 				$user_ids_query                 = new WP_User_Query($user_id_args);
 				$user_ids                       = $user_ids_query->get_results();
 				$user_ids_from_s2_custom_fields = self::search_s2_custom_fields($user_id_args, $original_args);
+
+				remove_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
 				if(!empty($user_ids_from_s2_custom_fields))
 				{
@@ -144,7 +155,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 			}
 			else // Use default behavior. This is much faster.
 			{
+				self::$search_columns_for_filter = $args['search_columns'];
+				add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
+
 				$query = new WP_User_Query($args); // Use args as configured already.
+
+				remove_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
 				return array('query' => $query, 'pagination' => self::paginate($page, (integer)$query->get_total(), $args['number']));
 			}
