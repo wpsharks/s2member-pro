@@ -202,7 +202,8 @@ jQuery(document).ready( // DOM ready.
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 							return false; // Error; cannot continue in this scenario.
 						}
-						$(optionsSelect).attr(disabled); // Not an option selection.
+						// $(optionsSelect).attr(disabled); // Not an option selection.
+						// Bug fix. Don't disable, because that prevents it from being submitted.
 					}
 					$(submissionButton).attr(disabled),
 						ws_plugin__s2member_animateProcessing($(submissionButton));
@@ -631,7 +632,8 @@ jQuery(document).ready( // DOM ready.
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
 								return false; // Error; cannot continue in this scenario.
 							}
-							$(optionsSelect).attr(disabled); // Not an option selection.
+							// $(optionsSelect).attr(disabled); // Not an option selection.
+							// Bug fix. Don't disable, because that prevents it from being submitted.
 						}
 						$(couponApplyButton).attr(disabled),
 							$(submissionButton).attr(disabled), ws_plugin__s2member_animateProcessing($(submissionButton));
