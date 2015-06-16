@@ -108,7 +108,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
 
-			'pro_gateways_enabled'                    => array('stripe'), // Defaults to Stripe.
+			'pro_gateways_enabled'                    => array('paypal', 'stripe'), // Defaults.
 
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
