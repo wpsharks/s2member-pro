@@ -124,7 +124,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 				if(!$access_expression || !preg_match('/\w+/', $access_expression))
 					trigger_error('Syntax error: no word chars in `access` parameter of s2Drip. Valid example: `level1 and ccap_music`.', E_USER_ERROR);
 
-				$access_expression = preg_replace_callback('/\w+/', 'self::_user_can_access_drip_cb', $access_expression);
+				$access_expression = preg_replace_callback('/\w+/', 'c_ws_plugin__s2member_pro_user_drip_access::_user_can_access_drip_cb', $access_expression);
 				$drip              = eval('return ('.$access_expression.');');
 			}
 			return apply_filters('ws_plugin__s2member_pro_user_can_access_drip', $drip, get_defined_vars());
@@ -139,7 +139,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 		 *
 		 * @return string One of `TRUE` or `FALSE`; as a string value.
 		 */
-		protected static function _user_can_access_drip_cb($cap)
+		public static function _user_can_access_drip_cb($cap)
 		{
 			$drip = 'FALSE';
 			$cap  = (string)$cap[0];
