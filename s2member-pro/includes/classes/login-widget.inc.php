@@ -50,7 +50,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 		 * @package s2Member\Widgets
 		 * @since 1.5
 		 */
-		public function c_ws_plugin__s2member_pro_login_widget()
+		public function __construct()
 		{
 			$widget_ops  = array('classname'   => 'colors', // Default widget options.
 			                     'description' => 'Displays a Login Form if not logged in. Or a Profile Summary when a User/Member is logged in.');
@@ -60,7 +60,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			do_action('ws_plugin__s2member_pro_login_widget_before_construction', get_defined_vars(), $this);
 			unset($__refs, $__v); // Housekeeping.
 
-			$this->WP_Widget($control_ops['id_base'], 's2Member Pro (Login Widget)', $widget_ops, $control_ops);
+			parent::__construct($control_ops['id_base'], 's2Member Pro (Login Widget)', $widget_ops, $control_ops);
 
 			do_action('ws_plugin__s2member_pro_login_widget_after_construction', get_defined_vars(), $this);
 		}
