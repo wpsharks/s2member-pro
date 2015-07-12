@@ -55,4 +55,3 @@ if (!function_exists ("s2member_pro_authnet_s2p_v_query_ok"))
 				return c_ws_plugin__s2member_utils_urls::s2member_sig_ok ($url_uri_query, $check_time, $exp_secs, "s2p-v");
 			}
 	}
-?>

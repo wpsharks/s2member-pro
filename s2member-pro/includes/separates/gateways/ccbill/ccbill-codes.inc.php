@@ -36,4 +36,3 @@ if(!defined('WPINC')) // MUST have WordPress.
 Add WordPress Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-ccBill-Button", "c_ws_plugin__s2member_pro_ccbill_button::sc_ccbill_button");
-?>

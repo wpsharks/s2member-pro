@@ -36,4 +36,3 @@ if(!defined('WPINC')) // MUST have WordPress.
 Add WordPress Editor Shortcodes.
 */
 add_shortcode ("s2Member-Pro-AliPay-Button", "c_ws_plugin__s2member_pro_alipay_button::sc_alipay_button");
-?>

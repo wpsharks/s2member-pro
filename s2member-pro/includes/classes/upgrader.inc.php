@@ -215,7 +215,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 											}
 										else if(!empty($s2_pro_upgrade) && $s2_pro_upgrade === /* Forbidden? */ "403 Forbidden")
 											{
-												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Invalid Username/Password (please try again).";
+												c_ws_plugin__s2member_pro_upgrader::$error = "Upgrade failed. Invalid Username/Password (or License Key); please try again.";
 											}
 										else if(!empty($s2_pro_upgrade) && $s2_pro_upgrade === "503 Service Unavailable")
 											{
@@ -302,4 +302,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 					}
 			}
 	}
-?>

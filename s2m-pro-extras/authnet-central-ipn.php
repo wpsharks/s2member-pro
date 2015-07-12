@@ -93,4 +93,3 @@ function curlpsr ($url = FALSE, $post_vars = array(), $max_con_secs = 20, $max_s
 
 		return (!empty($o)) ? $o : false;
 	}
-?>
