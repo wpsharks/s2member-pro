@@ -405,7 +405,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									($_COOKIE['s2member_tracking'] = $s2member_tracking);
 
 									if($has_custom_password)
-										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">login</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
 									else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
 
 									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
@@ -600,7 +600,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									($_COOKIE['s2member_tracking'] = $s2member_tracking);
 
 									if($has_custom_password)
-										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">login</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
 									else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
 
 									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)

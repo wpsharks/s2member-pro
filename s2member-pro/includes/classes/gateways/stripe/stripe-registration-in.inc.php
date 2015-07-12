@@ -115,7 +115,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 							wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
 							if($has_custom_password)
-								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Please <a href="%s" rel="nofollow">login</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
 							else $global_response = array('response' => _x('<strong>Thank you.</strong> You\'ll receive an email momentarily.', 's2member-front', 's2member'));
 
 							if($post_vars['attr']['success'] && substr($GLOBALS['ws_plugin__s2member_registration_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)

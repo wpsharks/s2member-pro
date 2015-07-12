@@ -287,7 +287,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 
-																		$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
+																		$global_response = array("response" => _x('<strong>Thank you.</strong> Your account has been updated.', "s2member-front", "s2member"));
 
 																		if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																			wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
@@ -491,7 +491,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 																						if($_authnet && !empty($_authnet["transaction_id"]) && $authnet["response_reason_code"] === "E00018")
 																							update_user_option($new__user_id, "s2member_auto_eot_time", $start_time);
 
-																						$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">login</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
+																						$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 
 																						if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																							wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
@@ -631,7 +631,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 
-																$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been updated.<br />&mdash; Please <a href="%s" rel="nofollow">log back in</a> now.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
+																$global_response = array("response" => _x('<strong>Thank you.</strong> Your account has been updated.', "s2member-front", "s2member"));
 
 																if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																	wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
@@ -748,7 +748,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_checkout_in"))
 
 																				$ipn["s2member_authnet_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 
-																				$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">login</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
+																				$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 
 																				if($post_vars["attr"]["success"] && substr($ipn["s2member_authnet_proxy_return_url"], 0, 2) === substr($post_vars["attr"]["success"], 0, 2) && ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_authnet_proxy_return_url"])) && ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
 																					wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
