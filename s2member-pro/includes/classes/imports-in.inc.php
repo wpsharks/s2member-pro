@@ -135,7 +135,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 						if($_user_login) // Sanitize the username.
 						{
 							if(is_multisite()) $_user_login = strtolower($_user_login);
-							$_user_login = preg_replace('/\s+/', '', sanitize_user($_user_login, is_multisite()));
+							$_user_login = sanitize_user($_user_login, is_multisite());
 						}
 						if($_user_email) $_user_email = sanitize_email($_user_email);
 
