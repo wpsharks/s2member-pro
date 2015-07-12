@@ -91,7 +91,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 						$_coupon['active_time'] = (integer)$_active_time;
 
 					if($_expires_time && ($_expires_time = strtotime($_expires_time)))
-						$_coupon['expires_time'] = (integer)$_expires_time;
+						{
+							$_coupon['expires_time'] = (integer)$_expires_time;
+							if(date('H:i:s', $_coupon['expires_time']) === '00:00:00')
+								$_coupon['expires_time'] += 86399; // End of the day.
+						}
 				}
 				unset($_active_time, $_expires_time); // Housekeeping.
 
