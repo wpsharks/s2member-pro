@@ -107,7 +107,8 @@ if(!function_exists('s2member_pro_login_widget'))
 	{
 		ob_start(); // Begin output buffering.
 
-		$args = (is_array($args)) ? $args : array('before_widget' => '', 'before_title' => '<h3>', 'after_title' => '</h3>', 'after_widget' => '');
+		$options = (array)$options; // Force array.
+		$args    = array_merge(array('before_widget' => '', 'before_title' => '<h3>', 'after_title' => '</h3>', 'after_widget' => ''), (array)$args);
 
 		c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 
