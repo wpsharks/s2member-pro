@@ -73,7 +73,10 @@ if(!function_exists('s2member_pro_stripe_customer'))
 {
 	function s2member_pro_stripe_customer()
 	{
-		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer', func_get_args());
+		if (!($args = func_get_args())) {
+			$args[0] = get_current_user_id();
+		}
+		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer', $args);
 	}
 }
 /**
@@ -88,6 +91,10 @@ if(!function_exists('s2member_pro_stripe_customer_subscription'))
 {
 	function s2member_pro_stripe_customer_subscription()
 	{
-		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription', func_get_args());
+		if (!($args = func_get_args())) {
+			$args[0] = get_user_option('s2member_subscr_cid');
+			$args[1] = get_user_option('s2member_subscr_id');
+		}
+		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription', $args);
 	}
 }
