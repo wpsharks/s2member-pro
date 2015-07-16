@@ -66,15 +66,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 					sleep(5); // Sleep here to give ClickBank a chance to finalize processing. Allows the API call to succeed.
 					$clickbank['s2member_log'][] = 'Awake. It\'s '.date('D M j, Y g:i:s a T').'. Processing will continue.';
 
-					if(is_array($order = json_decode(c_ws_plugin__s2member_utils_urls::remote('https://api.clickbank.com/rest/1.3/orders/'.$clickbank['cbreceipt'], FALSE, array_merge(c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_headers(), array('timeout' => 20))), TRUE)) && ($order = $order['orderData']))
+					if(($order = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_order($clickbank['cbreceipt'])) && is_array($order))
 					{
-						if(is_array($order) && isset($order[0]) && is_array($order[0]))
-							$order = $order[0]; // If there is more than one, we only want the first one.
-
-						foreach($order as $_k => &$_v) if(is_array($_v) && isset($_v['@nil']))
-							$_v = NULL; // Nullify properly.
-						unset($_k, $_v); // Housekeeping.
-
 						$clickbank['s2member_log'][] = 'Order API variables have been obtained from ClickBank.';
 
 						$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars_v2_1(http_build_query($clickbank, NULL, '&'), $order['txnType']);

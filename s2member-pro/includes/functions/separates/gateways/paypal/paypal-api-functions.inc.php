@@ -129,11 +129,11 @@ if(!function_exists('s2member_pro_paypal_rbp_times_for_user'))
 
 		$array = array('last_billing_time' => 0, 'next_billing_time' => 0);
 
-		if(preg_match('/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $paypal['LASTPAYMENTDATE']))
+		if($paypal['LASTPAYMENTDATE'] && strtotime($paypal['LASTPAYMENTDATE']) <= time())
 			$array['last_billing_time'] = strtotime($paypal['LASTPAYMENTDATE']);
 
-		if(($paypal['TOTALBILLINGCYCLES'] === '0' || $paypal['NUMCYCLESREMAINING'] > 0) && preg_match('/^(Active|ActiveProfile)$/i', $paypal['STATUS']))
-			if(preg_match('/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $paypal['NEXTBILLINGDATE']))
+		if(($paypal['TOTALBILLINGCYCLES'] <= 0 || $paypal['NUMCYCLESREMAINING'] > 0) && preg_match('/^(Active|ActiveProfile)$/i', $paypal['STATUS']))
+			if($paypal['NEXTBILLINGDATE'] && strtotime($paypal['NEXTBILLINGDATE']) > time())
 				$array['next_billing_time'] = strtotime($paypal['NEXTBILLINGDATE']);
 
 		return $array;
@@ -207,10 +207,10 @@ if(!function_exists('s2member_pro_payflow_rbp_times_for_user'))
 		$array = array('last_billing_time' => 0, 'next_billing_time' => 0);
 
 		if(($last_billing_time = get_user_option('s2member_last_payment_time', $user_id)))
-			$array['last_billing_time'] = $last_billing_time; // Must use this because the PayFlow API does not offer it up.
+			$array['last_billing_time'] = $last_billing_time; // Only choice.
 
-		if(($payflow['TERM'] === '0' || $payflow['PAYMENTSLEFT'] > 0) && preg_match('/^(Active|ActiveProfile)$/i', $payflow['STATUS']))
-			if(preg_match('/^[0-9]{8}/', $payflow['NEXTPAYMENT']))
+		if(($payflow['TERM'] <= 0 || $payflow['PAYMENTSLEFT'] > 0) && preg_match('/^(Active|ActiveProfile)$/i', $payflow['STATUS']))
+			if($payflow['NEXTPAYMENT'] && strtotime($payflow['NEXTPAYMENT']) > time())
 				$array['next_billing_time'] = strtotime($payflow['NEXTPAYMENT']);
 
 		return $array;

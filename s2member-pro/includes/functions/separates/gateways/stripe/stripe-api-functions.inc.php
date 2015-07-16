@@ -98,3 +98,5 @@ if(!function_exists('s2member_pro_stripe_customer_subscription'))
 		return call_user_func_array('c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription', $args);
 	}
 }
+
+// @TODO List invoices (i.e., payment history).

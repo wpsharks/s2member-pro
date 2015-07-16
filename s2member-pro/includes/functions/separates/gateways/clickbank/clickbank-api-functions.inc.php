@@ -32,3 +32,22 @@
 */
 if(!defined('WPINC')) // MUST have WordPress.
 	exit ("Do not access this file directly.");
+
+/**
+ * ClickBank order info.
+ *
+ * @param int|string $user_id Input user ID. Defaults to current user ID.
+ *
+ * @return array An array of order data; else an empty array.
+ */
+if(!function_exists('s2member_pro_clickbank_order'))
+{
+	function s2member_pro_clickbank_order($user_id = 0)
+	{
+		if(!$user_id) $user_id = get_current_user_id();
+		if(!$user_id) return array(); // Not possible.
+
+		$subscr_id = get_user_option('s2member_subscr_id', $user_id);
+		return c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_order($subscr_id);
+	}
+}

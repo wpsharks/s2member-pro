@@ -238,5 +238,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 
 			return $support;
 		}
+
+		/**
+		 * ClickBank order data via API access.
+		 *
+		 * @package s2Member\ClickBank
+		 * @since 150714
+		 *
+		 * @param string $cbreceipt The ClickBank receipt ID.
+		 *
+		 * @return array Order data, else an empty array on failure.
+		 */
+		public static function clickbank_api_order($cbreceipt)
+		{
+			if(!($cbreceipt = trim((string)$cbreceipt)))
+				return array();
+
+			$headers  = self::clickbank_api_headers();
+			$endpoint = 'https://api.clickbank.com/rest/1.3/orders/'.$cbreceipt;
+			$response = c_ws_plugin__s2member_utils_urls::remote($endpoint, FALSE, array_merge($headers, array('timeout' => 20)));
+
+			if(is_array($order = json_decode($response, TRUE)) && !empty($order['orderData']))
+			{
+				$order = $order['orderData']; // Assume one by default.
+				if(isset($order[0]) && is_array($order[0]))
+					$order = $order[0]; // First one.
+
+				foreach($order as $_k => &$_v)
+					if(is_array($_v) && isset($_v['@nil']))
+						$_v = NULL; // Nullify properly.
+				unset($_k, $_v); // Housekeeping.
+
+				return $order;
+			}
+			return array();
+		}
 	}
 }
