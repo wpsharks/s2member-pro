@@ -63,6 +63,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_drip_in'))
 			do_action('ws_plugin__s2member_pro_before_sc_drip', get_defined_vars());
 			unset($__refs, $__v);
 
+			c_ws_plugin__s2member_no_cache::no_cache_constants(true);
+
 			$attr = shortcode_atts(
 				array(
 					'level'    => '0',

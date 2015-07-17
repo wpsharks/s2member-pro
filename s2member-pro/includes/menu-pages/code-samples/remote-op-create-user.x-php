@@ -2,7 +2,7 @@
 $op["op"] = "create_user"; // The Remote Operation.
 
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
-	// See: `s2Member ⥱ API / Scripting ⥱ Remote Operations API ⥱ API Key`
+	// See: `s2Member → API / Scripting → Remote Operations API → API Key`
 
 $op["data"] = array(
 	"user_login" => "johndoe22", // Required. A unique Username. Lowercase alphanumerics/underscores.

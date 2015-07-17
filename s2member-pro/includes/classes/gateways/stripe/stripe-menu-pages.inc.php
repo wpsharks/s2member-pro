@@ -128,7 +128,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_menu_pages'))
 		public static function stripe_forms_page()
 		{
 			if(c_ws_plugin__s2member_pro_stripe_responses::stripe_form_api_validation_errors()) // Report error if Stripe Options are not yet configured.
-				c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <strong>s2Member ⥱ Stripe Options</strong> first. Once all of your Stripe Options are configured, return to this page &amp; generate your Stripe Form(s).', TRUE);
+				c_ws_plugin__s2member_admin_notices::display_admin_notice('Please configure <strong>s2Member → Stripe Options</strong> first. Once all of your Stripe Options are configured, return to this page &amp; generate your Stripe Form(s).', TRUE);
 
 			include_once dirname(dirname(dirname(dirname(__FILE__)))).'/menu-pages/stripe-forms.inc.php';
 		}

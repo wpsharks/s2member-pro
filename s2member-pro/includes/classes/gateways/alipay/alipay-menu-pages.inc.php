@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_alipay_menu_pages"))
 				public static function alipay_buttons_page ()
 					{
 						if (!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_seller_email"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_partner_id"] || !$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_alipay_security_code"])
-							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <strong>s2Member ⥱ AliPay Options</strong> first. Once all of your AliPay Options have been configured, return to this page &amp; generate your AliPay Button(s).', true);
+							c_ws_plugin__s2member_admin_notices::display_admin_notice ('Please configure <strong>s2Member → AliPay Options</strong> first. Once all of your AliPay Options have been configured, return to this page &amp; generate your AliPay Button(s).', true);
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/alipay-buttons.inc.php";
 
