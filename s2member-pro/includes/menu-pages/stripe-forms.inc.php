@@ -58,7 +58,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe / Free Registration Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Free Registration Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Free Registrations (copy/paste)</h3>'."\n";
@@ -90,7 +90,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			for($n = 1; $n <= $GLOBALS['WS_PLUGIN__']['s2member']['c']['levels']; $n++)
 			{
-				echo '<div class="ws-menu-page-group" title="Stripe Forms For Level #'.$n.' Access">'."\n";
+				echo '<div class="ws-menu-page-group" title="Forms For Level #'.$n.' Access">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level'.$n.'-forms-section">'."\n";
 				echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
@@ -134,7 +134,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '</div>'."\n";
 			}
-			echo '<div class="ws-menu-page-group" title="Stripe Billing Modification Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Modification Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-modification-forms-section">'."\n";
 			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
@@ -197,7 +197,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
-				echo '<div class="ws-menu-page-group" title="Stripe Capability (Buy Now) Forms">'."\n";
+				echo '<div class="ws-menu-page-group" title="Capability (Buy Now) Forms">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-forms-section">'."\n";
 				echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
@@ -241,7 +241,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '</div>'."\n";
 			}
-			echo '<div class="ws-menu-page-group" title="Stripe Billing Update Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Update Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-update-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Billing Updates (copy/paste)</h3>'."\n";
@@ -266,7 +266,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Billing Cancellation Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Cancellation Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-cancellation-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Cancellations (copy/paste)</h3>'."\n";
@@ -292,7 +292,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Member Registration Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Member Registration Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">'."\n";
 			echo '<h3>Registration Access Link Generator (for Customer Service)</h3>'."\n";
@@ -322,7 +322,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Specific Post/Page (Buy Now) Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page (Buy Now) Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-forms-section">'."\n";
 			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
@@ -383,7 +383,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Specific Post/Page Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">'."\n";
 			echo '<h3>Specific Post/Page Access Link Generator (for Customer Service)</h3>'."\n";

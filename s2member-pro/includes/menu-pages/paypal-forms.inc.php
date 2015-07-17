@@ -58,7 +58,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Free Registration Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Free Registration Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Free Registrations (copy/paste)</h3>'."\n";
@@ -90,7 +90,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 			{
-				echo '<div class="ws-menu-page-group" title="PayPal Pro / Forms For Level #'.$n.' Access">'."\n";
+				echo '<div class="ws-menu-page-group" title="Forms For Level #'.$n.' Access">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level'.$n.'-forms-section">'."\n";
 				echo '<h3>Pro-Form Generator For Level #'.$n.' Access</h3>'."\n";
@@ -133,7 +133,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 				echo '</div>'."\n";
 			}
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Billing Modification Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Modification Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-modification-forms-section">'."\n";
 			echo '<h3>Pro-Form Generator For Billing Modifications</h3>'."\n";
@@ -195,7 +195,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
-				echo '<div class="ws-menu-page-group" title="PayPal Pro / Capability (Buy Now) Forms">'."\n";
+				echo '<div class="ws-menu-page-group" title="Capability (Buy Now) Forms">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-forms-section">'."\n";
 				echo '<h3>Pro-Form Generator For Independent Custom Capabilities</h3>'."\n";
@@ -238,7 +238,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 				echo '</div>'."\n";
 			}
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Billing Update Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Update Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-update-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Billing Updates (copy/paste)</h3>'."\n";
@@ -263,7 +263,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Billing Cancellation Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Billing Cancellation Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-cancellation-forms-section">'."\n";
 			echo '<h3>One Form Does It All For Cancellations (copy/paste)</h3>'."\n";
@@ -289,7 +289,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Member Registration Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Member Registration Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">'."\n";
 			echo '<h3>Registration Access Link Generator (for Customer Service)</h3>'."\n";
@@ -320,7 +320,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Specific Post/Page (Buy Now) Forms">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page (Buy Now) Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-forms-section">'."\n";
 			echo '<h3>Pro-Form Generator For Specific Post/Page Forms</h3>'."\n";
@@ -380,7 +380,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="PayPal Pro / Specific Post/Page Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">'."\n";
 			echo '<h3>Specific Post/Page Access Link Generator (for Customer Service)</h3>'."\n";
