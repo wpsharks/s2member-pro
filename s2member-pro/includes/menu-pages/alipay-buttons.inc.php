@@ -60,7 +60,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 			{
-				echo '<div class="ws-menu-page-group" title="AliPay Buttons For Level #'.$n.' Access">'."\n";
+				echo '<div class="ws-menu-page-group" title="Buttons For Level #'.$n.' Access">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-level'.$n.'-buttons-section">'."\n";
 				echo '<h3>Button Code Generator For Level #'.$n.' Access</h3>'."\n";
@@ -109,7 +109,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
 			{
-				echo '<div class="ws-menu-page-group" title="AliPay Capability (Buy Now) Buttons">'."\n";
+				echo '<div class="ws-menu-page-group" title="Capability (Buy Now) Buttons">'."\n";
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-ccap-buttons-section">'."\n";
 				echo '<h3>Button Code Generator For Independent Custom Capabilities</h3>'."\n";
@@ -159,7 +159,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 				echo '</div>'."\n";
 			}
 
-			echo '<div class="ws-menu-page-group" title="AliPay Member Registration Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Member Registration Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-reg-links-section">'."\n";
 			echo '<h3>Registration Access Link Generator (for Customer Service)</h3>'."\n";
@@ -190,7 +190,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="AliPay Specific Post/Page (Buy Now) Buttons">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page (Buy Now) Buttons">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-buttons-section">'."\n";
 			echo '<h3>Button Code Generator For Specific Post/Page Buttons</h3>'."\n";
@@ -255,7 +255,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_buttons"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="AliPay Specific Post/Page Access Links">'."\n";
+			echo '<div class="ws-menu-page-group" title="Specific Post/Page Access Links">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-links-section">'."\n";
 			echo '<h3>Specific Post/Page Access Link Generator (for Customer Service)</h3>'."\n";
