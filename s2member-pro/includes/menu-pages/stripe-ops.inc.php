@@ -91,7 +91,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings ⥱ API Keys</strong>.'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -108,7 +108,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings ⥱ API Keys</strong>.'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -137,7 +137,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</select><br />'."\n";
 			echo 'Works for "Buy Now" transactions in USD only; i.e., other currency conversions not supported by Stripe at this time.<br />'."\n";
 			echo 'Turning this on requires that you <a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank" rel="external">enable the live Bitcoin API on your account</a>'."\n";
-			echo '<p><em><strong>Tip:</strong> This setting for Bitcoin is a global flag that enables Bitcoin for all Pro-Forms that offer a "Buy Now" item. However, you can also enable/disable Bitcoin in a specific Pro-Form (regardless of your configuration here), by adding the Shortcode Attribute <code>accept="bitcoin"</code> (to enable Bitcoin) or <code>accept=""</code> (to disable Bitcoin). For further details, please see: <strong>s2Member ⥱ Stripe Pro-Forms ⥱ Shortcode Attributes (Explained)</strong></em></p>'."\n";
+			echo '<p><em><strong>Tip:</strong> This setting for Bitcoin is a global flag that enables Bitcoin for all Pro-Forms that offer a "Buy Now" item. However, you can also enable/disable Bitcoin in a specific Pro-Form (regardless of your configuration here), by adding the Shortcode Attribute <code>accept="bitcoin"</code> (to enable Bitcoin) or <code>accept=""</code> (to disable Bitcoin). For further details, please see: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong></em></p>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -246,7 +246,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 				echo '<th>'."\n";
 				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
 				echo 'Enable Logging Routines?<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
 				echo '</label>'."\n";
 				echo '</th>'."\n";
 
@@ -282,7 +282,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
 			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Webhook/IPN Integration (required)</h3>'."\n";
-			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings ⥱ Webhooks</strong></p>'."\n";
+			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings → Webhooks</strong></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(home_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
 			echo '<div class="info" style="margin-bottom:0;">'."\n";
 			echo '<p>If you are currently in Test/Sandbox mode (i.e., you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
@@ -297,7 +297,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<h3>Signup Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro-Form integrations</h3>'."\n";
 			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro-Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because s2Member\'s Stripe Pro-Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -409,7 +409,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<h3>Modification Confirmation Email (required, but the default works fine)</h3>'."\n";
 			echo '<p>This email is sent to existing Users after they complete an upgrade/downgrade (if and when you make this possible). For instance, if a Free Subscriber upgrades to a paid Membership Level, s2Member considers this a Modification (NOT a Signup; a Signup is associated only with someone completely new). The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -503,7 +503,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
-			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member ⥱ General Options ⥱ Registration/Profile Fields</em>.</li>'."\n";
+			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member → General Options → Registration/Profile Fields</em>.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
@@ -532,9 +532,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-ccap-confirmation-email-section">'."\n";
 			echo '<h3>Capability Confirmation Email (required, but the default works fine)</h3>'."\n";
-			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard ⥱ s2Member ⥱ Stripe Forms ⥱ Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard → s2Member → Stripe Forms → Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -621,7 +621,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
-			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member ⥱ General Options ⥱ Registration/Profile Fields</em>.</li>'."\n";
+			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member → General Options → Registration/Profile Fields</em>.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
@@ -650,9 +650,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-confirmation-email-section">'."\n";
 			echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro-Form integrations</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <strong>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they successfully complete a Stripe "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <strong>s2Member → Restriction Options → Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -759,7 +759,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<p>When you create a Stripe Pro-Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your Stripe Pro-Form Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create a Stripe Pro-Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>'."\n";
 			echo '<p><em><strong>Quick Tip:</strong> If you configure Tax, it\'s good to include a note somewhere in the <code>desc=""</code> attribute of your Shortcode. Something like <code>desc="$x.xx (plus tax)"</code>.</em></p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This tax configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure taxes here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This tax configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure taxes here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -819,7 +819,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['auto_eot_system_enabled'] == 2 && (!function_exists('wp_cron') || !wp_get_schedule('ws_plugin__s2member_auto_eot_system__schedule'))) ? '' : ' style="display:none;"').'>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>'.esc_html(home_url('/?s2member_auto_eot_system_via_cron=1')).'</code></p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e., they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* These options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member → PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e., they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -941,7 +941,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="refunds,reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,reversals") ? ' selected="selected"' : '').'>Full Refunds, Reversals (these ALWAYS trigger an Immediate EOT action)</option>'."\n";
 			echo '<option value="refunds,partial_refunds,reversals"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["triggers_immediate_eot"] === "refunds,partial_refunds,reversals") ? ' selected="selected"' : '').'>Full Refunds, Partial Refunds, Reversals (these ALWAYS trigger an Immediate EOT action)</option>'."\n";
 			echo '</select><br />'."\n";
-			echo '<em><strong>Note:</strong> s2Member is not equipped to detect partial refunds against multi-payment Subscriptions reliably. Therefore, all refunds processed against Subscriptions (of any kind) are considered <strong>Partial</strong> Refunds. Full refunds (in the eyes of s2Member) occur only against Buy Now transactions where it is easy for s2Member to see that the refund amount is &gt;= the original Buy Now purchase price (i.e., a Full Refund). <strong>Also Note:</strong> This setting (no matter what you choose) will NOT impact s2Member\'s internal API Notifications for Refund/Reversal events. <a href="#" onclick="alert(\'A Full or Partial Refund; and/or a Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member in accordance with your configuration here.\\n\\nIn this way, you\\\'ll have the full ability to listen for these events on your own (via API Notifications); if you prefer (optional). For more information, check your Dashboard under: `s2Member ⥱ API Notifications ⥱ Refunds/Reversals`.\'); return false;">Click here for details</a>.</em>'."\n";
+			echo '<em><strong>Note:</strong> s2Member is not equipped to detect partial refunds against multi-payment Subscriptions reliably. Therefore, all refunds processed against Subscriptions (of any kind) are considered <strong>Partial</strong> Refunds. Full refunds (in the eyes of s2Member) occur only against Buy Now transactions where it is easy for s2Member to see that the refund amount is &gt;= the original Buy Now purchase price (i.e., a Full Refund). <strong>Also Note:</strong> This setting (no matter what you choose) will NOT impact s2Member\'s internal API Notifications for Refund/Reversal events. <a href="#" onclick="alert(\'A Full or Partial Refund; and/or a Reversal Notification will ALWAYS be processed internally by s2Member, even if no action is taken by s2Member in accordance with your configuration here.\\n\\nIn this way, you\\\'ll have the full ability to listen for these events on your own (via API Notifications); if you prefer (optional). For more information, check your Dashboard under: `s2Member → API Notifications → Refunds/Reversals`.\'); return false;">Click here for details</a>.</em>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";

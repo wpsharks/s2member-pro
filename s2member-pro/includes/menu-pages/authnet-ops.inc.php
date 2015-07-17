@@ -67,8 +67,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<h3>Authorize.Net Account Details (required)</h3>'."\n";
 			echo '<p><a href="http://s2member.com/r/authorize-net/" target="_blank" rel="external">Authorize.Net</a> is a leading provider of payment gateway services, managing the submission of billions of transactions to processing networks on behalf of merchant customers. Authorize.Net is a solution offered by the CyberSource Corporation, a wholly owned subsidiary of Visa (NYSE: V).</p>'."\n";
 			echo '<p>s2Member has been integrated with Authorize.Net for Direct Payments and also for ARB (Automated Recurring Billing). In order to take advantage of this integration, you will need to have an Authorize.Net Merchant Account. Once you have an account, all of the details below can be obtained from inside of your Authorize.Net account. If you need assistance, please check their <a href="http://s2member.com/r/authorize-net-developers/" target="_blank" rel="external">help section</a>.</p>'."\n";
-			echo '<p><em><strong>Authorize.Net Version (3.1):</strong> s2Member integrates with Transaction Version 3.1 for Authorize.Net. Please log into your Authorize.Net Merchant account and make sure your Transaction Version setting is configured as: <code>3.1</code>. You will find this inside your Authorize.Net Merchant account, under: <strong>Account ⥱ Settings ⥱ Transaction Version</strong>.</em></p>'."\n";
-			echo '<p><em><strong>Recurring Billing:</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generator for Authorize.Net, you will ALSO need <a href="http://s2member.com/r/authorize-net-arb/" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the s2Member Form Generator, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. See: <strong>s2Member ⥱ Authorize.Net Pro-Forms</strong>. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
+			echo '<p><em><strong>Authorize.Net Version (3.1):</strong> s2Member integrates with Transaction Version 3.1 for Authorize.Net. Please log into your Authorize.Net Merchant account and make sure your Transaction Version setting is configured as: <code>3.1</code>. You will find this inside your Authorize.Net Merchant account, under: <strong>Account → Settings → Transaction Version</strong>.</em></p>'."\n";
+			echo '<p><em><strong>Recurring Billing:</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generator for Authorize.Net, you will ALSO need <a href="http://s2member.com/r/authorize-net-arb/" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the s2Member Form Generator, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. See: <strong>s2Member → Authorize.Net Pro-Forms</strong>. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled page. When you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro-Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>SSL Compatibility:</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
 
@@ -87,7 +87,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_login_id" id="ws-plugin--s2member-pro-authnet-api-login-id" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"]).'" /><br />'."\n";
-			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account ⥱ Settings</strong>.'."\n";
+			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -104,7 +104,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_trans_key" id="ws-plugin--s2member-pro-authnet-api-trans-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"]).'" /><br />'."\n";
-			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account ⥱ Settings</strong>.'."\n";
+			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -121,7 +121,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_salt_key" id="ws-plugin--s2member-pro-authnet-api-salt-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"]).'" /><br />'."\n";
-			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account ⥱ Settings</strong>.'."\n";
+			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -157,7 +157,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 				echo '<th>'."\n";
 				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
 				echo 'Enable Logging Routines?<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
 				echo '</label>'."\n";
 				echo '</th>'."\n";
 
@@ -193,7 +193,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-authnet-ipn-section">'."\n";
 			echo '<h3>Authorize.Net Silent Post Integration (required)<br />aka: Authorize.Net IPN (Instant Payment Notifications)</h3>'."\n";
-			echo '<p>Log into your Authorize.Net Merchant account and navigate to this section:<br /><strong>Account ⥱ Settings ⥱ Silent Post URL</strong></p>'."\n";
+			echo '<p>Log into your Authorize.Net Merchant account and navigate to this section:<br /><strong>Account → Settings → Silent Post URL</strong></p>'."\n";
 			echo '<p>Your Authorize.Net Silent Post URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_authnet_notify=1")).'</code></p>'."\n";
 			echo '</div>'."\n";
 
@@ -205,7 +205,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<h3>Signup Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro-Form integrations</h3>'."\n";
 			echo '<p>This email is sent to new Customers after they successfully complete an Authorize.Net "Pro-Form" submission on your site. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, and NOT to send them a <code>%%registration_url%%</code>, because s2Member\'s Authorize.Net Pro-Form integration handles that automatically; based on scenario. You may want to customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -316,7 +316,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<h3>Modification Confirmation Email (required, but the default works fine)</h3>'."\n";
 			echo '<p>This email is sent to existing Users after they complete an upgrade/downgrade (if and when you make this possible). For instance, if a Free Subscriber upgrades to a paid Membership Level, s2Member considers this a Modification (NOT a Signup; a Signup is associated only with someone completely new). The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -409,7 +409,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
-			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member ⥱ General Options ⥱ Registration/Profile Fields</em>.</li>'."\n";
+			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member → General Options → Registration/Profile Fields</em>.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
@@ -438,9 +438,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-ccap-confirmation-email-section">'."\n";
 			echo '<h3>Capability Confirmation Email (required, but the default works fine)</h3>'."\n";
-			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard ⥱ s2Member ⥱ Authorize.Net Forms ⥱ Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to existing Users after they complete a Buy Now purchase for one or more Custom Capabilities (if and when you make this possible); see: <strong>Dashboard → s2Member → Authorize.Net Forms → Capability (Buy Now)</strong>. The <strong>primary</strong> purpose of this email is to provide the Customer with a confirmation that their account was updated. You may also customize this further by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -526,7 +526,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<li><code>%%date_of_birth%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>date_of_birth</code>.</li>'."\n";
 			echo '<li><code>%%street_address%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>street_address</code>.</li>'."\n";
 			echo '<li><code>%%country%%</code> would be valid; if you have a Custom Registration/Profile Field with the ID <code>country</code>.</li>'."\n";
-			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member ⥱ General Options ⥱ Registration/Profile Fields</em>.</li>'."\n";
+			echo '<li><em><code>%%etc, etc...%%</code> <strong>see:</strong> s2Member → General Options → Registration/Profile Fields</em>.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
@@ -555,9 +555,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sp-confirmation-email-section">'."\n";
 			echo '<h3>Specific Post/Page Confirmation Email (required, but the default works fine)<br />— specifically for s2Member Pro-Form integrations</h3>'."\n";
-			echo '<p>This email is sent to new Customers after they successfully complete an Authorize.Net "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <strong>s2Member ⥱ Restriction Options ⥱ Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>This email is sent to new Customers after they successfully complete an Authorize.Net "Pro-Form" submission on your site, for Specific Post/Page Access. (see: <strong>s2Member → Restriction Options → Specific Post/Page Access</strong>). This is NOT used for Membership sales, only for Specific Post/Page Access. The <strong>primary</strong> purpose of this email, is to provide the Customer with a receipt, along with a link to access the Specific Post/Page they\'ve purchased access to. If you\'ve created a Specific Post/Page Package (with multiple Posts/Pages bundled together into one transaction), this ONE link (<code>%%sp_access_url%%</code>) will automatically authenticate them for access to ALL of the Posts/Pages included in their transaction. You may customize this email further, by providing details that are specifically geared to your site.</p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This email configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -663,7 +663,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<p>When you create an Authorize.Net Pro-Form with s2Member, you\'ll be asked to supply a <em>Charge Amount</em>. Then, during checkout... s2Member calculates Tax. The calculated Tax Rate is added to the <em>Charge Amount</em> in your Authorize.Net Pro-Form Shortcode. The Tax Rate will be displayed to a Customer during checkout, <strong>after</strong> they\'ve supplied a Billing Address. For example, if you create an Authorize.Net Pro-Form that charges a Customer <strong>$24.95</strong>, and the Tax Rate is configured as 7.0%; s2Member will automatically calculate the Tax as $1.75. A Customer will pay the Total Amount (<em>Charge</em> + Tax = <strong>$26.70</strong>).</p>'."\n";
 			echo '<p><em><strong>Quick Tip:</strong> If you configure Tax, it\'s good to include a note somewhere in the <code>desc=""</code> attribute of your Shortcode. Something like <code>desc="$x.xx (plus tax)"</code>.</em></p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* This tax configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure taxes here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* This tax configuration is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure taxes here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member Pro-Forms.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -721,7 +721,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<p id="ws-plugin--s2member-auto-eot-system-enabled-via-cron"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"] == 2 && (!function_exists("wp_cron") || !wp_get_schedule("ws_plugin__s2member_auto_eot_system__schedule"))) ? '' : ' style="display:none;"').'>If you\'d like to run s2Member\'s Auto-EOT System through a more traditional Cron Job; instead of through <code>WP-Cron</code>, you will need to configure a Cron Job through your server control panel; provided by your hosting company. Set the Cron Job to run <code>once about every 10 minutes to an hour</code>. You\'ll want to configure an HTTP Cron Job that loads this URL:<br /><code>'.esc_html(home_url("/?s2member_auto_eot_system_via_cron=1")).'</code></p>'."\n";
 
-			echo '<p><em class="ws-menu-page-bright-hilite">* Most of these options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member ⥱ PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e., they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
+			echo '<p><em class="ws-menu-page-bright-hilite">* Most of these options are universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'These settings may ALSO appear under (s2Member → PayPal Options). Feel free to configure them here; but please remember that these configuration options are applied universally (i.e., they\\\'re SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";

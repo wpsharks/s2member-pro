@@ -8,7 +8,7 @@ $config["custom"] = "www.mydomain.com";
 $config["item_number"] = "1";
 
 // s2Member Proxy IPN URL handler.
-$config["proxy_ipn_handler_url"] = // You'll get this from Dashboard: `s2Member ⥱ PayPal Options ⥱ IPN Integration ⥱ Proxy IPN URL`.
+$config["proxy_ipn_handler_url"] = // You'll get this from Dashboard: `s2Member → PayPal Options → IPN Integration → Proxy IPN URL`.
 "http://www.mydomain.com/?s2member_paypal_notify=1&s2member_paypal_proxy=proxy&s2member_paypal_proxy_verification=c28831a2ddfdeexXX2f8b722efa0";
 
 // ---- Do NOT edit anything below, unless you know what you're doing. --------------------------------------------------------

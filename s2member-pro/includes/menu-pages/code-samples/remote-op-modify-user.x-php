@@ -2,7 +2,7 @@
 $op["op"] = "modify_user"; // The Remote Operation.
 
 $op["api_key"] = "[API Key]"; // Check your Dashboard for this value.
-	// See: `s2Member ⥱ API / Scripting ⥱ Remote Operations API ⥱ API Key`
+	// See: `s2Member → API / Scripting → Remote Operations API → API Key`
 
 $op["data"] = array(
 	// You must supply one of these values.
@@ -47,7 +47,7 @@ $op["data"] = array(
 	"reset_file_download_access_log" => "1", // Deletes/resets any existing logs associated with past File Download Access.
 		// You would ONLY pass this in if you wanted to give this User/Member a fresh start with their access to File Downloads.
 		// This resets the User/Member stats collected and compared against your Basic File Download Restrictions.
-		// See also: `Dashboard ⥱ s2Member® ⥱ Download Options ⥱ Basic Download Restrictions`
+		// See also: `Dashboard → s2Member® → Download Options → Basic Download Restrictions`
 
 	// WARNING: Setting either of these two additional values (depending on your underlying mailing list solution);
 	// may result in the User/Member being sent an email subscription confirmation—possibly sent by your mailing list provider.

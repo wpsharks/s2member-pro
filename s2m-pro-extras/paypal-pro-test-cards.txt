@@ -9,6 +9,6 @@
 http://s2member.com/r/paypal-developers/
 
 * s2Member must be configured for PayPal® Sandbox Mode.
-In your Dashboard, see: `s2Member ⥱ PayPal® Options`.
+In your Dashboard, see: `s2Member → PayPal® Options`.
 
 * Only works w/ PayPal® Pro (via s2Member Pro-Forms).

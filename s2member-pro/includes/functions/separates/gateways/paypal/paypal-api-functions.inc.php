@@ -210,8 +210,8 @@ if(!function_exists('s2member_pro_payflow_rbp_times_for_user'))
 			$array['last_billing_time'] = $last_billing_time; // Only choice.
 
 		if(($payflow['TERM'] <= 0 || $payflow['PAYMENTSLEFT'] > 0) && preg_match('/^(Active|ActiveProfile)$/i', $payflow['STATUS']))
-			if($payflow['NEXTPAYMENT'] && strtotime($payflow['NEXTPAYMENT']) > time())
-				$array['next_billing_time'] = strtotime($payflow['NEXTPAYMENT']);
+			if($payflow['NEXTPAYMENT'] && strlen($payflow['NEXTPAYMENT']) === 8) // MMDDYYYY format is not `strtotime()` compatible.
+				$array['next_billing_time'] = strtotime(substr($payflow['NEXTPAYMENT'], -4).'-'.substr($payflow['NEXTPAYMENT'], 0, 2).'-'.substr($payflow['NEXTPAYMENT'], 2, 2));
 
 		return $array;
 	}

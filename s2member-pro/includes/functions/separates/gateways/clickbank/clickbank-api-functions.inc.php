@@ -47,7 +47,16 @@ if(!function_exists('s2member_pro_clickbank_order'))
 		if(!$user_id) $user_id = get_current_user_id();
 		if(!$user_id) return array(); // Not possible.
 
-		$subscr_id = get_user_option('s2member_subscr_id', $user_id);
-		return c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_order($subscr_id);
+		$subscr_id       = get_user_option('s2member_subscr_id', $user_id);
+		$subscr_gateway  = get_user_option('s2member_subscr_gateway', $user_id);
+		$ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars($user_id);
+
+		if(!$subscr_id || $subscr_gateway !== 'clickbank')
+			return array(); // Not applicable.
+
+		if(!$ipn_signup_vars || empty($ipn_signup_vars['txn_id']))
+			return array(); // Not possible.
+
+		return c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_api_order($ipn_signup_vars['txn_id']);
 	}
 }
