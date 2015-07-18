@@ -78,7 +78,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 											{
 												if (!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 													{
-														$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
+														$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = @$post_vars["password1"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = $post_vars["first_name"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = $post_vars["last_name"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = @$post_vars["custom_fields"]["opt_in"]; // Fake this too.
