@@ -83,7 +83,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 									unset($_POST['s2member_pro_stripe_update']['source_token']); // These are good one-time only.
 									unset($_POST['s2member_pro_stripe_update']['source_token_summary']);
 
-									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['source_token'], $post_vars)))
+									if(is_object($set_customer_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($cur__subscr_cid, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid'])))
 									{
 										$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
 

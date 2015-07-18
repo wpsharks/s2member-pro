@@ -208,6 +208,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-reject-prepaid">'."\n";
+			echo 'Reject or Allow Prepaid Cards?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_reject_prepaid" id="ws-plugin--s2member-pro-stripe-api-reject-prepaid">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Allow; I will accept all types of cards; even prepaid cards (recommended, default)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Reject; refuse to accept cards that Stripe detects as being "prepaid" funding sources</option>'."\n";
+			echo '</select><br />'."\n";
+			echo '<em><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>reject_prepaid=""</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</em>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
