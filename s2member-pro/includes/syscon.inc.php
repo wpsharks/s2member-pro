@@ -122,7 +122,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => sprintf(_x('<div><small style="font-size:70%;">ClickBank is the retailer of products on this site. CLICKBANK® is a registered trademark of Click Sales, Inc., a Delaware corporation located at 917 S. Lusk Street, Suite 200, Boise Idaho, 83706, USA and used by permission. ClickBank\'s role as retailer does not constitute an endorsement, approval or review of these products or any claim, statement or opinion used in promotion of these products.</small></div><p>%1$s <strong><em>says&hellip;</em></strong></p>', 's2member-front', 's2member'), esc_html($_SERVER['HTTP_HOST'])),
 			'pro_google_merchant_id'                  => '', 'pro_google_merchant_key' => '', 'pro_google_sandbox' => '0',
 
-			'pro_recaptcha_public_key'                => '', 'pro_recaptcha_private_key' => '',
+			'pro_recaptcha_public_key'                 => '', 'pro_recaptcha_private_key'  => '',
+			'pro_recaptcha2_public_key'                => '', 'pro_recaptcha2_private_key' => '',
 
 			'pro_last_stats_log'                      => '0');
 
@@ -224,7 +225,7 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if(preg_match('/^pro_(?:stripe|google|authnet)_sandbox$/', $key) && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
-				else if(preg_match('/^pro_recaptcha_(?:public|private)_key$/', $key) && (!is_string($value) || !strlen($value)))
+				else if(preg_match('/^pro_recaptcha(?:2)?_(?:public|private)_key$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_last_stats_log' && (!is_string($value) || !strlen($value)))

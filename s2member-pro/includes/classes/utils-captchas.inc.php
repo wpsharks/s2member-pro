@@ -31,9 +31,9 @@
 * @since 111203
 */
 if(!defined('WPINC')) // MUST have WordPress.
-	exit("Do not access this file directly.");
+	exit('Do not access this file directly.');
 
-if (!class_exists ("c_ws_plugin__s2member_pro_utils_captchas"))
+if (!class_exists ('c_ws_plugin__s2member_pro_utils_captchas'))
 	{
 		/**
 		* Captcha utilities (introduced by s2Member Pro).
@@ -44,23 +44,52 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utils_captchas"))
 		class c_ws_plugin__s2member_pro_utils_captchas
 			{
 				/**
+				* reCAPTCHA™ version filter.
+				*
+				* @package s2Member\Utilities
+				* @since 150717
+				*
+				* @attaches-to ``add_filter('ws_plugin__s2member_recaptcha_version');``
+				*
+				* @param string The version passed in by the filter.
+				* @param array $vars Variables passed in by the filter.
+				*
+				* @return string The version number.
+				*/
+				public static function recaptcha_version($version = '', $vars = array())
+					{
+						if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_public_key'])
+							if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_private_key'])
+								return '2'; // Version 2 API.
+
+						return $version; // No change.
+					}
+
+				/**
 				* Public/private keys to use for reCAPTCHA™.
 				*
 				* @package s2Member\Utilities
 				* @since 111203
 				*
-				* @attaches-to ``add_filter("ws_plugin__s2member_recaptcha_keys");``
+				* @attaches-to ``add_filter('ws_plugin__s2member_recaptcha_keys');``
 				*
 				* @param array $keys An array with elements: `public` and `private`; passed through by the Filter.
 				* @param array $vars An array of defined variables, passed through by the Filter.
 				* @return array The array of ``$keys``, after possible modification.
 				*/
-				public static function recaptcha_keys ($keys = FALSE, $vars = FALSE)
+				public static function recaptcha_keys($keys = array(), $vars = array())
 					{
-						if (($public = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_public_key"]) && ($private = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_private_key"]))
-							$keys = array_merge ((array)$keys, array("public" => $public, "private" => $private));
+						if(self::recaptcha_version() === '2')
+						{
+							if(($public = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_public_key']) && ($private = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_private_key']))
+								$keys = array_merge ((array)$keys, array('public' => $public, 'private' => $private));
 
-						return /* Array of ``$keys``, after possible modification. */ $keys;
+							return $keys; // Not possible.
+						}
+						if(($public = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha_public_key']) && ($private = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha_private_key']))
+							$keys = array_merge ((array)$keys, array('public' => $public, 'private' => $private));
+
+						return $keys; // Not possible.
 					}
 			}
 	}
