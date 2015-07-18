@@ -153,27 +153,35 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				if($source_details) // Additional details we should save?
-				{
-					$source = $customer->sources->data[0]; // Just one source.
-					/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
-
-					if($source instanceof Stripe_Card)
 					{
-						foreach($source_details as $_key => $_value)
-							$source->{$_key} = $_value;
-						unset($_key, $_value);
+						try // Fail gracefully if a simple card update fails here.
+						{
+							$source = $customer->sources->data[0]; // Just one source.
+							/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
 
-						$source->save(); // Update.
-					}
-					else if($source instanceof Stripe_BitcoinReceiver)
-					{
-						foreach($source_details as $_key => $_value)
-							$source->metadata->{$_key} = $_value;
-						unset($_key, $_value);
+							if($source instanceof Stripe_Card)
+							{
+								foreach($source_details as $_key => $_value)
+									$source->{$_key} = $_value;
+								unset($_key, $_value);
 
-						$source->save(); // Update.
+								$source->save(); // Update.
+							}
+							else if($source instanceof Stripe_BitcoinReceiver)
+							{
+								foreach($source_details as $_key => $_value)
+									$source->metadata->{$_key} = $_value;
+								unset($_key, $_value);
+
+								$source->save(); // Update.
+							}
+						}
+						catch(exception $source_details_exception)
+						{
+							self::log_entry(__FUNCTION__, $input_time, $source_details, time(), $source_details_exception);
+							// Fail silently in this case. It's just a simple update for tax reporting.
+						}
 					}
-				}
 				return $customer;
 			}
 			catch(exception $exception)
