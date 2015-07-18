@@ -78,7 +78,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_registration_in"))
 											{
 												if (!($create_user = array())) // Build post fields for registration configuration, and then the creation array.
 													{
-														$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = $post_vars["password1"]; // Fake this for registration configuration.
+														$_POST["ws_plugin__s2member_custom_reg_field_user_pass1"] = @$post_vars["password1"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_first_name"] = $post_vars["first_name"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_last_name"] = $post_vars["last_name"]; // Fake this for registration configuration.
 														$_POST["ws_plugin__s2member_custom_reg_field_opt_in"] = @$post_vars["custom_fields"]["opt_in"]; // Fake this too.
@@ -107,7 +107,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_registration_in"))
 														$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 													}
 
-												if ($post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
+												if (@$post_vars["password1"] && $post_vars["password1"] === $create_user["user_pass"]) // A custom Password is being used?
 													{
 														if (((is_multisite () && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user ($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user ($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error ($new__user_id))
 															{
