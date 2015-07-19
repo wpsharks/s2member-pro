@@ -57,11 +57,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_login_in'))
 		 *
 		 * @return string Login widget.
 		 */
-		public static function shortcode($attr = array(), $content = '', $shortcode = '')
+		public static function shortcode($attr_args_options = array(), $content = '', $shortcode = '')
 		{
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('c_ws_plugin__s2member_pro_before_sc_login', get_defined_vars());
 			unset($__refs, $__v);
+
+			$attr_args_options = (array)$attr_args_options;
+
+			$default_attr = array(
+				'no_profile' => '0',
+			);
+			$attr    = array_merge($default_attr, $attr_args_options);
+			$attr    = array_intersect_key($attr, $default_attr);
 
 			$default_args = array(
 				'before_widget' => '',
@@ -69,13 +77,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_login_in'))
 				'after_title'   => '</h3>',
 				'after_widget'  => '',
 			);
-			$args    = array_merge($default_args, (array)$attr);
+			$args    = array_merge($default_args, $attr_args_options);
 			$args    = array_intersect_key($args, $default_args);
-			$options = array_merge(array(), (array)$attr);
+
+			$options = array_diff_key($attr_args_options, $attr, $args);
 
 			ob_start(); // Begin output buffering.
 			c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 			$login = ob_get_clean();
+
+			if(filter_var($attr['no_profile'], FILTER_VALIDATE_BOOLEAN))
+				if(is_user_logged_in()) $login = ''; // Not applicable.
 
 			return apply_filters('c_ws_plugin__s2member_pro_sc_login_content', $login, get_defined_vars());
 		}
