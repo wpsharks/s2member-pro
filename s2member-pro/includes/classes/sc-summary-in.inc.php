@@ -1,6 +1,6 @@
 <?php
 /**
- * [s2Member-Login] Shortcode.
+ * [s2Member-Summary] Shortcode.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -33,40 +33,40 @@
 if(!defined('WPINC')) // MUST have WordPress.
 	exit('Do not access this file directly.');
 
-if(!class_exists('c_ws_plugin__s2member_pro_sc_login_in'))
+if(!class_exists('c_ws_plugin__s2member_pro_sc_summary_in'))
 {
 	/**
-	 * [s2Member-Login] Shortcode.
+	 * [s2Member-Summary] Shortcode.
 	 *
 	 * @package s2Member\Shortcodes
 	 * @since 150712
 	 */
-	class c_ws_plugin__s2member_pro_sc_login_in
+	class c_ws_plugin__s2member_pro_sc_summary_in
 	{
 		/**
-		 * [s2Member-Login] Shortcode.
+		 * [s2Member-Summary] Shortcode.
 		 *
 		 * @package s2Member\Shortcodes
 		 * @since 150712
 		 *
-		 * @attaches-to ``add_shortcode('s2Member-Login');``
+		 * @attaches-to ``add_shortcode('s2Member-Summary');``
 		 *
 		 * @param array  $attr An array of Attributes.
 		 * @param string $content Content inside the Shortcode.
 		 * @param string $shortcode The actual Shortcode name itself.
 		 *
-		 * @return string Login widget.
+		 * @return string Summary widget.
 		 */
 		public static function shortcode($attr_args_options = array(), $content = '', $shortcode = '')
 		{
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
-			do_action('c_ws_plugin__s2member_pro_before_sc_login', get_defined_vars());
+			do_action('c_ws_plugin__s2member_pro_before_sc_summary', get_defined_vars());
 			unset($__refs, $__v); // Housekeeping.
 
 			$attr_args_options = (array)$attr_args_options;
 
 			$default_attr = array(
-				'show_summary_if_logged_in' => '0',
+				'show_login_if_not_logged_in' => '0',
 			);
 			$attr    = array_merge($default_attr, $attr_args_options);
 			$attr    = array_intersect_key($attr, $default_attr);
@@ -82,16 +82,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_login_in'))
 
 			$options = array_diff_key($attr_args_options, $attr, $args);
 
-			if(is_user_logged_in() && !filter_var($attr['show_summary_if_logged_in'], FILTER_VALIDATE_BOOLEAN))
-				$login = ''; // Empty. Logged in already.
+			if(!is_user_logged_in() && !filter_var($attr['show_login_if_not_logged_in'], FILTER_VALIDATE_BOOLEAN))
+				$summary = ''; // Empty. Logged in already.
 
 			else // Login widget if not logged in, else profile summary.
 			{
 				ob_start(); // Begin output buffering.
 				c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
-				$login = ob_get_clean();
+				$summary = ob_get_clean();
 			}
-			return apply_filters('c_ws_plugin__s2member_pro_sc_login', $login, get_defined_vars());
+			return apply_filters('c_ws_plugin__s2member_pro_sc_summary', $summary, get_defined_vars());
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Shortcodes for s2Member Pro.
+ * [s2Member-Summary] Shortcode.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -27,23 +27,39 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member
- * @since 1.0
+ * @package s2Member\Shortcodes
+ * @since 150712
  */
 if(!defined('WPINC')) // MUST have WordPress.
 	exit('Do not access this file directly.');
-/*
-Add WordPress Editor Shortcodes.
-*/
-add_shortcode('s2Drip', 'c_ws_plugin__s2member_pro_sc_drip::shortcode');
 
-add_shortcode('s2MOP', 'c_ws_plugin__s2member_pro_sc_mop_vars_notice::shortcode');
-add_shortcode('s2MOPNotice', 'c_ws_plugin__s2member_pro_sc_mop_vars_notice::shortcode');
-
-add_shortcode('s2Member-Login', 'c_ws_plugin__s2member_pro_sc_login::shortcode');
-add_shortcode('s2Member-Summary', 'c_ws_plugin__s2member_pro_sc_summary::shortcode');
-
-add_shortcode('s2Member-Gift-Codes', 'c_ws_plugin__s2member_pro_sc_gift_codes::shortcode');
-
-add_shortcode('s2Member-List', 'c_ws_plugin__s2member_pro_sc_member_list::shortcode');
-add_shortcode('s2Member-List-Search-Box', 'c_ws_plugin__s2member_pro_sc_member_list::s_box_shortcode');
+if(!class_exists('c_ws_plugin__s2member_pro_sc_summary'))
+{
+	/**
+	 * [s2Member-Summary] Shortcode.
+	 *
+	 * @package s2Member\Shortcodes
+	 * @since 150712
+	 */
+	class c_ws_plugin__s2member_pro_sc_summary
+	{
+		/**
+		 * [s2Member-Summary] Shortcode.
+		 *
+		 * @package s2Member\Shortcodes
+		 * @since 150712
+		 *
+		 * @attaches-to ``add_shortcode('s2Member-Summary');``
+		 *
+		 * @param array  $attr An array of Attributes.
+		 * @param string $content Content inside the Shortcode.
+		 * @param string $shortcode The actual Shortcode name itself.
+		 *
+		 * @return string Return-value of inner routine.
+		 */
+		public static function shortcode($attr = array(), $content = '', $shortcode = '')
+		{
+			return c_ws_plugin__s2member_pro_sc_summary_in::shortcode($attr, $content, $shortcode);
+		}
+	}
+}
