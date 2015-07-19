@@ -49,16 +49,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-captchas-section">'."\n";
 			echo '<h3>CAPTCHA Anti-Spam Security (for s2Member Pro-Forms)</h3>'."\n";
-			echo '<p>Please note. s2Member does not introduce a <a href="http://www.s2member.com/r/captcha-definition/" target="_blank" rel="external">CAPTCHA</a> <em>(i.e., a challenge-response)</em> into any core feature for WordPress. We\'ve <strong>excluded</strong> this functionality on purpose, because many site owners prefer to use a more comprehensive CAPTCHA plugin that encompasses all aspects of their site. We recommend <a href="http://wordpress.org/extend/plugins/si-captcha-for-wordpress/" target="_blank" rel="external">this one</a>. <strong>That being said</strong>, s2Member Pro-Forms for Stripe, PayPal Pro and Authorize.Net (including Free Registration Forms) <em>can</em> be configured to use Google\'s reCAPTCHA™ service (free). Just add this Attribute to your Pro-Form Shortcode: <code>captcha="clean"</code>.</p>'."\n";
-			echo '<p><strong>Regarding s2Member Pro-Forms:</strong> s2Member comes with a default set of reCAPTCHA™ Keys, both Public and Private. If you leave the fields below empty, s2Member will simply use its own default set of Keys for reCAPTCHA™. However, if you\'re using s2Member Pro-Forms, we <em>do</em> suggest that you acquire your own set of reCAPTCHA™ Keys <em>(it\'s free)</em>. It\'s better to have your own set of Keys, specifically for your domain. Please follow <a href="http://www.s2member.com/r/recaptcha-create-keys/" target="_blank" rel="external">this link</a> to obtain Public/Private Keys for the reCAPTCHA™ service.</p>'."\n";
+			echo '<p>Please note. s2Member does not introduce a <a href="http://www.s2member.com/r/captcha-definition/" target="_blank" rel="external">CAPTCHA</a> <em>(i.e., a challenge-response)</em> into any core feature for WordPress. We\'ve <strong>excluded</strong> this functionality on purpose, because many site owners prefer to use a more comprehensive CAPTCHA plugin that encompasses all aspects of their site. We recommend <a href="http://wordpress.org/extend/plugins/si-captcha-for-wordpress/" target="_blank" rel="external">this one</a>. <strong>That being said</strong>, s2Member Pro-Forms for Stripe, PayPal Pro and Authorize.Net (including Free Registration Forms) <em>can</em> be configured to use Google\'s reCAPTCHA™ service (free). Just add this attribute to your Pro-Form Shortcode: <code>captcha="light"</code>. Or, use <code>captcha="dark"</code>, for a dark-themed reCAPTCHA™ box instead.</p>'."\n";
+			echo '<p>You\'ll need to <a href="http://s2member.com/r/recaptcha-create-keys/" target="_blank" rel="external">create a free set of keys</a> for this site in order to use reCAPTCHA™.</p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-recaptcha-public-key">'."\n";
-			echo 'reCAPTCHA™ Public Key:'."\n";
+			echo '<label for="ws-plugin--s2member-pro-recaptcha2-public-key">'."\n";
+			echo 'reCAPTCHA™ v2 Site Key:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -66,15 +66,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha_public_key" id="ws-plugin--s2member-pro-recaptcha-public-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_public_key"]).'" />'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha2_public_key" id="ws-plugin--s2member-pro-recaptcha2-public-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha2_public_key"]).'" />'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-recaptcha-private-key">'."\n";
-			echo 'reCAPTCHA™ Private Key:'."\n";
+			echo '<label for="ws-plugin--s2member-pro-recaptcha2-private-key">'."\n";
+			echo 'reCAPTCHA™ v2 Secret Key:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -82,7 +82,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha_private_key" id="ws-plugin--s2member-pro-recaptcha-private-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha_private_key"]).'" />'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha2_private_key" id="ws-plugin--s2member-pro-recaptcha2-private-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_recaptcha2_private_key"]).'" />'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -95,4 +95,4 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 	}
 }
 
-new c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops ();
+new c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops();

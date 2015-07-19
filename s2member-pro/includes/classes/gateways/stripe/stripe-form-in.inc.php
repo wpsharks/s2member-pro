@@ -161,7 +161,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$captcha = '<div id="s2member-pro-stripe-cancellation-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-cancellation-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-cancellation-form-captcha-section">'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-cancellation-form-captcha-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-cancellation-form-section-title s2member-pro-stripe-form-captcha-section-title s2member-pro-stripe-cancellation-form-captcha-section-title">'."\n";
-					$captcha .= _x('Security Code', 's2member-front', 's2member')."\n";
+					$captcha .= _x('Security Verification', 's2member-front', 's2member')."\n";
 					$captcha .= '</div>'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-cancellation-form-captcha-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-cancellation-form-div s2member-pro-stripe-form-captcha-div s2member-pro-stripe-cancellation-form-captcha-div">'."\n";
@@ -242,7 +242,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$captcha = '<div id="s2member-pro-stripe-registration-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-registration-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-registration-form-captcha-section">'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-registration-form-captcha-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-registration-form-section-title s2member-pro-stripe-form-captcha-section-title s2member-pro-stripe-registration-form-captcha-section-title">'."\n";
-					$captcha .= _x('Security Code', 's2member-front', 's2member')."\n";
+					$captcha .= _x('Security Verification', 's2member-front', 's2member')."\n";
 					$captcha .= '</div>'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-registration-form-captcha-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-registration-form-div s2member-pro-stripe-form-captcha-div s2member-pro-stripe-registration-form-captcha-div">'."\n";
@@ -315,7 +315,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$captcha = '<div id="s2member-pro-stripe-update-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-update-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-update-form-captcha-section">'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-update-form-captcha-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-update-form-section-title s2member-pro-stripe-form-captcha-section-title s2member-pro-stripe-update-form-captcha-section-title">'."\n";
-					$captcha .= _x('Security Code', 's2member-front', 's2member')."\n";
+					$captcha .= _x('Security Verification', 's2member-front', 's2member')."\n";
 					$captcha .= '</div>'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-update-form-captcha-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-update-form-div s2member-pro-stripe-form-captcha-div s2member-pro-stripe-update-form-captcha-div">'."\n";
@@ -399,7 +399,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$captcha = '<div id="s2member-pro-stripe-sp-checkout-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-sp-checkout-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-sp-checkout-form-captcha-section">'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-sp-checkout-form-captcha-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-sp-checkout-form-section-title s2member-pro-stripe-form-captcha-section-title s2member-pro-stripe-sp-checkout-form-captcha-section-title">'."\n";
-					$captcha .= _x('Security Code', 's2member-front', 's2member')."\n";
+					$captcha .= _x('Security Verification', 's2member-front', 's2member')."\n";
 					$captcha .= '</div>'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-sp-checkout-form-captcha-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-sp-checkout-form-div s2member-pro-stripe-form-captcha-div s2member-pro-stripe-sp-checkout-form-captcha-div">'."\n";
@@ -553,7 +553,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$captcha = '<div id="s2member-pro-stripe-checkout-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-checkout-form-captcha-section">'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-checkout-form-captcha-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-checkout-form-section-title s2member-pro-stripe-form-captcha-section-title s2member-pro-stripe-checkout-form-captcha-section-title">'."\n";
-					$captcha .= _x('Security Code', 's2member-front', 's2member')."\n";
+					$captcha .= _x('Security Verification', 's2member-front', 's2member')."\n";
 					$captcha .= '</div>'."\n";
 
 					$captcha .= '<div id="s2member-pro-stripe-checkout-form-captcha-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-captcha-div s2member-pro-stripe-checkout-form-captcha-div">'."\n";

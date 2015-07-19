@@ -83,7 +83,7 @@ jQuery(document).ready( // DOM ready.
 				$clForm.on('submit', function(/* Form validation. */)
 				{
 					var context = this, label = '', error = '', errors = '',
-						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field, '+captchaSection+' #g-recaptcha-response');
 
 					$(':input', context)
 						.each(function(/* Go through them all together. */)
@@ -103,7 +103,7 @@ jQuery(document).ready( // DOM ready.
 					}
 					else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
 						return false; // Error; cannot continue in this scenario.
 					}
 					$(submissionButton).attr(disabled),
@@ -167,7 +167,7 @@ jQuery(document).ready( // DOM ready.
 					if($.inArray($(submissionNonceVerification).val(), ['option']) === -1)
 					{
 						var context = this, label = '', error = '', errors = '',
-							$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
+							$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field, '+captchaSection+' #g-recaptcha-response'),
 							$password1 = $(registrationSection + ' input#s2member-pro-stripe-registration-password1[aria-required="true"]'),
 							$password2 = $(registrationSection + ' input#s2member-pro-stripe-registration-password2');
 
@@ -199,7 +199,7 @@ jQuery(document).ready( // DOM ready.
 						}
 						else if($recaptchaResponse.length && !$recaptchaResponse.val())
 						{
-							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
 							return false; // Error; cannot continue in this scenario.
 						}
 						// $(optionsSelect).attr(disabled); // Not an option selection.
@@ -293,7 +293,7 @@ jQuery(document).ready( // DOM ready.
 				$upForm.on('submit', function(/* Form validation. */)
 				{
 					var context = this, label = '', error = '', errors = '',
-						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field');
+						$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field, '+captchaSection+' #g-recaptcha-response');
 
 					if(!$(sourceTokenInput).val())
 					{
@@ -318,7 +318,7 @@ jQuery(document).ready( // DOM ready.
 					}
 					else if($recaptchaResponse.length && !$recaptchaResponse.val())
 					{
-						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+						alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
 						return false; // Error; cannot continue in this scenario.
 					}
 					$(submissionButton).attr(disabled),
@@ -593,7 +593,7 @@ jQuery(document).ready( // DOM ready.
 						if($.inArray($(submissionNonceVerification).val(), ['option', 'apply-coupon']) === -1)
 						{
 							var context = this, label = '', error = '', errors = '',
-								$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field'),
+								$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field, '+captchaSection+' #g-recaptcha-response'),
 								$password1 = $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-password1[aria-required="true"]'),
 								$password2 = $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-password2');
 
@@ -629,7 +629,7 @@ jQuery(document).ready( // DOM ready.
 							}
 							else if($recaptchaResponse.length && !$recaptchaResponse.val())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Code missing. Please try again.", "s2member-front", "s2member")); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
 								return false; // Error; cannot continue in this scenario.
 							}
 							// $(optionsSelect).attr(disabled); // Not an option selection.

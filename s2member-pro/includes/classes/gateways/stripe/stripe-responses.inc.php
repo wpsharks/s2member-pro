@@ -526,7 +526,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', 's2member-front', 's2member'), esc_attr(wp_login_url($_SERVER['REQUEST_URI']))), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
-						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Missing or invalid Security Verification. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if(is_object($user = wp_get_current_user()) && $user->ID && $user->has_cap('administrator') /* NOT for Administrators. */)
 						$response = array('response' => _x('Unable to process. You are an Administrator. Stopping here for security. Otherwise, an Administrator could lose access.', 's2member-admin', 's2member'), 'error' => TRUE);
@@ -543,7 +543,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Missing Billing Info. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
-						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Missing or invalid Security Verification. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($form === 'registration') // Validation routines for free Registration forms.
 				{
@@ -592,7 +592,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => array_shift($custom_field_validation_errors), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
-						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Missing or invalid Security Verification. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($form === 'sp-checkout') // Validation routines for Specific Post/Page checkout forms.
 				{
@@ -621,7 +621,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
-						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Missing or invalid Security Verification. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else if($form === 'checkout') // Validation routines for Member Level checkout forms. This is the default functionality.
 				{
@@ -691,7 +691,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 						$response = array('response' => _x('Missing Postal/Zip Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['captcha'] && (empty($s['recaptcha_challenge_field']) || empty($s['recaptcha_response_field']) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s['recaptcha_challenge_field'], $s['recaptcha_response_field'])))
-						$response = array('response' => _x('Missing or invalid Security Code. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+						$response = array('response' => _x('Missing or invalid Security Verification. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 				}
 				else // Else we are dealing with an unknown form submission type.
 					$response = array('response' => _x('Unknown form submission type. Please contact Support.', 's2member-front', 's2member'), 'error' => TRUE);
