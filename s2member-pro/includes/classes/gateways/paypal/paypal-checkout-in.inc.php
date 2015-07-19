@@ -81,9 +81,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 
 								$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars); // Collect reCAPTCHA™ post vars.
 
-								(!empty($_GET["token"])) ? delete_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])) : null;
+								if(!empty($_GET["token"])) delete_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"]));
 
-								if /* Attr errors? */(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"]))
+								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"]))
 									{
 										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("checkout", $post_vars)))
 											{

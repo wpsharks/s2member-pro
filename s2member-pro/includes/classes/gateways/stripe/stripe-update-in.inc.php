@@ -67,7 +67,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 
 				$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars); // Collect reCAPTCHA™ post vars.
 
-				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr'])) // Must NOT have any attr errors.
+				if(!c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($post_vars['attr']))
 				{
 					if(!($form_submission_validation_errors // Validate update input form fields.
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('update', $post_vars))
