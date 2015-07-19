@@ -123,10 +123,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $source_token Stripe source card/bank/bitcoin token.
 		 * @param array  $post_vars Pro-Form post vars (optional).
+		 * @param null|string $reject_prepaid Any non-empty value (or `false` or `0`)
+		 * 	will override the global default setting for this instance.
 		 *
 		 * @return Stripe_Customer|string Customer object; else error message.
 		 */
-		public static function set_customer_source($customer_id, $source_token, $post_vars = array())
+		public static function set_customer_source($customer_id, $source_token, $post_vars = array(), $reject_prepaid = null)
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -153,26 +155,42 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				if($source_details) // Additional details we should save?
-				{
-					$source = $customer->sources->data[0]; // Just one source.
-					/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
-
-					if($source instanceof Stripe_Card)
 					{
-						foreach($source_details as $_key => $_value)
-							$source->{$_key} = $_value;
-						unset($_key, $_value);
+						try // Fail gracefully if a simple card update fails here.
+						{
+							$source = $customer->sources->data[0]; // Just one source.
+							/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
 
-						$source->save(); // Update.
-					}
-					else if($source instanceof Stripe_BitcoinReceiver)
-					{
-						foreach($source_details as $_key => $_value)
-							$source->metadata->{$_key} = $_value;
-						unset($_key, $_value);
+							if($source instanceof Stripe_Card)
+							{
+								foreach($source_details as $_key => $_value)
+									$source->{$_key} = $_value;
+								unset($_key, $_value);
 
-						$source->save(); // Update.
+								$source->save(); // Update.
+							}
+							else if($source instanceof Stripe_BitcoinReceiver)
+							{
+								foreach($source_details as $_key => $_value)
+									$source->metadata->{$_key} = $_value;
+								unset($_key, $_value);
+
+								$source->save(); // Update.
+							}
+						}
+						catch(exception $source_details_exception)
+						{
+							self::log_entry(__FUNCTION__, $input_time, $source_details, time(), $source_details_exception);
+							// Fail silently in this case. It's just a simple update for tax reporting.
+						}
 					}
+				$reject_prepaid = !empty($reject_prepaid) || $reject_prepaid === false || $reject_prepaid === '0'
+					? filter_var($reject_prepaid, FILTER_VALIDATE_BOOLEAN) // Use the value passed in.
+					: (boolean)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid'];
+
+				if($reject_prepaid && !empty($customer->sources->data[0]->funding) && $customer->sources->data[0]->funding === 'prepaid')
+				{ // Reject prepaid cards in this case.
+					return self::error_message(_x('Error: <strong>prepaid</strong> cards not accepted at this time. Please use a different card and try again.', 's2member-front', 's2member'));
 				}
 				return $customer;
 			}
@@ -627,12 +645,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		/**
 		 * Converts a Stripe exception into an error message.
 		 *
-		 * @param exception $exception
+		 * @param string|exception $exception
 		 *
 		 * @return string Error message.
 		 */
 		public static function error_message($exception)
 		{
+			if($exception && is_string($exception))
+				return $exception;
+
 			if($exception instanceof Stripe_CardError)
 			{
 				$body  = $exception->getJsonBody();

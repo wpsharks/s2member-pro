@@ -164,7 +164,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$captcha = '<div id="s2member-pro-paypal-cancellation-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-cancellation-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-cancellation-form-captcha-section">'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-cancellation-form-captcha-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-cancellation-form-section-title s2member-pro-paypal-form-captcha-section-title s2member-pro-paypal-cancellation-form-captcha-section-title">'."\n";
-										$captcha .= _x("Security Code", "s2member-front", "s2member")."\n";
+										$captcha .= _x("Security Verification", "s2member-front", "s2member")."\n";
 										$captcha .= '</div>'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-cancellation-form-captcha-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-cancellation-form-div s2member-pro-paypal-form-captcha-div s2member-pro-paypal-cancellation-form-captcha-div">'."\n";
@@ -275,7 +275,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$captcha = '<div id="s2member-pro-paypal-registration-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-registration-form-captcha-section">'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-registration-form-captcha-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-registration-form-section-title s2member-pro-paypal-form-captcha-section-title s2member-pro-paypal-registration-form-captcha-section-title">'."\n";
-										$captcha .= _x("Security Code", "s2member-front", "s2member")."\n";
+										$captcha .= _x("Security Verification", "s2member-front", "s2member")."\n";
 										$captcha .= '</div>'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-registration-form-captcha-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-registration-form-div s2member-pro-paypal-form-captcha-div s2member-pro-paypal-registration-form-captcha-div">'."\n";
@@ -428,7 +428,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$captcha = '<div id="s2member-pro-paypal-update-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-update-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-update-form-captcha-section">'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-update-form-captcha-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-update-form-section-title s2member-pro-paypal-form-captcha-section-title s2member-pro-paypal-update-form-captcha-section-title">'."\n";
-										$captcha .= _x("Security Code", "s2member-front", "s2member")."\n";
+										$captcha .= _x("Security Verification", "s2member-front", "s2member")."\n";
 										$captcha .= '</div>'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-update-form-captcha-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-update-form-div s2member-pro-paypal-form-captcha-div s2member-pro-paypal-update-form-captcha-div">'."\n";
@@ -568,7 +568,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$captcha = '<div id="s2member-pro-paypal-sp-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-sp-checkout-form-captcha-section">'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-sp-checkout-form-captcha-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-sp-checkout-form-section-title s2member-pro-paypal-form-captcha-section-title s2member-pro-paypal-sp-checkout-form-captcha-section-title">'."\n";
-										$captcha .= _x("Security Code", "s2member-front", "s2member")."\n";
+										$captcha .= _x("Security Verification", "s2member-front", "s2member")."\n";
 										$captcha .= '</div>'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-sp-checkout-form-captcha-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-sp-checkout-form-div s2member-pro-paypal-form-captcha-div s2member-pro-paypal-sp-checkout-form-captcha-div">'."\n";
@@ -781,7 +781,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										$captcha = '<div id="s2member-pro-paypal-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-checkout-form-captcha-section">'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-checkout-form-captcha-section-title" class="s2member-pro-paypal-form-section-title s2member-pro-paypal-checkout-form-section-title s2member-pro-paypal-form-captcha-section-title s2member-pro-paypal-checkout-form-captcha-section-title">'."\n";
-										$captcha .= _x("Security Code", "s2member-front", "s2member")."\n";
+										$captcha .= _x("Security Verification", "s2member-front", "s2member")."\n";
 										$captcha .= '</div>'."\n";
 
 										$captcha .= '<div id="s2member-pro-paypal-checkout-form-captcha-div" class="s2member-pro-paypal-form-div s2member-pro-paypal-checkout-form-div s2member-pro-paypal-form-captcha-div s2member-pro-paypal-checkout-form-captcha-div">'."\n";

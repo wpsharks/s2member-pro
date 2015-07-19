@@ -17,7 +17,7 @@ abstract class Stripe
   /**
    * @var string|null The version of the Stripe API to use for requests.
    */
-  public static $apiVersion = '2015-02-18';
+  public static $apiVersion = '2015-07-13';
   /**
    * @var boolean Defaults to true.
    */

@@ -159,7 +159,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$captcha = '<div id="s2member-pro-authnet-cancellation-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-cancellation-form-captcha-section">' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-cancellation-form-captcha-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-cancellation-form-section-title s2member-pro-authnet-form-captcha-section-title s2member-pro-authnet-cancellation-form-captcha-section-title">' . "\n";
-										$captcha .= _x ("Security Code", "s2member-front", "s2member") . "\n";
+										$captcha .= _x ("Security Verification", "s2member-front", "s2member") . "\n";
 										$captcha .= '</div>' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-cancellation-form-captcha-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-cancellation-form-div s2member-pro-authnet-form-captcha-div s2member-pro-authnet-cancellation-form-captcha-div">' . "\n";
@@ -270,7 +270,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$captcha = '<div id="s2member-pro-authnet-registration-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-registration-form-captcha-section">' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-registration-form-captcha-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-registration-form-section-title s2member-pro-authnet-form-captcha-section-title s2member-pro-authnet-registration-form-captcha-section-title">' . "\n";
-										$captcha .= _x ("Security Code", "s2member-front", "s2member") . "\n";
+										$captcha .= _x ("Security Verification", "s2member-front", "s2member") . "\n";
 										$captcha .= '</div>' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-registration-form-captcha-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-registration-form-div s2member-pro-authnet-form-captcha-div s2member-pro-authnet-registration-form-captcha-div">' . "\n";
@@ -422,7 +422,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$captcha = '<div id="s2member-pro-authnet-update-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-update-form-captcha-section">' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-update-form-captcha-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-update-form-section-title s2member-pro-authnet-form-captcha-section-title s2member-pro-authnet-update-form-captcha-section-title">' . "\n";
-										$captcha .= _x ("Security Code", "s2member-front", "s2member") . "\n";
+										$captcha .= _x ("Security Verification", "s2member-front", "s2member") . "\n";
 										$captcha .= '</div>' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-update-form-captcha-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-update-form-div s2member-pro-authnet-form-captcha-div s2member-pro-authnet-update-form-captcha-div">' . "\n";
@@ -562,7 +562,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$captcha = '<div id="s2member-pro-authnet-sp-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-sp-checkout-form-captcha-section">' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-sp-checkout-form-captcha-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-sp-checkout-form-section-title s2member-pro-authnet-form-captcha-section-title s2member-pro-authnet-sp-checkout-form-captcha-section-title">' . "\n";
-										$captcha .= _x ("Security Code", "s2member-front", "s2member") . "\n";
+										$captcha .= _x ("Security Verification", "s2member-front", "s2member") . "\n";
 										$captcha .= '</div>' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-sp-checkout-form-captcha-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-sp-checkout-form-div s2member-pro-authnet-form-captcha-div s2member-pro-authnet-sp-checkout-form-captcha-div">' . "\n";
@@ -773,7 +773,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 										$captcha = '<div id="s2member-pro-authnet-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-checkout-form-captcha-section">' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-checkout-form-captcha-section-title" class="s2member-pro-authnet-form-section-title s2member-pro-authnet-checkout-form-section-title s2member-pro-authnet-form-captcha-section-title s2member-pro-authnet-checkout-form-captcha-section-title">' . "\n";
-										$captcha .= _x ("Security Code", "s2member-front", "s2member") . "\n";
+										$captcha .= _x ("Security Verification", "s2member-front", "s2member") . "\n";
 										$captcha .= '</div>' . "\n";
 
 										$captcha .= '<div id="s2member-pro-authnet-checkout-form-captcha-div" class="s2member-pro-authnet-form-div s2member-pro-authnet-checkout-form-div s2member-pro-authnet-form-captcha-div s2member-pro-authnet-checkout-form-captcha-div">' . "\n";
