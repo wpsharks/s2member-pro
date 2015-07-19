@@ -108,7 +108,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
 
 			'pro_gateways_seen'                       => '0', // Default value.
-			'pro_gateways_enabled'                    => array('paypal', 'stripe', 'unconfigured'),
+			'pro_gateways_enabled'                    => array('stripe', 'paypal', 'unconfigured'),
 
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
@@ -122,10 +122,10 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => sprintf(_x('<div><small style="font-size:70%;">ClickBank is the retailer of products on this site. CLICKBANK® is a registered trademark of Click Sales, Inc., a Delaware corporation located at 917 S. Lusk Street, Suite 200, Boise Idaho, 83706, USA and used by permission. ClickBank\'s role as retailer does not constitute an endorsement, approval or review of these products or any claim, statement or opinion used in promotion of these products.</small></div><p>%1$s <strong><em>says&hellip;</em></strong></p>', 's2member-front', 's2member'), esc_html($_SERVER['HTTP_HOST'])),
 			'pro_google_merchant_id'                  => '', 'pro_google_merchant_key' => '', 'pro_google_sandbox' => '0',
 
-			'pro_recaptcha_public_key'                 => '', 'pro_recaptcha_private_key'  => '',
-			'pro_recaptcha2_public_key'                => '', 'pro_recaptcha2_private_key' => '',
+			'pro_recaptcha_public_key'                => '', 'pro_recaptcha_private_key'  => '',
+			'pro_recaptcha2_public_key'               => '', 'pro_recaptcha2_private_key' => '',
 
-			'pro_last_stats_log'                      => '0' // Stats pinger.
+			'pro_last_stats_log'                      => '0', // Stats pinger.
 		);
 		return array_merge($default_options, $pro_default_options);
 	}
