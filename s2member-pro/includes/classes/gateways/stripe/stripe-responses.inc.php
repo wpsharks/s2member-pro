@@ -583,11 +583,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if((empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if((empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
-						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if((empty($s['password1']) || strlen($s['password1']) < c_ws_plugin__s2member_user_securities::min_password_length()) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+						$response = array('response' => sprintf(_x('Invalid Password. Must be at least %1$s characters. Please try again.', 's2member-front', 's2member'), c_ws_plugin__s2member_user_securities::min_password_length()), 'error' => TRUE);
 
-					else if(!empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
-						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(!empty($s['password1']) && strlen($s['password1']) > 64 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+						$response = array('response' => _x('Invalid Password. Max length is 64 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if((empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Password fields do NOT match. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
@@ -670,11 +670,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && (empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < 6) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
-						$response = array('response' => _x('Invalid Password. Must be at least 6 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(!is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < c_ws_plugin__s2member_user_securities::min_password_length()) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+						$response = array('response' => sprintf(_x('Invalid Password. Must be at least %1$s characters. Please try again.', 's2member-front', 's2member'), c_ws_plugin__s2member_user_securities::min_password_length()), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 20 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
-						$response = array('response' => _x('Invalid Password. Max length is 20 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if(!is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 64 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+						$response = array('response' => _x('Invalid Password. Max length is 64 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if(!is_user_logged_in() && (empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Password fields do NOT match. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);

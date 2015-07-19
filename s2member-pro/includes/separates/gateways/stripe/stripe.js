@@ -153,7 +153,7 @@ jQuery(document).ready( // DOM ready.
 					$(registrationSection + ' > div#s2member-pro-stripe-registration-form-password-div').hide(),
 						$(registrationSection + ' > div#s2member-pro-stripe-registration-form-password-div :input').attr(ariaFalseDis);
 				}
-				$(registrationSection + ' > div#s2member-pro-stripe-registration-form-password-div :input').on('keyup', function()
+				$(registrationSection + ' > div#s2member-pro-stripe-registration-form-password-div :input').on('keyup initialize.s2', function()
 				{
 					ws_plugin__s2member_passwordStrength(
 						$(registrationSection + ' input#s2member-pro-stripe-registration-username'),
@@ -161,7 +161,7 @@ jQuery(document).ready( // DOM ready.
 						$(registrationSection + ' input#s2member-pro-stripe-registration-password2'),
 						$(registrationSection + ' div#s2member-pro-stripe-registration-form-password-strength')
 					);
-				});
+				}).trigger('initialize.s2');
 				$rgForm.on('submit', function(/* Form validation. */)
 				{
 					if($.inArray($(submissionNonceVerification).val(), ['option']) === -1)
@@ -192,10 +192,15 @@ jQuery(document).ready( // DOM ready.
 							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
 							return false; // Error; cannot continue in this scenario.
 						}
-						else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
+						else if($password1.length && $.trim($password1.val()).length < ws_plugin__s2member_passwordMinLength())
 						{
-							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
-							return false; // Error; cannot continue in this scenario.
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length())); ?>');
+							return false;
+						}
+						else if($password1.length && ws_plugin__s2member_passwordStrengthMeter($.trim($password1.val()), $.trim($password2.val()), true) < ws_plugin__s2member_passwordMinStrengthScore())
+						{
+							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label())); ?>');
+							return false;
 						}
 						else if($recaptchaResponse.length && !$recaptchaResponse.val())
 						{
@@ -428,7 +433,7 @@ jQuery(document).ready( // DOM ready.
 						$(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div').hide(),
 							$(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div :input').attr(ariaFalseDis);
 					}
-					else $(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div :input').on('keyup', function()
+					else $(registrationSection + ' > div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-div :input').on('keyup initialize.s2', function()
 					{
 						ws_plugin__s2member_passwordStrength(
 							$(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-username'),
@@ -436,7 +441,7 @@ jQuery(document).ready( // DOM ready.
 							$(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-password2'),
 							$(registrationSection + ' div#s2member-pro-stripe-' + coTypeWithDashes + '-form-password-strength')
 						);
-					});
+					}).trigger('initialize.s2');
 					/*
 					 Handle tax calulations via tax-related input fields.
 					 */
@@ -622,10 +627,15 @@ jQuery(document).ready( // DOM ready.
 								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
 								return false; // Error; cannot continue in this scenario.
 							}
-							else if($password1.length && $.trim($password1.val()).length < 6/* Enforce minimum length requirement here. */)
+							else if($password1.length && $.trim($password1.val()).length < ws_plugin__s2member_passwordMinLength())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Password MUST be at least 6 characters. Please try again.", "s2member-front", "s2member")); ?>');
-								return false; // Error; cannot continue in this scenario.
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length())); ?>');
+								return false;
+							}
+							else if($password1.length && ws_plugin__s2member_passwordStrengthMeter($.trim($password1.val()), $.trim($password2.val()), true) < ws_plugin__s2member_passwordMinStrengthScore())
+							{
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label())); ?>');
+								return false;
 							}
 							else if($recaptchaResponse.length && !$recaptchaResponse.val())
 							{
