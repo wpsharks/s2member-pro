@@ -44,7 +44,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  * @var string
  */
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_VERSION'))
-	define('WS_PLUGIN__S2MEMBER_PRO_VERSION', '150702' /* !#distro-version#! */);
+	define('WS_PLUGIN__S2MEMBER_PRO_VERSION', '150719' /* !#distro-version#! */);
 /**
  * Minimum PHP version required to run s2Member Pro.
  *
@@ -64,7 +64,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION'))
  * @var string
  */
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION'))
-	define('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION', '3.3' /* !#wp-requires-at-least-version#! */);
+	define('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION', '4.2' /* !#wp-requires-at-least-version#! */);
 /**
  * Minimum Framework version required by s2Member Pro.
  *
@@ -74,7 +74,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION'))
  * @var string
  */
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION'))
-	define('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION', '150702' /* !#distro-version#! */);
+	define('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION', '150719' /* !#distro-version#! */);
 /*
 Several compatibility checks.
 If all pass, load the s2Member plugin.
