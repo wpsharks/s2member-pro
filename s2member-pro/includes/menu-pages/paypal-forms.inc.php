@@ -58,6 +58,36 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
+			echo '<div class="ws-menu-page-group" title="PayPal Pro Requirements">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-requirements-section">'."\n";
+
+			echo '<h3>Is "PayPal Payments Pro" required for me to use Pro-Forms?</h3>'."\n";
+			echo '<p>Yes, PayPal Payments Pro is required for Pro-Forms. However, there are some exceptions to that rule.</p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<h4>PayPal Payments Pro is Absolutely Required:</h4>'."\n";
+			echo '<ul>'."\n";
+			echo '	<li>For you to accept on-site credit card payments via Pro-Forms; i.e., not just PayPal Express Checkout.</li>'."\n";
+			echo '	<li>For Cancelation, Billing Update, and Billing Modification Pro-Forms to work as expected in all cases.</li>'."\n";
+			echo '	<li>Generally speaking, for you to take full advantage of everything that Pro-Forms can do; and to have them all work as originally intended.</li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '<p><em><strong>See also:</strong> <a href="https://s2member.com/kb-article/supported-paypal-account-types/" target="_blank" rel="external">Supported PayPal Account Types</a></em></p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<h4>PayPal Payments Pro is NOT Required (Exceptions):</h4>'."\n";
+			echo '<ul>'."\n";
+			echo '	<li>For you to introduce Free Registration Pro-Forms. In fact, you can use Free Registration Pro-Forms w/o even configuring PayPal API credentials.</li>'."\n";
+			echo '	<li>For you to accept PayPal Express Checkout only (not ideal). See: <a href="https://s2member.com/kb-article/do-s2member-pro-forms-work-with-paypal-standard-i-e-without-paypal-pro/" target="_blank" rel="external">this KB article</a> for details and important limitations.</li>'."\n";
+			echo '	<li style="font-style:italic;">If you integrate with Stripe™ instead (free, most popular). See: <a href="https://s2member.com/kb-article/does-s2member-integrate-w-stripe-bitcoin/" target="_blank" rel="external">Does s2Member Pro integrate w/ Stripe? Bitcoin?</a></li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '</div>'."\n";
+			echo '</div>'."\n";
+
 			echo '<div class="ws-menu-page-group" title="Free Registration Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";

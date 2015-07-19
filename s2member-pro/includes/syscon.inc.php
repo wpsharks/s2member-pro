@@ -89,8 +89,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 	 */
 	function ws_plugin__s2member_pro_default_options($default_options = array())
 	{
-		$pro_default_options = array(
-			// Defaults for the Pro Add-on.
+		$pro_default_options = array( // Defaults for the Pro Add-on.
 			'pro_signup_email_recipients'             => '"%%full_name%%" <%%payer_email%%>',
 			'pro_signup_email_subject'                => _x('Congratulations! (your membership has been approved)', 's2member-front', 's2member'),
 			'pro_signup_email_message'                => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nYour Username/Password will arrive shortly, in a separate email. If you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
@@ -108,7 +107,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
 
-			'pro_gateways_enabled'                    => array('paypal', 'stripe'), // Defaults.
+			'pro_gateways_seen'                       => '0', // Default value.
+			'pro_gateways_enabled'                    => array('paypal', 'stripe', 'unconfigured'),
 
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
@@ -125,8 +125,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_recaptcha_public_key'                 => '', 'pro_recaptcha_private_key'  => '',
 			'pro_recaptcha2_public_key'                => '', 'pro_recaptcha2_private_key' => '',
 
-			'pro_last_stats_log'                      => '0');
-
+			'pro_last_stats_log'                      => '0' // Stats pinger.
+		);
 		return array_merge($default_options, $pro_default_options);
 	}
 }
@@ -184,6 +184,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_remote_ops_key' && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_gateways_seen' && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_gateways_enabled' && !is_array($value))
