@@ -121,30 +121,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_gateways'))
 			update_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
 			if(is_multisite() && is_main_site()) update_site_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
 
-			$page       = admin_url('/admin.php?page=ws-plugin--s2member-pro-other-gateways');
-			$notice     = '<strong>s2Member® Pro says...</strong> Please configure <a href="'.esc_attr($page).'" style="text-decoration:underline;">Other Payment Gateways</a>; i.e., choose which payment gateways you would like to use.';
-			$notice_md5 = md5($notice); // For automatic dismissal seen below.
-
 			// If `unconfigured` is not in the array of gateways they have already been configured in that scenario.
 			// 	Or, perhaps this is a site that was setup prior to 150717; i.e., this notice is not applicable.
-			if(!in_array('unconfigured', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_gateways_enabled']))
-				{
-					if(is_array($notices = get_option('ws_plugin__s2member_notices')))
-						{
-							foreach($notices as $_key => $_notice)
-								if($_notice['dismiss'] && md5($_notice['notice']) === $notice_md5)
-									{
-										unset($notices[$_key]); // Auto-dismiss.
-										$notices = array_merge($notices); // Re-index array.
-										update_option('ws_plugin__s2member_notices', $notices);
-										break; // We can stop here.
-									}
-							unset($_key, $_notice); // Housekeeping.
-						}
-					return; // Already configured these; i.e., back compatibility.
-				}
-			// Otherwise, continue with the notice (default behavior).
-			c_ws_plugin__s2member_admin_notices::enqueue_admin_notice($notice, 'blog:*', FALSE, 0, TRUE);
+			if(!in_array('unconfigured', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_gateways_enabled'], TRUE))
+				return; // Already configured these; i.e., back compatibility.
+
+			$page   = admin_url('/admin.php?page=ws-plugin--s2member-pro-other-gateways');
+			$notice = '<strong>s2Member® Pro says...</strong> Please configure <a href="'.esc_attr($page).'" style="text-decoration:underline;">Other Payment Gateways</a>; i.e., choose which payment gateways you would like to use.';
+
+			c_ws_plugin__s2member_admin_notices::enqueue_admin_notice($notice, 'blog:*');
 		}
 	}
 }
