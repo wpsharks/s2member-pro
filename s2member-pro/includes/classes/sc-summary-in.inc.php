@@ -91,6 +91,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_summary_in'))
 				c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 				$summary = ob_get_clean();
 			}
+			if($summary) // Wrapper for CSS styling.
+				$summary = '<div class="ws-plugin--s2member-sc-summary">'.$summary.'</div>';
+
 			return apply_filters('c_ws_plugin__s2member_pro_sc_summary', $summary, get_defined_vars());
 		}
 	}
