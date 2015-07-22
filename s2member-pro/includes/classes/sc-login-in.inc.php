@@ -91,6 +91,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_login_in'))
 				c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 				$login = ob_get_clean();
 			}
+			if($login) // Wrapper for CSS styling.
+				$login = '<div class="ws-plugin--s2member-sc-login">'.$login.'</div>';
+
 			return apply_filters('c_ws_plugin__s2member_pro_sc_login', $login, get_defined_vars());
 		}
 	}
