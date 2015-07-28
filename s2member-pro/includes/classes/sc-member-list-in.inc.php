@@ -134,12 +134,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 
 					unset($_role); // Housekeeping.
 				}
-				if($attr['levels']) // Must satisfy all Levels in the list (default behavior).
+				if(isset($attr['levels'][0])) // Must satisfy all Levels in the list (default behavior).
 				{
 					foreach(preg_split('/[;,\s]+/', $attr['levels'], NULL, PREG_SPLIT_NO_EMPTY) as $_level)
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
-							'value'   => '"s2member_level'.$_level.'"',
+							'value'   => (int)$_level === 0 ? '"subscriber"' : '"s2member_level'.$_level.'"',
 							'compare' => 'LIKE',
 						);
 					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
