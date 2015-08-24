@@ -200,8 +200,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					if(is_object($user = new WP_User ($user_id)) && !empty($user->ID) && ($user_id = $user->ID))
 					{
 						if(!empty($op['data']['notification']))
-							wp_new_user_notification($user_id, $op['data']['user_pass']);
-
+							{
+								if (version_compare(get_bloginfo("version"), "4.3", ">="))
+									wp_new_user_notification($user_id, "both", $op['data']['user_pass']);
+								else wp_new_user_notification($user_id, $op['data']['user_pass']);
+							}
 						return serialize(array('ID' => $user_id));
 					}
 					return 'Error: Creation may have failed. Unable to obtain WP_User ID.';
