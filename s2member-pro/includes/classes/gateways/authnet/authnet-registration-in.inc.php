@@ -111,7 +111,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 														if (((is_multisite () && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user ($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user ($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error ($new__user_id))
 															{
 																update_user_option ($new__user_id, "default_password_nag", false, true);
-																wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
+
+																if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																	wp_new_user_notification ($new__user_id, "admin", $create_user["user_pass"]);
+																else wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
 
 																$global_response = array("response" => sprintf (_x ('<strong>Thank you.</strong> Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr (wp_login_url ())));
 
@@ -128,7 +131,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 														if (((is_multisite () && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user ($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user ($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error ($new__user_id))
 															{
 																update_user_option ($new__user_id, "default_password_nag", true, true); // Password nag.
-																wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
+
+																if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																	wp_new_user_notification ($new__user_id, "both", $create_user["user_pass"]);
+																else wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
 
 																$global_response = array("response" => _x ('<strong>Thank you.</strong> You\'ll receive an email momentarily.', "s2member-front", "s2member"));
 
