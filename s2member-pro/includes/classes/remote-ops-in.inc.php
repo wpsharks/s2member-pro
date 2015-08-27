@@ -161,9 +161,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				$v['ws_plugin__s2member_custom_reg_field_user_login'] = (string)@$op['data']['user_login'];
 				$v['ws_plugin__s2member_custom_reg_field_user_email'] = (string)@$op['data']['user_email'];
 
-				if(empty($op['data']['user_pass']) || !is_string($op['data']['user_pass']))
-					$op['data']['user_pass'] = wp_generate_password( /* Auto-generate. */);
-				$GLOBALS['ws_plugin__s2member_generate_password_return'] = $op['data']['user_pass'];
+				$op['data']['user_pass'] = c_ws_plugin__s2member_registrations::maybe_custom_pass($op['data']['user_pass']);
+				$v['ws_plugin__s2member_custom_reg_field_user_pass1'] = $op['data']['user_pass'];
 
 				$v['ws_plugin__s2member_custom_reg_field_first_name'] = (string)@$op['data']['first_name'];
 				$v['ws_plugin__s2member_custom_reg_field_last_name']  = (string)@$op['data']['last_name'];
@@ -201,8 +200,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 					{
 						if(!empty($op['data']['notification']))
 							{
-								if (version_compare(get_bloginfo("version"), "4.3", ">="))
-									wp_new_user_notification($user_id, "both", $op['data']['user_pass']);
+								if (version_compare(get_bloginfo('version'), '4.3', '>='))
+									wp_new_user_notification($user_id, 'both', $op['data']['user_pass']);
 								else wp_new_user_notification($user_id, $op['data']['user_pass']);
 							}
 						return serialize(array('ID' => $user_id));

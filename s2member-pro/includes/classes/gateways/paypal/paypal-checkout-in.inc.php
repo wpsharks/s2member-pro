@@ -488,7 +488,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$_COOKIE["s2member_item_number"] = /* Fake this too. */ c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["level_ccaps_eotper"]);
 
 																		$create_user["user_login"] = /* Copy this into a separate array for `wp_create_user()`. */ $post_vars["username"];
-																		$create_user["user_pass"] = /* Which may fire `c_ws_plugin__s2member_registrations::generate_password()`. */ wp_generate_password();
+																		$create_user["user_pass"] = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
 																		$create_user["user_email"] = /* Copy this into a separate array for `wp_create_user()`. */ $post_vars["email"];
 																	}
 																if /* A custom Password is being used? */(!empty($post_vars["password1"]) && $post_vars["password1"] === $create_user["user_pass"])
@@ -811,7 +811,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																		$_COOKIE["s2member_item_number"] = /* Fake this too. */ c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["level_ccaps_eotper"]);
 
 																		$create_user["user_login"] =  /* Copy this into a separate array for `wp_create_user()`. */$post_vars["username"];
-																		$create_user["user_pass"] =  /* Which may fire `c_ws_plugin__s2member_registrations::generate_password()`. */wp_generate_password();
+																		$create_user["user_pass"] =  c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
 																		$create_user["user_email"] =  /* Copy this into a separate array for `wp_create_user()`. */$post_vars["email"];
 																	}
 																if /* A custom Password is being used? */(!empty($post_vars["password1"]) && $post_vars["password1"] === $create_user["user_pass"])

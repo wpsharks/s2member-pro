@@ -102,7 +102,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 														$GLOBALS["ws_plugin__s2member_registration_return_url"] = $post_vars["attr"]["success"]; // Custom success return.
 
 														$create_user["user_login"] = $post_vars["username"]; // Copy this into a separate array for `wp_create_user()`.
-														$create_user["user_pass"] = wp_generate_password (); // Which may fire `c_ws_plugin__s2member_registrations::generate_password()`.
+														$create_user["user_pass"] = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
 														$create_user["user_email"] = $post_vars["email"]; // Copy this into a separate array for `wp_create_user()`.
 													}
 
