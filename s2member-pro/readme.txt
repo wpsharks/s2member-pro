@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 150825
-Stable tag: 150825
+Version: 150827
+Stable tag: 150827
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -131,13 +131,13 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v150825 =
+= v150827 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
 
-= v150825 =
+= v150827 =
 
 - (s2Member/s2Member Pro) **WordPress v4.3 Compat./Bug Fix** This release of s2Member alters the way New User Notification Emails are sent, and in how they should be formatted in WordPress v4.3+.
 
