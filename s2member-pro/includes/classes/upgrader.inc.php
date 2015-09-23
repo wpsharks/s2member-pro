@@ -71,6 +71,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 				*/
 				public static function wizard()
 					{
+						if(!current_user_can('update_plugins'))
+							return ''; // Not applicable.
+
 						$_p = !empty($_POST) ? c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep((array)$_POST)) : array();
 						$error = (!empty(c_ws_plugin__s2member_pro_upgrader::$error)) ? (string)c_ws_plugin__s2member_pro_upgrader::$error : "";
 						$stored = (array)get_transient(md5("ws_plugin__s2member_pro_upgrade_credentials"));
@@ -130,6 +133,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_upgrader"))
 				*/
 				public static function upgrade /* Pro Upgrader. */()
 					{
+						if(!current_user_can('update_plugins'))
+							return; // Not applicable.
+
 						global /* Need this global object reference. */ $wp_filesystem;
 
 						if(!empty($_POST["ws_plugin__s2member_pro_upgrade"]) && ($nonce = (string)$_POST["ws_plugin__s2member_pro_upgrade"]) && wp_verify_nonce($nonce, "ws-plugin--s2member-pro-upgrade") && ($_p = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST))))
