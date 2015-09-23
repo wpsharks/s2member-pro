@@ -392,7 +392,9 @@ jQuery(document).ready( // DOM ready.
 
 					else $(couponSection).show(), $(couponApplyButton).on('click', function(/* Submit coupon code upon clicking apply button. */)
 					{
-						$(submissionNonceVerification).val('apply-coupon'), $coForm.submit();
+						$(submissionNonceVerification).val('apply-coupon'),
+							$coForm.attr('action', $coForm.attr('action').replace(/#.*$/, '') + '#s2p-form'),
+							$coForm.submit(); // Submit form with hash positioning.
 					});
 					/*
 					 Handle a user that is already logged into their account.
