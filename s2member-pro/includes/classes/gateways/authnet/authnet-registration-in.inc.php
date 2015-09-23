@@ -113,7 +113,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 																update_user_option ($new__user_id, "default_password_nag", false, true);
 
 																if (version_compare(get_bloginfo("version"), "4.3", ">="))
-																	wp_new_user_notification ($new__user_id, "admin", $create_user["user_pass"]);
+																	wp_new_user_notification ($new__user_id, null, "admin", $create_user["user_pass"]);
 																else wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
 
 																$global_response = array("response" => sprintf (_x ('<strong>Thank you.</strong> Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr (wp_login_url ())));
@@ -133,7 +133,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_registration_in"))
 																update_user_option ($new__user_id, "default_password_nag", true, true); // Password nag.
 
 																if (version_compare(get_bloginfo("version"), "4.3", ">="))
-																	wp_new_user_notification ($new__user_id, "both", $create_user["user_pass"]);
+																	wp_new_user_notification ($new__user_id, null, "both", $create_user["user_pass"]);
 																else wp_new_user_notification ($new__user_id, $create_user["user_pass"]);
 
 																$global_response = array("response" => _x ('<strong>Thank you.</strong> You\'ll receive an email momentarily.', "s2member-front", "s2member"));

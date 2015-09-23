@@ -394,7 +394,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
 									if (version_compare(get_bloginfo("version"), "4.3", ">="))
-										wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 									else wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
 									if(!empty($stripe_subscription_failed_charge_succeeded))
@@ -595,7 +595,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
 									if (version_compare(get_bloginfo("version"), "4.3", ">="))
-										wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 									else wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
 									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));

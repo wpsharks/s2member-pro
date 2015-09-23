@@ -201,7 +201,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 						if(!empty($op['data']['notification']))
 							{
 								if (version_compare(get_bloginfo('version'), '4.3', '>='))
-									wp_new_user_notification($user_id, 'both', $op['data']['user_pass']);
+									wp_new_user_notification($user_id, null, 'both', $op['data']['user_pass']);
 								else wp_new_user_notification($user_id, $op['data']['user_pass']);
 							}
 						return serialize(array('ID' => $user_id));
