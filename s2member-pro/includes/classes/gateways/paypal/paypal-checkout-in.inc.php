@@ -495,7 +495,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
 																			{
-																				if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																				if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+																					wp_new_user_notification($new__user_id, null, "admin", $create_user["user_pass"]);
+																				else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 																					wp_new_user_notification($new__user_id, "admin", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
@@ -519,7 +521,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			{
 																				update_user_option /* Password nag. */($new__user_id, "default_password_nag", true, true);
 
-																				if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																				if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+																					wp_new_user_notification($new__user_id, null, "both", $create_user["user_pass"]);
+																				else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 																					wp_new_user_notification($new__user_id, "both", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
@@ -818,7 +822,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																	{
 																		if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user["user_login"], $create_user["user_email"], $create_user["user_pass"]))) || ($new__user_id = wp_create_user($create_user["user_login"], $create_user["user_pass"], $create_user["user_email"]))) && !is_wp_error($new__user_id))
 																			{
-																				if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																				if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+																					wp_new_user_notification($new__user_id, null, "admin", $create_user["user_pass"]);
+																				else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 																					wp_new_user_notification($new__user_id, "admin", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
@@ -842,7 +848,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			{
 																				update_user_option /* Password nag. */($new__user_id, "default_password_nag", true, true);
 
-																				if (version_compare(get_bloginfo("version"), "4.3", ">="))
+																				if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+																					wp_new_user_notification($new__user_id, null, "both", $create_user["user_pass"]);
+																				else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 																					wp_new_user_notification($new__user_id, "both", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
