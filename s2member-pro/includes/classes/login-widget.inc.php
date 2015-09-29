@@ -248,7 +248,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			echo '<input type="text" autocomplete="off" id="'.esc_attr($this->get_field_id('signup_url')).'" name="'.esc_attr($this->get_field_name('signup_url')).'" value="'.format_to_edit($options['signup_url']).'" class="widefat" /><br />'."\n";
 			echo '<small>(leave blank to exclude this link)</small><br /><br />'."\n";
 
-			echo '<label for="'.esc_attr($this->get_field_id('code')).'">Additional XHTML'.((!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '/PHP' : '').' Code?</label><br />'."\n";
+			echo '<label for="'.esc_attr($this->get_field_id('code')).'">Additional HTML'.((!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '/PHP' : '').' Code (or <a href="https://codex.wordpress.org/Shortcode_API" target="_blank">Shortcodes</a>)</label><br />'."\n";
 			echo '<textarea id="'.esc_attr($this->get_field_id('logged_out_code')).'" name="'.esc_attr($this->get_field_name('logged_out_code')).'" rows="1" cols="1" class="widefat" style="height:50px;">'.format_to_edit($options['logged_out_code']).'</textarea>'."\n";
 
 			echo '<div style="margin:15px 0 15px 0; height:1px; line-height:1px; background:#CCCCCC;"></div>'."\n";
@@ -278,7 +278,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			echo '<label for="'.esc_attr($this->get_field_id('logout_redirect')).'">Redirection After Logout</label><br />'."\n";
 			echo '<select id="'.esc_attr($this->get_field_id('logout_redirect')).'" name="'.esc_attr($this->get_field_name('logout_redirect')).'" class="widefat"><option value="%%home%%"'.(($options['logout_redirect'] === '%%home%%') ? ' selected="selected"' : '').'>Home Page</option><option value="%%previous%%"'.(($options['logout_redirect'] === '%%previous%%') ? ' selected="selected"' : '').'>Previous page</option><option value=""'.((!$options['logout_redirect']) ? ' selected="selected"' : '').'>Login screen</option></select><br /><br />'."\n";
 
-			echo '<label for="'.esc_attr($this->get_field_id('code')).'">Additional XHTML'.((!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '/PHP' : '').' Code?</label><br />'."\n";
+			echo '<label for="'.esc_attr($this->get_field_id('code')).'">Additional HTML'.((!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '/PHP' : '').' Code (or <a href="https://codex.wordpress.org/Shortcode_API" target="_blank">Shortcodes</a>)</label><br />'."\n";
 			echo '<textarea id="'.esc_attr($this->get_field_id('logged_in_code')).'" name="'.esc_attr($this->get_field_name('logged_in_code')).'" rows="1" cols="1" class="widefat" style="height:50px;">'.format_to_edit($options['logged_in_code']).'</textarea>'."\n";
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<div style="margin:15px 0 15px 0; height:1px; line-height:1px; background:#CCCCCC;"></div>'."\n" : '';
