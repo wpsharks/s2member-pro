@@ -73,7 +73,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<div class="ws-menu-page-scrollbox" style="height:250px;">'."\n";
+			echo '<div class="ws-menu-page-scrollbox" style="height:auto;">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_gateways_enabled[]" value="update-signal" />'."\n";
 			foreach(c_ws_plugin__s2member_pro_gateways::available_gateways() as $ws_plugin__s2member_temp_s_key => $ws_plugin__s2member_temp_s_val)
 				echo '<input type="checkbox" name="ws_plugin__s2member_pro_gateways_enabled[]" id="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'" value="'.esc_attr($ws_plugin__s2member_temp_s_key).'"'.((in_array($ws_plugin__s2member_temp_s_key, $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_gateways_enabled"])) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'">'.$ws_plugin__s2member_temp_s_val.'</label><br /><br />'."\n";
