@@ -573,7 +573,7 @@ jQuery(document).ready( // DOM ready.
 							acceptBitcoin = false, acceptBitcoinAmountInCents = 0, acceptBitcoinCurrency = '', acceptBitcoinDesc = '';
 
 						var getSourceToken = StripeCheckout.configure
-						({
+						({ locale: 'auto',
 							 bitcoin    : acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
 							 amount     : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
 							 currency   : acceptBitcoin ? acceptBitcoinCurrency : undefined, // Needed only when accepting Bitcoin.
