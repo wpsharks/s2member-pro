@@ -268,6 +268,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-allow-remember-me">'."\n";
+			echo 'Stripe Should Offer to Remember Each Customer?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_allow_remember_me" id="ws-plugin--s2member-pro-stripe-api-allow-remember-me">'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_allow_remember_me']) ? ' selected="selected"' : '').'>Yes, Stripe should offer a "Remember Me" checkbox option (default Stripe behavior)</option>'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_allow_remember_me']) ? ' selected="selected"' : '').'>No, do not offer to remember each customer</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
