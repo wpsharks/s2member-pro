@@ -286,10 +286,12 @@ jQuery(document).ready( // DOM ready.
 
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
+						 billingAddress : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_billing_address"]); ?>' == '1',
+						 shippingAddress: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_shipping_address"]); ?>' == '1',
 						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
 
 						 email          : typeof S2MEMBER_CURRENT_USER_EMAIL === 'string' ? S2MEMBER_CURRENT_USER_EMAIL : '',
-						 allowRememberMe: true, // Allow Stripe to remember the customer.
+						 allowRememberMe: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_allow_remember_me"]); ?>' == '1',
 
 						 token: function(token) // Callback handler.
 						 {
@@ -591,10 +593,12 @@ jQuery(document).ready( // DOM ready.
 
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
+							 billingAddress : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_billing_address"]); ?>' == '1',
+							 shippingAddress: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_shipping_address"]); ?>' == '1',
 							 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
 
 							 email          : $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(),
-							 allowRememberMe: true, // Allow Stripe to remember the customer.
+							 allowRememberMe: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_allow_remember_me"]); ?>' == '1',
 
 							 token: function(token) // Callback handler.
 							 {
