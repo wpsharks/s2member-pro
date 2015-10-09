@@ -213,6 +213,44 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-billing-address">'."\n";
+			echo 'Stripe Should Collect a Full Billing Address?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_billing_address" id="ws-plugin--s2member-pro-stripe-api-billing-address">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s billing address (default Stripe behavior)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full billing address</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-shipping-address">'."\n";
+			echo 'Stripe Should Collect a Full Shipping Address?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_shipping_address" id="ws-plugin--s2member-pro-stripe-api-shipping-address">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s shipping address (default Stripe behavior)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full shipping address</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-stripe-api-reject-prepaid">'."\n";
 			echo 'Reject or Allow Prepaid Cards?'."\n";
 			echo '</label>'."\n";
