@@ -73,11 +73,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<div class="ws-menu-page-scrollbox" style="height:auto;">'."\n";
+			echo '<div class="ws-menu-page-scrollbox" style="height:auto; overflow:visible;">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_gateways_enabled[]" value="update-signal" />'."\n";
-			foreach(c_ws_plugin__s2member_pro_gateways::available_gateways() as $ws_plugin__s2member_temp_s_key => $ws_plugin__s2member_temp_s_val)
-				echo '<input type="checkbox" name="ws_plugin__s2member_pro_gateways_enabled[]" id="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'" value="'.esc_attr($ws_plugin__s2member_temp_s_key).'"'.((in_array($ws_plugin__s2member_temp_s_key, $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_gateways_enabled"])) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'">'.$ws_plugin__s2member_temp_s_val.'</label><br /><br />'."\n";
 			echo '<input type="checkbox" checked="checked" disabled="disabled" /> <label><strong>PayPal Website Payments Standard</strong> <em>(w/ Buttons)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring. (<strong>core / always on</strong>)</span></label>'."\n";
+			foreach(c_ws_plugin__s2member_pro_gateways::available_gateways() as $ws_plugin__s2member_temp_s_key => $ws_plugin__s2member_temp_s_val)
+				echo '<br /><br /><input type="checkbox" name="ws_plugin__s2member_pro_gateways_enabled[]" id="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'" value="'.esc_attr($ws_plugin__s2member_temp_s_key).'"'.((in_array($ws_plugin__s2member_temp_s_key, $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_gateways_enabled"])) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-gateways-enabled-'.esc_attr($ws_plugin__s2member_temp_s_key).'">'.$ws_plugin__s2member_temp_s_val.'</label>'."\n";
 			echo '</div>'."\n";
 			echo 'Enable/disable Payment Gateways integrated with s2Member Pro.'."\n";
 			echo '</td>'."\n";
