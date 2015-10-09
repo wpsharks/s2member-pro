@@ -275,14 +275,19 @@ jQuery(document).ready( // DOM ready.
 
 				$(sourceTokenButton).on('click', function() // Stripe integration.
 				{
+					var stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
+
 					var getSourceToken = StripeCheckout.configure
 					({
 						 bitcoin: false, // Accept Bitcoin as a funding source in this instance?
 
+						 image          : stripeImage ? stripeImage : undefined,
+						 locale         : 'auto', // Language of popup based on visitor's country.
+
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
-						 image          : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>',
 						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
+
 						 email          : typeof S2MEMBER_CURRENT_USER_EMAIL === 'string' ? S2MEMBER_CURRENT_USER_EMAIL : '',
 						 allowRememberMe: true, // Allow Stripe to remember the customer.
 
@@ -572,8 +577,13 @@ jQuery(document).ready( // DOM ready.
 						if(acceptBitcoin && (isNaN(acceptBitcoinAmountInCents) || acceptBitcoinAmountInCents <= 0)) // Not possible.
 							acceptBitcoin = false, acceptBitcoinAmountInCents = 0, acceptBitcoinCurrency = '', acceptBitcoinDesc = '';
 
+						var stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
+
 						var getSourceToken = StripeCheckout.configure
-						({ locale: 'auto',
+						({
+							 image      : stripeImage ? stripeImage : undefined,
+							 locale     : 'auto', // Language of popup based on visitor's country.
+
 							 bitcoin    : acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
 							 amount     : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
 							 currency   : acceptBitcoin ? acceptBitcoinCurrency : undefined, // Needed only when accepting Bitcoin.
@@ -581,8 +591,8 @@ jQuery(document).ready( // DOM ready.
 
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
-							 image          : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>',
 							 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
+
 							 email          : $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(),
 							 allowRememberMe: true, // Allow Stripe to remember the customer.
 
