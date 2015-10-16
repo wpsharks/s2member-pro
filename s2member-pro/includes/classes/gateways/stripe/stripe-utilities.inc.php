@@ -60,7 +60,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			$metadata = array_merge(self::_additional_customer_metadata($post_vars), (array)$metadata);
@@ -133,7 +134,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			$metadata       = self::_additional_customer_metadata($post_vars);
@@ -243,7 +245,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			$metadata = array_merge(self::_additional_charge_metadata($post_vars, $cost_calculations), (array)$metadata);
@@ -314,7 +317,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			try // Obtain charge object; if possible.
@@ -346,7 +350,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			$amount                      = $shortcode_attrs['ra'];
@@ -407,7 +412,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
@@ -474,7 +480,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			try // Obtain existing customer object; else create a new one.
@@ -511,7 +518,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			try // Attempt to cancel the subscription for this customer.
@@ -550,7 +558,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = array('event_id' => $event->id);
 
-			require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 			try // Acquire the event from the Stripe servers.
