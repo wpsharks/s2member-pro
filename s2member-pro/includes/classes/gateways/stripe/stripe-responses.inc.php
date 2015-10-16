@@ -518,7 +518,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 */
 		public static function stripe_form_submission_validation_errors($form, $s = array())
 		{
-			$cp_attr             = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($s['attr'], $s['coupon'], 'attr');
+			$cp_attr             = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($s['attr'], @$s['coupon'], 'attr');
 			$is_free_checkout    = in_array($form, array('sp-checkout', 'checkout'), TRUE) && $cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0;
 			$is_bitcoin_checkout = !$is_free_checkout && in_array($form, array('sp-checkout', 'checkout'), TRUE) && stripos($s['source_token'], 'btcrcv_') === 0;
 
