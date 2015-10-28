@@ -129,10 +129,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				unset($user_id_args['number'], $user_id_args['offset']);
 
 				self::$search_columns_for_filter = $user_id_args['search_columns'];
+				foreach(self::$search_columns_for_filter as $_key => $_column) {
+					if(stripos($_column, 's2member_custom_field_') === 0)
+						unset(self::$search_columns_for_filter[$_key]);
+				}
+				unset($_key, $column); // Housekeeping.
 				add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
-				$user_ids_query                 = new WP_User_Query($user_id_args);
-				$user_ids                       = $user_ids_query->get_results();
+				$user_ids = array(); // Intialize.
+				if ($user_id_args['search'] && self::$search_columns_for_filter) {
+						$user_ids_query = new WP_User_Query($user_id_args);
+						$user_ids  = $user_ids_query->get_results();
+				}
 				$user_ids_from_s2_custom_fields = self::search_s2_custom_fields($user_id_args, $original_args);
 
 				remove_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
@@ -205,7 +213,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_member_list'))
 				$search_regex_frag = preg_quote($args['search']);
 				$search_regex_frag = str_replace('"', '', $search_regex_frag);
 				$search_regex_frag = str_replace('\\*', '[^"]*', $search_regex_frag);
-				$regex             = '(^|\{)s\:[0-9]+\:"('.$matching_custom_fields_regex_frag.')";s\:[0-9]+\:"'.$search_regex_frag.'"'; // e.g., `a:1:{s:12:"country_code";s:3:"USA";}`.
+				$regex = '(^|\{|;)s\:[0-9]+\:"('.$matching_custom_fields_regex_frag.')";s\:[0-9]+\:"'.$search_regex_frag.'"'; // e.g., `a:1:{s:12:"country_code";s:3:"USA";}`.
 				$_users            = $wpdb->get_results("SELECT `user_id` as `ID` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_custom_fields' AND `meta_value` REGEXP '".esc_sql($regex)."'");
 
 				if($_users && is_array($_users))
