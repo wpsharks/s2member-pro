@@ -32,6 +32,16 @@
 jQuery(document).ready(
 	function($)
 	{
+		if(location.href.match(/page\=ws-plugin--s2member-.+?-ops/))
+		{
+			$('select#ws-plugin--s2member-pro-eot-reminder-email-enable').on('change', function(){
+				var $this = $(this), val = $this.val(),
+					$ops = $('.ws-menu-page-pro-eot-reminder-email-ops');
+
+				$ops.css('opacity', val === '1' ? '' : '0.5');
+			}).trigger('change');
+		}
+
 		if(location.href.match(/page\=ws-plugin--s2member-pro-coupon-codes/))
 		{
 			var $menuTable = $('.ws-menu-page-table'),

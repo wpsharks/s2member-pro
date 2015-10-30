@@ -1070,6 +1070,34 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-enable">'."\n";
+			echo 'EOT Renewal/Reminder Enabled?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_eot_reminder_email_enable" id="ws-plugin--s2member-pro-eot-reminder-email-enable">'."\n";
+			echo '<option value="0"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_enable'] === "0") ? ' selected="selected"' : '').'>No (disabled)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_enable'] === "1") ? ' selected="selected"' : '').'>Yes (enable)</option>'."\n";
+			echo '</select>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-pro-eot-reminder-email-ops" style="opacity:0.5;">'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-days">'."\n";
 			echo 'Remind X Days Before EOT Occurs:'."\n";
 			echo '</label>'."\n";
@@ -1080,10 +1108,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_days" id="ws-plugin--s2member-pro-eot-reminder-email-days" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_days']).'" /><br />'."\n";
-			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>5,1</code> sends a reminder email 5 days before the EOT will occur, and then again 1 day before the EOT occurs.<br />'."\n";
+			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>5,1</code> sends a reminder email 5 days before the EOT will occur, and then again (if the EOT still exists; i.e., the customer has not yet renewed) 1 day before the EOT occurs. If you set this to <code>5</code> (one value only) the reminder is sent only one time. If you set this to <code>10,5,2,1</code> there is the potential for a reminder to be sent up to four times.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
@@ -1097,7 +1132,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_recipients" id="ws-plugin--s2member-pro-eot-reminder-email-recipients" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_recipients']).'" /><br />'."\n";
-			echo 'This is a semicolon ( ; ) delimited list of Recipients. Here is an example:<br />'."\n";
+			echo 'This is a semicolon <code>;</code> delimited list of recipients. Here is an example:<br />'."\n";
 			echo '<code>"%%user_full_name%%" &lt;%%user_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code>'."\n";
 			echo '</td>'."\n";
 
@@ -1188,6 +1223,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
+			echo '</div>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
