@@ -1057,16 +1057,33 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="EOT Reminder Email">'."\n";
+			echo '<div class="ws-menu-page-group" title="EOT Renewal/Reminder Email">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-eot-reminder-email-section">'."\n";
 			echo '<h3>EOT Renewal/Reminder Email (optional, for reminding customers who have an EOT Time)</h3>'."\n";
-			echo '<p>The <strong>primary</strong> purpose of this email is to remind the customer that they will soon lose access to what they paid for. You may customize this further by providing details that are specifically geared to your site.</p>'."\n";
+			echo '<p>The <strong>primary</strong> purpose of this email is to remind a customer that they will soon lose access to what they paid for. You may customize this further by providing details that are specifically geared to your site. Keep in mind that some of your customers may not have an EOT Time; i.e., if you don\'t require a recurring payment or you\'re not selling fixed-term access, then a customer\'s account never expires. Thus, they will have no EOT Time. This email is not going to be sent to those customers. See also: <a href="https://s2member.com/kb-article/when-is-an-eot-time-set-for-each-user/" target="_blank">When is an EOT Time set for each user?</a></p>'."\n";
 
 			// echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-days">'."\n";
+			echo 'Remind X Days Before EOT Occurs:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_days" id="ws-plugin--s2member-pro-eot-reminder-email-days" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_days']).'" /><br />'."\n";
+			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>5,1</code> sends a reminder email 5 days before the EOT will occur, and then again 1 day before the EOT occurs.<br />'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
@@ -1098,7 +1115,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_subject" id="ws-plugin--s2member-pro-eot-reminder-email-subject" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_subject']).'" /><br />'."\n";
-			echo 'Subject line used in the email reinder that is sent to a Customer.'."\n";
+			echo 'Subject line used in the email reminder that is sent to a Customer.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
