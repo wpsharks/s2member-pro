@@ -282,7 +282,7 @@ jQuery(document).ready( // DOM ready.
 						 bitcoin: false, // Accept Bitcoin as a funding source in this instance?
 
 						 image          : stripeImage ? stripeImage : undefined,
-						 locale         : 'auto', // Language of popup based on visitor's country.
+						 locale         : 'auto', // Based on visitor's country.
 
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
@@ -571,25 +571,26 @@ jQuery(document).ready( // DOM ready.
 
 					$(sourceTokenButton).on('click', function() // Stripe integration.
 					{
-						var acceptBitcoin = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0 && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-bitcoin-accepted').length > 0,
-							acceptBitcoinAmountInCents = acceptBitcoin ? parseInt($.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val())) : 0,
-							acceptBitcoinCurrency = acceptBitcoin ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-currency').val()).toUpperCase() : 'USD',
-							acceptBitcoinDesc = acceptBitcoin ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-desc').val()) : '';
+						var isBuyNow = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0,
+							acceptBitcoin = isBuyNow && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-bitcoin-accepted').length > 0,
+							isBuyNowAmountInCents = isBuyNow ? parseInt($.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val())) : 0,
+							isBuyNowCurrency = isBuyNow ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-currency').val()).toUpperCase() : '',
+							isBuyNowDesc = isBuyNow ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-desc').val()) : '';
 
-						if(acceptBitcoin && (isNaN(acceptBitcoinAmountInCents) || acceptBitcoinAmountInCents <= 0)) // Not possible.
-							acceptBitcoin = false, acceptBitcoinAmountInCents = 0, acceptBitcoinCurrency = '', acceptBitcoinDesc = '';
+						if(isBuyNow && (isNaN(isBuyNowAmountInCents) || isBuyNowAmountInCents <= 0))
+							isBuyNow = false, acceptBitcoin = false, isBuyNowAmountInCents = 0, isBuyNowCurrency = '', isBuyNowDesc = '';
 
 						var stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
 
 						var getSourceToken = StripeCheckout.configure
 						({
 							 image      : stripeImage ? stripeImage : undefined,
-							 locale     : 'auto', // Language of popup based on visitor's country.
+							 locale     : 'auto', // Based on visitor's country.
 
-							 bitcoin    : acceptBitcoin, // Accept Bitcoin as a funding source in this instance?
-							 amount     : acceptBitcoin ? acceptBitcoinAmountInCents : undefined, // Needed only when accepting Bitcoin.
-							 currency   : acceptBitcoin ? acceptBitcoinCurrency : undefined, // Needed only when accepting Bitcoin.
-							 description: acceptBitcoin ? acceptBitcoinDesc : undefined, // Needed only when accepting Bitcoin.
+							 amount     : isBuyNow ? isBuyNowAmountInCents : undefined,
+							 currency   : isBuyNow ? isBuyNowCurrency : undefined,
+							 description: isBuyNow ? isBuyNowDesc : undefined,
+							 bitcoin    : isBuyNow && acceptBitcoin,
 
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
 							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
