@@ -47,7 +47,7 @@ jQuery(document).ready(
 					        var $this = $(this), val = $this.val();
 					        var $viaCron = $('p#ws-plugin--s2member-auto-eot-system-enabled-via-cron');
 
-					        if(val == 2/* Display Cron instructions. */) $viaCron.show();
+					        if (val == 2/* Display Cron instructions. */) $viaCron.show();
 					        else $viaCron.hide(); // Hide instructions.
 				        });
 		}

@@ -1108,7 +1108,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_days" id="ws-plugin--s2member-pro-eot-reminder-email-days" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_days']).'" /><br />'."\n";
-			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>5,1</code> sends a reminder email 5 days before the EOT will occur, and then again (if the EOT still exists; i.e., the customer has not yet renewed) 1 day before the EOT occurs. If you set this to <code>5</code> (one value only) the reminder is sent only one time. If you set this to <code>10,5,2,1</code> there is the potential for a reminder to be sent up to four times.'."\n";
+			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>-5,-1</code> sends a reminder email 5 days before the EOT will occur, and then again (if the EOT still exists; i.e., the customer has not yet renewed) 1 day before the EOT occurs. Negative numbers indicate days <em>before</em> the EOT occurs, positive numbers <em>after</em> the EOT has already occurred; <code>0</code> being the day the EOT occurs. If you set this to <code>-5</code> (one value only) the reminder is sent only one time. If you set this to <code>-10,-5,-2,-1,2,5</code> there is the potential for a reminder to be sent up to six times. Four times before the EOT occurs. Two times after the EOT occurs.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -1117,12 +1117,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
+			echo '<div id="ws-plugin--s2member-pro-eot-reminder-email-day">'."\n";
+			echo '	<h3 style="display:inline-block;">Customize Email for Day:</h3>'."\n";
+			echo '	<div class="-tabs ws-menu-page-number-button-tabs">'."\n";
+			echo '	</div>'."\n";
+			echo '</div>'."\n";
+
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-recipients">'."\n";
+			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-recipients-for-day">'."\n";
 			echo 'EOT Renewal/Reminder Recipients:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
@@ -1131,7 +1137,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_recipients" id="ws-plugin--s2member-pro-eot-reminder-email-recipients" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_recipients']).'" /><br />'."\n";
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_reminder_email_recipients" id="ws-plugin--s2member-pro-eot-reminder-email-recipients" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_recipients']).'" />'."\n";
+			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-eot-reminder-email-recipients-for-day" value="" /><br />'."\n";
 			echo 'This is a semicolon <code>;</code> delimited list of recipients. Here is an example:<br />'."\n";
 			echo '<code>"%%user_full_name%%" &lt;%%user_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code>'."\n";
 			echo '</td>'."\n";
@@ -1140,7 +1147,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-subject">'."\n";
+			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-subject-for-day">'."\n";
 			echo 'EOT Renewal/Reminder Subject:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
@@ -1149,7 +1156,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_subject" id="ws-plugin--s2member-pro-eot-reminder-email-subject" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_subject']).'" /><br />'."\n";
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_reminder_email_subject" id="ws-plugin--s2member-pro-eot-reminder-email-subject" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_subject']).'" />'."\n";
+			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-eot-reminder-email-subject-for-day" value="" /><br />'."\n";
 			echo 'Subject line used in the email reminder that is sent to a Customer.'."\n";
 			echo '</td>'."\n";
 
@@ -1157,7 +1165,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-message">'."\n";
+			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-message-for-day">'."\n";
 			echo 'EOT Renewal/Reminder Message:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
@@ -1166,7 +1174,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_pro_eot_reminder_email_message" id="ws-plugin--s2member-pro-eot-reminder-email-message" rows="10">'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_message']).'</textarea><br />'."\n";
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_reminder_email_message" id="ws-plugin--s2member-pro-eot-reminder-email-message" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_message']).'" />'."\n";
+			echo '<textarea id="ws-plugin--s2member-pro-eot-reminder-email-message-for-day" rows="10"></textarea><br />'."\n";
 			echo 'Message Body used in the email reminder that is sent to a Customer.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
