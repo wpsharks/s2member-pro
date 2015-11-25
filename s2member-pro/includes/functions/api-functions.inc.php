@@ -115,3 +115,19 @@ if(!function_exists('s2member_pro_login_widget'))
 		return ob_get_clean();
 	}
 }
+
+if(!function_exists('s2member_pro_gift_code_generate'))
+{
+	function s2member_pro_gift_code_generate($args = array())
+	{
+		$default_args = array(
+			'discount'  => '100%',
+			'directive' => '',
+			'singulars' => '',
+		);
+		$args = array_merge($default_args, $args, array('quantity' => 1));
+		$coupons_class = new c_ws_plugin__s2member_pro_coupons();
+		$gifts = $coupons_class->generate_gifts($args);
+		return array_pop($gifts);
+	}
+}
