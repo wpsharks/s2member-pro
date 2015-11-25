@@ -116,6 +116,15 @@ if(!function_exists('s2member_pro_login_widget'))
 	}
 }
 
+/**
+ * Generate a new gift code.
+ *
+ * @param array $args Optional arguments. See list of `$default_args` below, which you can override.
+ *
+ * @return array Output gift array; e.g., `$gift['code']` to read the new gift code.
+ *
+ * @example `<?php echo s2member_pro_gift_code_generate()['code']; ?>`
+ */
 if(!function_exists('s2member_pro_gift_code_generate'))
 {
 	function s2member_pro_gift_code_generate($args = array())
