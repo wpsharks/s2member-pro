@@ -55,6 +55,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          */
         public static function remind($vars = array())
         {
+            global $wpdb;
+
             $options = &$GLOBALS['WS_PLUGIN__']['s2member']['o'];
 
             if (!$options['pro_eot_reminder_email_enable']) {
@@ -70,8 +72,27 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
                 return; // Not possible. Possible corruption in the DB.
             }
+            $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day'), get_defined_vars());
             $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
 
+            $sql_already_scanned_recently = '
+                SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
+                    WHERE `meta_key` = \''.$wpdb->prefix.'s2member_last_reminder_scan\'
+                        AND `meta_value` > \''.esc_sql($scan_time).'\'
+            ';
+            $sql = '
+                SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
+                    WHERE (
+                              (`meta_key` = \''.$wpdb->prefix.'s2member_subscr_gateway\' AND `meta_value` != \'\')
+                              OR (`meta_key` = \''.$wpdb->prefix.'s2member_auto_eot_time\' AND `meta_value` != \'\')
+                              OR (`meta_key` = \''.$wpdb->prefix.'s2member_last_auto_eot_time\' AND `meta_value` != \'\')
+                          )
+                          AND `user_id` NOT IN('.$sql_already_scanned_recently.')
+                    LIMIT '.esc_sql($per_process).'
+            ';
+            if (!($user_ids = $wpdb->get_col($sql))) {
+                return; // Nothing to do here.
+            }
             // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
         }
 
