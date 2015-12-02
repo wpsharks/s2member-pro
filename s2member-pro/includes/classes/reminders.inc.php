@@ -1,6 +1,6 @@
 <?php
 /**
- * Stripe Reminders.
+ * Reminders.
  *
  * Copyright: © 2009-2011
  * {@link http://www.websharks-inc.com/ WebSharks, Inc.}
@@ -27,30 +27,31 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @since 151202 Stripe reminders.
+ * @since 151202 Reminders.
  */
 if (!defined('WPINC')) { // MUST have.
     exit('Do not access this file directly.');
 }
-if (!class_exists('c_ws_plugin__s2member_pro_stripe_reminders')) {
+if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
     /**
-     * Stripe Reminders.
+     * Reminders.
      *
-     * @since 151202 Stripe reminders.
+     * @since 151202 Reminders.
      */
-    class c_ws_plugin__s2member_pro_stripe_reminders
+    class c_ws_plugin__s2member_pro_reminders
     {
         /**
-         * Auto-detects Pro-Forms when Auto SSL is enabled.
+         * Remind.
          *
-         * @since 151202 Stripe reminders.
+         * @since 151202 Reminders.
          *
          * @attaches-to ``add_action('ws_plugin__s2member_after_auto_eot_system');``
          *
          * @param array $vars Expects an array of defined variables.
          */
-        public static function stripe_reminders($vars = array())
+        public static function remind($vars = array())
         {
+            // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
         }
     }
 }
