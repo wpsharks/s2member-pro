@@ -51,6 +51,14 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          */
         public static function remind($vars = array())
         {
+            $options = &$GLOBALS['WS_PLUGIN__']['s2member']['o'];
+
+            if (!$options['pro_eot_reminder_email_enable']) {
+                return; // Nothing to do here.
+            }
+            if (!$options['pro_eot_reminder_email_days']) {
+                return; // Nothing to do here.
+            }
             // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
         }
     }
