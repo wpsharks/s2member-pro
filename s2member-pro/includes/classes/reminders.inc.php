@@ -40,6 +40,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
      */
     class c_ws_plugin__s2member_pro_reminders
     {
+        protected static $recipients;
+        protected static $subject;
+        protected static $message;
+
         /**
          * Remind.
          *
@@ -59,7 +63,53 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!$options['pro_eot_reminder_email_days']) {
                 return; // Nothing to do here.
             }
+            self::$recipients = json_decode($options['pro_eot_reminder_email_recipients']);
+            self::$subject    = json_decode($options['pro_eot_reminder_email_subject']);
+            self::$message    = json_decode($options['pro_eot_reminder_email_message']);
+
+            if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
+                return; // Not possible. Possible corruption in the DB.
+            }
             // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
+        }
+
+        protected static function get_recipients_for_day($day)
+        {
+            $day = (string) $day; // Force string.
+
+            if (!isset($day[0])) {
+                return ''; // Day is empty.
+            }
+            if (!empty(self::$recipients->{$day}) && is_string(self::$recipients->{$day})) {
+                return self::$recipients->{$day};
+            }
+            return ''; // Nothing.
+        }
+
+        protected static function get_subject_for_day($day)
+        {
+            $day = (string) $day; // Force string.
+
+            if (!isset($day[0])) {
+                return ''; // Day is empty.
+            }
+            if (!empty(self::$subject->{$day}) && is_string(self::$subject->{$day})) {
+                return self::$subject->{$day};
+            }
+            return ''; // Nothing.
+        }
+
+        protected static function get_message_for_day($day)
+        {
+            $day = (string) $day; // Force string.
+
+            if (!isset($day[0])) {
+                return ''; // Day is empty.
+            }
+            if (!empty(self::$message->{$day}) && is_string(self::$message->{$day})) {
+                return self::$message->{$day};
+            }
+            return ''; // Nothing.
         }
     }
 }
