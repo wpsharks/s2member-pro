@@ -27,13 +27,13 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member\API_Functions
  * @since 1.0
  */
-if(!defined('WPINC')) // MUST have WordPress.
-	exit ('Do not access this file directly.');
+if (!defined('WPINC')) { // MUST have WordPress.
+    exit('Do not access this file directly.');
+}
 
-/**
+/*
  * Allows for the inclusion of the Pro Login Widget directly into a theme/plugin file.
  *
  * This function will return the HTML output from the widget function call.
@@ -101,42 +101,47 @@ if(!defined('WPINC')) // MUST have WordPress.
  *
  * @return string The Pro Login Widget, HTML markup.
  */
-if(!function_exists('s2member_pro_login_widget'))
-{
-	function s2member_pro_login_widget($options = array(), $args = array())
-	{
-		ob_start(); // Begin output buffering.
+if (!function_exists('s2member_pro_login_widget')) {
+    function s2member_pro_login_widget($options = array(), $args = array())
+    {
+        ob_start(); // Begin output buffering.
 
-		$options = (array)$options; // Force array.
-		$args    = array_merge(array('before_widget' => '', 'before_title' => '<h3>', 'after_title' => '</h3>', 'after_widget' => ''), (array)$args);
+        $options = (array) $options;
+        $args    = array_merge(
+            array(
+                'before_widget' => '',
+                'before_title'  => '<h3>',
+                'after_title'   => '</h3>',
+                'after_widget'  => '',
+            ),
+            (array) $args
+        );
+        c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
 
-		c_ws_plugin__s2member_pro_login_widget::___static_widget___($args, $options);
-
-		return ob_get_clean();
-	}
+        return ob_get_clean();
+    }
 }
 
-/**
- * Generate a new gift code.
+/*
+ * Generate a new redemption code.
  *
  * @param array $args Optional arguments. See list of `$default_args` below, which you can override.
  *
- * @return array Output gift array; e.g., `$gift['code']` to read the new gift code.
+ * @return array Output array; e.g., `$redemption['code']` to read the new redemption code.
  *
- * @example `<?php echo s2member_pro_gift_code_generate()['code']; ?>`
+ * @example `<?php echo s2member_pro_redemption_code_generate()['code']; ?>`
  */
-if(!function_exists('s2member_pro_gift_code_generate'))
-{
-	function s2member_pro_gift_code_generate($args = array())
-	{
-		$default_args = array(
-			'discount'  => '100%',
-			'directive' => '',
-			'singulars' => '',
-		);
-		$args = array_merge($default_args, $args, array('quantity' => 1));
-		$coupons_class = new c_ws_plugin__s2member_pro_coupons();
-		$gifts = $coupons_class->generate_gifts($args);
-		return array_pop($gifts);
-	}
+if (!function_exists('s2member_pro_redemption_code_generate')) {
+    function s2member_pro_redemption_code_generate($args = array())
+    {
+        $default_args = array(
+            'discount'  => '100%',
+            'directive' => '',
+            'singulars' => '',
+        );
+        $args          = array_merge($default_args, $args, array('quantity' => 1));
+        $coupons_class = new c_ws_plugin__s2member_pro_coupons();
+        $gifts         = $coupons_class->generate_gifts($args);
+        return array_pop($gifts);
+    }
 }
