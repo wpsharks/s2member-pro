@@ -70,6 +70,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
                 return; // Not possible. Possible corruption in the DB.
             }
+            $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
+
             // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
         }
 
