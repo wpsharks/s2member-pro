@@ -60,7 +60,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				$stripe = array(); // Initialize array of Webhook/IPN event data and s2Member log details.
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken.
 
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
+				if(!class_exists('Stripe'))
+					require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
 				Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 
 				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
