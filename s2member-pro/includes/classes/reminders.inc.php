@@ -60,7 +60,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!$options['pro_eot_reminder_email_enable']) {
                 return; // Nothing to do here.
             }
-            if (!$options['pro_eot_reminder_email_days']) {
+            if (!isset($options['pro_eot_reminder_email_days'][0])) {
                 return; // Nothing to do here.
             }
             self::$recipients = json_decode($options['pro_eot_reminder_email_recipients']);
