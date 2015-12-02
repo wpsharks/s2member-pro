@@ -93,7 +93,24 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!($user_ids = $wpdb->get_col($sql))) {
                 return; // Nothing to do here.
             }
-            // Will use `c_ws_plugin__s2member_utils_users::get_user_eot($user_id = 0, $check_gateway = TRUE, $favor = 'fixed')`
+            foreach ($user_ids as $_user_id) {
+                if (!($_user = new WP_User($_user_id)) || !$_user->ID) {
+                    continue; // Possible DB corruption.
+                }
+                update_user_option($_user->ID, 's2member_last_reminder_scan', time());
+
+                $_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID);
+                if (!$_eot || !$_eot['type'] || !$_eot['time'] || !$_eot['tense']) {
+                    continue; // Nothing to do for this user.
+                }
+                switch ($_eot['type']) {
+                    case 'fixed': // @TODO
+                        break; // Break switch handler.
+
+                    case 'next': // @TODO
+                        break; // Break switch handler.
+                }
+            } // unset($_user_id, $_user, $_eot); // Housekeeping
         }
 
         protected static function get_recipients_for_day($day)
