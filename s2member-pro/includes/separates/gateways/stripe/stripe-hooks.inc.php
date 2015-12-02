@@ -27,11 +27,11 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member\Stripe
  * @since 140617
  */
-if(!defined('WPINC')) // MUST have WordPress.
-	exit('Do not access this file directly.');
+if (!defined('WPINC')) { // MUST have.
+    exit('Do not access this file directly.');
+}
 /*
 Add the plugin Actions/Filters here.
 */
@@ -42,6 +42,8 @@ add_action('init', 'c_ws_plugin__s2member_pro_stripe_checkout::stripe_checkout')
 add_action('init', 'c_ws_plugin__s2member_pro_stripe_sp_checkout::stripe_sp_checkout');
 add_action('init', 'c_ws_plugin__s2member_pro_stripe_registration::stripe_registration');
 add_action('init', 'c_ws_plugin__s2member_pro_stripe_cancellation::stripe_cancellation');
+
+add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_stripe_reminders::stripe_reminders');
 
 add_filter('ws_plugin__s2member_during_constants_c', 'c_ws_plugin__s2member_pro_stripe_constants::stripe_constants', 10, 2);
 

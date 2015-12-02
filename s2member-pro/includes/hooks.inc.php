@@ -27,11 +27,11 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member
- * @since 1.0
+ * @since 1.0 Initial release.
  */
-if(!defined('WPINC')) // MUST have WordPress.
-	exit('Do not access this file directly.');
+if (!defined('WPINC')) { // MUST have WordPress.
+    exit('Do not access this file directly.');
+}
 /*
 Add the plugin Actions/Filters here.
 */
