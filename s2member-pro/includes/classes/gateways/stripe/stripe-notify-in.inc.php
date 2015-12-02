@@ -238,26 +238,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					$stripe['s2member_log'][] = 's2Member uses the Stripe SDK for remote connections; which relies upon the cURL extension for PHP. Please make sure that your installation of PHP has the cURL extension; and that it\'s configured together with OpenSSL for HTTPS communication.';
 					$stripe['s2member_log'][] = var_export($_REQUEST, TRUE)."\n".var_export(json_decode(@file_get_contents('php://input')), TRUE);
 				}
-				$logt = c_ws_plugin__s2member_utilities::time_details();
-				$logv = c_ws_plugin__s2member_utilities::ver_details();
-				$logm = c_ws_plugin__s2member_utilities::mem_details();
-				$log4 = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."\n".'User-Agent: '.$_SERVER['HTTP_USER_AGENT'];
-				$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
-				$log2 = (is_multisite() && !is_main_site()) ? 'stripe-ipn-4-'.trim(preg_replace('/[^a-z0-9]/i', '-', (!empty($_log4) ? $_log4 : '')), '-').'.log' : 'stripe-ipn.log';
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', $stripe);
 
-				if($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs'])
-					if(is_dir($logs_dir = $GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir']))
-						if(is_writable($logs_dir) && c_ws_plugin__s2member_utils_logs::archive_oversize_log_files())
-							file_put_contents($logs_dir.'/'.$log2,
-							                  'LOG ENTRY: '.$logt."\n".$logv."\n".$logm."\n".$log4."\n".
-							                  c_ws_plugin__s2member_utils_logs::conceal_private_info(var_export($stripe, TRUE))."\n\n",
-							                  FILE_APPEND);
-
-				status_header(200); // Send a 200 OK status header.
-				header('Content-Type: text/plain; charset=UTF-8'); // Content-Type text/plain with UTF-8.
-				while(@ob_end_clean()) ; // Clean any existing output buffers.
-
-				exit(); // Exit now.
+				status_header(200);
+				header('Content-Type: text/plain; charset=UTF-8');
+				while(@ob_end_clean()); exit();
 			}
 		}
 
