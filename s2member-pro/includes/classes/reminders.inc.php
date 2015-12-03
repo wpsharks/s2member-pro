@@ -108,7 +108,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             c_ws_plugin__s2member_email_configs::email_config();
 
             foreach ($user_ids as $_user_id) {
-                $_day = $_recipients = $_subject = $_message = null;
+                $_eot = $_day = $_recipients = $_subject = $_message = null;
 
                 if (!($_user = new WP_User($_user_id)) || !$_user->ID) {
                     continue; // Possible DB corruption.
@@ -212,8 +212,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $subject   = str_ireplace('%%full_name%%', $full_name, $subject);
                 $message   = str_ireplace('%%full_name%%', $full_name, $message);
             }
-            foreach (array(
-                'subscr_id',
+            foreach (array( // In case IPN Signup Vars are unavailable.
+                'subscr_id', // e.g., imported/migrated by site owner.
                 'subscr_cid',
                 'subscr_baid',
                 'subscr_gateway',
@@ -223,7 +223,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
             } // unset($_key, $_value); // Housekeeping.
 
-            foreach (array(
+            foreach (array( // WP account properties.
                 'ID',
                 'first_name',
                 'last_name',
@@ -236,13 +236,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $message                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $message);
             } // unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
 
-            $first_name = $user->first_name;
+            $first_name = $user->first_name; // If not yet filled above.
             $subject    = str_ireplace('%%first_name%%', $first_name, $subject);
             $message    = str_ireplace('%%first_name%%', $first_name, $message);
 
-            $last_name = $user->last_name;
+            $last_name = $user->last_name; // If not yet filled above.
             $subject   = str_ireplace('%%last_name%%', $last_name, $subject);
             $message   = str_ireplace('%%last_name%%', $last_name, $message);
+
+            $full_name = trim($first_name.' '.$last_name); // Same here.
+            $subject   = str_ireplace('%%full_name%%', $full_name, $subject);
+            $message   = str_ireplace('%%full_name%%', $full_name, $message);
 
             $user_full_name = trim($user->first_name.' '.$user->last_name);
             $subject        = str_ireplace('%%user_full_name%%', $user_full_name, $subject);
