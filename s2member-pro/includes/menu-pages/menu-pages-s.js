@@ -148,7 +148,7 @@ jQuery(document).ready(
 			});
 			$eot_reminder_email_days.closest('form').on('submit', function(event) {
 				var days = eot_reminder_get_unique_days(),
-					_eot_reminder_email_recipients = {}, _eot_reminder_email_subject = {}, eot_reminder_email_message = {};
+					_eot_reminder_email_recipients = {}, _eot_reminder_email_subject = {}, _eot_reminder_email_message = {};
 				days.push('_'); // Add the default day option too; so we don't lose this.
 
 				$.each(days, function(i, day) {
