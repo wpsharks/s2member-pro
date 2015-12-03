@@ -186,7 +186,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
                     $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
                 }
-            } // unset($_key, $_value); // Housekeeping.
+            } unset($_key, $_value); // Housekeeping.
 
             if (!empty($ipn_signup_vars['initial_term'])) {
                 $initial_cycle = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['initial_term']);
@@ -221,7 +221,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $_value  = (string) get_user_option('s2member_'.$_key, $user->ID);
                 $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
                 $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
-            } // unset($_key, $_value); // Housekeeping.
+            } unset($_key, $_value); // Housekeeping.
 
             foreach (array( // WP account properties.
                 'ID',
@@ -234,7 +234,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $_lc_property_wo_user_prefix = preg_replace('/^user_/i', '', strtolower($_property));
                 $subject                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $subject);
                 $message                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $message);
-            } // unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
+            } unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
 
             $first_name = $user->first_name; // If not yet filled above.
             $subject    = str_ireplace('%%first_name%%', $first_name, $subject);
@@ -277,12 +277,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     $_serialized_value = maybe_serialize($_value);
                     $subject           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $subject);
                     $message           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $message);
-                } // unset($_key, $_value, $_serialized_value); // Housekeeping.
+                } unset($_key, $_value, $_serialized_value); // Housekeeping.
             }
             foreach (preg_split('/\|/', get_user_option('s2member_custom', $user->ID)) as $_key => $_value) {
                 $subject = str_ireplace('%%cv'.$_key.'%%', $_value, $subject);
                 $message = str_ireplace('%%cv'.$_key.'%%', $_value, $message);
-            } // unset($_key, $_value); // Housekeeping.
+            } unset($_key, $_value); // Housekeeping.
 
             $eot_date = date_i18n(get_option('date_format'), $eot['time']);
             $subject  = str_ireplace('%%eot_date%%', $eot_date, $subject);
