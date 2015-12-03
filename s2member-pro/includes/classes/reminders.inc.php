@@ -304,8 +304,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
 
-            $subject = trim(preg_replace('/%%(.+?)%%/i', '', $subject));
-            $message = trim(preg_replace('/%%(.+?)%%/i', '', $message));
+            $subject = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
+            $message = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
 
             if (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) {
                 $subject = c_ws_plugin__s2member_utilities::evl($subject);
