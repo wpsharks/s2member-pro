@@ -27,11 +27,11 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://www.s2member.com/videos/}
  *
- * @package s2Member
- * @since 1.0
+ * @since 1.0 Initial release.
  */
-if(!defined('WPINC')) // MUST have WordPress.
-	exit('Do not access this file directly.');
+if (!defined('WPINC')) { // MUST have WordPress.
+    exit('Do not access this file directly.');
+}
 /*
 Add the plugin Actions/Filters here.
 */
@@ -83,3 +83,5 @@ add_filter('ws_plugin__s2member_profile_s2member_subscr_gateways', 'c_ws_plugin_
 add_action('ws_plugin__s2member_after_loaded', 'c_ws_plugin__s2member_pro_gateways::load_gateways', 1);
 
 add_filter('plugin_row_meta', 'c_ws_plugin__s2member_pro_menu_pages::module_identifier', 10, 2);
+
+add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_reminders::remind');

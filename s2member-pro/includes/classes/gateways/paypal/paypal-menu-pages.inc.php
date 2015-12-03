@@ -171,6 +171,23 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 		}
 
 		/**
+		 * Builds the PayPal Pro Reminder Email Config into s2Member.
+		 *
+		 * @package s2Member\Menu_Pages
+		 * @since 120315
+		 *
+		 * @attaches-to ``add_action("ws_plugin__s2member_during_paypal_ops_page_during_left_sections_after_eot_behavior");``
+		 *
+		 * @param array $vars Expects an array of defined variables passed through by the Action Hook.
+		 *
+		 * @return null
+		 */
+		public static function paypal_ops_reminder_email($vars = array())
+		{
+			include_once dirname(dirname(dirname(dirname(__FILE__))))."/menu-pages/paypal-ops-reminder-email.inc.php";
+		}
+
+		/**
 		 * Builds the PayPal Pro Tax Configuration into s2Member.
 		 *
 		 * @package s2Member\Menu_Pages

@@ -98,6 +98,14 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_sp_email_subject'                    => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
 			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
+			'pro_eot_reminder_email_enable'           => '0',
+			'pro_eot_reminder_email_on_npt_also'      => '0',
+			'pro_eot_reminder_email_days'             => '-5,-1',
+
+			'pro_eot_reminder_email_recipients'       => json_encode((object)array('_' => '"%%user_full_name%%" <%%user_email%%>')),
+			'pro_eot_reminder_email_subject'          => json_encode((object)array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member')))),
+			'pro_eot_reminder_email_message'          => json_encode((object)array('_' => sprintf(_x("Hi %%%%first_name%%%%! :-)\n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name')))),
+
 			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
 			'pro_affiliate_coupon_code_tracking_urls' => '', // A line-delimited list of Coupon Code tracking URLs.
@@ -113,9 +121,9 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_paypal_checkout_rdp'                 => '0', 'pro_paypal_return_template_header' => '',
 
 			'pro_stripe_api_publishable_key'          => '', 'pro_stripe_api_secret_key' => '', 'pro_stripe_sandbox' => '0',
-			'pro_stripe_api_accept_bitcoin'           => '0', // Enable Bitcoin support in this instance of s2Member + Stripe?
 			'pro_stripe_api_statement_description'    => '', // Use a specific statement descrption that is unique to this WP installation?
 			'pro_stripe_api_image'                    => '', // Defaults to an empty string; i.e., uses what is provided on the Stripe side of their config.
+			'pro_stripe_api_accept_bitcoin'           => '0', // Enable Bitcoin support in this instance of s2Member + Stripe?
 			'pro_stripe_api_validate_zipcode'         => '0', // Validate a customer's zipcode?
 			'pro_stripe_api_billing_address'          => '0', // Collect a customer's billing address also?
 			'pro_stripe_api_shipping_address'         => '0', // Collect a customer's shipping address also?
@@ -171,7 +179,16 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if(preg_match('/^pro_(?:signup|sp)_email_recipients$/', $key) && !is_string($value))
 					$value = $pro_default_options[$key];
 
-				else if(preg_match('/^pro_(?:signup|sp)_email_(?:subject|message)$/', $key) && (!is_string($value) || !strlen($value)))
+				else if($key === 'pro_eot_reminder_email_recipients' && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if(preg_match('/^pro_(?:signup|sp|eot_reminder)_email_(?:subject|message)$/', $key) && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_eot_reminder_email_enable' && (!is_string($value) || !is_numeric($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_eot_reminder_email_days' && (!is_string($value) || !($value = trim(preg_replace('/[^0-9,\-]/', '', $value), ','))))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_(?:coupon_codes|affiliate_coupon_code_(?:tracking_urls|suffix_chars))$/', $key) && (!is_string($value) || !strlen($value)))
@@ -207,13 +224,10 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if(preg_match('/^pro_alipay_(?:seller_email|partner_id|security_code|return_template_header)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
-				else if(preg_match('/^pro_stripe_(?:api_publishable_key|api_secret_key|api_statement_description|api_image)$/', $key) && (!is_string($value) || !strlen($value)))
+				else if(preg_match('/^pro_stripe_api_(?:publishable_key|secret_key|statement_description|image)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
 
-				else if(preg_match('/^pro_stripe_api_validate_zipcode$/', $key) && (!is_string($value) || !is_numeric($value)))
-					$value = $pro_default_options[$key];
-
-				else if(preg_match('/^pro_stripe_api_reject_prepaid$/', $key) && (!is_string($value) || !is_numeric($value)))
+				else if(preg_match('/^pro_stripe_api_(?:accept_bitcoin|validate_zipcode|billing_address|shipping_address|allow_remember_me|reject_prepaid)$/', $key) && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_authnet_(?:api_login_id|api_trans_key|api_salt_key)$/', $key) && (!is_string($value) || !strlen($value)))
