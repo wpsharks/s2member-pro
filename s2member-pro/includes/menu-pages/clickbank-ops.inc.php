@@ -847,10 +847,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="EOT Renewal/Reminder Email">'."\n";
+			echo '<div class="ws-menu-page-group" title="EOT Renewal/Reminder Email(s)">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-eot-reminder-email-section">'."\n";
-			echo '<h3>EOT Renewal/Reminder Email (optional, for reminding customers who have an EOT Time)</h3>'."\n";
+			echo '<h3>EOT Renewal/Reminder Emails (optional, for reminding customers who have an EOT Time)</h3>'."\n";
 			echo '<p>The <strong>primary</strong> purpose of this email is to remind a customer that they will soon lose access to what they paid for. You may customize this further by providing details that are specifically geared to your site. Keep in mind that some of your customers may not have an EOT Time; i.e., if you don\'t require a recurring payment or you\'re not selling fixed-term access, then a customer\'s account never expires. Thus, they will have no EOT Time. This email is not going to be sent to those customers. See also: <a href="https://s2member.com/kb-article/when-is-an-eot-time-set-for-each-user/" target="_blank">When is an EOT Time set for each user?</a></p>'."\n";
 
 			echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
