@@ -319,7 +319,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 return ''; // Not possible.
                 //
             } elseif ($time >= self::$now) {
-                // Now, or in the future?
+                // Now, or in the future.
                 $diff = $time - self::$now;
                 $diff = floor($diff / DAY_IN_SECONDS);
                 return (string) -max(0, $diff);
