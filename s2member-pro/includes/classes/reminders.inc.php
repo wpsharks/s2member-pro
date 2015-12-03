@@ -304,17 +304,20 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             }
             unset($_key, $_value); // Housekeeping.
 
-            $eot_date   = date_i18n(get_option('date_format'), $eot['time']);
+            $eot_offset     = (get_option('gmt_offset') * HOUR_IN_SECONDS);
+            $eot_local_time = $eot['time'] + $eot_offset; // `date_i18n()`
+
+            $eot_date   = date_i18n(get_option('date_format'), $eot_local_time);
             $recipients = str_ireplace('%%eot_date%%', $eot_date, $recipients);
             $subject    = str_ireplace('%%eot_date%%', $eot_date, $subject);
             $message    = str_ireplace('%%eot_date%%', $eot_date, $message);
 
-            $eot_time   = date_i18n(get_option('time_format'), $eot['time']);
+            $eot_time   = date_i18n(get_option('time_format'), $eot_local_time);
             $recipients = str_ireplace('%%eot_time%%', $eot_time, $recipients);
             $subject    = str_ireplace('%%eot_time%%', $eot_time, $subject);
             $message    = str_ireplace('%%eot_time%%', $eot_time, $message);
 
-            $eot_tz     = date_i18n('T', $eot['time']);
+            $eot_tz     = date_i18n('T', $eot_local_time);
             $recipients = str_ireplace('%%eot_tz%%', $eot_tz, $recipients);
             $subject    = str_ireplace('%%eot_tz%%', $eot_tz, $subject);
             $message    = str_ireplace('%%eot_tz%%', $eot_tz, $message);
