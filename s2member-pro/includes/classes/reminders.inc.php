@@ -40,7 +40,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
      */
     class c_ws_plugin__s2member_pro_reminders
     {
-        protected static $now; // Timestamp.
+        protected static $now; // `time()`
         protected static $recipients;
         protected static $subject;
         protected static $message;
@@ -206,10 +206,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $message   = str_ireplace('%%full_name%%', $full_name, $message);
             }
             foreach (array(
-                'subscr_gateway',
                 'subscr_id',
                 'subscr_cid',
                 'subscr_baid',
+                'subscr_gateway',
             ) as $_key) {
                 $_value  = (string) get_user_option('s2member_'.$_key, $user->ID);
                 $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
