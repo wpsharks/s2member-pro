@@ -99,6 +99,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
 			'pro_eot_reminder_email_enable'           => '0',
+			'pro_eot_reminder_email_on_npt_also'      => '0',
 			'pro_eot_reminder_email_days'             => '-5,-1',
 
 			'pro_eot_reminder_email_recipients'       => json_encode((object)array('_' => '"%%user_full_name%%" <%%user_email%%>')),

@@ -43,6 +43,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
         protected static $recipients;
         protected static $subject;
         protected static $message;
+        protected static $now;
 
         /**
          * Remind.
@@ -68,17 +69,19 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             self::$recipients = json_decode($options['pro_eot_reminder_email_recipients']);
             self::$subject    = json_decode($options['pro_eot_reminder_email_subject']);
             self::$message    = json_decode($options['pro_eot_reminder_email_message']);
+            self::$now        = time(); // Current UTC timestamp.
 
             if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
                 return; // Not possible. Possible corruption in the DB.
             }
-            $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day'), get_defined_vars());
+            $days        = preg_split('/[;,\s]+/', $options['pro_eot_reminder_email_days'], -1, PREG_SPLIT_NO_EMPTY);
+            $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
             $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
 
             $sql_already_scanned_recently = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
                     WHERE `meta_key` = \''.$wpdb->prefix.'s2member_last_reminder_scan\'
-                        AND `meta_value` > \''.esc_sql($scan_time).'\'
+                        AND `meta_value` >= \''.esc_sql($scan_time).'\'
             ';
             $sql = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
@@ -97,7 +100,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 if (!($_user = new WP_User($_user_id)) || !$_user->ID) {
                     continue; // Possible DB corruption.
                 }
-                update_user_option($_user->ID, 's2member_last_reminder_scan', time());
+                update_user_option($_user->ID, 's2member_last_reminder_scan', self::$now);
 
                 $_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID);
                 if (!$_eot || !$_eot['type'] || !$_eot['time'] || !$_eot['tense']) {
@@ -105,12 +108,42 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 }
                 switch ($_eot['type']) {
                     case 'fixed': // @TODO
+                        $_day = self::calculate_day_from($_eot['time']);
                         break; // Break switch handler.
 
                     case 'next': // @TODO
+                        if (!$options['pro_eot_reminder_email_on_npt_also']) {
+                            break; // Nothing to do here.
+                        }
+                        $_day = self::calculate_day_from($_eot['time']);
                         break; // Break switch handler.
                 }
-            } // unset($_user_id, $_user, $_eot); // Housekeeping
+                $ipn_signup_vars    = self::get_user_ipn_signup_vars($user->ID);
+                $subscr_gateway     = (string) get_user_option('s2member_subscr_gateway', $user->ID);
+                $subscr_id          = (string) get_user_option('s2member_subscr_id', $user->ID);
+                $subscr_cid         = (string) get_user_option('s2member_subscr_cid', $user->ID);
+                $last_auto_eot_time = (integer) get_user_option('s2member_last_auto_eot_time', $user->ID);
+                $auto_eot_time      = (integer) get_user_option('s2member_auto_eot_time', $user->ID);
+            } // unset($_user_id, $_user, $_eot, $_day); // Housekeeping
+        }
+
+        protected static function calculate_day_from($time)
+        {
+            // -1 = 1 day before.
+            //  0 = the day of.
+            //  1 = 1 day after.
+
+            if ($time >= self::$now) {
+                // Now, or in the future?
+                $diff = $time - self::$now;
+                $diff = floor($diff / DAY_IN_SECONDS);
+                return -max(0, $diff);
+                //
+            } else { // Past tense.
+                $diff = self::$now - $time;
+                $diff = floor($diff / DAY_IN_SECONDS);
+                return max(0, $diff);
+            }
         }
 
         protected static function get_recipients_for_day($day)
