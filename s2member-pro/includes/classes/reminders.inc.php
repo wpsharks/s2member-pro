@@ -308,8 +308,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $message = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
 
             if (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) {
-                $subject = c_ws_plugin__s2member_utilities::evl($subject);
-                $message = c_ws_plugin__s2member_utilities::evl($message);
+                $subject = c_ws_plugin__s2member_utilities::evl($subject, get_defined_vars());
+                $message = c_ws_plugin__s2member_utilities::evl($message, get_defined_vars());
             }
         }
 
