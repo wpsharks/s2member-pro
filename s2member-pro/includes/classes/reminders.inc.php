@@ -192,11 +192,15 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             }
             if (!empty($ipn_signup_vars['regular_term'])) {
                 if (!empty($ipn_signup_vars['recurring'])) {
-                    $recurring_regular_cycle = $ipn_signup_vars['recurring'];
-                    $recurring_regular_cycle .= ' / '.c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], true);
+                    $regular_cycle           = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], true);
+                    $recurring_regular_cycle = $ipn_signup_vars['recurring'].' / '.c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], true);
                 } else {
+                    $regular_cycle           = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], false);
                     $recurring_regular_cycle = __('0 / non-recurring', 's2member-front', 's2member');
                 }
+                $subject = str_ireplace('%%regular_cycle%%', $regular_cycle, $subject);
+                $message = str_ireplace('%%regular_cycle%%', $regular_cycle, $message);
+
                 $subject = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $subject);
                 $message = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $message);
             }
@@ -253,6 +257,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $subject    = str_ireplace('%%user_level%%', $user_level, $subject);
             $message    = str_ireplace('%%user_level%%', $user_level, $message);
 
+            $user_level_label = c_ws_plugin__s2member_user_access::user_access_label($user);
+            $subject          = str_ireplace('%%user_level_label%%', $user_level_label, $subject);
+            $message          = str_ireplace('%%user_level_label%%', $user_level_label, $message);
+
             $user_ccaps = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($user));
             $subject    = str_ireplace('%%user_ccaps%%', $user_ccaps, $subject);
             $message    = str_ireplace('%%user_ccaps%%', $user_ccaps, $message);
@@ -291,6 +299,11 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
             $subject = trim(preg_replace('/%%(.+?)%%/i', '', $subject));
             $message = trim(preg_replace('/%%(.+?)%%/i', '', $message));
+
+            if (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) {
+                $subject = c_ws_plugin__s2member_utilities::evl($subject);
+                $message = c_ws_plugin__s2member_utilities::evl($message);
+            }
         }
 
         protected static function calculate_day($time)

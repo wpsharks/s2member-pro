@@ -103,8 +103,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_eot_reminder_email_days'             => '-5,-1',
 
 			'pro_eot_reminder_email_recipients'       => json_encode((object)array('_' => '"%%user_full_name%%" <%%user_email%%>')),
-			'pro_eot_reminder_email_subject'          => json_encode((object)array('_' => _x('Renewal Reminder (Account Expires in %%eot_descriptive_time%%)', 's2member-front', 's2member'))),
-			'pro_eot_reminder_email_message'          => json_encode((object)array('_' => sprintf(_x("Hi %%first_name%%! :-)\n\nJust a reminder that your account access will expire: %%eot_date_time_tz%% (%%eot_descriptive_time%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name')))),
+			'pro_eot_reminder_email_subject'          => json_encode((object)array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member')))),
+			'pro_eot_reminder_email_message'          => json_encode((object)array('_' => sprintf(_x("Hi %%%%first_name%%%%! :-)\n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name')))),
 
 			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',

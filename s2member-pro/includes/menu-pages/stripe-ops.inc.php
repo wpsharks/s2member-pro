@@ -1139,8 +1139,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<td>'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_reminder_email_recipients" id="ws-plugin--s2member-pro-eot-reminder-email-recipients" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_recipients']).'" />'."\n";
 			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-eot-reminder-email-recipients-for-day" value="" /><br />'."\n";
-			echo 'This is a semicolon <code>;</code> delimited list of recipients. Here is an example:<br />'."\n";
-			echo '<code>"%%user_full_name%%" &lt;%%user_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code>'."\n";
+			echo 'This is a semicolon <code>;</code> delimited list of recipients <em>(listed together here, but emailed separately)</em>.<br />'."\n";
+			echo '<small>Example: <code>"%%user_full_name%%" &lt;%%user_email%%&gt;; admin@example.com; "Webmaster" &lt;webmaster@example.com&gt;</code></small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -1176,16 +1176,43 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<td>'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_reminder_email_message" id="ws-plugin--s2member-pro-eot-reminder-email-message" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_message']).'" />'."\n";
 			echo '<textarea id="ws-plugin--s2member-pro-eot-reminder-email-message-for-day" rows="10"></textarea><br />'."\n";
-			echo 'Message Body used in the email reminder that is sent to a Customer.<br /><br />'."\n";
-			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
+			echo 'Message Body (plain text; i.e., not HTML) used in the email reminder that is sent to a Customer.<br /><br />'."\n";
+
+			echo '<strong>You can also use these special Replacement Codes if you need them:</strong><br /><br />'."\n";
+
+			echo '<strong>EOT Date/Time Formats:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
-			echo '<li><code>%%subscr_id%%</code> = The Stripe Subscription ID, which remains constant throughout any &amp; all future payments. [ <a href="#" onclick="alert(\'There is one exception. If you are selling Lifetime or Fixed-Term (non-recurring) access, using Buy Now functionality; the %%subscr_id%% is actually set to the Transaction ID for the purchase. Stripe does not provide a specific Subscription ID for Buy Now purchases. Since Lifetime &amp; Fixed-Term Subscriptions are NOT recurring (i.e., there is only ONE payment), using the Transaction ID as the Subscription ID is a graceful way to deal with this minor conflict.\'); return false;">?</a> ]</li>'."\n";
-			echo '<li><code>%%subscr_cid%%</code> = Applicable only with Stripe integration. This is the Customer\'s ID in Stripe, which remains constant throughout any &amp; all future payments. Each Stripe Customer has this Customer ID; and also a Subscription and/or Transaction ID [ <a href="#" onclick="alert(\'Applicable only when you integrate s2Member with Stripe. In all other cases, the %%subscr_cid%% is simply set to the %%subscr_id%% value; i.e., it is a duplicate of %%subscr_id%% when running anything other than Stripe.\\n\\nEach Stripe Customer has a Customer ID; and also a Subscription and/or Transaction ID. See %%subscr_id%% for further details.\'); return false;">?</a> ]</li>'."\n";
+			echo '<li><code>%%eot_date%%</code> = The EOT date; e.g., <code>'.esc_html(date_i18n(get_option('date_format'), strtotime('+30 days'))).'</code> (based on date format in your WordPress General Settings).</li>'."\n";
+			echo '<li><code>%%eot_time%%</code> = The EOT time; e.g., <code>'.esc_html(date_i18n(get_option('time_format'), strtotime('+30 days'))).'</code> (based on time format in your WordPress General Settings).</li>'."\n";
+			echo '<li><code>%%eot_tz%%</code> = The EOT timezone code; e.g., <code>'.esc_html(date_i18n('T', strtotime('+30 days'))).'</code> (based on timezone in your WordPress General Settings).</li>'."\n";
+			echo '<li><code>%%eot_date_time_tz%%</code> = A full concatenation of <code>%%eot_date%% %%eot_time%% %%eot_tz%%</code>; e.g., <code>'.esc_html(date_i18n(get_option('date_format').' '.get_option('time_format').' T', strtotime('+30 days'))).'</code></li>'."\n";
+			echo '<li><code>%%eot_descriptive_time%%</code> = An human readable description of the EOT time difference, between now and the EOT. e.g., <code>30 days</code>, <code>2 hours</code>, <code>1 month</code>. For example, "<strong>expires in <code>%%eot_descriptive_time%%</code></strong>". Or "<strong><code>%%eot_descriptive_time%%</code> from now</strong>". If the EOT has already occurred; e.g., if you have non-negative days listed above, so that reminders are sent even <em>after</em> the EOT has occurred, all of the dates (including this description) will reflect that. In the case of this descriptive variation, you might alter your usage to, "<strong><code>%%eot_descriptive_time%%</code> ago</strong>".</li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '<strong>Account Details:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%user_first_name%%</code> = The First Name in their WordPress account profile.</li>'."\n";
+			echo '<li><code>%%user_last_name%%</code> = The Last Name in their WordPress account profile.</li>'."\n";
+			echo '<li><code>%%user_full_name%%</code> = The First/Last Name in their WordPress account profile.</li>'."\n";
+			echo '<li><code>%%user_email%%</code> = The Email Address in their WordPress account profile.</li>'."\n";
+			echo '<li><code>%%user_login%%</code> = The Username associated with their account in WordPress.</li>'."\n";
+			echo '<li><code>%%user_ip%%</code> = The Customer\'s original IP Address, during checkout/registration via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
+			echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
+			echo '<li><code>%%user_role%%</code> = The Role that this user has on your site; e.g., <code>s2member_level1</code>, <code>s2member_level2</code>, etc.</li>'."\n";
+			echo '<li><code>%%user_level%%</code> = The Level this user has on your site; e.g., <code>1</code>, <code>2</code>, <code>3</code>, etc.</li>'."\n";
+			echo '<li><code>%%user_level_label%%</code> = The Level Label that this user has; e.g., <code>Bronze</code>, <code>Platimun</code>, etc.</li>'."\n";
+			echo '<li><code>%%user_ccaps%%</code> = A comma-delimited list of any Custom Capabilities they have; e.g., <code>pro,unlimited</code></li>'."\n";
+			echo '</ul>'."\n";
+
+			echo '<strong>Customer Subscription Data:</strong>'."\n";
+			echo '<ul class="ws-menu-page-li-margins">'."\n";
+			echo '<li><code>%%subscr_id%%</code> = The customer\'s Paid Subscr. ID, which remains constant throughout any &amp; all future payments.</li>'."\n";
+			echo '<li><code>%%subscr_cid%%</code> = This is the Customer\'s ID in Stripe, which remains constant throughout any &amp; all future payments.</li>'."\n";
 			echo '<li><code>%%currency%%</code> = Three-character currency code (uppercase); e.g., <code>USD</code></li>'."\n";
 			echo '<li><code>%%currency_symbol%%</code> = Currency code symbol; e.g., <code>$</code></li>'."\n";
-			echo '<li><code>%%initial%%</code> = The Initial Fee. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent when they completed checkout, no matter what. Even if that amount is 0. If a Customer upgrades/downgrades under the terms of a 100% Free Trial Period, this will be 0.\'); return false;">?</a> ]</li>'."\n";
-			echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offer something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
-			echo '<li><code>%%recurring%%</code> = This is the amount that will be charged on a recurring basis, or <code>0</code> if non-recurring. [ <a href="#" onclick="alert(\'If Recurring Payments have not been required, this will be equal to 0. That being said, %%regular%% &amp; %%recurring%% are usually the same value. This variable can be used in two different ways. You can use it to determine what the Regular Recurring Rate is, or to determine whether the Subscription will recur or not. If it is going to recur, %%recurring%% will be > 0.\'); return false;">?</a> ]</li>'."\n";
+			echo '<li><code>%%initial%%</code> = The Initial Fee. If you offered a 100% Free Trial, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This will always represent the amount of money the Customer spent when they initially completed checkout, no matter what. Even if that amount was 0. If a Customer upgraded/downgraded under the terms of a 100% Free Trial Period, this will be 0.\'); return false;">?</a> ]</li>'."\n";
+			echo '<li><code>%%regular%%</code> = The Regular Amount of the Subscription. If you offered something 100% free, this will be <code>0</code>. [ <a href="#" onclick="alert(\'This is how much the Subscription costs after an Initial Period expires. If you did NOT offer an Initial Period at a different price, %%initial%% and %%regular%% will be equal to the same thing.\'); return false;">?</a> ]</li>'."\n";
+			echo '<li><code>%%recurring%%</code> = This is the amount that will be charged on a recurring basis, or <code>0</code> if non-recurring. [ <a href="#" onclick="alert(\'If Recurring Payments have not been required, this will be equal to 0. That being said, %%regular%% &amp; %%recurring%% are usually the same value.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%first_name%%</code> = The First Name of the Customer who purchased the Membership Subscription.</li>'."\n";
 			echo '<li><code>%%last_name%%</code> = The Last Name of the Customer who purchased the Membership Subscription.</li>'."\n";
 			echo '<li><code>%%full_name%%</code> = The Full Name (First &amp; Last) of the Customer who purchased the Membership Subscription.</li>'."\n";
@@ -1195,15 +1222,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<li><code>%%initial_term%%</code> = This is the term length of the Initial Period. This will be a numeric value, followed by a space, then a single letter. [ <a href="#" onclick="alert(\'Here are some examples:\\n\\n%%initial_term%% = 1 D (this means 1 Day)\\n%%initial_term%% = 1 W (this means 1 Week)\\n%%initial_term%% = 1 M (this means 1 Month)\\n%%initial_term%% = 1 Y (this means 1 Year)\\n\\nThe Initial Period never recurs, so this only lasts for the term length specified, then it is over.\'); return false;">?</a> ]</li>'."\n";
 			echo '<li><code>%%initial_cycle%%</code> = This is the <code>%%initial_term%%</code> from above, converted to a cycle representation of: <code><em>X days/weeks/months/years</em></code>.</li>'."\n";
 			echo '<li><code>%%regular_term%%</code> = This is the term length of the Regular Period. This will be a numeric value, followed by a space, then a single letter. [ <a href="#" onclick="alert(\'Here are some examples:\\n\\n%%regular_term%% = 1 D (this means 1 Day)\\n%%regular_term%% = 1 W (this means 1 Week)\\n%%regular_term%% = 1 M (this means 1 Month)\\n%%regular_term%% = 1 Y (this means 1 Year)\\n%%regular_term%% = 1 L (this means 1 Lifetime)\\n\\nThe Regular Term is usually recurring. So the Regular Term value represents the period (or duration) of each recurring period. If %%recurring%% = 0, then the Regular Term only applies once, because it is not recurring. So if it is not recurring, the value of %%regular_term%% simply represents how long their Membership privileges are going to last after the %%initial_term%% has expired, if there was an Initial Term. The value of this variable ( %%regular_term%% ) will never be empty, it will always be at least: 1 D, meaning 1 day. No exceptions.\'); return false;">?</a> ]</li>'."\n";
-			echo '<li><code>%%regular_cycle%%</code> = This is the <code>%%regular_term%%</code> from above, converted to a cycle representation of: <code><em>[every] X days/weeks/months/years—OR daily, weekly, bi-weekly, monthly, bi-monthly, quarterly, yearly, or lifetime</em></code>. This is a very useful Replacment Code. Its value is dynamic; depending on term length, recurring status, and period/term lengths configured.</li>'."\n";
+			echo '<li><code>%%regular_cycle%%</code> = This is the <code>%%regular_term%%</code> from above, converted to a cycle representation of: <code><em>[every] X days/weeks/months/years</em></code>. Or, if applicable, it may simply read <em><code>daily, weekly, bi-weekly, monthly, bi-monthly, quarterly, yearly, or lifetime</em></code>. This is a very useful Replacment Code. Its value is dynamic; depending on term length, recurring status, and period/term lengths configured.</li>'."\n";
 			echo '<li><code>%%recurring/regular_cycle%%</code> = Example (<code>14.95 / Monthly</code>), or ... (<code>0 / non-recurring</code>); depending on the value of <code>%%recurring%%</code>.</li>'."\n";
-			echo '<li><code>%%user_first_name%%</code> = The First Name listed on their User account. This might be different than what is on file with Stripe.</li>'."\n";
-			echo '<li><code>%%user_last_name%%</code> = The Last Name listed on their User account. This might be different than what is on file with Stripe.</li>'."\n";
-			echo '<li><code>%%user_full_name%%</code> = The Full Name listed on their User account. This might be different than what is on file with Stripe.</li>'."\n";
-			echo '<li><code>%%user_email%%</code> = The Email Address associated with their User account. This might be different than what is on file with Stripe.</li>'."\n";
-			echo '<li><code>%%user_login%%</code> = The Username associated with their account. The Customer created this during registration.</li>'."\n";
-			echo '<li><code>%%user_ip%%</code> = The Customer\'s original IP Address, during checkout/registration via <code>$_SERVER["REMOTE_ADDR"]</code>.</li>'."\n";
-			echo '<li><code>%%user_id%%</code> = A unique WordPress User ID that references this account in the WordPress database.</li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '<strong>Custom Registration/Profile Fields are also supported in this email:</strong>'."\n";
@@ -1216,16 +1236,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<strong>Custom Replacement Codes can also be inserted using these instructions:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
-			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the `custom` attribute in your Shortcode.</li>'."\n";
+			echo '<li><code>%%cv0%%</code> = The domain of your site, which is passed through the <code>custom</code> attribute in your Shortcode.</li>'."\n";
 			echo '<li><code>%%cv1%%</code> = If you need to track additional custom variables, you can pipe delimit them into the `custom` attribute; inside your Shortcode, like this: <code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|cv1|cv2|cv3"</code>. You can have an unlimited number of custom variables. Obviously, this is for advanced webmasters; but the functionality has been made available for those who need it.</li>'."\n";
 			echo '</ul>'."\n";
 			echo '<strong>This example uses cv1 to record a special marketing campaign:</strong><br />'."\n";
-			echo '<em>(The campaign (i.e., christmas-promo) could be referenced using <code>%%cv1%%</code>)</em><br />'."\n";
+			echo '<em>The campaign (i.e., christmas-promo) could be referenced using <code>%%cv1%%</code>.</em><br />'."\n";
 			echo '<code>custom="'.esc_html($_SERVER['HTTP_HOST']).'|christmas-promo"</code>'."\n";
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags—optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$stripe</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from your Pro-Form integration (related to the transaction itself); which are then translated into a format that s2Member\'s Core Gateway Processor can understand (e.g., <code>$stripe["item_number"]</code>, <code>$stripe["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags (optional, for developers). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
