@@ -82,19 +82,19 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
             $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
 
-            $sql_already_scanned_recently = '
+            $user_ids_already_scanned_recently = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
                     WHERE `meta_key` = \''.$wpdb->prefix.'s2member_last_reminder_scan\'
                         AND `meta_value` >= \''.esc_sql($scan_time).'\'
             ';
             $sql = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
-                    WHERE (
+                    WHERE `user_id` NOT IN('.$user_ids_already_scanned_recently.')
+                        AND (
                               (`meta_key` = \''.$wpdb->prefix.'s2member_subscr_gateway\' AND `meta_value` != \'\')
                               OR (`meta_key` = \''.$wpdb->prefix.'s2member_auto_eot_time\' AND `meta_value` != \'\')
                               OR (`meta_key` = \''.$wpdb->prefix.'s2member_last_auto_eot_time\' AND `meta_value` != \'\')
-                          )
-                          AND `user_id` NOT IN('.$sql_already_scanned_recently.')
+                            )
                     LIMIT '.esc_sql($per_process).'
             ';
             if (!($user_ids = $wpdb->get_col($sql))) {
