@@ -74,6 +74,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
                 return; // Not possible. Possible corruption in the DB.
             }
+            if (!($mail_from = '"'.str_replace('"', "'", $GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_name']).'"'.
+                               ' <'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email'].'>')) {
+                return; // Not possible. Email configuration is incomplete.
+            }
             $days        = preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY);
             $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
             $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
@@ -124,25 +128,169 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     continue; // No subject.
                 } elseif (!($_message = self::get_message_for_day($_day))) {
                     continue; // No message.
-                }
-                foreach (array(
-                    'subscr_gateway',
-                    'subscr_id',
-                    'subscr_cid',
-                    'subscr_cid',
-                ) as $_s2_meta_key) {
-                    $_subject = str_ireplace('%%'.$_s2_meta_key.'%%', get_user_option('s2member_'.$_s2_meta_key, $_user->ID), $_subject);
-                    $_message = str_ireplace('%%'.$_s2_meta_key.'%%', get_user_option('s2member_'.$_s2_meta_key, $_user->ID), $_message);
-                } // unset($_s2_meta_key); // Housekeeping.
+                } //
+                // This alters the subject/message by reference.
+                self::fill_replacement_codes($_user, $_eot, $_subject, $_message);
 
-                if (!$_subject || !$_message) {
-                    continue; // Empty as replacement(s).
+                if (!$_subject || !$_message || !$mail_from) {
+                    continue; // Final validation.
                 }
-            } // unset($_user_id, $_user, $_eot, $_day, $_recipients, $_subject, $_message); // Housekeeping
+                foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
+                    wp_mail(
+                        $_recipient, $_subject, $_message,
+                        'From: '.$mail_from."\r\n".'Content-Type: text/plain; charset=utf-8'
+                    );
+                } // unset($_recipient);
+            } // unset($_user_id, $_user, $_eot, $_day);
+            // unset($_recipients, $_subject, $_message);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
             }
+        }
+
+        protected static function fill_replacement_codes($user, $eot, &$subject, &$message)
+        {
+            $ipn_signup_vars = // If available, these take precedence.
+                (array) c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars($user->ID);
+
+            foreach (array(
+                'payer_email',
+                'first_name',
+                'last_name',
+
+                'subscr_id',
+                'subscr_cid',
+                'subscr_baid',
+                'subscr_gateway',
+
+                'currency',
+                'currency_symbol',
+
+                'initial',
+                'initial_term',
+
+                'regular',
+                'regular_term',
+
+                'recurring',
+
+                'item_name',
+                'item_number',
+            ) as $_key) {
+                if (isset($ipn_signup_vars[$_key])) {
+                    $_value  = (string) $ipn_signup_vars[$_key];
+                    $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
+                    $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
+                }
+            } // unset($_key, $_value); // Housekeeping.
+
+            if (!empty($ipn_signup_vars['initial_term'])) {
+                $initial_cycle = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['initial_term']);
+                $subject       = str_ireplace('%%initial_cycle%%', $initial_cycle, $subject);
+                $message       = str_ireplace('%%initial_cycle%%', $initial_cycle, $message);
+            }
+            if (!empty($ipn_signup_vars['regular_term'])) {
+                if (!empty($ipn_signup_vars['recurring'])) {
+                    $recurring_regular_cycle = $ipn_signup_vars['recurring'];
+                    $recurring_regular_cycle .= ' / '.c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], true);
+                } else {
+                    $recurring_regular_cycle = __('0 / non-recurring', 's2member-front', 's2member');
+                }
+                $subject = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $subject);
+                $message = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $message);
+            }
+            if (isset($ipn_signup_vars['first_name'], $ipn_signup_vars['last_name'])) {
+                $full_name = trim($ipn_signup_vars['first_name'].' '.$ipn_signup_vars['last_name']);
+                $subject   = str_ireplace('%%full_name%%', $full_name, $subject);
+                $message   = str_ireplace('%%full_name%%', $full_name, $message);
+            }
+            foreach (array(
+                'subscr_gateway',
+                'subscr_id',
+                'subscr_cid',
+                'subscr_baid',
+            ) as $_key) {
+                $_value  = (string) get_user_option('s2member_'.$_key, $user->ID);
+                $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
+                $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
+            } // unset($_key, $_value); // Housekeeping.
+
+            foreach (array(
+                'ID',
+                'first_name',
+                'last_name',
+                'user_email',
+                'user_login',
+            ) as $_property) {
+                $_property_value             = (string) $user->{$_property};
+                $_lc_property_wo_user_prefix = preg_replace('/^user_/i', '', strtolower($_property));
+                $subject                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $subject);
+                $message                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $message);
+            } // unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
+
+            $first_name = $user->first_name;
+            $subject    = str_ireplace('%%first_name%%', $first_name, $subject);
+            $message    = str_ireplace('%%first_name%%', $first_name, $message);
+
+            $last_name = $user->last_name;
+            $subject   = str_ireplace('%%last_name%%', $last_name, $subject);
+            $message   = str_ireplace('%%last_name%%', $last_name, $message);
+
+            $user_full_name = trim($user->first_name.' '.$user->last_name);
+            $subject        = str_ireplace('%%user_full_name%%', $user_full_name, $subject);
+            $message        = str_ireplace('%%user_full_name%%', $user_full_name, $message);
+
+            $user_ip = get_user_option('s2member_registration_ip', $user->ID);
+            $subject = str_ireplace('%%user_ip%%', $user_ip, $subject);
+            $message = str_ireplace('%%user_ip%%', $user_ip, $message);
+
+            $user_role = c_ws_plugin__s2member_user_access::user_access_role($user);
+            $subject   = str_ireplace('%%user_role%%', $user_role, $subject);
+            $message   = str_ireplace('%%user_role%%', $user_role, $message);
+
+            $user_level = c_ws_plugin__s2member_user_access::user_access_level($user);
+            $subject    = str_ireplace('%%user_level%%', $user_level, $subject);
+            $message    = str_ireplace('%%user_level%%', $user_level, $message);
+
+            $user_ccaps = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($user));
+            $subject    = str_ireplace('%%user_ccaps%%', $user_ccaps, $subject);
+            $message    = str_ireplace('%%user_ccaps%%', $user_ccaps, $message);
+
+            if (is_array($fields = get_user_option('s2member_custom_fields', $user->ID))) {
+                foreach ($fields as $_key => $_value) {
+                    $_serialized_value = maybe_serialize($_value);
+                    $subject           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $subject);
+                    $message           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $message);
+                } // unset($_key, $_value, $_serialized_value); // Housekeeping.
+            }
+            foreach (preg_split('/\|/', get_user_option('s2member_custom', $user->ID)) as $_key => $_value) {
+                $subject = str_ireplace('%%cv'.$_key.'%%', $_value, $subject);
+                $message = str_ireplace('%%cv'.$_key.'%%', $_value, $message);
+            } // unset($_key, $_value); // Housekeeping.
+
+            $eot_date = date_i18n(get_option('date_format'), $eot['time']);
+            $subject  = str_ireplace('%%eot_date%%', $eot_date, $subject);
+            $message  = str_ireplace('%%eot_date%%', $eot_date, $message);
+
+            $eot_time = date_i18n(get_option('time_format'), $eot['time']);
+            $subject  = str_ireplace('%%eot_time%%', $eot_time, $subject);
+            $message  = str_ireplace('%%eot_time%%', $eot_time, $message);
+
+            $eot_tz  = date_i18n('T', $eot['time']);
+            $subject = str_ireplace('%%eot_tz%%', $eot_tz, $subject);
+            $message = str_ireplace('%%eot_tz%%', $eot_tz, $message);
+
+            $eot_date_time_tz = $eot_date.' '.$eot_time.' '.$eot_tz;
+            $subject          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $subject);
+            $message          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $message);
+
+            $eot_descriptive_time = c_ws_plugin__s2member_utils_time::approx_time_difference(self::$now, $eot['time']);
+            $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
+            $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
+
+            $subject = trim(preg_replace('/%%(.+?)%%/i', '', $subject));
+            $message = trim(preg_replace('/%%(.+?)%%/i', '', $message));
         }
 
         protected static function calculate_day($time)
