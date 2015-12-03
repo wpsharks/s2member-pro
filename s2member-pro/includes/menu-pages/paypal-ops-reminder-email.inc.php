@@ -242,6 +242,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 			echo '</table>'."\n";
 			echo '</div>'."\n";
 			echo '</div>'."\n";
+			
 			echo '</div>'."\n";
 		}
 	}
