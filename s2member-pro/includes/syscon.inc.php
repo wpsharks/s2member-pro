@@ -188,7 +188,7 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 				else if($key === 'pro_eot_reminder_email_enable' && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];
 
-				else if($key === 'pro_eot_reminder_email_days' && (!is_string($value) || !($value = trim(preg_replace('/[^0-9,]/', '', $value), ','))))
+				else if($key === 'pro_eot_reminder_email_days' && (!is_string($value) || !($value = trim(preg_replace('/[^0-9,\-]/', '', $value), ','))))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_(?:coupon_codes|affiliate_coupon_code_(?:tracking_urls|suffix_chars))$/', $key) && (!is_string($value) || !strlen($value)))
