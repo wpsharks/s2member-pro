@@ -119,8 +119,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
                 if (!$_eot || !$_eot['type'] || !$_eot['time'] || !$_eot['tense']) {
                     continue; // Nothing to do; i.e., no EOT or NPT time.
-                } elseif ($_eot['type'] === 'next' && !$options['pro_eot_reminder_email_on_npt_also']) {
-                    continue; // Nothing to do; i.e., not an EOT time and NPTs are off.
+                } elseif ($_eot['type'] === 'next' // Disabled by default!
+                        && !$options['pro_eot_reminder_email_on_npt_also']) {
+                    continue; // Nothing to do; i.e., not an EOT time and no NPTs.
                 } elseif (!($_day = self::calculate_day($_eot['time'])) && $_day !== '0') {
                     continue; // Unable to calculate day.
                 } elseif (!in_array($_day, $days, true)) {
@@ -132,27 +133,23 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 } elseif (!($_message = self::get_message_for_day($_day))) {
                     continue; // No message.
                 } //
-                // This alters the subject/message by reference.
-                self::fill_replacement_codes($_user, $_eot, $_subject, $_message);
-
-                if (!$_subject || !$_message || !$mail_from) {
-                    continue; // Final validation.
+                self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
+                if (!$_recipients || !$_subject || !$_message || !$mail_from) {
+                    continue; // Final validation must not fail.
                 }
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
-                    wp_mail(
-                        $_recipient, $_subject, $_message,
-                        'From: '.$mail_from."\r\n".'Content-Type: text/plain; charset=utf-8'
-                    );
-                } // unset($_recipient);
-            } // unset($_user_id, $_user, $_eot, $_day);
-            // unset($_recipients, $_subject, $_message);
+                    wp_mail($_recipient, $_subject, $_message, // `text/plain` emails.
+                        'From: '.$mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+                }
+            }
+            unset($_user_id, $_user, $_eot, $_day, $_recipients, $_recipient, $_subject, $_message);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
             }
         }
 
-        protected static function fill_replacement_codes($user, $eot, &$subject, &$message)
+        protected static function fill_replacement_codes($user, $eot, &$recipients, &$subject, &$message)
         {
             $ipn_signup_vars = // If available, these take precedence.
                 (array) c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars($user->ID);
@@ -182,14 +179,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 'item_number',
             ) as $_key) {
                 if (isset($ipn_signup_vars[$_key])) {
-                    $_value  = (string) $ipn_signup_vars[$_key];
-                    $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
-                    $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
+                    $_value     = (string) $ipn_signup_vars[$_key];
+                    $recipients = str_ireplace('%%'.$_key.'%%', $_value, $recipients);
+                    $subject    = str_ireplace('%%'.$_key.'%%', $_value, $subject);
+                    $message    = str_ireplace('%%'.$_key.'%%', $_value, $message);
                 }
-            } unset($_key, $_value); // Housekeeping.
+            }
+            unset($_key, $_value); // Housekeeping.
 
             if (!empty($ipn_signup_vars['initial_term'])) {
                 $initial_cycle = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['initial_term']);
+                $recipients    = str_ireplace('%%initial_cycle%%', $initial_cycle, $recipients);
                 $subject       = str_ireplace('%%initial_cycle%%', $initial_cycle, $subject);
                 $message       = str_ireplace('%%initial_cycle%%', $initial_cycle, $message);
             }
@@ -201,16 +201,19 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     $regular_cycle           = c_ws_plugin__s2member_utils_time::period_term($ipn_signup_vars['regular_term'], false);
                     $recurring_regular_cycle = __('0 / non-recurring', 's2member-front', 's2member');
                 }
-                $subject = str_ireplace('%%regular_cycle%%', $regular_cycle, $subject);
-                $message = str_ireplace('%%regular_cycle%%', $regular_cycle, $message);
+                $recipients = str_ireplace('%%regular_cycle%%', $regular_cycle, $recipients);
+                $subject    = str_ireplace('%%regular_cycle%%', $regular_cycle, $subject);
+                $message    = str_ireplace('%%regular_cycle%%', $regular_cycle, $message);
 
-                $subject = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $subject);
-                $message = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $message);
+                $recipients = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $recipients);
+                $subject    = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $subject);
+                $message    = str_ireplace('%%recurring/regular_cycle%%', $recurring_regular_cycle, $message);
             }
             if (isset($ipn_signup_vars['first_name'], $ipn_signup_vars['last_name'])) {
-                $full_name = trim($ipn_signup_vars['first_name'].' '.$ipn_signup_vars['last_name']);
-                $subject   = str_ireplace('%%full_name%%', $full_name, $subject);
-                $message   = str_ireplace('%%full_name%%', $full_name, $message);
+                $full_name  = trim($ipn_signup_vars['first_name'].' '.$ipn_signup_vars['last_name']);
+                $recipients = str_ireplace('%%full_name%%', $full_name, $recipients);
+                $subject    = str_ireplace('%%full_name%%', $full_name, $subject);
+                $message    = str_ireplace('%%full_name%%', $full_name, $message);
             }
             foreach (array( // In case IPN Signup Vars are unavailable.
                 'subscr_id', // e.g., imported/migrated by site owner.
@@ -218,10 +221,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 'subscr_baid',
                 'subscr_gateway',
             ) as $_key) {
-                $_value  = (string) get_user_option('s2member_'.$_key, $user->ID);
-                $subject = str_ireplace('%%'.$_key.'%%', $_value, $subject);
-                $message = str_ireplace('%%'.$_key.'%%', $_value, $message);
-            } unset($_key, $_value); // Housekeeping.
+                $_value     = (string) get_user_option('s2member_'.$_key, $user->ID);
+                $recipients = str_ireplace('%%'.$_key.'%%', $_value, $recipients);
+                $subject    = str_ireplace('%%'.$_key.'%%', $_value, $subject);
+                $message    = str_ireplace('%%'.$_key.'%%', $_value, $message);
+            }
+            unset($_key, $_value); // Housekeeping.
 
             foreach (array( // WP account properties.
                 'ID',
@@ -232,89 +237,118 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             ) as $_property) {
                 $_property_value             = (string) $user->{$_property};
                 $_lc_property_wo_user_prefix = preg_replace('/^user_/i', '', strtolower($_property));
+                $recipients                  = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $recipients);
                 $subject                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $subject);
                 $message                     = str_ireplace('%%user_'.$_lc_property_wo_user_prefix.'%%', $_property_value, $message);
-            } unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
+            }
+            unset($_property, $_property_value, $_lc_property_wo_user_prefix); // Housekeeping.
 
             $first_name = $user->first_name; // If not yet filled above.
+            $recipients = str_ireplace('%%first_name%%', $first_name, $recipients);
             $subject    = str_ireplace('%%first_name%%', $first_name, $subject);
             $message    = str_ireplace('%%first_name%%', $first_name, $message);
 
-            $last_name = $user->last_name; // If not yet filled above.
-            $subject   = str_ireplace('%%last_name%%', $last_name, $subject);
-            $message   = str_ireplace('%%last_name%%', $last_name, $message);
+            $last_name  = $user->last_name; // If not yet filled above.
+            $recipients = str_ireplace('%%last_name%%', $last_name, $recipients);
+            $subject    = str_ireplace('%%last_name%%', $last_name, $subject);
+            $message    = str_ireplace('%%last_name%%', $last_name, $message);
 
-            $full_name = trim($first_name.' '.$last_name); // Same here.
-            $subject   = str_ireplace('%%full_name%%', $full_name, $subject);
-            $message   = str_ireplace('%%full_name%%', $full_name, $message);
+            $full_name  = trim($first_name.' '.$last_name); // Same here.
+            $recipients = str_ireplace('%%full_name%%', $full_name, $recipients);
+            $subject    = str_ireplace('%%full_name%%', $full_name, $subject);
+            $message    = str_ireplace('%%full_name%%', $full_name, $message);
 
             $user_full_name = trim($user->first_name.' '.$user->last_name);
+            $recipients     = str_ireplace('%%user_full_name%%', $user_full_name, $recipients);
             $subject        = str_ireplace('%%user_full_name%%', $user_full_name, $subject);
             $message        = str_ireplace('%%user_full_name%%', $user_full_name, $message);
 
-            $user_ip = get_user_option('s2member_registration_ip', $user->ID);
-            $subject = str_ireplace('%%user_ip%%', $user_ip, $subject);
-            $message = str_ireplace('%%user_ip%%', $user_ip, $message);
+            $user_ip    = get_user_option('s2member_registration_ip', $user->ID);
+            $recipients = str_ireplace('%%user_ip%%', $user_ip, $recipients);
+            $subject    = str_ireplace('%%user_ip%%', $user_ip, $subject);
+            $message    = str_ireplace('%%user_ip%%', $user_ip, $message);
 
-            $user_role = c_ws_plugin__s2member_user_access::user_access_role($user);
-            $subject   = str_ireplace('%%user_role%%', $user_role, $subject);
-            $message   = str_ireplace('%%user_role%%', $user_role, $message);
+            $user_role  = c_ws_plugin__s2member_user_access::user_access_role($user);
+            $recipients = str_ireplace('%%user_role%%', $user_role, $recipients);
+            $subject    = str_ireplace('%%user_role%%', $user_role, $subject);
+            $message    = str_ireplace('%%user_role%%', $user_role, $message);
 
             $user_level = c_ws_plugin__s2member_user_access::user_access_level($user);
+            $recipients = str_ireplace('%%user_level%%', $user_level, $recipients);
             $subject    = str_ireplace('%%user_level%%', $user_level, $subject);
             $message    = str_ireplace('%%user_level%%', $user_level, $message);
 
             $user_level_label = c_ws_plugin__s2member_user_access::user_access_label($user);
+            $recipients       = str_ireplace('%%user_level_label%%', $user_level_label, $recipients);
             $subject          = str_ireplace('%%user_level_label%%', $user_level_label, $subject);
             $message          = str_ireplace('%%user_level_label%%', $user_level_label, $message);
 
             $user_ccaps = implode(',', c_ws_plugin__s2member_user_access::user_access_ccaps($user));
+            $recipients = str_ireplace('%%user_ccaps%%', $user_ccaps, $recipients);
             $subject    = str_ireplace('%%user_ccaps%%', $user_ccaps, $subject);
             $message    = str_ireplace('%%user_ccaps%%', $user_ccaps, $message);
 
             if (is_array($fields = get_user_option('s2member_custom_fields', $user->ID))) {
                 foreach ($fields as $_key => $_value) {
                     $_serialized_value = maybe_serialize($_value);
+                    $recipients        = str_ireplace('%%'.$_key.'%%', $_serialized_value, $recipients);
                     $subject           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $subject);
                     $message           = str_ireplace('%%'.$_key.'%%', $_serialized_value, $message);
-                } unset($_key, $_value, $_serialized_value); // Housekeeping.
+                }
+                unset($_key, $_value, $_serialized_value); // Housekeeping.
             }
             foreach (preg_split('/\|/', get_user_option('s2member_custom', $user->ID)) as $_key => $_value) {
-                $subject = str_ireplace('%%cv'.$_key.'%%', $_value, $subject);
-                $message = str_ireplace('%%cv'.$_key.'%%', $_value, $message);
-            } unset($_key, $_value); // Housekeeping.
+                $recipients = str_ireplace('%%cv'.$_key.'%%', $_value, $recipients);
+                $subject    = str_ireplace('%%cv'.$_key.'%%', $_value, $subject);
+                $message    = str_ireplace('%%cv'.$_key.'%%', $_value, $message);
+            }
+            unset($_key, $_value); // Housekeeping.
 
-            $eot_date = date_i18n(get_option('date_format'), $eot['time']);
-            $subject  = str_ireplace('%%eot_date%%', $eot_date, $subject);
-            $message  = str_ireplace('%%eot_date%%', $eot_date, $message);
+            $eot_date   = date_i18n(get_option('date_format'), $eot['time']);
+            $recipients = str_ireplace('%%eot_date%%', $eot_date, $recipients);
+            $subject    = str_ireplace('%%eot_date%%', $eot_date, $subject);
+            $message    = str_ireplace('%%eot_date%%', $eot_date, $message);
 
-            $eot_time = date_i18n(get_option('time_format'), $eot['time']);
-            $subject  = str_ireplace('%%eot_time%%', $eot_time, $subject);
-            $message  = str_ireplace('%%eot_time%%', $eot_time, $message);
+            $eot_time   = date_i18n(get_option('time_format'), $eot['time']);
+            $recipients = str_ireplace('%%eot_time%%', $eot_time, $recipients);
+            $subject    = str_ireplace('%%eot_time%%', $eot_time, $subject);
+            $message    = str_ireplace('%%eot_time%%', $eot_time, $message);
 
-            $eot_tz  = date_i18n('T', $eot['time']);
-            $subject = str_ireplace('%%eot_tz%%', $eot_tz, $subject);
-            $message = str_ireplace('%%eot_tz%%', $eot_tz, $message);
+            $eot_tz     = date_i18n('T', $eot['time']);
+            $recipients = str_ireplace('%%eot_tz%%', $eot_tz, $recipients);
+            $subject    = str_ireplace('%%eot_tz%%', $eot_tz, $subject);
+            $message    = str_ireplace('%%eot_tz%%', $eot_tz, $message);
 
             $eot_date_time_tz = $eot_date.' '.$eot_time.' '.$eot_tz;
+            $recipients       = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $recipients);
             $subject          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $subject);
             $message          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $message);
 
             $eot_descriptive_time = c_ws_plugin__s2member_utils_time::approx_time_difference(self::$now, $eot['time']);
+            $recipients           = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $recipients);
             $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
 
-            $subject = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
-            $message = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
+            $recipients = trim(preg_replace('/%%(.+?)%%/i', '', $recipients)); // Remove remaining.
+            $subject    = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
+            $message    = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
 
             if (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) {
-                $subject = c_ws_plugin__s2member_utilities::evl($subject, get_defined_vars());
-                $message = c_ws_plugin__s2member_utilities::evl($message, get_defined_vars());
+                //
+                $evl_vars = get_defined_vars(); // Defined vars; minus primaries.
+                unset($evl_vars['recipients'], $evl_vars['subject'], $evl_vars['message']);
+
+                $recipients = c_ws_plugin__s2member_utilities::evl($recipients, $evl_vars);
+                $subject    = c_ws_plugin__s2member_utilities::evl($subject, $evl_vars);
+                $message    = c_ws_plugin__s2member_utilities::evl($message, $evl_vars);
             }
         }
 
         protected static function calculate_day($time)
         {
+            // Note: `floor()` very important here.
+            // Always round down to avoid skipping any.
+
             // -1 = 1 day before.
             //  0 = the day of.
             //  1 = 1 day after.
