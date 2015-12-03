@@ -324,7 +324,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $subject          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $subject);
             $message          = str_ireplace('%%eot_date_time_tz%%', $eot_date_time_tz, $message);
 
-            $eot_descriptive_time = c_ws_plugin__s2member_utils_time::approx_time_difference(self::$now, $eot['time']);
+            $eot_descriptive_time = c_ws_plugin__s2member_utils_time::approx_time_difference(self::$now, $eot['time'], 'floor');
             $recipients           = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $recipients);
             $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
