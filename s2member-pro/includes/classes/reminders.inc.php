@@ -134,15 +134,40 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     continue; // No message.
                 } //
                 self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
-                if (!$_recipients || !$_subject || !$_message || !$mail_from) {
+
+                $_mail_from  = apply_filters('s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
+                $_recipients = apply_filters('s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
+                $_subject    = apply_filters('s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
+                $_message    = apply_filters('s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
+
+                if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
                     continue; // Final validation must not fail.
                 }
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
                     wp_mail($_recipient, $_subject, $_message, // `text/plain` emails.
-                        'From: '.$mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+                        'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+
+                    $_log_entry = array(
+                        'eot'        => $_eot,
+                        'eot_rfc822' => date(DATE_RFC822, $_eot['time']),
+                        'day'        => $_day, // Reminder day.
+                        'now'        => self::$now,
+
+                        'user_id'         => $_user->ID,
+                        'user_login'      => $_user->user_login,
+                        'user_email'      => $_user->user_email,
+                        'user_first_name' => $_user->first_name,
+                        'user_last_name'  => $_user->last_name,
+
+                        'mail_from'    => $_mail_from,
+                        'recipient'    => $_recipient,
+                        'subject'      => $_subject,
+                        'message_clip' => substr($_message, 0, 100).'...',
+                    );
+                    c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
                 }
             }
-            unset($_user_id, $_user, $_eot, $_day, $_recipients, $_recipient, $_subject, $_message);
+            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_log_entry);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
@@ -331,6 +356,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $recipients           = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $recipients);
             $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
+
+            // This allows developers to build a list of custom replacement codes if they'd like; using a WP filter.
+            foreach (apply_filters('s2member_pro_eot_reminder_email_custom_rcs', array(), get_defined_vars()) as $_custom_rc_key => $_custom_rc_value) {
+                if (!is_string($_custom_rc_key) || !is_scalar($_custom_rc_value)) {
+                    continue; // Requires string key and scalar value.
+                }
+                $recipients = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $recipients);
+                $subject    = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $subject);
+                $message    = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $message);
+            }
+            unset($_custom_rc_key, $_custom_rc_value); // Housekeeping.
 
             $recipients = trim(preg_replace('/%%(.+?)%%/i', '', $recipients)); // Remove remaining.
             $subject    = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
