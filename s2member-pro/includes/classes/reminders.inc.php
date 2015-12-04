@@ -78,9 +78,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 || !$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email']) {
                 return; // Not possible. Email configuration is incomplete.
             }
-            $days        = preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY);
-            $scan_time   = apply_filters('ws_plugin__s2member_pro_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
-            $per_process = apply_filters('ws_plugin__s2member_pro_reminders_per_process', $vars['per_process'], get_defined_vars());
+            $days                 = preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY);
+            $scan_time            = apply_filters('ws_plugin__s2member_pro_eot_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
+            $per_process          = apply_filters('ws_plugin__s2member_pro_eot_reminders_per_process', $vars['per_process'], get_defined_vars());
+            $message_bytes_in_log = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message_bytes_in_log', 100);
 
             $mail_from = '"'.str_replace('"', "'", $GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_name']).'"'.
                                ' <'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email'].'>';
@@ -159,11 +160,15 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                         'user_first_name' => $_user->first_name,
                         'user_last_name'  => $_user->last_name,
 
-                        'mail_from'    => $_mail_from,
-                        'recipient'    => $_recipient,
-                        'subject'      => $_subject,
-                        'message_clip' => substr($_message, 0, 100).'...',
+                        'mail_from' => $_mail_from,
+                        'recipient' => $_recipient,
+                        'subject'   => $_subject,
                     );
+                    if (strlen($_message) > $message_bytes_in_log) {
+                        $_log_entry['message_clip'] = substr($_message, 0, $message_bytes_in_log).'...';
+                    } else {
+                        $_log_entry['message'] = $_message; // Full message.
+                    }
                     c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
                 }
             }
