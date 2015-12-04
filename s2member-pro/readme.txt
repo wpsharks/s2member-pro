@@ -17,38 +17,38 @@ Authorize.Net® Compatible: yes
 Google® Checkout Compatible: yes
 ClickBank® Compatible: yes
 
-Tested up to: 4.4-alpha
+Tested up to: 4.4
 Requires at least: 4.2
 Requires: s2Member® Framework
 
 Requires PHP: 5.2+
-Tested up to PHP: 5.6
+Tested up to PHP: 7.0
 
 Copyright: © 2009 WebSharks, Inc.
 License: GNU General Public License v2 or later.
 Contributors: WebSharks, JasWSInc, anguz, sitegeek, raamdev, kristineds
 
 Author: s2Member® / WebSharks, Inc.
-Author URI: http://www.s2member.com/
-Donate link: http://www.s2member.com/donate/
-Beta link: http://www.s2member.com/beta-testers/
+Author URI: http://s2member.com/
+Donate link: http://s2member.com/donate/
+Beta link: http://s2member.com/beta-testers/
 
 Text Domain: s2member
 Domain Path: ../s2member/includes/translations
 
 Plugin Name: s2Member® Pro Add-on
-Forum URI: http://www.s2member.com/forums/
-Plugin URI: http://www.s2member.com/pro/
-Privacy URI: http://www.s2member.com/privacy/
-Changelog URI: http://www.s2member.com/changelog/
-Video Tutorials: http://www.s2member.com/videos/
-Knowledge Base: http://www.s2member.com/kb/
-Newsletter: http://www.s2member.com/r/subscribe/
-Pro Add-on / Home Page: http://www.s2member.com/
-Pro Add-on / Prices: http://www.s2member.com/prices/
+Forum URI: http://s2member.com/forums/
+Plugin URI: http://s2member.com/
+Privacy URI: http://s2member.com/privacy-policy/
+Changelog URI: http://s2member.com/changelog/
+Video Tutorials: http://s2member.com/videos/
+Knowledge Base: http://s2member.com/kb/
+Newsletter: http://s2member.com/r/subscribe/
+Pro Add-on / Home Page: http://s2member.com/
+Pro Add-on / Prices: http://s2member.com/prices/
 Pro Add-on / Auto-Update URL: https://www.s2member.com/
-PayPal Pro Integration: http://www.s2member.com/videos/ED70D90C6749DA3D/
-Professional Installation URI: http://www.s2member.com/professional-installation/
+PayPal Pro Integration: http://s2member.com/r/pp-account-types/
+Professional Installation URI: http://s2member.com/r/professional-installation/
 
 Description: s2Member® Pro adds PayPal® Payments Pro integration, advanced import/export tools, and many other enhancements.
 Tags: s2, s2member, s2 member, membership, users, user, members, member, subscribers, subscriber, members only, roles, capabilities, capability, register, signup, stripe, paypal, paypal pro, pay pal, authorize, authorize.net, google wallet, clickbank, click bank, buddypress, buddy press, bbpress, bb press, shopping cart, cart, checkout, ecommerce
@@ -79,15 +79,15 @@ Yes. s2Member and s2Member Pro, are also both compatible with Multisite Networki
 
 = Please Check the Following s2Member® Resources =
 
-* s2Member® FAQs: <http://www.s2member.com/faqs/>
-* Knowledge Base: <http://www.s2member.com/kb/>
-* Video Tutorials: <http://www.s2member.com/videos/>
-* Community: <http://www.s2member.com/forums/>
-* Codex: <http://www.s2member.com/codex/>
+* s2Member® FAQs: <http://s2member.com/faqs/>
+* Knowledge Base: <http://s2member.com/kb/>
+* Video Tutorials: <http://s2member.com/videos/>
+* Community: <http://s2member.com/forums/>
+* Codex: <http://s2member.com/codex/>
 
 = Translating s2Member® =
 
-Please see [this FAQ entry](http://www.s2member.com/faqs/#s2-faqs-translations)
+Please see: <http://s2member.com/r/translations/>
 
 == License ==
 
