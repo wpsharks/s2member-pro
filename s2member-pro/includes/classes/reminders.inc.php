@@ -134,6 +134,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     continue; // No message.
                 } //
                 self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
+
+                $mail_from   = apply_filters('s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
+                $_recipients = apply_filters('s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
+                $_subject    = apply_filters('s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
+                $_message    = apply_filters('s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
+
                 if (!$_recipients || !$_subject || !$_message || !$mail_from) {
                     continue; // Final validation must not fail.
                 }
