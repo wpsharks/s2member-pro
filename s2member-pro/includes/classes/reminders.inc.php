@@ -146,9 +146,28 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
                     wp_mail($_recipient, $_subject, $_message, // `text/plain` emails.
                         'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+
+                    $_log_entry = array(
+                        'eot'        => $_eot,
+                        'eot_rfc822' => date(DATE_RFC822, $_eot['time']),
+                        'day'        => $_day, // Reminder day.
+                        'now'        => self::$now,
+
+                        'user_id'         => $_user->ID,
+                        'user_login'      => $_user->user_login,
+                        'user_email'      => $_user->user_email,
+                        'user_first_name' => $_user->first_name,
+                        'user_last_name'  => $_user->last_name,
+
+                        'mail_from'    => $_mail_from,
+                        'recipient'    => $_recipient,
+                        'subject'      => $_subject,
+                        'message_clip' => substr($_message, 0, 100).'...',
+                    );
+                    c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
                 }
             }
-            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message);
+            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_log_entry);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
