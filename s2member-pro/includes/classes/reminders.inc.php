@@ -136,10 +136,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 } //
                 self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
 
-                $_mail_from  = apply_filters('s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
-                $_recipients = apply_filters('s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
-                $_subject    = apply_filters('s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
-                $_message    = apply_filters('s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
+                $_mail_from  = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
+                $_recipients = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
+                $_subject    = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
+                $_message    = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
 
                 if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
                     continue; // Final validation must not fail.
@@ -363,7 +363,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
 
             // This allows developers to build a list of custom replacement codes if they'd like; using a WP filter.
-            foreach (apply_filters('s2member_pro_eot_reminder_email_custom_rcs', array(), get_defined_vars()) as $_custom_rc_key => $_custom_rc_value) {
+            foreach (apply_filters('ws_plugin__s2member_pro_eot_reminder_email_custom_rcs', array(), get_defined_vars()) as $_custom_rc_key => $_custom_rc_value) {
                 if (!is_string($_custom_rc_key) || !is_scalar($_custom_rc_value)) {
                     continue; // Requires string key and scalar value.
                 }
