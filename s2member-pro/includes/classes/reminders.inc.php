@@ -338,6 +338,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $subject              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $subject);
             $message              = str_ireplace('%%eot_descriptive_time%%', $eot_descriptive_time, $message);
 
+            // This allows developers to build a list of custom replacement codes if they'd like; using a WP filter.
+            foreach (apply_filters('s2member_pro_eot_reminder_email_custom_rcs', array(), get_defined_vars()) as $_custom_rc_key => $_custom_rc_value) {
+                if (!is_string($_custom_rc_key) || !is_scalar($_custom_rc_value)) {
+                    continue; // Requires string key and scalar value.
+                }
+                $recipients = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $recipients);
+                $subject    = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $subject);
+                $message    = str_ireplace('%%'.$_custom_rc_key.'%%', (string) $_custom_rc_value, $message);
+            }
+            unset($_custom_rc_key, $_custom_rc_value); // Housekeeping.
+
             $recipients = trim(preg_replace('/%%(.+?)%%/i', '', $recipients)); // Remove remaining.
             $subject    = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
             $message    = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
