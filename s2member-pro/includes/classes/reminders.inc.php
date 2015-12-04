@@ -148,7 +148,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                         'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
                 }
             }
-            unset($_user_id, $_user, $_eot, $_day, $_recipients, $_recipient, $_subject, $_message);
+            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
