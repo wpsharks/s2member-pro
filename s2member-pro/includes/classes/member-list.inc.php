@@ -18,11 +18,11 @@ if (!defined('WPINC')) { // MUST have.
 }
 class c_ws_plugin__s2member_pro_member_list
 {
-    public static $search_columns_for_filter = array();
+    public static $_search_columns_for_filter = array();
 
     public static function _search_columns_filter()
     {
-        return self::$search_columns_for_filter;
+        return self::$_search_columns_for_filter;
     }
 
     public static function query($args = array())
@@ -119,18 +119,18 @@ class c_ws_plugin__s2member_pro_member_list
             $user_id_args['order']   = 'ASC';
             unset($user_id_args['number'], $user_id_args['offset']);
 
-            self::$search_columns_for_filter = $user_id_args['search_columns'];
+            self::$_search_columns_for_filter = $user_id_args['search_columns'];
 
-            foreach (self::$search_columns_for_filter as $_key => $_column) {
+            foreach (self::$_search_columns_for_filter as $_key => $_column) {
                 if (stripos($_column, 's2member_custom_field_') === 0) {
-                    unset(self::$search_columns_for_filter[$_key]);
+                    unset(self::$_search_columns_for_filter[$_key]);
                 }
             } // unset($_key, $column); // Housekeeping.
 
             add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
             $user_ids = array(); // Intialize.
-            if ($user_id_args['search'] && self::$search_columns_for_filter) {
+            if ($user_id_args['search'] && self::$_search_columns_for_filter) {
                 $user_ids_query = new WP_User_Query($user_id_args);
                 $user_ids       = $user_ids_query->get_results();
             }
@@ -167,7 +167,7 @@ class c_ws_plugin__s2member_pro_member_list
                 ),
             );
         } else { // Use default behavior. This is much faster.
-            self::$search_columns_for_filter = $args['search_columns'];
+            self::$_search_columns_for_filter = $args['search_columns'];
 
             add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
