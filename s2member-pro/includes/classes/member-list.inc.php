@@ -118,6 +118,11 @@ class c_ws_plugin__s2member_pro_member_list
                 'value'   => '___',
                 'compare' => '!=',
             ),
+            'nickname' => array(
+                'key'     => 'nickname',
+                'value'   => '___',
+                'compare' => '!=',
+            ),
         );
         if ($args['meta_query']) {
             $args['meta_query'] = array(
