@@ -228,6 +228,106 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 							}
 							break; // Break switch handler.
+
+						case 'charge.refunded': // Customer refund (partial or full).
+
+							if(!empty($event->data->object)
+							   && ($stripe_charge = $event->data->object) instanceof Stripe_Charge
+							   && !empty($strip_charge->amount_refunded) && !empty($stripe_charge->customer)
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_charge->customer))
+							)
+							{
+								$processing = TRUE;
+
+								$ipn['payment_status'] = 'refunded';
+								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+								$ipn['parent_txn_id'] = $ipn_signup_vars['subscr_id'];
+
+								$ipn['custom'] = $ipn_signup_vars['custom'];
+
+								$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
+								$ipn['mc_gross']    = '-'.number_format(abs($strip_charge->amount), 2, '.', '');
+								$ipn['mc_currency'] = strtoupper($strip_charge->currency);
+								$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
+
+								$ipn['period1'] = $ipn_signup_vars['period1'];
+								$ipn['period3'] = $ipn_signup_vars['period3'];
+
+								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+								$ipn['first_name']  = $ipn_signup_vars['first_name'];
+								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+								$ipn['item_name']   = $ipn_signup_vars['item_name'];
+								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+								$ipn['s2member_paypal_proxy']              = 'stripe';
+								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor.';
+								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+							}
+							break; // Break switch handler.
+
+						case 'charge.dispute.created': // Customer dispute (chargeback).
+
+							if(!empty($event->data->object->charge)
+							   && ($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::get_charge($event->data->object->charge)) instanceof Stripe_Charge
+							   && !empty($stripe_charge->customer) // The charge that is being disputed must be associated with a customer that we know of.
+							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_charge->customer))
+							)
+							{
+								$processing = TRUE;
+
+								$ipn['payment_status'] = 'reversed';
+								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+								$ipn['parent_txn_id'] = $ipn_signup_vars['subscr_id'];
+
+								$ipn['custom'] = $ipn_signup_vars['custom'];
+
+								$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
+								$ipn['mc_gross']    = '-'.number_format(abs($strip_charge->amount), 2, '.', '');
+								$ipn['mc_currency'] = strtoupper($strip_charge->currency);
+								$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
+
+								$ipn['period1'] = $ipn_signup_vars['period1'];
+								$ipn['period3'] = $ipn_signup_vars['period3'];
+
+								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+								$ipn['first_name']  = $ipn_signup_vars['first_name'];
+								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+
+								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+
+								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+
+								$ipn['item_name']   = $ipn_signup_vars['item_name'];
+								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+
+								$ipn['s2member_paypal_proxy']              = 'stripe';
+								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor.';
+								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+							}
+							break; // Break switch handler.
 					}
 					if(empty($processing)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
 				}
