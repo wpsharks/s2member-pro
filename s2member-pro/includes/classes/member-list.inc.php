@@ -82,8 +82,7 @@ class c_ws_plugin__s2member_pro_member_list
             } elseif (in_array($_key, array('role', 'search', 'who', 'meta_key', 'meta_value', 'meta_compare', 'order', 'orderby'), true)) {
                 $_value = (string) $_value;
             }
-        }
-        unset($_key, $_value); // Housekeeping.
+        } // unset($_key, $_value); // Housekeeping.
 
         /* ---------------------------------------------------------- */
 
@@ -126,8 +125,7 @@ class c_ws_plugin__s2member_pro_member_list
                 if (stripos($_column, 's2member_custom_field_') === 0) {
                     unset(self::$search_columns_for_filter[$_key]);
                 }
-            }
-            unset($_key, $column); // Housekeeping.
+            } // unset($_key, $column); // Housekeeping.
 
             add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
