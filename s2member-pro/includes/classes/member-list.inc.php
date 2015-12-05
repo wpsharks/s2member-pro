@@ -18,15 +18,28 @@ if (!defined('WPINC')) { // MUST have.
 }
 class c_ws_plugin__s2member_pro_member_list
 {
-    public static $_search_columns_for_filter = array();
-
+    /**
+     * User query filter helper.
+     *
+     * @return array Search columns.
+     */
     public static function _search_columns_filter()
     {
         return self::$_search_columns_for_filter;
     }
+    protected static $_search_columns_for_filter = array();
 
+    /**
+     * User query (abstraction layer).
+     *
+     * @param array $args Query args.
+     *
+     * @return array ['query', 'pagination'] elements.
+     */
     public static function query($args = array())
     {
+        global $wpdb;
+
         if (!is_array($args)) {
             $args = array();
         }
@@ -37,8 +50,8 @@ class c_ws_plugin__s2member_pro_member_list
         } elseif (($page = (int) $_REQUEST[$p_var]) < 1) {
             $page = 1; // Default page number.
         }
-        $original_args = $args;
-        $default_args  = array(
+        $original_args = $args; // Needed below.
+        $default_args  = array( // Default query args.
             'blog_id' => $GLOBALS['blog_id'],
 
             'role'         => '',
@@ -49,12 +62,18 @@ class c_ws_plugin__s2member_pro_member_list
 
             'search'         => '',
             'search_columns' => array(
+                // `wp_users`
                 'ID',
                 'user_login',
                 'user_email',
                 'user_url',
                 'user_nicename',
                 'display_name',
+
+                // `wp_usermeta`
+                'first_name',
+                'last_name',
+                'nickname',
             ),
             'include' => array(),
             'exclude' => array(),
@@ -82,22 +101,102 @@ class c_ws_plugin__s2member_pro_member_list
             } elseif (in_array($_key, array('role', 'search', 'who', 'meta_key', 'meta_value', 'meta_compare', 'order', 'orderby'), true)) {
                 $_value = (string) $_value;
             }
-        } // unset($_key, $_value); // Housekeeping.
+        }
+        unset($_key, $_value); // Housekeeping; must unset due to reference.
 
         /* ---------------------------------------------------------- */
 
+        $first_last_name_meta_queries = array(
+            'relaton'    => 'AND',
+            'first_name' => array(
+                'key'     => 'first_name',
+                'value'   => '___',
+                'compare' => '!=',
+            ),
+            'last_name' => array(
+                'key'     => 'last_name',
+                'value'   => '___',
+                'compare' => '!=',
+            ),
+        );
+        if ($args['meta_query']) {
+            $args['meta_query'] = array(
+                'relation' => 'AND',
+                $args['meta_query'], $first_last_name_meta_queries,
+            );
+        } elseif ($user_meta_queries) {
+            $args['meta_query'] = $first_last_name_meta_queries;
+        }
+        /* ---------------------------------------------------------- */
+
+        if (strpos(trim($args['search'], "* \t\n\r\0\x0B"), '*') !== false) {
+            $args['search'] = '"'.str_replace('*', '', $args['search']).'"';
+            // Do not allow `*` to appear in the middle of a string.
+            // This is currently unsupported by WP_User_Query.
+            // It also creates a problem w/ usermeta regex below.
+        }
         if (strlen($args['search']) >= 2 && strpos($args['search'], '*') === false && strpos($args['search'], '"') === false) {
             $args['search'] = '*'.$args['search'].'*';
         }
+        $args['search'] = trim($args['search'], '"'." \t\n\r\0\x0B");
+        $search_regex   = '^'.str_replace('\\*', '.*', preg_quote($args['search'])).'$';
+        // Note that an ungreedy `.*?` is not possible. See: <http://jas.xyz/1PIWPZA>
+
+        /* ---------------------------------------------------------- */
+
         if (!$args['search_columns']) { // Use defaults?
             $args['search_columns'] = $default_args['search_columns'];
         }
-        $search_s2_custom_fields = true; // Default value.
+        $user_search_cols            = preg_grep('/^(?:ID|user_login|user_email|user_url|user_nicename|display_name)$/', $args['search_columns']);
+        $s2_custom_field_search_cols = preg_grep('/^s2member_custom_field_\w+$/', $args['search_columns']);
+        $user_meta_search_cols       = array_diff($args['search_columns'], $user_search_cols, $s2_custom_field_search_cols);
 
-        if (empty($args['search'])) {
+        self::$_search_columns_for_filter = $user_search_cols; // `wp_user` cols only.
+        add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
+
+        $blog_prefix = $wpdb->get_blog_prefix($args['blog_id']); // e.g., `wp_`, etc.
+
+        foreach ($user_meta_search_cols as &$_search_col) {
+            if (stripos($_search_col, 's2member_') === 0) {
+                $_search_col = $blog_prefix.$_search_col; // e.g., `wp_s2member_subscr_id`.
+            } // Stored as a user option key; i.e., as a blog-specific/prefixed metadata value.
+        }
+        unset($_search_col); // Housekeeping; must unset due to reference.
+
+        /* ---------------------------------------------------------- */
+
+        $search_s2_custom_fields = true; // Default behavior.
+
+        if (!$args['search']) {
             $search_s2_custom_fields = false;
-        } elseif (!empty($original_args['search_columns']) && !preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns'])) {
+        } elseif (!empty($original_args['search_columns']) && !$s2_custom_field_search_cols) {
             $search_s2_custom_fields = false;
+        }
+        /* ---------------------------------------------------------- */
+
+        // Convert this into a complex meta query w/ multiple dimensions.
+        // See: <http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters>
+        // Here we wrap what could potentially be a complex meta query already.
+
+        if ($args['search'] && $search_regex && $user_meta_search_cols) {
+            $user_meta_queries = array('relation' => 'OR');
+
+            foreach ($user_meta_search_cols as $_search_col) {
+                $user_meta_queries[] = array(
+                    'key'     => $_search_col,
+                    'value'   => $search_regex,
+                    'compare' => 'REGEXP',
+                );
+            } // unset($_search_col); // Housekeeping.
+
+            if ($user_meta_queries && $args['meta_query']) {
+                $args['meta_query'] = array(
+                    'relation' => 'AND', // Both!
+                    $args['meta_query'], $user_meta_queries,
+                );
+            } elseif ($user_meta_queries) {
+                $args['meta_query'] = $user_meta_queries;
+            }
         }
         /* ---------------------------------------------------------- */
 
@@ -112,73 +211,63 @@ class c_ws_plugin__s2member_pro_member_list
 
         /* ---------------------------------------------------------- */
 
-        if ($search_s2_custom_fields) {
-            $user_id_args            = $args;
-            $user_id_args['fields']  = 'ID';
-            $user_id_args['orderby'] = 'ID';
-            $user_id_args['order']   = 'ASC';
-            unset($user_id_args['number'], $user_id_args['offset']);
-
-            self::$_search_columns_for_filter = $user_id_args['search_columns'];
-
-            foreach (self::$_search_columns_for_filter as $_key => $_column) {
-                if (stripos($_column, 's2member_custom_field_') === 0) {
-                    unset(self::$_search_columns_for_filter[$_key]);
-                }
-            } // unset($_key, $column); // Housekeeping.
-
-            add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
+        if ($args['search']) {
+            $query_args            = $args;
+            $query_args['fields']  = 'ID';
+            $query_args['orderby'] = 'ID';
+            $query_args['order']   = 'ASC';
+            unset($query_args['number'], $query_args['offset']);
 
             $user_ids = array(); // Intialize.
-            if ($user_id_args['search'] && self::$_search_columns_for_filter) {
-                $user_ids_query = new WP_User_Query($user_id_args);
-                $user_ids       = $user_ids_query->get_results();
-            }
-            $user_ids_from_s2_custom_fields = self::search_s2_custom_fields($user_id_args, $original_args);
 
+            if ($user_search_cols) {
+                $query_args['meta_query'] = $original_args['meta_query'];
+                $query                    = new WP_User_Query($query_args);
+                $user_ids                 = array_merge($user_ids, $query->get_results());
+            }
+            if ($user_meta_search_cols) {
+                unset($query_args['search']);
+                $query_args['meta_query'] = $args['meta_query'];
+                $query                    = new WP_User_Query($query_args);
+                $user_ids                 = array_merge($user_ids, $query->get_results());
+            }
             remove_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
-            if (!empty($user_ids_from_s2_custom_fields)) {
-                $user_ids = array_unique(array_merge($user_ids, $user_ids_from_s2_custom_fields));
+            if ($search_s2_custom_fields) { // Also search in the serialized array of custom fields?
+                if (($s2_custom_field_user_ids = self::search_s2_custom_fields($args, $s2_custom_field_search_cols))) {
+                    $user_ids = array_merge($user_ids, $s2_custom_field_user_ids);
+                }
             }
-            if (!$user_ids) { // Known to be empty?
+            if (!($user_ids = array_unique($user_ids))) {
                 return array(
-                    'query'      => $user_ids_query,
-                    'pagination' => self::paginate(
-                        $page,
-                        0,
-                        $args['number']
-                    ),
+                    'query'      => new WP_User_Query(),
+                    'pagination' => self::paginate($page, 0, $args['number']),
                 );
             }
-            $user_id_args            = $args;
-            $user_id_args['include'] = $user_ids;
-            $user_id_args['fields']  = 'all_with_meta';
-            unset($user_id_args['search'], $user_id_args['search_columns']);
+            $query_args               = $args;
+            $query_args['include']    = $user_ids;
+            $query_args['fields']     = 'all_with_meta';
+            $query_args['meta_query'] = $original_args['meta_query'];
+            unset($query_args['search'], $query_args['search_columns']);
 
-            $user_ids_query = new WP_User_Query($user_id_args);
+            $query = new WP_User_Query($query_args);
 
             return array(
-                'query'      => $user_ids_query,
+                'query'      => $query,
                 'pagination' => self::paginate(
-                    $page,
-                    (int) $user_ids_query->get_total(),
-                    $user_id_args['number']
+                    $page, // Current page.
+                    (int) $query->get_total(),
+                    $query_args['number']
                 ),
             );
-        } else { // Use default behavior. This is much faster.
-            self::$_search_columns_for_filter = $args['search_columns'];
-
-            add_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
-
-            $query = new WP_User_Query($args); // Use args as configured already.
-
+        } else { // Default behavior; must faster.
+            $query = new WP_User_Query($args); // Args as-is.
             remove_filter('user_search_columns', 'c_ws_plugin__s2member_pro_member_list::_search_columns_filter');
 
             return array(
                 'query'      => $query,
                 'pagination' => self::paginate(
-                    $page,
+                    $page, // Current page.
                     (int) $query->get_total(),
                     $args['number']
                 ),
@@ -187,49 +276,42 @@ class c_ws_plugin__s2member_pro_member_list
     }
 
     /**
-     * Searches s2Member Custom Fields; an extension to the self::query() method.
+     * Searches s2 custom fields.
      *
-     * @param array $args          Arguments passed to self::query() after self::query() merged the defaults.
-     * @param array $original_args Original arguments passed by the shortcode before self::query() merged the defaults.
+     * @param array $args        Query args.
+     * @param array $search_cols Custom field cols to search for.
+     *                           An empty array indicates all custom fields.
      *
-     * @return array An array of User IDs.
+     * @return array User IDs to include in subsequent queries.
      */
-    protected static function search_s2_custom_fields($args, $original_args)
+    protected static function search_s2_custom_fields($args, $search_cols)
     {
         global $wpdb;
 
-        if (empty($args['search'])) {
-            return array(); // Nothing to do.
+        if (!$args['search']) {
+            return array();
         }
-        if (!empty($original_args['search_columns'])) {
-            if (!preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns'])) {
-                return array(); // Nothing to do.
+        $include_user_ids         = array();
+        $custom_fields_regex_frag = '';
+
+        foreach ((array) $search_cols as $_search_col) {
+            if (preg_match('/^s2member_custom_field_(?P<field_id>\w+)$/', $_search_col, $_m)) {
+                $custom_fields_regex_frag .= preg_quote(trim($_m['field_id'])).'|';
             }
-        }
-        $matching_custom_fields_regex_frag = '';
-        $include_user_ids                  = array();
+        } // unset($_search_col, $_m); // Housekeeping.
+        $custom_fields_regex_frag = rtrim($custom_fields_regex_frag, '|');
 
-        if (empty($original_args['search_columns'])) {
-            $matching_custom_fields_regex_frag = '.*';
-        } elseif (($custom_field_columns = preg_grep('/(?:^|\W)s2member_custom_field_\w+/', $args['search_columns']))) {
-            foreach ($custom_field_columns as $_column) {
-                if (preg_match('/(?:^|\W)s2member_custom_field_(?P<field_id>\w+)/', $_column, $_m)) {
-                    $matching_custom_fields_regex_frag .= preg_quote(trim($_m['field_id'])).'|';
-                }
-            } // unset($_column, $_m); // Housekeeping.
-            $matching_custom_fields_regex_frag = rtrim($matching_custom_fields_regex_frag, '|');
+        if (!$custom_fields_regex_frag) { // All columns?
+            $custom_fields_regex_frag = '.*';
         }
-        if ($matching_custom_fields_regex_frag) {
-            $search_regex_frag = preg_quote($args['search']);
-            $search_regex_frag = str_replace('"', '', $search_regex_frag);
-            $search_regex_frag = str_replace('\\*', '[^"]*', $search_regex_frag);
-            $regex             = '(^|\{|;)s\:[0-9]+\:"('.$matching_custom_fields_regex_frag.')";s\:[0-9]+\:"'.$search_regex_frag.'"'; // e.g., `a:1:{s:12:"country_code";s:3:"USA";}`.
-            $users             = $wpdb->get_results('SELECT `user_id` as `ID` FROM `'.$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_custom_fields' AND `meta_value` REGEXP '".esc_sql($regex)."'");
+        $blog_prefix       = $wpdb->get_blog_prefix($args['blog_id']); // e.g., `wp_`, etc.
+        $search_regex_frag = str_replace('\\*', '[^"]*', preg_quote(str_replace(array('"', '{', '}'), '', $args['search'])));
+        $regex             = '(^|\{|;)s\:[0-9]+\:"('.$custom_fields_regex_frag.')"(;s\:[0-9]+\:"'.$search_regex_frag.'"|;a\:[0-9]+\:\{i\:[0-9]+;[^}]*"'.$search_regex_frag.'")';
+        $users             = $wpdb->get_results('SELECT `user_id` as `ID` FROM `'.$wpdb->usermeta."` WHERE `meta_key` = '".$blog_prefix."s2member_custom_fields' AND `meta_value` REGEXP '".esc_sql($regex)."'");
 
-            if ($users && is_array($users)) {
-                foreach ($users as $_user) {
-                    $include_user_ids[] = $_user->ID;
-                }
+        if ($users && is_array($users)) {
+            foreach ($users as $_user) {
+                $include_user_ids[] = $_user->ID;
             } // unset($_user);
         }
         return $include_user_ids;

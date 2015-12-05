@@ -171,18 +171,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 
 			$member_list_query = c_ws_plugin__s2member_pro_member_list::query($args);
 
-			$custom_template = (is_file(TEMPLATEPATH.'/member-list.php')) ? TEMPLATEPATH.'/member-list.php' : '';
-			$custom_template = (is_file(get_stylesheet_directory().'/member-list.php')) ? get_stylesheet_directory().'/member-list.php' : $custom_template;
+			$custom_template = is_file(TEMPLATEPATH.'/member-list.php') ? TEMPLATEPATH.'/member-list.php' : '';
+			$custom_template = is_file(get_stylesheet_directory().'/member-list.php') ? get_stylesheet_directory().'/member-list.php' : $custom_template;
 
-			$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-			$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-			$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template']) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template']) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template']) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 			if($attr['template'] && !$custom_template) // Unable to locate the template file?
 				trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr['template'])), E_USER_ERROR);
 
 			$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__)).'/templates/members/member-list.php')));
-			$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
+			$code = trim((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
 			return apply_filters('ws_plugin__s2member_pro_sc_member_list', $code, get_defined_vars());
 		}
@@ -212,18 +212,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$s_var    = self::s_var();
 			$p_var    = self::p_var();
 
-			$custom_template = (is_file(TEMPLATEPATH.'/member-list-search-box.php')) ? TEMPLATEPATH.'/member-list-search-box.php' : '';
-			$custom_template = (is_file(get_stylesheet_directory().'/member-list-search-box.php')) ? get_stylesheet_directory().'/member-list-search-box.php' : $custom_template;
+			$custom_template = is_file(TEMPLATEPATH.'/member-list-search-box.php') ? TEMPLATEPATH.'/member-list-search-box.php' : '';
+			$custom_template = is_file(get_stylesheet_directory().'/member-list-search-box.php') ? get_stylesheet_directory().'/member-list-search-box.php' : $custom_template;
 
-			$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-			$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-			$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template']) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template']) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
+			$custom_template = $attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template']) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 			if($attr['template'] && !$custom_template) // Unable to locate the template file?
 				trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr['template'])), E_USER_ERROR);
 
 			$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__)).'/templates/members/member-list-search-box.php')));
-			$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
+			$code = trim((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
 
 			$hidden_inputs = ''; // Initialize.
 			foreach(stripslashes_deep($_GET) as $_key => $_value) if($_key !== $s_var && $_key !== $p_var && is_scalar($_value))
@@ -267,7 +267,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 		 *
 		 * @note This is used by shortcode template files.
 		 */
-		public static function parse_replacement_codes($string, $user)
+		public static function parse_link_replacement_codes($string, $user)
 		{
 			if(($string = (string)$string) && $user instanceof WP_User && $user->exists())
 			{
