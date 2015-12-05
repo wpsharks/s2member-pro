@@ -164,8 +164,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 				$args['blog_id'] = $GLOBALS['blog_id']; // Disallow for security reasons.
 
-			$s_var = self::s_var();
-			$p_var = self::p_var();
+			$s_var = self::s_var(); $p_var = self::p_var();
+
 			if($attr['enable_list_search'] && !empty($_REQUEST[$s_var]))
 				$args['search'] = trim(stripslashes($_REQUEST[$s_var]));
 
@@ -271,12 +271,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 		{
 			if(($string = (string)$string) && $user instanceof WP_User && $user->exists())
 			{
-				$string = str_ireplace('%%ID%%', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->ID)), $string);
-				$string = str_ireplace('%%username%%', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_login)), $string);
-				$string = str_ireplace('%%nicename%%', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_nicename)), $string);
-				$string = str_ireplace('%%display_name%%', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->display_name)), $string);
-				$string = str_ireplace('%%email%%', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($user->user_email)), $string);
+				$string = str_ireplace('%%ID%%', urlencode($user->ID), $string);
+				$string = str_ireplace('%%username%%', urlencode($user->user_login), $string);
+				$string = str_ireplace('%%nicename%%', urlencode($user->user_nicename), $string);
+				$string = str_ireplace('%%display_name%%', urlencode($user->display_name), $string);
+				$string = str_ireplace('%%email%%', urlencode($user->user_email), $string);
 				$string = str_ireplace('%%md5.email%%', urlencode(md5(trim(strtolower($user->user_email)))), $string);
+				$string = str_ireplace('%%sha1.email%%', urlencode(sha1(trim(strtolower($user->user_email)))), $string);
 			}
 			return preg_replace('/%%(.+?)%%/', '', $string);
 		}
