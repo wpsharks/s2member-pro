@@ -129,7 +129,7 @@ class c_ws_plugin__s2member_pro_member_list
                 'relation' => 'AND',
                 $args['meta_query'], $first_last_name_meta_queries,
             );
-        } elseif ($user_meta_queries) {
+        } else {
             $args['meta_query'] = $first_last_name_meta_queries;
         }
         /* ---------------------------------------------------------- */
