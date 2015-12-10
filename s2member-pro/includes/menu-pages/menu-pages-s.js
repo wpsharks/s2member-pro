@@ -101,14 +101,18 @@ jQuery(document).ready(
 				});
 				return days;
 			};
-			var eot_reminder_email_switch_to_day = function(day, _fallback) {
-				var current_day = $eot_reminder_email_day.data('current');
+			var eot_reminder_email_save_current_day = function() {
+				var current_day = String($eot_reminder_email_day.data('current'));
 
-				if (current_day && current_day !== '_') { // Save current day?
-					eot_reminder_email_recipients[current_day] = $eot_reminder_email_recipients_for_day.val();
-					eot_reminder_email_subject[current_day] = $eot_reminder_email_subject_for_day.val();
-					eot_reminder_email_message[current_day] = $eot_reminder_email_message_for_day.val();
+				if (current_day !== 'undefined' && current_day !== '' && current_day !== '_') {
+					eot_reminder_email_recipients[current_day] = $.trim($eot_reminder_email_recipients_for_day.val());
+					eot_reminder_email_subject[current_day] = $.trim($eot_reminder_email_subject_for_day.val());
+					eot_reminder_email_message[current_day] = $.trim($eot_reminder_email_message_for_day.val());
 				}
+			};
+			var eot_reminder_email_switch_to_day = function(day, _fallback) {
+				eot_reminder_email_save_current_day();
+
 				$eot_reminder_email_recipients_for_day.val(eot_reminder_email_recipients_for_day(day, _fallback));
 				$eot_reminder_email_subject_for_day.val(eot_reminder_email_subject_for_day(day, _fallback));
 				$eot_reminder_email_message_for_day.val(eot_reminder_email_message_for_day(day, _fallback));
@@ -147,9 +151,14 @@ jQuery(document).ready(
 				eot_reminder_email_switch_to_day(day);
 			});
 			$eot_reminder_email_days.closest('form').on('submit', function(event) {
+				eot_reminder_email_save_current_day(); // Save current day.
+
 				var days = eot_reminder_get_unique_days(),
-					_eot_reminder_email_recipients = {}, _eot_reminder_email_subject = {}, _eot_reminder_email_message = {};
-				days.push('_'); // Add the default day option too; so we don't lose this.
+					_eot_reminder_email_recipients = {},
+					_eot_reminder_email_subject = {},
+					_eot_reminder_email_message = {};
+
+				days.push('_'); // Add the default day option too.
 
 				$.each(days, function(i, day) {
 					_eot_reminder_email_recipients[day] = eot_reminder_email_recipients_for_day(day);
