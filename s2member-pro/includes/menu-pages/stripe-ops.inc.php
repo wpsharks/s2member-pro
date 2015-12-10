@@ -162,7 +162,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
 			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here.<br />'."\n";
-			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value that you configure in your Stripe Dashboard is used instead.</small>'."\n";
+			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value may or may not be displayed by Stripe. It\'s best to configure it here.</small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -206,7 +206,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<select name="ws_plugin__s2member_pro_stripe_api_validate_zipcode" id="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do not validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
-			echo '</select>'."\n";
+			echo '</select><br />'."\n";
+			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>validate_zipcode="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -225,7 +226,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<select name="ws_plugin__s2member_pro_stripe_api_billing_address" id="ws-plugin--s2member-pro-stripe-api-billing-address">'."\n";
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s billing address (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full billing address</option>'."\n";
-			echo '</select>'."\n";
+			echo '</select><br />'."\n";
+			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>collect_billing_address="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -244,7 +246,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<select name="ws_plugin__s2member_pro_stripe_api_shipping_address" id="ws-plugin--s2member-pro-stripe-api-shipping-address">'."\n";
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s shipping address (default Stripe behavior)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full shipping address</option>'."\n";
-			echo '</select>'."\n";
+			echo '</select><br />'."\n";
+			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>collect_shipping_address="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -264,7 +267,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Allow; I will accept all types of cards; even prepaid cards (recommended, default)</option>'."\n";
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Reject; refuse to accept cards that Stripe detects as being "prepaid" funding sources</option>'."\n";
 			echo '</select><br />'."\n";
-			echo '<em><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>reject_prepaid=""</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</em>'."\n";
+			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>reject_prepaid="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";

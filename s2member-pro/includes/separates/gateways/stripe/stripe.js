@@ -275,7 +275,10 @@ jQuery(document).ready( // DOM ready.
 
 				$(sourceTokenButton).on('click', function() // Stripe integration.
 				{
-					var stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
+					var validateZipCode = $(submissionSection + ' input#s2member-pro-stripe-update-should-validate-zipcode').val() == '1',
+						collectBillingAddress = $(submissionSection + ' input#s2member-pro-stripe-update-should-collect-billing-address').val() == '1',
+						collectShippingAddress = $(submissionSection + ' input#s2member-pro-stripe-update-should-collect-shipping-address').val() == '1',
+						stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
 
 					var getSourceToken = StripeCheckout.configure
 					({
@@ -285,13 +288,10 @@ jQuery(document).ready( // DOM ready.
 						 locale         : 'auto', // Based on visitor's country.
 
 						 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
-						 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
-						 billingAddress : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_billing_address"]); ?>' == '1',
-						 shippingAddress: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_shipping_address"]); ?>' == '1',
-						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
-
-						 email          : typeof S2MEMBER_CURRENT_USER_EMAIL === 'string' ? S2MEMBER_CURRENT_USER_EMAIL : '',
 						 allowRememberMe: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_allow_remember_me"]); ?>' == '1',
+						 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
+						 zipCode        : validateZipCode, billingAddress : collectBillingAddress, shippingAddress: collectShippingAddress,
+						 email          : typeof S2MEMBER_CURRENT_USER_EMAIL === 'string' ? S2MEMBER_CURRENT_USER_EMAIL : '',
 
 						 token: function(token) // Callback handler.
 						 {
@@ -572,15 +572,17 @@ jQuery(document).ready( // DOM ready.
 					$(sourceTokenButton).on('click', function() // Stripe integration.
 					{
 						var isBuyNow = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0,
+							validateZipCode = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-should-validate-zipcode').val() == '1',
+							collectBillingAddress = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-should-collect-billing-address').val() == '1',
+							collectShippingAddress = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-should-collect-shipping-address').val() == '1',
 							acceptBitcoin = isBuyNow && $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-bitcoin-accepted').length > 0,
 							isBuyNowAmountInCents = isBuyNow ? parseInt($.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').val())) : 0,
 							isBuyNowCurrency = isBuyNow ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-currency').val()).toUpperCase() : '',
-							isBuyNowDesc = isBuyNow ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-desc').val()) : '';
+							isBuyNowDesc = isBuyNow ? $.trim($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-desc').val()) : '',
+							stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
 
 						if(isBuyNow && (isNaN(isBuyNowAmountInCents) || isBuyNowAmountInCents <= 0))
 							isBuyNow = false, acceptBitcoin = false, isBuyNowAmountInCents = 0, isBuyNowCurrency = '', isBuyNowDesc = '';
-
-						var stripeImage = '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_image"]); ?>';
 
 						var getSourceToken = StripeCheckout.configure
 						({
@@ -593,13 +595,10 @@ jQuery(document).ready( // DOM ready.
 							 bitcoin    : isBuyNow && acceptBitcoin,
 
 							 key            : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]); ?>',
-							 zipCode        : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]); ?>' == '1',
-							 billingAddress : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_billing_address"]); ?>' == '1',
-							 shippingAddress: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_shipping_address"]); ?>' == '1',
-							 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
-
-							 email          : $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(),
 							 allowRememberMe: '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_allow_remember_me"]); ?>' == '1',
+							 panelLabel     : '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("Add", "s2member-front", "s2member")); ?>',
+							 zipCode        : validateZipCode, billingAddress : collectBillingAddress, shippingAddress: collectShippingAddress,
+							 email          : $(registrationSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-email').val(),
 
 							 token: function(token) // Callback handler.
 							 {

@@ -129,8 +129,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					$option_selections .= '<option value="'.esc_attr($_option_id).'"'.(!empty($_option['selected']) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
 				unset($_option_id, $_option); // Housekeeping.
 			}
-			$attr = shortcode_atts(array('ids' => '0', 'exp' => '72', 'level' => (@$attr['register'] ? '0' : '1'), 'ccaps' => '', 'desc' => '', 'cc' => 'USD', 'custom' => $_SERVER['HTTP_HOST'], 'ta' => '0', 'tp' => '0', 'tt' => 'D', 'ra' => '0.50', 'rp' => '1', 'rt' => 'M', 'rr' => '1', 'rrt' => '', 'modify' => '0', 'cancel' => '0', 'unsub' => '0', 'sp' => '0', 'register' => '0', 'update' => '0', 'accept' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin'] ? 'bitcoin' : '', 'coupon' => '', 'accept_coupons' => '0', 'default_country_code' => 'US', 'captcha' => '', 'template' => '', 'success' => '', 'reject_prepaid' => ''), $attr);
-
+			$attr = shortcode_atts(array(
+				'ids'                      => '0',
+				'exp'                      => '72',
+				'level'                    => @$attr['register'] ? '0' : '1',
+				'ccaps'                    => '',
+				'desc'                     => '',
+				'cc'                       => 'USD',
+				'custom'                   => $_SERVER['HTTP_HOST'],
+				'ta'                       => '0',
+				'tp'                       => '0',
+				'tt'                       => 'D',
+				'ra'                       => '0.50',
+				'rp'                       => '1',
+				'rt'                       => 'M',
+				'rr'                       => '1',
+				'rrt'                      => '',
+				'modify'                   => '0',
+				'cancel'                   => '0',
+				'unsub'                    => '0',
+				'sp'                       => '0',
+				'register'                 => '0',
+				'update'                   => '0',
+				'accept'                   => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin'] ? 'bitcoin' : '',
+				'coupon'                   => '',
+				'accept_coupons'           => '0',
+				'default_country_code'     => 'US',
+				'captcha'                  => '',
+				'template'                 => '',
+				'success'                  => '',
+				'validate_zipcode'         => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode'],
+				'collect_billing_address'  => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address'],
+				'collect_shipping_address' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address'],
+				'reject_prepaid'           => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']
+			), $attr);
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rt']                   = strtoupper($attr['rt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rr']                   = strtoupper($attr['rr']); // Must be provided in upper-case format. Numerical, or BN value. Only after running shortcode_atts().
@@ -333,6 +365,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_update[nonce]" id="s2member-pro-stripe-update-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-update')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[source_token]" id="s2member-pro-stripe-update-source-token" value="'.esc_attr(@$_p['s2member_pro_stripe_update']['source_token']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[source_token_summary]" id="s2member-pro-stripe-update-source-token-summary" value="'.esc_attr(@$_p['s2member_pro_stripe_update']['source_token_summary']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-update-should-validate-zipcode" value="'.esc_attr($attr['validate_zipcode']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-update-should-collect-billing-address" value="'.esc_attr($attr['collect_billing_address']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-update-should-collect-shipping-address" value="'.esc_attr($attr['collect_shipping_address']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_update[attr]" id="s2member-pro-stripe-update-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2p-option" value="'.esc_attr((string)@$_REQUEST['s2p-option']).'" />';
 
@@ -440,6 +475,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= $is_buy_now_currency ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-currency" value="'.esc_attr($is_buy_now_currency).'" />' : '';
 				$hidden_inputs .= $is_buy_now_desc ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-desc" value="'.esc_attr($is_buy_now_desc).'" />' : '';
 				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-sp-checkout-should-validate-zipcode" value="'.esc_attr($attr['validate_zipcode']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-sp-checkout-should-collect-billing-address" value="'.esc_attr($attr['collect_billing_address']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-sp-checkout-should-collect-shipping-address" value="'.esc_attr($attr['collect_shipping_address']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[attr]" id="s2member-pro-stripe-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : '';
@@ -593,6 +631,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= $is_buy_now_currency ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-currency" value="'.esc_attr($is_buy_now_currency).'" />' : '';
 				$hidden_inputs .= $is_buy_now_desc ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-desc" value="'.esc_attr($is_buy_now_desc).'" />' : '';
 				$hidden_inputs .= $is_buy_now_bitcoin_accepted ? '<input type="hidden" id="s2member-pro-stripe-checkout-is-buy-now-bitcoin-accepted" value="1" />' : '';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-checkout-should-validate-zipcode" value="'.esc_attr($attr['validate_zipcode']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-checkout-should-collect-billing-address" value="'.esc_attr($attr['collect_billing_address']).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-checkout-should-collect-shipping-address" value="'.esc_attr($attr['collect_shipping_address']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';
