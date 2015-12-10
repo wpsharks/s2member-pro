@@ -102,9 +102,9 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_eot_reminder_email_on_npt_also'      => '0',
 			'pro_eot_reminder_email_days'             => '-5,-1',
 
-			'pro_eot_reminder_email_recipients'       => json_encode((object)array('_' => '"%%user_full_name%%" <%%user_email%%>')),
-			'pro_eot_reminder_email_subject'          => json_encode((object)array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member')))),
-			'pro_eot_reminder_email_message'          => json_encode((object)array('_' => sprintf(_x("Hi %%%%first_name%%%%! :-)\n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name')))),
+			'pro_eot_reminder_email_recipients'       => array('_' => '"%%user_full_name%%" <%%user_email%%>'),
+			'pro_eot_reminder_email_subject'          => array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member'))),
+			'pro_eot_reminder_email_message'          => array('_' => sprintf(_x("Hi %%%%first_name%%%%!\n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name'))),
 
 			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
@@ -141,6 +141,18 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			'pro_last_stats_log'                      => '0', // Stats pinger.
 		);
+		$pro_default_options['pro_eot_reminder_email_recipients']['-5'] = $pro_default_options['pro_eot_reminder_email_recipients']['_'];
+		$pro_default_options['pro_eot_reminder_email_subject']['-5'] = $pro_default_options['pro_eot_reminder_email_subject']['_'];
+		$pro_default_options['pro_eot_reminder_email_message']['-5'] = $pro_default_options['pro_eot_reminder_email_message']['_'];
+
+		$pro_default_options['pro_eot_reminder_email_recipients']['-1'] = $pro_default_options['pro_eot_reminder_email_recipients']['_'];
+		$pro_default_options['pro_eot_reminder_email_subject']['-1'] = $pro_default_options['pro_eot_reminder_email_subject']['_'];
+		$pro_default_options['pro_eot_reminder_email_message']['-1'] = $pro_default_options['pro_eot_reminder_email_message']['_'];
+
+		$pro_default_options['pro_eot_reminder_email_recipients'] = json_encode((object)$pro_default_options['pro_eot_reminder_email_recipients']);
+		$pro_default_options['pro_eot_reminder_email_subject'] = json_encode((object)$pro_default_options['pro_eot_reminder_email_subject']);
+		$pro_default_options['pro_eot_reminder_email_message'] = json_encode((object)$pro_default_options['pro_eot_reminder_email_message']);
+
 		return array_merge($default_options, $pro_default_options);
 	}
 }
