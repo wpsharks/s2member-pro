@@ -86,14 +86,21 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $mail_from = '"'.str_replace('"', "'", $GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_name']).'"'.
                                ' <'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email'].'>';
 
-            $user_ids_already_scanned_recently = '
+            $user_ids_to_exclude = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
-                    WHERE `meta_key` = \''.$wpdb->prefix.'s2member_last_reminder_scan\'
-                        AND `meta_value` >= \''.esc_sql($scan_time).'\'
+                    WHERE
+                        (`meta_key` = \''.$wpdb->prefix.'s2member_last_reminder_scan\' AND `meta_value` >= \''.esc_sql($scan_time).'\')
+                        OR (`meta_key` = \''.$wpdb->prefix.'s2member_reminders_enable\' AND `meta_value` = \'0\')
             ';
+            $additional_user_ids_to_exclude = apply_filters('ws_plugin__s2member_pro_eot_reminders_exclude_user_ids', array(), get_defined_vars());
+
             $sql = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
-                    WHERE `user_id` NOT IN('.$user_ids_already_scanned_recently.')
+                    WHERE `user_id` NOT IN('.$user_ids_to_exclude.')
+
+                        '.($additional_user_ids_to_exclude // See filter above.
+                            ? 'AND `user_id` NOT IN(\''.implode("','", $additional_user_ids_to_exclude).'\')'
+                            : '').'
                         AND (
                               (`meta_key` = \''.$wpdb->prefix.'s2member_subscr_gateway\' AND `meta_value` != \'\')
                               OR (`meta_key` = \''.$wpdb->prefix.'s2member_auto_eot_time\' AND `meta_value` != \'\')
