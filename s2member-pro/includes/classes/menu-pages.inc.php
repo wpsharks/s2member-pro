@@ -296,5 +296,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 
 			include_once dirname(dirname(__FILE__))."/menu-pages/coupon-codes.inc.php";
 		}
+
+		/**
+		 * Builds the Coupon Codes page.
+		 *
+		 * @attaches-to `ws_plugin__s2member_before_mms_ops_page`
+		 *
+		 * @package s2Member\Menu_Pages
+		 * @since 160119
+		 */
+		public static function before_mms_ops_page_hook()
+		{
+			if(c_ws_plugin__s2member_menu_pages::update_all_options())
+				c_ws_plugin__s2member_pro_mms_patches::mms_patches(TRUE);
+		}
 	}
 }
