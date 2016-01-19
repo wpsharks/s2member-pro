@@ -106,7 +106,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_mms_ops"))
 												echo '<option value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["mms_auto_patch"]) ? ' selected="selected"' : '').'>Yes (automatically patch WordPress)</option>'."\n";
 												echo '<option value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["mms_auto_patch"]) ? ' selected="selected"' : '').'>No (I\'ll patch WordPress myself)</option>'."\n";
 												echo '</select><br />'."\n";
-												echo '<em class="ws-menu-page-hilite">These files MUST be patched, each time you upgrade the WordPress core. If you set this option to <code>Yes (Patch Automatically)</code>, s2Member will patch your installation now, and also in the future, should you upgrade to newer version. That way, you won\'t need to patch manually each time WordPress is upgraded.</em>'."\n";
+												echo '<em>These files <strong>must</strong> be patched, each time you upgrade the WordPress core. If you set this option to <code>Yes (Patch Automatically)</code>, s2Member will patch your installation now, and also in the future, should you upgrade to newer version. That way, you won\'t need to patch manually each time WordPress is upgraded.</em>'."\n";
 											}
 
 										echo '</td>'."\n";
@@ -334,7 +334,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_mms_ops"))
 										$ws_plugin__s2member_temp = preg_replace("/(\=)( )(.+?)( )(\=)/", "<h3>$3</h3>", $ws_plugin__s2member_temp);
 										$ws_plugin__s2member_temp = NC_Markdown($ws_plugin__s2member_temp);
 
+										echo '<div style="max-width:1024px;">';
 										echo preg_replace("/(\<a)( href)/i", "$1".' target="_blank" rel="nofollow external"'."$2", $ws_plugin__s2member_temp);
+										echo '</div>';
 									}
 							}
 

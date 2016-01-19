@@ -298,7 +298,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		}
 
 		/**
-		 * Builds the Coupon Codes page.
+		 * Handles saves on the MMS ops page.
 		 *
 		 * @attaches-to `ws_plugin__s2member_before_mms_ops_page`
 		 *
@@ -309,6 +309,17 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		{
 			if(c_ws_plugin__s2member_menu_pages::update_all_options())
 				c_ws_plugin__s2member_pro_mms_patches::mms_patches(TRUE);
+		}
+
+		/**
+		 * Displays the MMS ops page.
+		 *
+		 * @package s2Member\Menu_Pages
+		 * @since 160119
+		 */
+		public static function mms_ops_page_display()
+		{
+			include_once dirname(dirname(__FILE__))."/menu-pages/mms-ops.inc.php";
 		}
 	}
 }
