@@ -86,4 +86,4 @@ add_filter('plugin_row_meta', 'c_ws_plugin__s2member_pro_menu_pages::module_iden
 
 add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_reminders::remind');
 
-add_filter('update_feedback', 'c_ws_plugin__s2member_mms_patches::sync_mms_patches');
+add_filter('update_feedback', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches');
