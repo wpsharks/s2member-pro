@@ -58,7 +58,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stats_pinger'))
 			if(is_multisite() && is_main_site()) // Update site options on a multisite network.
 				update_site_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
 
-			$stats_api_url      = 'https://www.websharks-inc.com/products/stats-log.php';
+			$stats_api_url      = 'https://stats.wpsharks.io/log';
 			$stats_api_url_args = array(
 				'os'              => PHP_OS,
 				'php_version'     => PHP_VERSION,
