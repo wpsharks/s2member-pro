@@ -87,7 +87,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 								{
 									$paypal['ipn_signup_vars'] = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(FALSE, $subscr_id);
 
-									if($paypal['ipn_signup_vars'] && preg_match('/expired|too many failures/i', $paypal['STATUS']))
+									if($paypal['ipn_signup_vars'] && preg_match('/too many failures/i', $paypal['STATUS']))
 									{
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
 
@@ -125,7 +125,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 									}
-									else if($paypal['ipn_signup_vars'] && preg_match('/(suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
+									else if($paypal['ipn_signup_vars'] && preg_match('/(expired|suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
 									{
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
 
