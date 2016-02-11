@@ -233,7 +233,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 							if(!empty($event->data->object)
 							   && ($stripe_charge = $event->data->object) instanceof Stripe_Charge
-							   && !empty($strip_charge->amount_refunded) && !empty($stripe_charge->customer)
+							   && !empty($stripe_charge->amount_refunded) && !empty($stripe_charge->customer)
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_charge->customer))
 							)
 							{
@@ -247,8 +247,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['custom'] = $ipn_signup_vars['custom'];
 
 								$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-								$ipn['mc_gross']    = '-'.number_format(abs($strip_charge->amount), 2, '.', '');
-								$ipn['mc_currency'] = strtoupper($strip_charge->currency);
+								$ipn['mc_gross']    = '-'.number_format(abs($stripe_charge->amount), 2, '.', '');
+								$ipn['mc_currency'] = strtoupper($stripe_charge->currency);
 								$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
 								$ipn['period1'] = $ipn_signup_vars['period1'];
@@ -297,8 +297,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['custom'] = $ipn_signup_vars['custom'];
 
 								$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-								$ipn['mc_gross']    = '-'.number_format(abs($strip_charge->amount), 2, '.', '');
-								$ipn['mc_currency'] = strtoupper($strip_charge->currency);
+								$ipn['mc_gross']    = '-'.number_format(abs($stripe_charge->amount), 2, '.', '');
+								$ipn['mc_currency'] = strtoupper($stripe_charge->currency);
 								$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
 								$ipn['period1'] = $ipn_signup_vars['period1'];
