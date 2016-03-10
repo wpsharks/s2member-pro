@@ -48,7 +48,7 @@ jQuery(document).ready( // DOM ready.
 			var preloadAjaxLoader, // Loading image.
 				$clForm, $upForm, $rgForm, $spForm, $coForm,
 				ariaTrue = {'aria-required': 'true'}, ariaFalse = {'aria-required': 'false'},
-				ariaFalseDis = {'aria-required': 'false', 'disabled': 'disabled'},
+				ariaFalseDis = {'aria-required': 'false', 'readonly': 'readonly'},
 				disabled = {'disabled': 'disabled'},
 
 				taxMayApply = true, calculateTax, cTaxDelay, cTaxTimeout, cTaxReq, cTaxLocation, ajaxTaxDiv,
