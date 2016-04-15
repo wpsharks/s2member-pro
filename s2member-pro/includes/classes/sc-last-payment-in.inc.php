@@ -65,7 +65,7 @@ if(!class_exists('c_ws_plugin__s2member_sc_last_payment_in'))
             $time = null; // Initialize the time calculation.
             if($last_payment_time) // // Do we have a time to work with?
                 {
-                    $time = new DateTime(date('Y-m-d H:i:s', $last_payment['time']));
+                    $time = new DateTime(date('Y-m-d H:i:s', $last_payment_time));
                     if($attr['timezone'] && strtoupper($attr['timezone']) !== 'UTC')
                         $time->setTimezone(new DateTimeZone($attr['timezone']));
                 }
