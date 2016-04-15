@@ -63,7 +63,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_mms_patches"))
 						unset($__refs, $__v);
 
 						if (is_multisite () && is_network_admin () && $pagenow === "update-core.php")
-							if ($message === "Upgrading database&#8230;" && c_ws_plugin__s2member_mms_patches::mms_patches ())
+							if ($message === "Upgrading database&#8230;" && c_ws_plugin__s2member_pro_mms_patches::mms_patches ())
 								apply_filters("update_feedback", "s2 Multisite patches applied&#8230;");
 
 						return apply_filters("ws_plugin__s2member_sync_mms_patches", $message, get_defined_vars ());
