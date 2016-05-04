@@ -83,7 +83,7 @@ function curlpsr ($url = FALSE, $post_vars = array(), $max_con_secs = 20, $max_s
 						CURLOPT_VERBOSE => false,
 						CURLOPT_FAILONERROR => true,
 						CURLOPT_FORBID_REUSE => true,
-						CURLOPT_SSL_VERIFYPEER => false
+						CURLOPT_SSL_VERIFYPEER => true
 					));
 
 				$o = trim(curl_exec($curl));

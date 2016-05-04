@@ -47,7 +47,7 @@ function curlpsr($url = FALSE, $post_vars = array(), $max_con_secs = 20, $max_st
 				if /* Because cURL can't deal with complex arrays. */(is_array($post_vars))
 					$post_vars = http_build_query($post_vars);
 				$follow = (!ini_get("safe_mode") && !ini_get("open_basedir"));
-				curl_setopt_array($curl, array(CURLOPT_URL => $url, CURLOPT_POST => true, CURLOPT_CONNECTTIMEOUT => $max_con_secs, CURLOPT_TIMEOUT => $max_stream_secs, CURLOPT_HEADER => false, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => $headers, CURLOPT_POSTFIELDS => $post_vars, CURLOPT_FOLLOWLOCATION => $follow, CURLOPT_MAXREDIRS => (($follow) ? 5 : 0), CURLOPT_ENCODING => "", CURLOPT_VERBOSE => false, CURLOPT_FAILONERROR => true, CURLOPT_FORBID_REUSE => true, CURLOPT_SSL_VERIFYPEER => false));
+				curl_setopt_array($curl, array(CURLOPT_URL => $url, CURLOPT_POST => true, CURLOPT_CONNECTTIMEOUT => $max_con_secs, CURLOPT_TIMEOUT => $max_stream_secs, CURLOPT_HEADER => false, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => $headers, CURLOPT_POSTFIELDS => $post_vars, CURLOPT_FOLLOWLOCATION => $follow, CURLOPT_MAXREDIRS => (($follow) ? 5 : 0), CURLOPT_ENCODING => "", CURLOPT_VERBOSE => false, CURLOPT_FAILONERROR => true, CURLOPT_FORBID_REUSE => true, CURLOPT_SSL_VERIFYPEER => true));
 				$o = trim(curl_exec($curl));
 				curl_close($curl);
 			}

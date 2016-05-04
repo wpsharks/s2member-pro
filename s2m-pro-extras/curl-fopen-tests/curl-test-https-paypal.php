@@ -31,7 +31,7 @@ function curlpsr ($url = FALSE, $postvars = array(), $max_con_secs = 20, $max_st
 					CURLOPT_CONNECTTIMEOUT => $max_con_secs, CURLOPT_TIMEOUT => $max_stream_secs, // Initial connection & stream seconds.
 					CURLOPT_HEADER => false, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => $headers, CURLOPT_POSTFIELDS => $postvars,
 					CURLOPT_FOLLOWLOCATION => ($follow = (!ini_get ("safe_mode") && !ini_get ("open_basedir"))), CURLOPT_MAXREDIRS => (($follow) ? 5 : 0),
-					CURLOPT_ENCODING => "", CURLOPT_VERBOSE => false, CURLOPT_FAILONERROR => true, CURLOPT_FORBID_REUSE => true, CURLOPT_SSL_VERIFYPEER => false));
+					CURLOPT_ENCODING => "", CURLOPT_VERBOSE => false, CURLOPT_FAILONERROR => true, CURLOPT_FORBID_REUSE => true, CURLOPT_SSL_VERIFYPEER => true));
 
 				$o = trim (curl_exec ($c));
 
