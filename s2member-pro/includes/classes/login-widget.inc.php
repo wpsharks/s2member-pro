@@ -127,7 +127,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 				echo '<form method="post" action="'.esc_attr(site_url('wp-login.php', 'login_post')).'" class="ws-plugin--s2member-pro-login-widget-form">'."\n";
 
 				echo '<div class="ws-plugin--s2member-pro-login-widget-username">'."\n";
-				echo '<label for="ws-plugin--s2member-pro-login-widget-username">'._x('Username', 's2member-front', 's2member').':</label><br />'."\n";
+				echo '<label for="ws-plugin--s2member-pro-login-widget-username">'._x('Username or Email', 's2member-front', 's2member').':</label><br />'."\n";
 				echo '<input type="text" name="log" id="ws-plugin--s2member-pro-login-widget-username" class="form-control" title="Username" />'."\n";
 				echo '</div>'."\n";
 
