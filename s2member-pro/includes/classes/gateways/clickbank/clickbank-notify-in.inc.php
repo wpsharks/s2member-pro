@@ -78,7 +78,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `SALE/STANDARD` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `web_accept` ).';
-						$clickbank['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+						$clickbank['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
@@ -116,7 +116,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `SALE/RECURRING` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_signup` ).';
-						$clickbank['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+						$clickbank['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
@@ -164,7 +164,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `BILL/RECURRING` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_payment` ).';
-						$clickbank['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+						$clickbank['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
@@ -203,7 +203,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `RFND|CGBK|INSF` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `payment_status` ( `refunded|reversed` ).';
-						$clickbank['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+						$clickbank['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
@@ -245,7 +245,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 					{
 						$clickbank['s2member_log'][] = 'ClickBank transaction identified as ( `RECURRING/COMPLETED` or `CANCEL-REBILL` ).';
 						$clickbank['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` ( `subscr_cancel` ).';
-						$clickbank['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
+						$clickbank['s2member_log'][] = 'Please check core IPN logs for further processing details.';
 
 						$processing = $processed = TRUE;
 						$ipn        = array(); // Reset.
