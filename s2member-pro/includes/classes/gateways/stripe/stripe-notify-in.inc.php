@@ -247,7 +247,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['custom'] = $ipn_signup_vars['custom'];
 
 								$ipn['mc_fee']      = '-'.number_format('0.00', 2, '.', '');
-								$ipn['mc_gross']    = '-'.number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount(abs($stripe_charge->amount), $stripe_charge->currency), 2, '.', '');
+								$ipn['mc_gross']    = '-'.number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount(abs($stripe_charge->amount_refunded), $stripe_charge->currency), 2, '.', '');
 								$ipn['mc_currency'] = strtoupper($stripe_charge->currency);
 								$ipn['tax']         = '-'.number_format('0.00', 2, '.', '');
 
