@@ -124,7 +124,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 								$code = str_replace(array("&amp;cbskin=&amp;", "&amp;cbfid=&amp;", "&amp;cbur=&amp;", "&amp;cbf=&amp;"), "&amp;", $code);
 								$code = str_replace(array("&amp;tid=&amp;", "&amp;vtid=&amp;"), "&amp;", $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(c_ws_plugin__s2member_utils_ip::current())), $code);
 
 								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 
@@ -169,7 +169,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(uniqid())), $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(c_ws_plugin__s2member_utils_ip::current())), $code);
 
 								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 
@@ -216,7 +216,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 								$code = (!$attr["rr"]) ? preg_replace("/&amp;s2_subscr_id\=s2-\<\?php echo uniqid\(\); \?\>/", "", $code) : preg_replace("/\<\?php echo uniqid\(\); \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(uniqid())), $code);
 
-								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($_SERVER["REMOTE_ADDR"])), $code);
+								$code = preg_replace("/\<\?php echo S2MEMBER_CURRENT_USER_IP; \?\>/", c_ws_plugin__s2member_utils_strings::esc_refs(urlencode(c_ws_plugin__s2member_utils_ip::current())), $code);
 
 								$code = preg_replace("/%%referencing%%/", (($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? c_ws_plugin__s2member_utils_strings::esc_refs("&amp;s2_referencing=".urlencode($referencing)) : ""), $code);
 

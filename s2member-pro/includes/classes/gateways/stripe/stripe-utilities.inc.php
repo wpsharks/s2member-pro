@@ -112,8 +112,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if(!empty($post_vars['first_name']) || !empty($post_vars['last_name']))
 				$metadata['name'] = trim((string)@$post_vars['first_name'].' '.(string)@$post_vars['last_name']);
 
-			if(!empty($_SERVER['REMOTE_ADDR']))
-				$metadata['ip'] = (string)$_SERVER['REMOTE_ADDR'];
+			if(c_ws_plugin__s2member_utils_ip::current())
+				$metadata['ip'] = c_ws_plugin__s2member_utils_ip::current();
 
 			return $metadata;
 		}

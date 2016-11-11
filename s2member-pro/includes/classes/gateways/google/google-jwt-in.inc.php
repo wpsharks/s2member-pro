@@ -115,7 +115,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 																"sellerData" => json_encode(
 																	array("cs" => $attr["custom"],
 																			"in" => $attr["sp_ids_exp"],
-																			"ip" => $_SERVER["REMOTE_ADDR"],
+																			"ip" => c_ws_plugin__s2member_utils_ip::current(),
 																			"rf" => $attr["referencing"],
 																			"fn" => $fn, "ln" => $ln, "em" => $em)));
 
@@ -134,7 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 																"sellerData" => json_encode(
 																	array("cs" => $attr["custom"],
 																			"in" => $attr["level_ccaps_eotper"],
-																			"ip" => $_SERVER["REMOTE_ADDR"],
+																			"ip" => c_ws_plugin__s2member_utils_ip::current(),
 																			"rf" => $attr["referencing"],
 																			"fn" => $fn, "ln" => $ln, "em" => $em)));
 
@@ -155,7 +155,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 																"sellerData" => json_encode(
 																	array("cs" => $attr["custom"],
 																			"in" => $attr["level_ccaps_eotper"],
-																			"ip" => $_SERVER["REMOTE_ADDR"],
+																			"ip" => c_ws_plugin__s2member_utils_ip::current(),
 																			"rf" => $attr["referencing"],
 																			"fn" => $fn, "ln" => $ln, "em" => $em)));
 
@@ -192,7 +192,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 																			"p1" => $attr["tp"] . " " . $attr["tt"],
 																			"p3" => $attr["rp"] . " " . $attr["rt"],
 																			"rr" => $attr["rr"],
-																			"ip" => $_SERVER["REMOTE_ADDR"],
+																			"ip" => c_ws_plugin__s2member_utils_ip::current(),
 																			"rf" => $attr["referencing"],
 																			"fn" => $fn, "ln" => $ln, "em" => $em)));
 									}
@@ -220,7 +220,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_google_jwt_in"))
 																			"p1" => "0 D", // No trial period in this case.
 																			"p3" => $attr["rp"] . " " . $attr["rt"],
 																			"rr" => $attr["rr"],
-																			"ip" => $_SERVER["REMOTE_ADDR"],
+																			"ip" => c_ws_plugin__s2member_utils_ip::current(),
 																			"rf" => $attr["referencing"],
 																			"fn" => $fn, "ln" => $ln, "em" => $em)));
 									}

@@ -219,7 +219,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['option_selection1'] = $old__subscr_or_wp_id;
 
 								$ipn['option_name2']      = 'Customer IP Address';
-								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+								$ipn['option_selection2'] = c_ws_plugin__s2member_utils_ip::current();
 
 								$ipn['item_name']   = $cost_calculations['desc'];
 								$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];
@@ -344,7 +344,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['option_selection1'] = $_SERVER['HTTP_HOST'];
 
 								$ipn['option_name2']      = 'Customer IP Address';
-								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+								$ipn['option_selection2'] = c_ws_plugin__s2member_utils_ip::current();
 
 								$ipn['item_name']   = $cost_calculations['desc'];
 								$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];
@@ -474,7 +474,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['option_selection1'] = $old__subscr_or_wp_id;
 
 								$ipn['option_name2']      = 'Customer IP Address';
-								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+								$ipn['option_selection2'] = c_ws_plugin__s2member_utils_ip::current();
 
 								$ipn['item_name']   = $cost_calculations['desc'];
 								$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];
@@ -548,7 +548,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['option_selection1'] = $_SERVER['HTTP_HOST'];
 
 								$ipn['option_name2']      = 'Customer IP Address';
-								$ipn['option_selection2'] = $_SERVER['REMOTE_ADDR'];
+								$ipn['option_selection2'] = c_ws_plugin__s2member_utils_ip::current();
 
 								$ipn['item_name']   = $cost_calculations['desc'];
 								$ipn['item_number'] = $post_vars['attr']['level_ccaps_eotper'];

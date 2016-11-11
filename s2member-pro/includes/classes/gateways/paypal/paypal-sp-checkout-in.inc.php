@@ -99,7 +99,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;
 
-														$post_vars["attr"]["invoice"] = uniqid()."~".$_SERVER["REMOTE_ADDR"]; // Unique invoice w/ IP address too.
+														$post_vars["attr"]["invoice"] = uniqid()."~".c_ws_plugin__s2member_utils_ip::current(); // Unique invoice w/ IP address too.
 
 														if(!($paypal_set_xco = array())) // PayPal Express Checkout.
 															{
@@ -161,7 +161,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 												else // Else we're good. Now ready to process this "Buy Now" transaction.
 													{
 														if(empty($post_vars["attr"]["invoice"])) // Only if it's empty.
-															$post_vars["attr"]["invoice"] = uniqid()."~".$_SERVER["REMOTE_ADDR"];
+															$post_vars["attr"]["invoice"] = uniqid()."~".c_ws_plugin__s2member_utils_ip::current();
 
 														if(!($paypal = array())) // Build a simple "Buy Now" request.
 															{
@@ -196,7 +196,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$paypal["EMAIL"] = $post_vars["email"];
 																		$paypal["FIRSTNAME"] = $post_vars["first_name"];
 																		$paypal["LASTNAME"] = $post_vars["last_name"];
-																		$paypal["IPADDRESS"] = $_SERVER["REMOTE_ADDR"];
+																		$paypal["IPADDRESS"] = c_ws_plugin__s2member_utils_ip::current();
 
 																		$paypal["DESC"] = $cost_calculations["desc"];
 																		$paypal["CUSTOM"] = $post_vars["attr"]["custom"];
@@ -267,7 +267,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																			}
 
 																		$ipn["option_name2"] = "Customer IP Address";
-																		$ipn["option_selection2"] = $_SERVER["REMOTE_ADDR"];
+																		$ipn["option_selection2"] = c_ws_plugin__s2member_utils_ip::current();
 
 																		$ipn["item_name"] = $cost_calculations["desc"];
 																		$ipn["item_number"] = $post_vars["attr"]["sp_ids_exp"];
