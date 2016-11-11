@@ -27,103 +27,141 @@
  * (i.e., new features, bug fixes, updates, improvements); along with full access
  * to our video tutorial library: {@link http://s2member.com/videos/}
  *
- * @package s2Member\API_Remote_Ops
  * @since 110713
  */
-if(!defined('WPINC')) // MUST have WordPress.
-	exit('Do not access this file directly.');
+if (!defined('WPINC')) { // MUST have WordPress.
+    exit('Do not access this file directly.');
+}
+if (!class_exists('c_ws_plugin__s2member_pro_remote_ops')) {
+    /**
+     * s2Member Pro Remote Operations API.
+     *
+     * @since 110713
+     */
+    class c_ws_plugin__s2member_pro_remote_ops
+    {
+        /**
+         * Handles Remote Operation communications.
+         *
+         * @since 110713 Adding remote OPs.
+         *
+         * @attaches-to ``add_action('init');``
+         */
+        public static function remote_ops()
+        {
+            if (($op = self::get_remote_op())) {
+                status_header(200); // Always.
+                c_ws_plugin__s2member_no_cache::no_cache_constants(true);
 
-if(!class_exists('c_ws_plugin__s2member_pro_remote_ops'))
-{
-	/**
-	 * s2Member Pro Remote Operations API.
-	 *
-	 * @package s2Member\API_Remote_Ops
-	 * @since 110713
-	 */
-	class c_ws_plugin__s2member_pro_remote_ops
-	{
-		/**
-		 * Handles Remote Operation communications.
-		 *
-		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
-		 *
-		 * @attaches-to ``add_action('init');``
-		 *
-		 * @return null Or exits script execution with a serialized array on success, or a string beginning with `Error:` on failure.
-		 */
-		public static function remote_ops()
-		{
-			if(!empty($_GET['s2member_pro_remote_op']) && !empty($_POST['s2member_pro_remote_op']))
-			{
-				c_ws_plugin__s2member_no_cache::no_cache_constants(TRUE);
+                extract($op); // `[format, data]` elements.
 
-				status_header(200);
-				header('Content-Type: text/plain; charset=UTF-8');
-				while(@ob_end_clean()) ; // Clean any existing output buffers.
+                if ($format === 'serialized') {
+                    header('Content-Type: text/plain; charset=utf-8');
+                } elseif ($format === 'json') {
+                    header('Content-Type: application/json; charset=utf-8');
+                }
+                while (@ob_end_clean()); // Clean output buffers.
 
-				if(is_array($op = maybe_unserialize(c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_remote_op'])))))
-				{
-					if(is_array($op = c_ws_plugin__s2member_utils_strings::trim_deep($op))) // Now trim again, in case of serialized array.
-					{
-						if(!empty($op['api_key']) && $op['api_key'] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen())
-						{
-							if(!empty($op['op']) && is_callable('c_ws_plugin__s2member_pro_remote_ops_in::'.$op['op']))
-								exit(call_user_func('c_ws_plugin__s2member_pro_remote_ops_in::'.$op['op'], $op));
+                if (empty($data['api_key']) || $data['api_key'] !== self::remote_ops_key_gen()) {
+                    if ($format === 'serialized') {
+                        exit('Error: Invalid API key.');
+                    } elseif ($format === 'json') {
+                        exit(json_encode(array('error' => 'Invalid API key.')));
+                    }
+                } elseif (empty($data['op']) || !is_string($data['op'])) {
+                    if ($format === 'serialized') {
+                        exit('Error: Invalid operation.');
+                    } elseif ($format === 'json') {
+                        exit(json_encode(array('error' => 'Invalid operation.')));
+                    }
+                } elseif (is_callable('c_ws_plugin__s2member_pro_remote_ops_in::'.$data['op'])) {
+                    $response = call_user_func('c_ws_plugin__s2member_pro_remote_ops_in::'.$data['op'], $data);
 
-							exit('Error: $_POST[\'s2member_pro_remote_op\'][\'op\'] is empty or invalid.');
-						}
-						exit('Error: $_POST[\'s2member_pro_remote_op\'][\'api_key\'] is empty or invalid.');
-					}
-					exit('Error: $_POST[\'s2member_pro_remote_op\'] is NOT a serialized array.');
-				}
-				exit('Error: $_POST[\'s2member_pro_remote_op\'] is NOT a serialized array.');
-			}
-		}
+                    if ($format === 'serialized') { // Array indicates success.
+                        exit(is_array($response) ? serialize($response) : 'Error: '.$response);
+                    } elseif ($format === 'json') { // Array indicates success.
+                        exit(is_array($response) ? json_encode($response) : json_encode(array('error' => $response)));
+                    }
+                }
+            }
+        }
 
-		/**
-		 * Test if this WordPress instance is a specific Remote Operation.
-		 *
-		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
-		 *
-		 * @param string $_op The Remote Operation to test this instance against.
-		 *
-		 * @return bool True if instance is the specified Operation, else false.
-		 */
-		public static function is_remote_op($_op = '')
-		{
-			if(!empty($_GET['s2member_pro_remote_op']) && !empty($_POST['s2member_pro_remote_op']))
-				if(is_array($op = maybe_unserialize(c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_remote_op'])))))
-					if(is_array($op = c_ws_plugin__s2member_utils_strings::trim_deep($op))) // Now trim again, in case of serialized array.
-						if(!empty($op['api_key']) && $op['api_key'] === c_ws_plugin__s2member_pro_remote_ops::remote_ops_key_gen())
-							if(!empty($op['op']) && $op['op'] === $_op)
-								return TRUE;
-			return FALSE;
-		}
+        /**
+         * Is remote OP?
+         *
+         * @since 110713 Adding remote OPs.
+         *
+         * @param string $check_op OP to check.
+         *
+         * @return bool True if remote OP.
+         */
+        public static function is_remote_op($check_op = '')
+        {
+            if (!($op = self::get_remote_op())) {
+                return false; // Nope.
+            }
+            extract($op); // `[format, data]` elements.
 
-		/**
-		 * Generates an API Key, for Remote Operations.
-		 *
-		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
-		 *
-		 * @return string An API Key. It's an MD5 Hash, 32 chars, URL-safe.
-		 */
-		public static function remote_ops_key_gen()
-		{
-			global $current_site, $current_blog;
+            if (!empty($data['api_key']) && $data['api_key'] === self::remote_ops_key_gen()) {
+                if (!empty($data['op']) && (!$check_op || $data['op'] === $check_op)) {
+                    return true; // Is remote OP.
+                }
+            } // Otherwise return default.
+            return false; // Default return value.
+        }
 
-			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key'])
-				$key = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key'];
+        /**
+         * Get Remote OP.
+         *
+         * @since 161110 Adding support for JSON I/O.
+         *
+         * @return array Remote OP `[format, data]`.
+         */
+        public static function get_remote_op()
+        {
+            static $remote_op; // Static cache.
 
-			else if(is_multisite() && !is_main_site()) // Child blogs in a MS network get their own key.
-				$key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt($current_blog->domain.$current_blog->path, FALSE, FALSE));
+            if ($remote_op !== null) {
+                return $remote_op;
+            }
+            if (empty($_GET['s2member_pro_remote_op'])) {
+                return $remote_op = array();
+            } elseif (empty($_POST['s2member_pro_remote_op'])) {
+                return $remote_op = array();
+            }
+            $op = trim(stripslashes((string) $_POST['s2member_pro_remote_op']));
 
-			else $key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt(preg_replace('/\:[0-9]+$/', '', $_SERVER['HTTP_HOST']), FALSE, FALSE));
+            if (is_array($serialized_op = maybe_unserialize($op))) {
+                $serialized_op    = c_ws_plugin__s2member_utils_strings::trim_deep($serialized_op);
+                return $remote_op = array('format' => 'serialized', 'data' => $serialized_op);
+                //
+            } elseif (is_array($json_op = json_decode($op, true))) {
+                $json_op          = c_ws_plugin__s2member_utils_strings::trim_deep($json_op);
+                return $remote_op = array('format' => 'json', 'data' => $json_op);
+            }
+            return $remote_op = array('format' => 'serialized', 'data' => array());
+        }
 
-			return apply_filters('ws_plugin__s2member_pro_remote_ops_key', (!empty($key)) ? $key : '');
-		}
-	}
+        /**
+         * Generates an API Key, for Remote Operations.
+         *
+         * @since 110713 Adding remote OPs.
+         *
+         * @return string An API Key. It's an MD5 Hash, 32 chars, URL-safe.
+         */
+        public static function remote_ops_key_gen()
+        {
+            global $current_site, $current_blog;
+
+            if ($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key']) {
+                $key = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_remote_ops_key'];
+                //
+            } elseif (is_multisite() && !is_main_site()) { // Child blogs in a MS network get their own key.
+                $key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt($current_blog->domain.$current_blog->path, false, false));
+            } else {
+                $key = md5(c_ws_plugin__s2member_utils_encryption::xencrypt(preg_replace('/\:[0-9]+$/', '', $_SERVER['HTTP_HOST']), false, false));
+            }
+            return apply_filters('ws_plugin__s2member_pro_remote_ops_key', !empty($key) ? $key : '');
+        }
+    }
 }
