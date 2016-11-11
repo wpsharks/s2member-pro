@@ -47,12 +47,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 		 * Gets data for an existing User.
 		 *
 		 * @package s2Member\API_Remote_Ops
-		 * @since 140103
 		 *
-		 * @param array $op An input array of Remote Operation parameters.
+		 * @since 110713 Remote OPs.
 		 *
-		 * @return string Returns a serialized array with an `ID` element object on success (among other array elements);
-		 *   else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+		 * @param array $op OP data array.
+		 *
+		 * @return array|string Response array or error string.
 		 */
 		public static function get_user($op = NULL)
 		{
@@ -67,10 +67,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				else if(!empty($op['data']['user_email']) && ($_user = get_user_by('email', (string)$op['data']['user_email'])) && !empty($_user->ID))
 					$user = $_user;
 
-				else return 'Error: Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username/Email not found).';
+				else return 'Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username/Email not found).';
 
 				if(is_multisite() && !is_user_member_of_blog($user->ID))
-					return 'Error: Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username/Email not a part of this Blog).';
+					return 'Failed to locate this User. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username/Email not a part of this Blog).';
 
 				$role  = c_ws_plugin__s2member_user_access::user_access_role($user);
 				$level = c_ws_plugin__s2member_user_access::user_access_role_to_level($role);
@@ -90,31 +90,31 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				$s2member_paid_registration_times  = get_user_option('s2member_paid_registration_times', $user->ID);
 				$s2member_file_download_access_log = get_user_option('s2member_file_download_access_log', $user->ID);
 
-				return serialize(array('ID'                                => $user->ID, 'role' => $role, 'level' => $level, 'ccaps' => $ccaps, 'data' => $data,
-				                       's2member_originating_blog'         => $s2member_originating_blog,
-				                       's2member_subscr_gateway'           => $s2member_subscr_gateway,
-				                       's2member_subscr_id'                => $s2member_subscr_id,
-				                       's2member_custom'                   => $s2member_custom,
-				                       's2member_registration_ip'          => $s2member_registration_ip,
-				                       's2member_notes'                    => $s2member_notes,
-				                       's2member_auto_eot_time'            => $s2member_auto_eot_time,
-				                       's2member_custom_fields'            => $s2member_custom_fields,
-				                       's2member_paid_registration_times'  => $s2member_paid_registration_times,
-				                       's2member_file_download_access_log' => $s2member_file_download_access_log));
+				return array('ID' => $user->ID, 'role' => $role, 'level' => $level, 'ccaps' => $ccaps, 'data' => $data,
+				             's2member_originating_blog'         => $s2member_originating_blog,
+				             's2member_subscr_gateway'           => $s2member_subscr_gateway,
+				             's2member_subscr_id'                => $s2member_subscr_id,
+				             's2member_custom'                   => $s2member_custom,
+				             's2member_registration_ip'          => $s2member_registration_ip,
+				             's2member_notes'                    => $s2member_notes,
+				             's2member_auto_eot_time'            => $s2member_auto_eot_time,
+				             's2member_custom_fields'            => $s2member_custom_fields,
+				             's2member_paid_registration_times'  => $s2member_paid_registration_times,
+				             's2member_file_download_access_log' => $s2member_file_download_access_log);
 			}
-			return 'Error: Empty or invalid request ( `get_user` ). Please try again.';
+			return 'Empty or invalid request ( `get_user` ). Please try again.';
 		}
 
 		/**
 		 * Checks authentication for an existing User.
 		 *
 		 * @package s2Member\API_Remote_Ops
-		 * @since 140103
 		 *
-		 * @param array $op An input array of Remote Operation parameters.
+		 * @since 110713 Remote OPs.
 		 *
-		 * @return string Returns a serialized array with an `ID` element object on success;
-		 *   else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+		 * @param array $op OP data array.
+		 *
+		 * @return array|string Response array or error string.
 		 */
 		public static function auth_check_user($op = NULL)
 		{
@@ -126,26 +126,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				if(empty($op['data']['user_login']) || empty($op['data']['user_pass'])
 				   || !($user = wp_authenticate($op['data']['user_login'], $op['data']['user_pass']))
 				   || is_wp_error($user) || empty($user->ID)
-				) return 'Error: Failed to authenticate this User. Unable to authenticate User/Member with data supplied (i.e., Username/Password invalid).';
+				) return 'Failed to authenticate this User. Unable to authenticate User/Member with data supplied (i.e., Username/Password invalid).';
 
 				if(is_multisite() && !is_user_member_of_blog($user->ID))
-					return 'Error: Failed to authenticate this User (i.e., the supplied Username is not a part of this Blog).';
+					return 'Failed to authenticate this User (i.e., the supplied Username is not a part of this Blog).';
 
-				return serialize(array('ID' => $user->ID));
+				return array('ID' => $user->ID);
 			}
-			return 'Error: Empty or invalid request ( `auth_check_user` ). Please try again.';
+			return 'Empty or invalid request ( `auth_check_user` ). Please try again.';
 		}
 
 		/**
 		 * Creates a new User.
 		 *
 		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
 		 *
-		 * @param array $op An input array of Remote Operation parameters.
+		 * @since 110713 Remote OPs.
 		 *
-		 * @return string Returns a serialized array with an `ID` element object on success,
-		 *   else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+		 * @param array $op OP data array.
+		 *
+		 * @return array|string Response array or error string.
 		 */
 		public static function create_user($op = NULL)
 		{
@@ -206,28 +206,28 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 									wp_new_user_notification($user_id, 'both', $op['data']['user_pass']);
 								else wp_new_user_notification($user_id, $op['data']['user_pass']);
 							}
-						return serialize(array('ID' => $user_id));
+						return array('ID' => $user_id);
 					}
-					return 'Error: Creation may have failed. Unable to obtain WP_User ID.';
+					return 'Creation may have failed. Unable to obtain WP_User ID.';
 				}
 				else if(is_wp_error($new) && $new->get_error_code())
-					return 'Error: '.$new->get_error_message();
+					return $new->get_error_message();
 
-				return 'Error: User creation failed for an unknown reason. Please try again.';
+				return 'User creation failed for an unknown reason. Please try again.';
 			}
-			return 'Error: Empty or invalid request ( `create_user` ). Please try again.';
+			return 'Empty or invalid request ( `create_user` ). Please try again.';
 		}
 
 		/**
 		 * Modifies an existing User.
 		 *
 		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
 		 *
-		 * @param array $op An input array of Remote Operation parameters.
+		 * @since 110713 Remote OPs.
 		 *
-		 * @return string Returns a serialized array with an `ID` element object on success,
-		 *   else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+		 * @param array $op OP data array.
+		 *
+		 * @return array|string Response array or error string.
 		 */
 		public static function modify_user($op = NULL)
 		{
@@ -239,13 +239,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				else if(!empty($op['data']['user_login']) && ($_user = new WP_User((string)$op['data']['user_login'])) && !empty($_user->ID))
 					$user = $_user;
 
-				else return 'Error: Modification failed. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username not found).';
+				else return 'Modification failed. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username not found).';
 
 				if(is_multisite() && !is_user_member_of_blog($user->ID))
-					return 'Error: Modification failed. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username not a part of this Blog).';
+					return 'Modification failed. Unable to obtain WP_User object instance with data supplied (i.e., ID/Username not a part of this Blog).';
 
 				if(is_super_admin($user->ID) || $user->has_cap('administrator'))
-					return 'Error: Modification failed. This API will not modify Administrators.';
+					return 'Modification failed. This API will not modify Administrators.';
 
 				$userdata['ID'] = $user->ID; // Needed for database update.
 
@@ -362,21 +362,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				if(!empty($op['data']['reset_file_download_access_log']))
 					delete_user_option($user->ID, 's2member_file_download_access_log');
 
-				return serialize(array('ID' => $user->ID));
+				return array('ID' => $user->ID);
 			}
-			return 'Error: Empty or invalid request ( `modify_user` ). Please try again.';
+			return 'Empty or invalid request ( `modify_user` ). Please try again.';
 		}
 
 		/**
 		 * Deletes an existing User.
 		 *
 		 * @package s2Member\API_Remote_Ops
-		 * @since 110713
 		 *
-		 * @param array $op An input array of Remote Operation parameters.
+		 * @since 110713 Remote OPs.
 		 *
-		 * @return string Returns a serialized array with an `ID` element object on success,
-		 *   else returns a string beginning with `Error:` on failure; which will include details regarding the error.
+		 * @param array $op OP data array.
+		 *
+		 * @return array|string Response array or error string.
 		 */
 		public static function delete_user($op = NULL)
 		{
@@ -388,17 +388,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				else if(!empty($op['data']['user_login']) && ($_user = new WP_User((string)$op['data']['user_login'])) && !empty($_user->ID))
 					$user = $_user;
 
-				else return 'Error: Deletion failed. Unable to obtain WP_User object instance.';
+				else return 'Deletion failed. Unable to obtain WP_User object instance.';
 
 				if(is_super_admin($user->ID) || $user->has_cap('administrator'))
-					return 'Error: Deletion failed. This API will not delete Administrators.';
+					return 'Deletion failed. This API will not delete Administrators.';
 
 				include_once ABSPATH.'wp-admin/includes/admin.php';
 				wp_delete_user($user->ID);
 
-				return serialize(array('ID' => $user->ID));
+				return array('ID' => $user->ID);
 			}
-			return 'Error: Empty or invalid request (`delete_user`). Please try again.';
+			return 'Empty or invalid request (`delete_user`). Please try again.';
 		}
 	}
 }
