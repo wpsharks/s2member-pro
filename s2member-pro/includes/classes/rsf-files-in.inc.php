@@ -62,7 +62,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_rsf_files_in'))
 			$smil_file_id = trim(stripslashes((string)$_GET['s2member_rsf_file']));
 
 			if(empty($_GET['s2member_rsf_file_ip']) // IP address must match up.
-			   || trim(stripslashes($_GET['s2member_rsf_file_ip'])) !== $_SERVER['REMOTE_ADDR']
+			   || trim(stripslashes($_GET['s2member_rsf_file_ip'])) !== c_ws_plugin__s2member_utils_ip::current()
 			) exit; // Invalid and/or missing IP address.
 
 			if(!c_ws_plugin__s2member_utils_urls::s2member_sig_ok($_SERVER['REQUEST_URI'], TRUE, 86400))

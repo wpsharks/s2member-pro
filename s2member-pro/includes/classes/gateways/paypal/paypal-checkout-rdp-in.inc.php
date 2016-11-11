@@ -304,7 +304,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$_paypal["EMAIL"] = $user->user_email;
 																				$_paypal["FIRSTNAME"] = $post_vars["first_name"];
 																				$_paypal["LASTNAME"] = $post_vars["last_name"];
-																				$_paypal["IPADDRESS"] = $_SERVER["REMOTE_ADDR"];
+																				$_paypal["IPADDRESS"] = c_ws_plugin__s2member_utils_ip::current();
 
 																				$_paypal["DESC"] = $cost_calculations["desc"];
 																				$_paypal["CUSTOM"] = $post_vars["attr"]["custom"];
@@ -449,7 +449,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																						$ipn["option_selection1"] = $old__subscr_or_wp_id;
 
 																						$ipn["option_name2"] = "Customer IP Address";
-																						$ipn["option_selection2"] = $_SERVER["REMOTE_ADDR"];
+																						$ipn["option_selection2"] = c_ws_plugin__s2member_utils_ip::current();
 
 																						$ipn["item_name"] = $cost_calculations["desc"];
 																						$ipn["item_number"] = $post_vars["attr"]["level_ccaps_eotper"];
@@ -554,7 +554,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$_paypal["EMAIL"] = $post_vars["email"];
 																		$_paypal["FIRSTNAME"] = $post_vars["first_name"];
 																		$_paypal["LASTNAME"] = $post_vars["last_name"];
-																		$_paypal["IPADDRESS"] = $_SERVER["REMOTE_ADDR"];
+																		$_paypal["IPADDRESS"] = c_ws_plugin__s2member_utils_ip::current();
 
 																		$_paypal["DESC"] = $cost_calculations["desc"];
 																		$_paypal["CUSTOM"] = $post_vars["attr"]["custom"];
@@ -696,7 +696,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$ipn["option_selection1"] = $_SERVER["HTTP_HOST"];
 
 																				$ipn["option_name2"] = "Customer IP Address";
-																				$ipn["option_selection2"] = $_SERVER["REMOTE_ADDR"];
+																				$ipn["option_selection2"] = c_ws_plugin__s2member_utils_ip::current();
 
 																				$ipn["item_name"] = $cost_calculations["desc"];
 																				$ipn["item_number"] = $post_vars["attr"]["level_ccaps_eotper"];
@@ -834,7 +834,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$paypal["EMAIL"] = $user->user_email;
 																				$paypal["FIRSTNAME"] = $post_vars["first_name"];
 																				$paypal["LASTNAME"] = $post_vars["last_name"];
-																				$paypal["IPADDRESS"] = $_SERVER["REMOTE_ADDR"];
+																				$paypal["IPADDRESS"] = c_ws_plugin__s2member_utils_ip::current();
 
 																				$paypal["DESC"] = $cost_calculations["desc"];
 																				$paypal["CUSTOM"] = $post_vars["attr"]["custom"];
@@ -897,7 +897,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$ipn["option_selection1"] = $old__subscr_or_wp_id;
 
 																				$ipn["option_name2"] = "Customer IP Address";
-																				$ipn["option_selection2"] = $_SERVER["REMOTE_ADDR"];
+																				$ipn["option_selection2"] = c_ws_plugin__s2member_utils_ip::current();
 
 																				$ipn["item_name"] = $cost_calculations["desc"];
 																				$ipn["item_number"] = $post_vars["attr"]["level_ccaps_eotper"];
@@ -971,7 +971,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$paypal["EMAIL"] = $post_vars["email"];
 																		$paypal["FIRSTNAME"] = $post_vars["first_name"];
 																		$paypal["LASTNAME"] = $post_vars["last_name"];
-																		$paypal["IPADDRESS"] = $_SERVER["REMOTE_ADDR"];
+																		$paypal["IPADDRESS"] = c_ws_plugin__s2member_utils_ip::current();
 
 																		$paypal["DESC"] = $cost_calculations["desc"];
 																		$paypal["CUSTOM"] = $post_vars["attr"]["custom"];
@@ -1031,7 +1031,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																		$ipn["option_selection1"] = $_SERVER["HTTP_HOST"];
 
 																		$ipn["option_name2"] = "Customer IP Address";
-																		$ipn["option_selection2"] = $_SERVER["REMOTE_ADDR"];
+																		$ipn["option_selection2"] = c_ws_plugin__s2member_utils_ip::current();
 
 																		$ipn["item_name"] = $cost_calculations["desc"];
 																		$ipn["item_number"] = $post_vars["attr"]["level_ccaps_eotper"];
