@@ -139,7 +139,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_mms_patches"))
 
 									$ms_functions_file = ABSPATH . "wp-includes/ms-functions.php";
 									$ms_functions_section = "/([\r\n\t\s ]+)(return new WP_Error( *?)\(( *?)'user_already_exists'( *?),( *?)__( *?)\(( *?)'That username is already activated.'( *?)\),( *?)\\\$signup( *?)\);)/";
-									$ms_functions_replace = "\n\t\t\t// Modified for full plugin compatiblity.\n\t\t\t//return new WP_Error( 'user_already_exists', __( 'That username is already activated.' ), \$signup);\n\t\t\treturn apply_filters('_wpmu_activate_existing_error_', new WP_Error( 'user_already_exists', __( 'That username is already activated.' ), \$signup), get_defined_vars());";
+									$ms_functions_replace = "\n\t\t\t// Modified for full plugin compatiblity.\n\t\t\t//return new WP_Error( 'user_already_exists', __( 'That username is already activated.', '' ), \$signup);\n\t\t\treturn apply_filters('_wpmu_activate_existing_error_', new WP_Error( 'user_already_exists', __( 'That username is already activated.', '' ), \$signup), get_defined_vars());";
 
 									if (file_exists ($ms_functions_file) && ($ms_functions = file_get_contents ($ms_functions_file)) && is_writable ($ms_functions_file))
 										{
