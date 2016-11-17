@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 161117
-Stable tag: 161117
+Version: 161117-RC
+Stable tag: 161117-RC
 
 SSL Compatible: yes
 bbPress® Compatible: yes
