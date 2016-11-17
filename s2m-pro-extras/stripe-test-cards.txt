@@ -1,6 +1,0 @@
---------- Test card numbers ---------
-
-See: https://stripe.com/docs/testing
-
-* s2Member must be configured for Stripe Test/Sandbox Mode.
-In your Dashboard, see: `s2Member → Stripe Options`.
