@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Return Templates (introduced by s2Member Pro).
  *

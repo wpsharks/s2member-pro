@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_BalanceTransaction extends Stripe_ApiResource
 {

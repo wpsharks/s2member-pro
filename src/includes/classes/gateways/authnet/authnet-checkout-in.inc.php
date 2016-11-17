@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Authorize.Net Checkout Form handler (inner processing routines).
 *

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Google API Constants *(for site owners)*.
 *

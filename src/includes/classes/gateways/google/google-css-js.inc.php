@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Google CSS/JS for theme integration.
 *

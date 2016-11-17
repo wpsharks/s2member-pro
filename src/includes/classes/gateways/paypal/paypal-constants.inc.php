@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * PayPal API Constants *(for site owners)*.
 *

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Stripe Checkout Form handler (inner processing routines).
  *

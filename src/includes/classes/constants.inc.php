@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * s2Member Pro API Constants *(for site owners)*.
 *

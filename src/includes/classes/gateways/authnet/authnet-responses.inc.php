@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Authorize.Net Pro-Form responses.
 *

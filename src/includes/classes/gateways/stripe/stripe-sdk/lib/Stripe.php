@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 // Tested on PHP 5.2, 5.3
 

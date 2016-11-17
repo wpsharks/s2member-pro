@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * ClickBank Return URL handler (inner processing routines).
  *

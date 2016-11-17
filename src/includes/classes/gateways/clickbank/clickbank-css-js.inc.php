@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * ClickBank CSS/JS for theme integration.
 *

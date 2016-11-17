@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Authorize.Net Silent Post *(aka: IPN)* (inner processing routines).
  *

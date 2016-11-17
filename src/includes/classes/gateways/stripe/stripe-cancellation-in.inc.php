@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Stripe Cancellation Form handler (inner processing routines).
  *

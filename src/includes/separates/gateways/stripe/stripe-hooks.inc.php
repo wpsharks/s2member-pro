@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Primary Hooks/Filters for Stripe.
  *

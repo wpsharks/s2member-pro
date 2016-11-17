@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_Charge extends Stripe_ApiResource
 {
@@ -57,7 +58,7 @@ class Stripe_Charge extends Stripe_ApiResource
     $opts = $this->parseOptions($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/refund';
-    list($response, $apiKey) = 
+    list($response, $apiKey) =
       $requestor->request('post', $url, $params, $opts->headers);
     $this->refreshFrom($response, $apiKey);
     return $this;
@@ -73,7 +74,7 @@ class Stripe_Charge extends Stripe_ApiResource
     $opts = $this->parseOptions($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/capture';
-    list($response, $apiKey) = 
+    list($response, $apiKey) =
       $requestor->request('post', $url, $params, $opts->headers);
     $this->refreshFrom($response, $apiKey);
     return $this;
@@ -89,7 +90,7 @@ class Stripe_Charge extends Stripe_ApiResource
     $opts = $this->parseOptions($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/dispute';
-    list($response, $apiKey) = 
+    list($response, $apiKey) =
       $requestor->request('post', $url, $params, $headers);
     $this->refreshFrom(array('dispute' => $response), $apiKey, true);
     return $this->dispute;
@@ -103,7 +104,7 @@ class Stripe_Charge extends Stripe_ApiResource
     $opts = $this->parseOptions($options);
     $requestor = new Stripe_ApiRequestor($opts->apiKey);
     $url = $this->instanceUrl() . '/dispute/close';
-    list($response, $apiKey) = 
+    list($response, $apiKey) =
       $requestor->request('post', $url, null, $opts->headers);
     $this->refreshFrom($response, $apiKey);
     return $this;

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Stripe Silent Post *(aka: IPN)* handler.
  *

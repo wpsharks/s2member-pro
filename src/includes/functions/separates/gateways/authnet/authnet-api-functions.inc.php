@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Authorize.Net API Functions *(for site owners)*.
 *

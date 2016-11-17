@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_InvalidRequestError extends Stripe_Error
 {

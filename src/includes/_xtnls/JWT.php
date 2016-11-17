@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 /**
  * JSON Web Token implementation
@@ -13,7 +14,7 @@ class JWT
     /**
      * @param string      $jwt    The JWT
      * @param string|null $key    The secret key
-     * @param bool        $verify Don't skip verification process 
+     * @param bool        $verify Don't skip verification process
      *
      * @return object The JWT's payload as a PHP object
      */
@@ -164,4 +165,3 @@ class JWT
     }
 
 }
-

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Stripe Update Forms (inner processing routines).
  *

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * ClickBank API Functions *(for site owners)*.
 *

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * PayPal Checkout Forms (inner processing routines).
 *

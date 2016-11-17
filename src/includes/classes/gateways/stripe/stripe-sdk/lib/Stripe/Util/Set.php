@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_Util_Set implements IteratorAggregate
 {

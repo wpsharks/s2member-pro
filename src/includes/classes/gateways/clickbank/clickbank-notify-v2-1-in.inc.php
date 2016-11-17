@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * ClickBank IPN v2.1 Handler (inner processing routines).
  *

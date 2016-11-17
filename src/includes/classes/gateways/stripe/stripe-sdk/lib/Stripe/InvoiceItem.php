@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_InvoiceItem extends Stripe_ApiResource
 {

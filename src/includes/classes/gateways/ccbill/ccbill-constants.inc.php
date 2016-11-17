@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * ccBill API Constants *(for site owners)*.
 *

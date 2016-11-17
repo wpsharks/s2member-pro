@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * PayPal Standard extras (introduced by s2Member Pro).
 *

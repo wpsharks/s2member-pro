@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Shortcode `[s2Member-Pro-PayPal-Form /]` (inner processing routines).
 *

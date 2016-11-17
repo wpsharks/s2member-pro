@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_ApplicationFeeRefund extends Stripe_ApiResource
 {

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Menu page for s2Member Pro (ccBill Options page).
  *

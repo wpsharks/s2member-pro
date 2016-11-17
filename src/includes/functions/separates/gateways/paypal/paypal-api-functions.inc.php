@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * PayPal API Functions *(for site owners)*.
  *

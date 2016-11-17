@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_RateLimitError extends Stripe_InvalidRequestError
 {

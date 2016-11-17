@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Authorize.Net Update Forms (inner processing routines).
 *

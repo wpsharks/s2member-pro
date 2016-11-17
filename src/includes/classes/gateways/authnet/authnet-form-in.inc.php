@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Shortcode `[s2Member-Pro-AuthNet-Form /]` (inner processing routines).
 *

@@ -1,10 +1,11 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_RequestOptions
 {
   public $headers;
   public $apiKey;
- 
+
   public function __construct($key, $headers)
   {
     $this->apiKey = $key;

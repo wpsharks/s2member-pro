@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Menu page for s2Member Pro (Authorize.Net API Constants).
  *

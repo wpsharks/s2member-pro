@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Pro Lock Icons (inner processing routines).
 *

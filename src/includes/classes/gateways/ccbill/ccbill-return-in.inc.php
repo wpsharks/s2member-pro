@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * ccBill Return URL handler (inner processing routines).
 *

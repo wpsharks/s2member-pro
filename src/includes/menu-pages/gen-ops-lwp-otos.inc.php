@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
  * Menu page for s2Member Pro (Login Welcome Page / One-Time-Offers).
  *

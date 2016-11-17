@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * Captcha utilities (introduced by s2Member Pro).
 *

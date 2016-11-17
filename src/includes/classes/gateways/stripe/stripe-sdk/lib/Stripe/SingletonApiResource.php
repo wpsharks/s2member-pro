@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 abstract class Stripe_SingletonApiResource extends Stripe_ApiResource
 {

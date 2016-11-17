@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 /**
 * AliPay CSS/JS for theme integration.
 *

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_FileUpload extends Stripe_ApiResource
 {

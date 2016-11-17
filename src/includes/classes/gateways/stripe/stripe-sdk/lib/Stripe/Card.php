@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 class Stripe_Card extends Stripe_ApiResource
 {
@@ -23,15 +24,15 @@ class Stripe_Card extends Stripe_ApiResource
     }
 
     if (isset($this['customer'])) {
-      
+
       $parent = $this['customer'];
       $base = self::classUrl('Stripe_Customer');
     } else if (isset($this['recipient'])) {
-      
+
       $parent = $this['recipient'];
       $base = self::classUrl('Stripe_Recipient');
     } else {
-      
+
       return null;
     }
 
@@ -63,4 +64,3 @@ class Stripe_Card extends Stripe_ApiResource
     return self::_scopedSave($class);
   }
 }
-
