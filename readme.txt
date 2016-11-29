@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 161117-RC
-Stable tag: 161117-RC
+Version: 161129
+Stable tag: 161129
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -22,7 +22,7 @@ Requires at least: 4.2
 Requires: s2Member® Framework
 
 Requires PHP: 5.2
-Tested up to PHP: 7.0.11
+Tested up to PHP: 7.0.12
 
 Copyright: © 2009 WebSharks, Inc.
 License: GNU General Public License v2 or later.
@@ -136,6 +136,44 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v161129 =
+
+- (s2Member Pro) **Bug Fix:** Stripe refund notifications via the Stripe Webhook were always interpreted by s2Member as full refunds. This release corrects this bug so that s2Member will handle partial refunds via the Stripe API properly in all cases. Props @raamdev for reporting.
+
+- (s2Member/s2Member Pro) **Bug Fix:** Updating profile via `[s2Member-Profile /]` when changing email addresses may leave the old email address on configured email list servers in some scenarios. Props @renzms for reporting. For further details see [issue #1007](https://github.com/websharks/s2member/issues/1007).
+
+- (s2Member/s2Member Pro) **SSL Compatibility & Option Deprecation:** In previous versions of s2Member there was a setting in the UI that allowed you to force non-SSL redirects to the Login Welcome Page. By popular demand, this setting has been deprecated and removed from the UI.
+
+  _**New Approach:** The new approach taken in the latest release of s2Member is to automatically detect when a non-SSL redirection should occur, and when it should not occur (i.e., when the default WordPress core behavior should remain as-is)._
+
+  _s2Member does this by looking at the `FORCE_SSL_LOGIN` and `FORCE_SSL_ADMIN` settings in WordPress, and also at your configured `siteurl` option in WordPress. If you are not forcing SSL logins, or your `siteurl` begins with `https://` (indicating that your entire site is served over SSL), non-SSL redirects will no longer be forced by s2Member, which resolves problems on many sites that serve their entire site over SSL (a growing trend over the past couple years)._
+
+  _Conversely, if `FORCE_SSL_LOGIN` or `FORCE_SSL_ADMIN` are true, and your configured `siteurl` option in WordPress does NOT begin with `https://` (e.g., just plain `http://`), then a non-SSL redirect **is** forced, as necessary, in order to avoid login cookie conflicts; i.e., the old behavior is preserved by this automatic detection._
+
+  _Overall, this new approach improves compatibility with WordPress core, particularly on sites that serve all of their pages over `https://` (as recommended by Google)._
+
+  _**Backward Compatibility:** As noted previously, the old option that allowed you to configure s2Member to force non-SSL redirects to the Login Welcome Page has been officially deprecated and removed from the UI. However, the old option does still exist internally, but only for backward compatibility. A WordPress filter is exposed that allows developers to alter the old setting if necessary. You can use the filter to force a `true` or `false` value._
+
+  ```php
+  <?php
+  add_filter('ws_plugin__s2member_login_redirection_always_http', '__return_true');
+  // OR add_filter('ws_plugin__s2member_login_redirection_always_http', '__return_false');
+  ```
+
+- (s2Member/s2Member Pro) **Bug Fix:** Username/password email being sent to users whenever Custom Passwords are enabled in your s2Member configuration and registration occurs via the default `wp-login.php?action=register` form. Fixed in this release. See also: [issue #870](https://github.com/websharks/s2member/issues/870) if you'd like additional details.
+
+- (s2Member Pro) **Bug Fix:** In the `[s2Member-List /]` search box shortcode an empty `action=""` attribute produces a warning due to invalid syntax in HTML v5. Fixed in this release. See [Issue #1006](https://github.com/websharks/s2member/issues/1006)
+
+- (s2Member/s2Member Pro) **IP Detection:** This release improves s2Member's ability to determine the current user's IP address. s2Member now searches through `HTTP_CF_CONNECTING_IP`, `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED`, `HTTP_VIA`, and `REMOTE_ADDR` (in that order) to locate the first valid public IP address. Either IPv4 or IPv6. Among other things, this improves s2Member's compatibility with sites using CloudFlare. See also: [issue #526](https://github.com/websharks/s2member/issues/526) if you'd like additional details.
+
+- (s2Member Pro) **JSON API:** In the pro version it is now possible to use the s2Member Pro Remote Operations API to send and receive JSON input/output. This makes the Remote Operations API in s2Member compatible with a variety of scripting languages, not just PHP; i.e., prior to this release the Remote Operations API required that you always use PHP's `serialize()` and `unserialize()` functions when making API calls. The use of `serialize()` and `unserialize()` are no longer a requirement since input/output data is now sent and received in the more portable JSON format. For new code samples, please see: **Dashboard → s2Member → API / Scripting → Pro API For Remote Operations**. See also: [issue #987](https://github.com/websharks/s2member/issues/987) if you'd like additional details on this change.
+
+  _**Note:** The old s2Member Pro Remote Operations API has been deprecated but will continue to function just like before (via `serialize()` and `unserialize()`) for the foreseeable future. Moving forward, we recommend the new JSON code samples. Again, you will find those under: **Dashboard → s2Member → API / Scripting → Pro API For Remote Operations**_
+
+- (s2Member/s2Member Pro) Enforce data types when determining PHP constants. See [this GitHub issue](https://github.com/websharks/s2member/issues/989) if you'd like further details.
+
+- (s2Member/s2Member Pro) **Phing Build Routines:** Starting with this release, developers working on the s2Member project are now able to perform builds of the software via the `websharks/phings` project; i.e., the structure of the plugin directories has been changed (slightly) to conform to Phing and PSR4 standards. This makes it easier for our developers to prepare and release new versions of the software in the future.
 
 = v160801 =
 
