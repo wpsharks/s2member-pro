@@ -189,13 +189,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
             } // The output from this call is not needed here.
             ob_end_clean(); // End & clean only.
 
-            self::maintenance(true); // Enter maintenance mode.
+            self::maintenance_mode(true); // Enter maintenance mode.
 
             if (!WP_Filesystem(self::$credentials, $plugins_dir)
                     || !($fs_plugins_dir = rtrim($wp_filesystem->find_folder($plugins_dir), '/'))
                     || !($fs_plugin_dir = rtrim($wp_filesystem->find_folder($plugin_dir), '/'))) {
                 self::$error = 'Upgrade failed. Error #0004. Please upgrade via FTP or supply valid filesystem credentials.';
-                self::maintenance(false); // Exit maintenance mode.
+                self::maintenance_mode(false); // Exit maintenance mode.
                 return; // Nothing more we can do here.
             }
             $tmp_zip              = wp_unique_filename($plugins_dir, basename($plugin_dir).'.zip');
@@ -208,42 +208,42 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 self::$error = 'Upgrade failed. Error #0005. Please upgrade via FTP.';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
-                self::maintenance(false);
+                self::maintenance_mode(false);
                 return;
             }
             if ($wp_filesystem->is_dir($fs_plugin_dir.'-new') && !$wp_filesystem->delete($fs_plugin_dir.'-new', true)) {
                 self::$error = 'Upgrade failed. Error #0006. Please upgrade via FTP. ';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
-                self::maintenance(false);
+                self::maintenance_mode(false);
                 return;
             }
             if (!$wp_filesystem->mkdir($fs_plugin_dir.'-new', FS_CHMOD_DIR)) {
                 self::$error = 'Upgrade failed. Error #0007. Please upgrade via FTP. ';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
-                self::maintenance(false);
+                self::maintenance_mode(false);
                 return;
             }
             if (is_wp_error($unzip = unzip_file($tmp_zip, $plugin_dir.'-new'))) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
                 self::$error = 'Upgrade failed. Error #0008. '.esc_html($unzip->get_error_message());
-                self::maintenance(false);
+                self::maintenance_mode(false);
                 return;
             }
             if ($wp_filesystem->is_dir($fs_plugin_dir) && !$wp_filesystem->delete($fs_plugin_dir, true)) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
                 self::$error = 'Upgrade failed. Error #0009. Please upgrade via FTP.';
-                // self::maintenance(false); // Stay in maintenance mode.
+                // self::maintenance_mode(false); // Stay in maintenance mode.
                 return;
             }
             if (!$wp_filesystem->move($fs_plugin_dir.'-new/s2member-pro', $fs_plugin_dir)) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($plugin_dir.'-new', true);
                 self::$error = 'Upgrade failed. Error #0010. Please upgrade via FTP.';
-                // self::maintenance(false); // Stay in maintenance mode.
+                // self::maintenance_mode(false); // Stay in maintenance mode.
                 return;
             }
             $wp_filesystem->delete($fs_tmp_zip);
@@ -251,7 +251,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
 
             $notice = 's2Member Pro successfully updated to v'.esc_html($latest['pro_version']).'.';
             c_ws_plugin__s2member_admin_notices::enqueue_admin_notice($notice, 'blog|network:*');
-            self::maintenance(false); // Exit maintenance mode now.
+            self::maintenance_mode(false); // Exit maintenance mode now.
 
             do_action('ws_plugin__s2member_pro_during_successfull_upgrade', get_defined_vars());
 
