@@ -132,7 +132,7 @@ else if(is_admin()) //  Admin compatibility errors.
 	}
 	else if(!defined('WS_PLUGIN__S2MEMBER_VERSION') || !defined('WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION') || !version_compare(WS_PLUGIN__S2MEMBER_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="\'.c_ws_plugin__s2member_readmes::parse_readme_value(\'Plugin URI\').\'" target="_blank">s2Member Framework</a>, v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.\'+. It\\\'s free.</p></div>\';'));
+		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="http://s2member.com/release-archive/" target="_blank">s2Member Framework</a>, v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.\'+. It\\\'s free.</p></div>\';'));
 	}
 	else if(!version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '>=') && file_exists(dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'))
 	{
