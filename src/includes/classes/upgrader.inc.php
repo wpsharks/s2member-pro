@@ -98,13 +98,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
 
             if (!empty($_p['ws_plugin__s2member_pro_upgrade']) && $error && strpos($error, '#0004') !== false && $credentials_form) {
                 $wizard = '<div class="error fade">'."\n";
-                $wizard .= '<p>Your <a href="http://s2member.com/" target="_blank">s2Member Pro Add-on</a> must be updated to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).'+.<br />Please log in at <a href="http://s2member.com/" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
+                $wizard .= '<p>Your <a href="http://s2member.com/" target="_blank">s2Member Pro Add-on</a> must be updated to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).'.<br />Please log in at <a href="http://s2member.com/" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
                 $wizard .= '</div>'."\n";
                 $wizard .= $credentials_form."\n";
                 //
             } else { // Otherwise, default handling.
                 $wizard = '<div class="error fade">'."\n";
-                $wizard .= '<p>Your <a href="http://s2member.com/" target="_blank">s2Member Pro Add-on</a> must be updated to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).'+.<br />Please log in at <a href="http://s2member.com/" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
+                $wizard .= '<p>Your <a href="http://s2member.com/" target="_blank">s2Member Pro Add-on</a> must be updated to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).'.<br />Please log in at <a href="http://s2member.com/" target="_blank" rel="external">s2Member.com</a> for access to the latest version.</p>'."\n";
 
                 $wizard .= '<form method="post" action="'.esc_attr($_SERVER['REQUEST_URI']).'" style="margin: 5px 0 5px 0;" autocomplete="off">'."\n";
                 $wizard .= '<p><strong>Or upgrade automatically using your s2Member.com username &amp; license key.</strong>.</p>'."\n";
@@ -205,21 +205,21 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
             $zip_file_contents = c_ws_plugin__s2member_utils_urls::remote($latest['pro_zip'], false, array('timeout' => 120));
 
             if (!$zip_file_contents || !$wp_filesystem->put_contents($fs_tmp_zip, $zip_file_contents, FS_CHMOD_FILE)) {
-                self::$error = 'Upgrade failed. Error #0005. Please upgrade via FTP.';
+                self::$error = 'Upgrade failed. Error #0005. Unable to acquire latest pro version via https://. Please upgrade via FTP.';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
                 self::maintenance_mode(false);
                 return;
             }
             if ($wp_filesystem->is_dir($fs_plugin_dir.'-new') && !$wp_filesystem->delete($fs_plugin_dir.'-new', true)) {
-                self::$error = 'Upgrade failed. Error #0006. Please upgrade via FTP. ';
+                self::$error = 'Upgrade failed. Error #0006. Unable to delete old temp plugin directory. Please upgrade via FTP. ';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
                 self::maintenance_mode(false);
                 return;
             }
             if (!$wp_filesystem->mkdir($fs_plugin_dir.'-new', FS_CHMOD_DIR)) {
-                self::$error = 'Upgrade failed. Error #0007. Please upgrade via FTP. ';
+                self::$error = 'Upgrade failed. Error #0007. Unable to create temporary plugin directory. Please upgrade via FTP. ';
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
                 self::maintenance_mode(false);
@@ -228,22 +228,22 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
             if (is_wp_error($unzip = unzip_file($tmp_zip, $plugin_dir.'-new'))) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
-                self::$error = 'Upgrade failed. Error #0008. '.esc_html($unzip->get_error_message());
+                self::$error = 'Upgrade failed. Error #0008. Failed to unzip new version. '.esc_html($unzip->get_error_message());
                 self::maintenance_mode(false);
                 return;
             }
             if ($wp_filesystem->is_dir($fs_plugin_dir) && !$wp_filesystem->delete($fs_plugin_dir, true)) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($fs_plugin_dir.'-new', true);
-                self::$error = 'Upgrade failed. Error #0009. Please upgrade via FTP.';
-                // self::maintenance_mode(false); // Stay in maintenance mode.
+                self::$error = 'Upgrade failed. Error #0009. Cannot delete existing pro add-on directory. Please upgrade via FTP.';
+                self::maintenance_mode(false); // Stay in maintenance mode.
                 return;
             }
             if (!$wp_filesystem->move($fs_plugin_dir.'-new/s2member-pro', $fs_plugin_dir)) {
                 $wp_filesystem->delete($fs_tmp_zip);
                 $wp_filesystem->delete($plugin_dir.'-new', true);
-                self::$error = 'Upgrade failed. Error #0010. Please upgrade via FTP.';
-                // self::maintenance_mode(false); // Stay in maintenance mode.
+                self::$error = 'Upgrade failed. Unable to extract. Error #0010. Please upgrade via FTP.';
+                self::maintenance_mode(false); // Stay in maintenance mode.
                 return;
             }
             $wp_filesystem->delete($fs_tmp_zip);
