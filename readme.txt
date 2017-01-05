@@ -44,11 +44,7 @@ Changelog URI: http://s2member.com/changelog/
 Video Tutorials: http://s2member.com/videos/
 Knowledge Base: http://s2member.com/kb/
 Newsletter: http://s2member.com/r/subscribe/
-Pro Add-on / Home Page: http://s2member.com/
-Pro Add-on / Prices: http://s2member.com/prices/
-Pro Add-on / Auto-Update URL: https://www.s2member.com/
 PayPal Pro Integration: http://s2member.com/r/pp-account-types/
-Professional Installation URI: http://s2member.com/r/professional-installation/
 
 Description: s2Member® Pro adds PayPal® Payments Pro integration, advanced import/export tools, and many other enhancements.
 Tags: membership, subscribers, subscriber, members only, roles, capabilities, capability, register, signup, paypal, ecommerce, restriction
@@ -57,19 +53,19 @@ s2Member® Pro adds Stripe™, PayPal® Payments Pro and Authorize.Net integrati
 
 == Description ==
 
-You can learn more about s2Member® Pro at [s2Member.com](http://www.s2member.com/).
+You can learn more about s2Member® Pro at [s2Member.com](http://s2member.com/).
 
 == Installation ==
 
 = s2Member® Pro is Very Easy to Install =
 
-1. First, you need to have the latest version of the [s2Member® Framework](http://www.s2member.com/framework/) already installed.
+1. First, you need to have the latest version of the [s2Member® Framework](http://s2member.com/release-archive/) already installed.
 2. Then, upload the `/s2member-pro` folder to your `/wp-content/plugins/` directory.
 3. That's it! s2Member® Pro will be loaded into the free version of s2Member automatically.
 
 = See Also (s2Member.com) =
 
-[Detailed installation/upgrade instructions](http://www.s2member.com/pro/#!s2_tab_jump=s2-pro-install-update).
+[Detailed installation/upgrade instructions](http://s2member.com/installation/).
 
 = Is s2Member compatible with Multisite Networking? =
 
@@ -255,7 +251,7 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 - (s2Member) **Multisite Support:** This release of s2Member (the free version only) removes full support for Multisite Networks, which is now a Pro feature; i.e., only available in the Pro version.
 
   ##### Is s2Member still compatible with WordPress Multisite Networking?
-  Multisite support is no longer included in the s2Member Framework. However, it is available with s2Member Pro. s2Member Pro is compatible with Multisite Networking. After you enable Multisite Networking, install the s2Member Pro Add-On. Then, navigate to `s2Member → Multisite (Config)` in the Dashboard of your Main Site. You can learn more about s2Member Pro at [s2Member.com](http://www.s2member.com/).
+  Multisite support is no longer included in the s2Member Framework. However, it is available with s2Member Pro. s2Member Pro is compatible with Multisite Networking. After you enable Multisite Networking, install the s2Member Pro Add-On. Then, navigate to `s2Member → Multisite (Config)` in the Dashboard of your Main Site. You can learn more about s2Member Pro at [s2Member.com](http://s2member.com/).
 
   ##### I was using the free version in a Multisite Network before. What happened?
   s2Member (when running on a Multisite Network) requires minor alterations in WordPress core that are not compatible with plugins available at WordPress.org (i.e., not allowed) at this time. For this reason, full support for Multisite Networks is now available only in the pro version.
@@ -528,7 +524,7 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 = v150102 =
 
 - (s2Member/s2Member Pro) **Custom Field Mapping:** This release of s2Member adds an internal mapping from s2Member's Custom Field values for each user, to the `get_user_option()` function in the WordPress core. This makes it possible to retrieve user custom field values like always via `get_user_field()` or now through the native `get_user_option()` function also. The benefit of this is that s2Member's custom fields are now more compatible with other themes/plugins for WordPress.
-- (s2Member Pro) **[s2Member-List /] Shortcode:** It is now possible to search through custom fields created with s2Member using the `search_columns=""` attribute; e.g., `search_columns="user_login,user_email,s2member_custom_field_MYFIELDID"`; where `MYFIELDID` can be replaced with a field ID that you generate with s2Member via `Dashboard → s2Member → General Options → Registration/Profile Fields`. See also: [this KB article](http://www.s2member.com/kb/s2member-list-shortcode/) for further details. See also: [this GitHub issue](https://github.com/websharks/s2member/issues/155) for details regarding this improvement.
+- (s2Member Pro) **[s2Member-List /] Shortcode:** It is now possible to search through custom fields created with s2Member using the `search_columns=""` attribute; e.g., `search_columns="user_login,user_email,s2member_custom_field_MYFIELDID"`; where `MYFIELDID` can be replaced with a field ID that you generate with s2Member via `Dashboard → s2Member → General Options → Registration/Profile Fields`. See also: [this KB article](http://s2member.com/kb-article/s2member-list-shortcode-documentation/) for further details. See also: [this GitHub issue](https://github.com/websharks/s2member/issues/155) for details regarding this improvement.
 - (s2Member/s2Member Pro) **MailChimp Bug Fix** This release fixes a bug first introduced in the previous release, which was causing Interest Groups configured w/ s2Member to not be added properly. Resolved in this release. Props to @ethanpil Thanks!
 - (s2Member Pro) **ccBill Buttons** This release updates all ccBill button graphics. The MasterCard logo has been removed, and a new set of buttons was created to improve upon the set provided in previous versions of s2Member Pro. See: [this GitHub issue](https://github.com/websharks/s2member/issues/392) if you'd like further details.
 - (s2Member Pro) **Authorize.Net** The `AUD` currency code is now supported by Authorize.Net, and thus, s2Member Pro has been updated to support the `AUD` currency code for Pro-Forms integrated with Authorize.Net. See [this GitHub issue](https://github.com/websharks/s2member/issues/383) if you'd like further details.
@@ -570,7 +566,7 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 = v141007 =
 
 - (s2Member Pro) **ClickBank IPN v6:** This release enables a new integration option for site owners integrated with ClickBank. You may now choose to integrate with v6 of ClickBank's IPN service, since all previous versions are slowly being phased out by ClickBank. Please see: `Dashboard → s2Member → ClickBank Options → IPN Integration` for v6 config. options. See also [this GitHub issue](https://github.com/websharks/s2member/issues/256) if you'd like further details regarding this topic. See also: [this article @ ClickBank](https://support.clickbank.com/entries/22803622-instant-notification-service).
-- (s2Member/s2Member Pro) **AWeber API Integration:** This release of s2Member adds a new option for site owners using AWeber. It is now possible to integrate with the new [s2Member App](http://www.s2member.com/r/aweber-api-key) for AWeber; i.e., via the AWeber API instead of via email-based communication. For further details, please see: `Dashboard → s2Member → API / List Servers → AWeber Integration`. See also: [this GitHub issue](https://github.com/websharks/s2member/issues/303) if you'd like additional details.
+- (s2Member/s2Member Pro) **AWeber API Integration:** This release of s2Member adds a new option for site owners using AWeber. It is now possible to integrate with the new [s2Member App](http://s2member.com/r/aweber-api-key) for AWeber; i.e., via the AWeber API instead of via email-based communication. For further details, please see: `Dashboard → s2Member → API / List Servers → AWeber Integration`. See also: [this GitHub issue](https://github.com/websharks/s2member/issues/303) if you'd like additional details.
 - (s2Member/s2Member Pro) **Bug Fix:** The EOT Behavior option for `refunds,partial_refunds,reversals` was not being accepted by s2Member. Fixed in this release. Please see [this GitHub issue](https://github.com/websharks/s2member/issues/345) if you'd like further details.
 - (s2Member/s2Member Pro) **MailChimp API Wrapper:** This release of s2Member comes with an updated API wrapper class for MailChimp integration. No change in functionality, just a smoother, slightly faster, and more bug-free interaction with the MailChimp API. Please see [this GitHub issue](https://github.com/websharks/s2member/issues/303) if you'd like further details regarding this improvement. See also: [the official MailChimp API class](https://bitbucket.org/mailchimp/mailchimp-api-php); i.e., what s2Member has been updated to in this release.
 - (s2Member/s2Member Pro) **URI Restrictions caSe-insensitive (Security Fix)** This release of s2Member changes the way URI Restrictions work. All URI Restrictions are now caSe-insensitive (i.e., `/some-path/` is now the same as `/some-Path/`), allowing s2Member to automatically pick up different variations used in attempts to exploit the behavior of certain slugs within the WordPress core. You can also change this new default behavior, if you prefer. Please see: `Dashboard → s2Member → Restriction Options → URI Restrictions`. See also: [this GitHub issue](https://github.com/websharks/s2member/issues/354) for the details about why this was changed in the most recent copy of s2Member.
