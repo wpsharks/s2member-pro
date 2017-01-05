@@ -111,7 +111,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 $wizard .= '<input type="hidden" name="ws_plugin__s2member_pro_upgrade" id="ws-plugin--s2member-pro-upgrade" value="'.esc_attr(wp_create_nonce('ws-plugin--s2member-pro-upgrade')).'" />'."\n";
                 $wizard .= '<input type="text" placeholder="Username" autocomplete="new-password" name="ws_plugin__s2member_pro_upgrade_username" id="ws-plugin--s2member-pro-upgrade-username" value="'.esc_attr($username).'" />'."\n";
                 $wizard .= '<input type="password" placeholder="License Key" autocomplete="new-password" name="ws_plugin__s2member_pro_upgrade_password" id="ws-plugin--s2member-pro-upgrade-password" value="'.esc_attr($password).'" />'."\n";
-                $wizard .= '<input type="submit" id="ws-plugin--s2member-pro-upgrade-submit" value="Upgrade s2Member Pro Automatically" />'."\n";
+                $wizard .= '<input type="submit" class="button" id="ws-plugin--s2member-pro-upgrade-submit" value="Upgrade s2Member Pro Automatically" />'."\n";
                 $wizard .= $error ? '<p><em>'.$error.'</em></p>'."\n" : '';
                 $wizard .= '</form>'."\n";
 
