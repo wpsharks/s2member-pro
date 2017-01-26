@@ -44,7 +44,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *
  * @var string
  */
-${__FILE__}['tmp'] = '161129'; //version//
+${__FILE__}['tmp'] = '170126-RC'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_VERSION', ${__FILE__}['tmp']);
 /**
@@ -77,7 +77,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION'))
  *
  * @var string
  */
-${__FILE__}['tmp'] = '161129'; //version//
+${__FILE__}['tmp'] = '170126-RC'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION', ${__FILE__}['tmp']);
 /*
@@ -92,7 +92,7 @@ if(version_compare(PHP_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION, '>=') &
 	*/
 	do_action('ws_plugin__s2member_pro_before_loaded');
 	/*
-	System configuraton.
+	System configuration.
 	*/
 	include_once dirname(__FILE__).'/src/includes/syscon.inc.php';
 	/*
