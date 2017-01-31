@@ -291,7 +291,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																				&& (substr($ipn['s2member_paypal_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) || stripos($ipn['s2member_paypal_proxy_return_url'], 'http') === 0)
 																				&& ($custom_success_url = str_ireplace(array("%%s_response%%", /* Deprecated in v111106 ». */ "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $ipn["s2member_paypal_proxy_return_url"]))
 																				&& ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url)))) {
-																			wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
+																			wp_redirect($post_vars['attr']['success'] === '%%sp_access_url%%' ? $custom_success_url : c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
 																		}
 																	}
 																else // Else, unable to generate Access Link.
