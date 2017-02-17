@@ -90,8 +90,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_remote_ops_api"))
 
 				echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-				echo '<p><strong>TIP:</strong> In addition to this documentation, you may also want to have a look at the <a href="http://www.s2member.com/codex/" target="_blank" rel="external">s2Member Codex</a>.<br />'."\n";
-				echo '<strong>See Also:</strong> <a href="http://www.s2member.com/codex/stable/s2member/api_constants/package-summary/" target="_blank" rel="external">s2Member Codex → API Constants</a>, and <a href="http://www.s2member.com/codex/stable/s2member/api_functions/package-summary/" target="_blank" rel="external">s2Member Codex → API Functions</a>.</p>'."\n";
+				echo '<p><strong>TIP:</strong> In addition to this documentation, you may also want to have a look at the <a href="https://s2member.com/r/codex/" target="_blank" rel="external">s2Member Codex</a>.<br />'."\n";
+				echo '<strong>See Also:</strong> <a href="https://s2member.com/r/s2member-codex-api-constants-package-summary/" target="_blank" rel="external">s2Member Codex → API Constants</a>, and <a href="https://s2member.com/r/s2member-codex-api-functions-package-summary/" target="_blank" rel="external">s2Member Codex → API Functions</a>.</p>'."\n";
 				echo '</div>'."\n";
 
 				echo '</div>'."\n";
