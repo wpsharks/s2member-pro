@@ -121,14 +121,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_exports_simple_in'))
 
 							$custom_capabilities = trim($custom_capabilities, ',');
 
-							$custom         = (isset($user->$s2map['custom'])) ? $user->$s2map['custom'] : '';
-							$subscr_id      = (isset($user->$s2map['subscr_id'])) ? $user->$s2map['subscr_id'] : '';
-							$subscr_gateway = (isset($user->$s2map['subscr_gateway'])) ? $user->$s2map['subscr_gateway'] : '';
+							$custom         = (isset($user->{$s2map['custom']})) ? $user->{$s2map['custom']} : '';
+							$subscr_id      = (isset($user->{$s2map['subscr_id']})) ? $user->{$s2map['subscr_id']} : '';
+							$subscr_gateway = (isset($user->{$s2map['subscr_gateway']})) ? $user->{$s2map['subscr_gateway']} : '';
 
-							$auto_eot_time           = (isset($user->$s2map['auto_eot_time'])) ? $user->$s2map['auto_eot_time'] : '';
-							$last_payment_time       = (isset($user->$s2map['last_payment_time'])) ? $user->$s2map['last_payment_time'] : '';
-							$paid_registration_times = (isset($user->$s2map['paid_registration_times'])) ? $user->$s2map['paid_registration_times'] : array();
-							$custom_fields           = (isset($user->$s2map['custom_fields']) && is_array($user->$s2map['custom_fields'])) ? $user->$s2map['custom_fields'] : array();
+							$auto_eot_time           = (isset($user->{$s2map['auto_eot_time']})) ? $user->{$s2map['auto_eot_time']} : '';
+							$last_payment_time       = (isset($user->{$s2map['last_payment_time']})) ? $user->{$s2map['last_payment_time']} : '';
+							$paid_registration_times = (isset($user->{$s2map['paid_registration_times']})) ? $user->{$s2map['paid_registration_times']} : array();
+							$custom_fields           = (isset($user->{$s2map['custom_fields']}) && is_array($user->{$s2map['custom_fields']})) ? $user->{$s2map['custom_fields']} : array();
 
 							$paid_registration_date  = (!empty($paid_registration_times['level'])) ? date('m/d/Y', $paid_registration_times['level']) : '';
 							$paid_registration_times = (!empty($paid_registration_times) && is_array($paid_registration_times)) ? serialize($paid_registration_times) : '';
