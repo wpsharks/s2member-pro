@@ -288,7 +288,10 @@ div.s2member-pro-stripe-form-submission-section > div.s2member-pro-stripe-form-s
 {
 	float : right;
 }
-iframe.stripe_checkout_app
-{
-	z-index : 999999 !important;
-}
+/* No longer necessary and this can cause problems on mobile devices.
+	See: <https://github.com/websharks/s2member/issues/1057#issuecomment-285853506>
+	iframe.stripe_checkout_app
+	{
+		z-index : 999999 !important;
+	}
+*/
