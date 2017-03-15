@@ -667,18 +667,22 @@ jQuery(document).ready( // DOM ready.
 					});
 				})($coForm);
 			}
-			var buildSourceTokenTextSummary = function(token)
+			var buildSourceTokenTextSummary = function(token, args)
 			{
 				if(typeof token !== 'object') return '';
+				// `args` contains billing/shipping address.
 
-				if(token.type === 'bank_account' && token.bank_account)
-					return token.bank_account.bank_name + ': xxxx...' + token.bank_account.last4;
-
-				if(token.type === 'card' && token.card)
+				if(token.type === 'card' && token.card && token.card.brand && token.card.last4)
 					return token.card.brand + ': xxxx-xxxx-xxxx-' + token.card.last4;
 
-				if(token.type === 'bitcoin_receiver' && token.inbound_address)
-					return 'Bitcoin to: ' + token.inbound_address;
+				if(token.type === 'alipay_account' && token.alipay_account && token.alipay_account.username)
+					return 'Alipay: ' + token.alipay_account.username;
+
+				if(token.type === 'bank_account' && token.bank_account && token.bank_account.bank_name && token.bank_account.last4)
+					return token.bank_account.bank_name + ': xxxx...' + token.bank_account.last4;
+
+				if(token.type === 'source_bitcoin' && token.bitcoin && token.bitcoin.address)
+					return 'Bitcoin: ' + token.bitcoin.address;
 
 				return 'Token: ' + token.id;
 			};
