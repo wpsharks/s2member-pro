@@ -128,6 +128,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 									}
 									else if($paypal['ipn_signup_vars'] && preg_match('/(expired|suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
 									{
+										if (strtolower($paypal['STATUS']) === 'expired'
+												&& $paypal['ipn_signup_vars']['initial'] <= 0
+												&& $paypal['ipn_signup_vars']['initial_term'] !== '0 D'
+												&& !$paypal['ipn_signup_vars']['recurring']) {
+											update_user_option($user_id, 's2member_free_trial_expired_time', time());
+										}
 										$paypal['s2member_log'][] = 'Payflow IPN via polling, processed on: '.date('D M j, Y g:i:s a T');
 
 										$paypal['s2member_log'][] = 'Payflow transaction identified as ( `SUBSCRIPTION '.strtoupper($paypal['STATUS']).'` ).';
