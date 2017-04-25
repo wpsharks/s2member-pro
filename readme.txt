@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 170221
-Stable tag: 170221
+Version: 170425-RC
+Stable tag: 170425-RC
 
 SSL Compatible: yes
 bbPress® Compatible: yes
@@ -22,7 +22,7 @@ Requires at least: 4.2
 Requires: s2Member® Framework
 
 Requires PHP: 5.2
-Tested up to PHP: 7.0.15
+Tested up to PHP: 7.0.17
 
 Copyright: © 2009 WebSharks, Inc.
 License: GNU General Public License v2 or later.
