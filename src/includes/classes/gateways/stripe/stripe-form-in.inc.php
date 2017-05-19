@@ -162,7 +162,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				'validate_zipcode'         => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode'],
 				'collect_billing_address'  => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address'],
 				'collect_shipping_address' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address'],
-				'reject_prepaid'           => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']
+				'reject_prepaid'           => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']
 			), $attr);
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
 			$attr['rt']                   = strtoupper($attr['rt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
