@@ -17,7 +17,7 @@ Authorize.Net® Compatible: yes
 Google® Checkout Compatible: yes
 ClickBank® Compatible: yes
 
-Tested up to: 4.8-alpha
+Tested up to: 4.9-alpha
 Requires at least: 4.2
 Requires: s2Member® Framework
 
