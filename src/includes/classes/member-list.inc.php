@@ -256,6 +256,12 @@ class c_ws_plugin__s2member_pro_member_list
             $query_args['meta_query'] = $original_args['meta_query'];
             unset($query_args['search'], $query_args['search_columns']);
 
+            // If ordering by one of the meta values.
+			if (in_array($args['orderby'], array('first_name', 'last_name', 'nickname'))) {
+				$query_args['orderby']  = 'meta_value';
+				$query_args['meta_key'] = $args['orderby'];
+			}
+
             $query = new WP_User_Query($query_args);
 
             return array(
