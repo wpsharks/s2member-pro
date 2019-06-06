@@ -122,8 +122,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_mms_patches"))
 										($display_notices) ? c_ws_plugin__s2member_admin_notices::display_admin_notice ('Your <code>/wp-includes/load.php</code> file could NOT be patched. File NOT writable.', true) : null;
 
 									$user_new_file = ABSPATH . "wp-admin/user-new.php";
-									$user_new_section = "/([\r\n\t\s ]+)(wpmu_signup_user( *?)\(( *?)\\\$new_user_login,( *?)(?:\\\$new_user_email|\\\$_REQUEST\[( *?)'email'( *?)\]),( *?)array( *?)\(( *?)'add_to_blog'( *?)\=\>( *?)\\\$wpdb->blogid,( *?)'new_role'( *?)\=\>( *?)\\\$_REQUEST\[( *?)'role'( *?)\]( *?)\)( *?)\);)/";
-									$user_new_replace = "\n\t\t\t// Modified for full plugin compatiblity.\n\t\t\t//wpmu_signup_user( \$new_user_login, \$_REQUEST[ 'email' ], array( 'add_to_blog' => \$wpdb->blogid, 'new_role' => \$_REQUEST[ 'role' ] ) );\n\t\t\twpmu_signup_user( \$new_user_login, \$_REQUEST[ 'email' ], apply_filters( 'add_signup_meta', array( 'add_to_blog' => \$wpdb->blogid, 'new_role' => \$_REQUEST[ 'role' ] ) ) );";
+									$user_new_section = "/\t\t\twpmu_signup_user\(\s*\\\$new_user_login,\s*\\\$new_user_email,\s*array\(\s*'add_to_blog'\s*\=\>\s*get_current_blog_id\(\),\s*'new_role'\s*\=\>\s*\\\$_REQUEST\['role'\],?\s*\)\s*\);/";
+									$user_new_replace = "\t\t\t// Modified for full plugin compatibility.\n\t\t\t// wpmu_signup_user( \$new_user_login, \$new_user_email, array( 'add_to_blog' => get_current_blog_id(), 'new_role' => \$_REQUEST['role'], ) );\n\t\t\twpmu_signup_user(\n\t\t\t\t\$new_user_login,\n\t\t\t\t\$new_user_email,\n\t\t\t\tapply_filters(\n\t\t\t\t\t'add_signup_meta',\n\t\t\t\t\tarray(\n\t\t\t\t\t\t'add_to_blog' => get_current_blog_id(),\n\t\t\t\t\t\t'new_role'    => \$_REQUEST['role'],\n\t\t\t\t\t)\n\t\t\t\t)\n\t\t\t);";
 
 									if (file_exists ($user_new_file) && ($user_new = file_get_contents ($user_new_file)) && is_writable ($user_new_file))
 										{
