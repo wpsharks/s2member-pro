@@ -1,3 +1,13 @@
-	// Modified for full plugin compatiblity.
-	//wpmu_signup_user( $new_user_login, $_REQUEST[ 'email' ], array( 'add_to_blog' => $wpdb->blogid, 'new_role' => $_REQUEST[ 'role' ] ) );
-	wpmu_signup_user( $new_user_login, $_REQUEST[ 'email' ], apply_filters( 'add_signup_meta', array( 'add_to_blog' => $wpdb->blogid, 'new_role' => $_REQUEST[ 'role' ] ) ) );
+	// Modified for full plugin compatibility.
+	// wpmu_signup_user( $new_user_login, $new_user_email, array( 'add_to_blog' => get_current_blog_id(), 'new_role' => $_REQUEST['role'], ) );
+	wpmu_signup_user(
+		$new_user_login,
+		$new_user_email,
+		apply_filters(
+			'add_signup_meta',
+			array(
+				'add_to_blog' => get_current_blog_id(),
+				'new_role'    => $_REQUEST['role'],
+			)
+		)
+	);
