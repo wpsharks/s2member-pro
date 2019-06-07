@@ -208,8 +208,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"])
 							$response = array("response" => _x('Authorize.Net configuration error. Your Authorize.Net API Transaction Key is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
-						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"])
-							$response = array("response" => _x('Authorize.Net configuration error. Your Authorize.Net Secret MD5 Hash is not yet configured.', "s2member-admin", "s2member"), "error" => true);
+						else if(!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_sign_key"])
+							$response = array("response" => _x('Authorize.Net configuration error. Your Authorize.Net Signature Key is not yet configured.', "s2member-admin", "s2member"), "error" => true);
 
 						return (empty($response) || !empty($attr["register"])) ? null : $response;
 					}
