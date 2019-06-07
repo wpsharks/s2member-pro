@@ -114,8 +114,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-api-salt-key">'."\n";
-			echo 'Authorize.Net Secret MD5 Hash:'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-sign-key">'."\n";
+			echo 'Authorize.Net Signature Key:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -123,8 +123,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_salt_key" id="ws-plugin--s2member-pro-authnet-api-salt-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"]).'" /><br />'."\n";
-			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
+			if(!in_array("sha512", hash_algos()))
+				echo ' <span class="ws-menu-page-error">The Authorize.Net Signature Key requires the SHA512 hashing algorithm, but is not enabled on your server. Please contact your hosting provider to enable it.</span>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_sign_key" id="ws-plugin--s2member-pro-authnet-api-sign-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_sign_key"]).'" /><br />'."\n";
+			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account → Settings → API Credentials & Keys</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-salt-key">'."\n";
+			echo 'Authorize.Net Secret MD5 Hash (Deprecated):'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_salt_key" id="ws-plugin--s2member-pro-authnet-api-salt-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"]).'" disabled="disabled" /><br />'."\n";
+			echo 'See: <a href="https://support.authorize.net/s/article/MD5-Hash-End-of-Life-Signature-Key-Replacement">MD5 Hash End of Life & Signature Key Replacement</a>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
