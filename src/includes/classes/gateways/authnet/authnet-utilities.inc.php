@@ -421,7 +421,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				*/
 				public static function authnet_postvars()
 					{
-						if(!empty($_REQUEST["s2member_pro_authnet_notify"]) && !empty($_REQUEST["x_MD5_Hash"]))
+						if(!empty($_REQUEST["s2member_pro_authnet_notify"]) && (!empty($_REQUEST["x_SHA2_Hash"]) || !empty($_REQUEST["x_MD5_Hash"])))
 							{
 								$postvars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_REQUEST));
 
@@ -432,7 +432,29 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 								$aim_digest_vars = $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"].$postvars["x_trans_id"].$postvars["x_amount"];
 								$arb_digest_vars = $postvars["x_trans_id"].$postvars["x_amount"];
 
-								if(strtolower($postvars["x_MD5_Hash"]) === md5($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"].$aim_digest_vars))
+								// Upgrade to the x_SHA2_Hash.
+								if(isset($postvars["x_SHA2_Hash"]) && strtolower($postvars["x_SHA2_Hash"]) != "") {
+									$fields = array('x_trans_id' => '', 'x_test_request' => '', 'x_response_code' => '', 'x_auth_code' => '', 'x_cvv2_resp_code' => '', 'x_cavv_response' => '', 'x_avs_code' => '', 'x_method' => '', 'x_account_number' => '', 'x_amount' => '', 'x_company' => '', 'x_first_name' => '', 'x_last_name' => '', 'x_address' => '', 'x_city' => '', 'x_state' => '', 'x_zip' => '', 'x_country' => '', 'x_phone' => '', 'x_fax' => '', 'x_email' => '', 'x_ship_to_company' => '', 'x_ship_to_first_name' => '', 'x_ship_to_last_name' => '', 'x_ship_to_address' => '', 'x_ship_to_city' => '', 'x_ship_to_state' => '', 'x_ship_to_zip' => '', 'x_ship_to_country' => '', 'x_invoice_num' => '');
+									foreach($fields as $i => $field)
+										$fields[$i] = (isset($_REQUEST[$i]))?$_REQUEST[$i]:'';
+									if(!function_exists('hash_equals')) {
+										function hash_equals($str1, $str2) {
+											if(strlen($str1) != strlen($str2)) {
+												return false;
+											} else {
+												$res = $str1 ^ $str2;
+												$ret = 0;
+												for($i = strlen($res) - 1; $i >= 0; $i--)
+													$ret |= ord($res[$i]);
+												return !$ret;
+											}
+										}
+									}
+									if(hash_equals(hash_hmac('sha512', '^'.implode('^', $fields).'^', pack('H*', $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_sign_key"])), strtolower($postvars["x_SHA2_Hash"])))
+										return $postvars;
+								}
+								
+								else if(strtolower($postvars["x_MD5_Hash"]) === md5($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"].$aim_digest_vars))
 									return $postvars;
 
 								else if(strtolower($postvars["x_MD5_Hash"]) === md5($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"].$arb_digest_vars))
