@@ -7,7 +7,7 @@
  * PHP, WordPress and other compatibility requirements.
  *
  * Copyright: © 2009-2011
- * {@link http://websharks-inc.com/ WebSharks, Inc.}
+ * {@link http://wpsharks.com/ WP Sharks}
  * (coded in the USA)
  *
  * This WordPress plugin (s2Member Pro) is comprised of two parts:
@@ -44,7 +44,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *
  * @var string
  */
-${__FILE__}['tmp'] = '170722'; //version//
+${__FILE__}['tmp'] = '190617'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_VERSION', ${__FILE__}['tmp']);
 /**
@@ -55,7 +55,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_VERSION'))
  *
  * @var string
  */
-${__FILE__}['tmp'] = '5.2'; //php-required-version//
+${__FILE__}['tmp'] = '5.6'; //php-required-version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION', ${__FILE__}['tmp']);
 /**
@@ -77,7 +77,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION'))
  *
  * @var string
  */
-${__FILE__}['tmp'] = '170722'; //version//
+${__FILE__}['tmp'] = '190617'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION', ${__FILE__}['tmp']);
 /*
