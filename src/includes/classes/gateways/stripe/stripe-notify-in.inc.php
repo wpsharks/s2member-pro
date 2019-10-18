@@ -61,9 +61,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				$stripe = array(); // Initialize array of Webhook/IPN event data and s2Member log details.
 				@ignore_user_abort(TRUE); // Continue processing even if/when connection is broken.
 
-				if(!class_exists('Stripe'))
-					require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-				Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+				c_ws_plugin__s2member_pro_stripe_utilities::init_stripe_sdk();
 
 				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
 				{
@@ -72,7 +70,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'invoice.payment_succeeded': // Subscription payments.
 
 							if(!empty($event->data->object)
-							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
+							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
 							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', '')) > 0
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
@@ -127,7 +125,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'invoice.payment_failed': // Subscription payment failures.
 
 							if(!empty($event->data->object)
-							   && ($stripe_invoice = $event->data->object) instanceof Stripe_Invoice
+							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
 							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', '')) > 0
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
@@ -149,7 +147,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'customer.deleted': // Customer deletions.
 
 							if(!empty($event->data->object)
-							   && ($stripe_customer = $event->data->object) instanceof Stripe_Customer
+							   && ($stripe_customer = $event->data->object) instanceof \Stripe\Customer
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_customer->id))
 							)
 							{
@@ -191,7 +189,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'customer.subscription.deleted': // Customer subscription deletion.
 
 							if(!empty($event->data->object)
-							   && ($stripe_subscription = $event->data->object) instanceof Stripe_Subscription
+							   && ($stripe_subscription = $event->data->object) instanceof \Stripe\Subscription
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
 							{
@@ -233,7 +231,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'charge.refunded': // Customer refund (partial or full).
 
 							if(!empty($event->data->object)
-							   && ($stripe_charge = $event->data->object) instanceof Stripe_Charge
+							   && ($stripe_charge = $event->data->object) instanceof \Stripe\Charge
 							   && !empty($stripe_charge->amount_refunded) && !empty($stripe_charge->customer)
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_charge->customer))
 							)
@@ -283,7 +281,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						case 'charge.dispute.created': // Customer dispute (chargeback).
 
 							if(!empty($event->data->object->charge)
-							   && ($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::get_charge($event->data->object->charge)) instanceof Stripe_Charge
+							   && ($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::get_charge($event->data->object->charge)) instanceof \Stripe\Charge
 							   && !empty($stripe_charge->customer) // The charge that is being disputed must be associated with a customer that we know of.
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_charge->customer))
 							)
@@ -360,12 +358,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 		 */
 		public static function _maybe_end_subscription_after_payment($customer_id, $stripe_subscription)
 		{
-			if(!$customer_id || !($stripe_subscription instanceof Stripe_Subscription))
+			if(!$customer_id || !($stripe_subscription instanceof \Stripe\Subscription))
 				return ''; // Not possible.
 
+			// Non-recurring subscription
+			// It only gets here if it had a trial.
+			// Non-recur without trial is charged as buy-now instead of subscription.
 			if(isset($stripe_subscription->plan->metadata->recurring)
-			   && !filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			   && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
+				&& !filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+				&& strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
@@ -374,9 +375,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				       ' Auto-cancelling subscription after current period ends.';
 			}
 			else if(isset($stripe_subscription->plan->metadata->recurring)
-			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			        && isset($stripe_subscription->plan->metadata->recurring_times) && (integer)$stripe_subscription->plan->metadata->recurring_times === 1
-			        && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
+				&& filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+				&& isset($stripe_subscription->plan->metadata->recurring_times)
+				&& (integer)$stripe_subscription->plan->metadata->recurring_times === 1
+				&& strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
@@ -384,15 +386,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				return 'Subscription `'.$stripe_subscription->id.'` has `plan->metadata->recurring=true` `plan->metadata->recurring_times=1`.'.
 				       ' Auto-cancelling subscription after current period ends. This was the last billing cycle.';
 			}
+			// Installments
 			else if(isset($stripe_subscription->plan->metadata->recurring)
-			        && filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
-			        && isset($stripe_subscription->plan->metadata->recurring_times) && $stripe_subscription->plan->metadata->recurring_times > 0
-			        && strtolower($stripe_subscription->plan->interval) === 'day' // s2Member configures all plans with a day-based interval.
-			        && strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
+				&& filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
+				&& isset($stripe_subscription->plan->metadata->recurring_times)
+				&& $stripe_subscription->plan->metadata->recurring_times > 0
+				&& strtolower($stripe_subscription->plan->interval) === 'day' // s2Member configures all plans with a day-based interval.
+				&& strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 
-			        && ($rr_start_time = $stripe_subscription->trial_end ? $stripe_subscription->trial_end : $stripe_subscription->start)
-			        && ($rr_end_time = $rr_start_time + (($stripe_subscription->plan->interval_count * $stripe_subscription->plan->metadata->recurring_times) * 86400))
-			        && (time() + 43200 >= $rr_end_time) // Give this 12 hours of leeway.
+				&& ($rr_start_time = $stripe_subscription->trial_end ? $stripe_subscription->trial_end : $stripe_subscription->start)
+				// End time is when the last paid period ends, but this is what we need.
+				// They are installments, and access will continue after the last payment, no EOT.
+				// What matters is not the end of the last paid period, but its beginning.
+				// Payments happen at the beginning of each period, not the end.
+				// First payment happened at start time, so remove it from recurring_times when calculating remaining ones.
+				&& ($rr_last_payment_time = $rr_start_time + (($stripe_subscription->plan->interval_count * ($stripe_subscription->plan->metadata->recurring_times - 1)) * 86400))
+				&& (time() + 43200 >= $rr_last_payment_time) // Give this 12 hours of leeway.
 			)
 			{
 				c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($customer_id, $stripe_subscription->id);
