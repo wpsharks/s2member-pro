@@ -89,7 +89,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_css_js'))
 
 			echo "\n".$g."\n"; // Add a line break before inclusion.
 
-			include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.min.js';
+			//!!! include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.min.js';
+			include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.js';
 		}
 	}
 }
