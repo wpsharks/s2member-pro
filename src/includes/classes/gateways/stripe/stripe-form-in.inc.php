@@ -380,10 +380,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
-				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)
 					$custom_template_contents = ''; // Custom template must be up-to-date.
 
 				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-update-form.php'));
+
+				// Billing Method
+				$billing_method = trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-billing-div.php'));
+				$code = preg_replace('/%%billing_method%%/', c_ws_plugin__s2member_utils_strings::esc_refs($billing_method), $code);
+				$pi_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'] : '';
+				$code = preg_replace('/%%pi_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($pi_secret), $code);
+				$seti_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'] : '';
+				$code = preg_replace('/%%seti_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($seti_secret), $code);
+				$sub_id = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'] : '';
+				$code = preg_replace('/%%sub_id%%/', c_ws_plugin__s2member_utils_strings::esc_refs($sub_id), $code);
+
 				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
@@ -489,10 +500,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
-				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)
 					$custom_template_contents = ''; // Custom template must be up-to-date.
 
 				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-sp-checkout-form.php'));
+
+				// Billing Method
+				$billing_method = trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-billing-div.php'));
+				$code = preg_replace('/%%billing_method%%/', c_ws_plugin__s2member_utils_strings::esc_refs($billing_method), $code);
+				$pi_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'] : '';
+				$code = preg_replace('/%%pi_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($pi_secret), $code);
+				$seti_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'] : '';
+				$code = preg_replace('/%%seti_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($seti_secret), $code);
+				$sub_id = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'] : '';
+				$code = preg_replace('/%%sub_id%%/', c_ws_plugin__s2member_utils_strings::esc_refs($sub_id), $code);
+
 				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
@@ -506,6 +528,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%email_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['email'])), $code);
 				$code = preg_replace('/%%source_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_sp_checkout']['source_token'])), $code);
 				$code = preg_replace('/%%source_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_sp_checkout']['source_token_summary'])), $code);
+				$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p["s2member_pro_stripe_sp_checkout"]["street"])), $code);
+				$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p["s2member_pro_stripe_sp_checkout"]["city"])), $code);
 				$code = preg_replace('/%%state_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['state'])), $code);
 				$code = preg_replace('/%%country_options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($country_options), $code);
 				$code = preg_replace('/%%zip_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_sp_checkout']['zip'])), $code);
@@ -587,6 +611,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 							}
 						$custom_fields .= '</div>'."\n";
 					}
+
 				if($attr['captcha']) // Is a captcha being used on this form?
 				{
 					$captcha = '<div id="s2member-pro-stripe-checkout-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-checkout-form-captcha-section">'."\n";
@@ -621,8 +646,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				else $opt_in = ''; // Not applicable.
 
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token'] : '').'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token_summary'] : '').'" />';
+				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token'] : '').'" />';
+				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token_summary'] : '').'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= !$GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-password-not-required-or-not-possible" value="1" />' : '';
 				$hidden_inputs .= !$tax_may_apply ? '<input type="hidden" id="s2member-pro-stripe-checkout-tax-not-required-or-not-possible" value="1" />' : '';
@@ -637,6 +662,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-checkout-should-collect-shipping-address" value="'.esc_attr($attr['collect_shipping_address']).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[attr]" id="s2member-pro-stripe-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 
+				// Is there a custom template for this?
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-checkout-form.php')) ? get_stylesheet_directory().'/stripe-checkout-form.php' : $custom_template;
 
@@ -645,10 +671,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
-				if($custom_template_contents && stripos($custom_template_contents, '%%source_token_summary%%') === FALSE)
+				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)
 					$custom_template_contents = ''; // Custom template must be up-to-date.
 
+				// Load the template we'll use.
 				$code = $custom_template_contents ? $custom_template_contents : trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-checkout-form.php'));
+
+				// Billing Method
+				$billing_method = trim(file_get_contents(dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-billing-div.php'));
+				$code = preg_replace('/%%billing_method%%/', c_ws_plugin__s2member_utils_strings::esc_refs($billing_method), $code);
+				$pi_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'] : '';
+				$code = preg_replace('/%%pi_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($pi_secret), $code);
+				$seti_secret = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'] : '';
+				$code = preg_replace('/%%seti_secret%%/', c_ws_plugin__s2member_utils_strings::esc_refs($seti_secret), $code);
+				$sub_id = (!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'])) ? $GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'] : '';
+				$code = preg_replace('/%%sub_id%%/', c_ws_plugin__s2member_utils_strings::esc_refs($sub_id), $code);
+
+				// Evaluate the PHP in the template.
 				$code = trim(!$custom_template_contents || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
@@ -666,6 +705,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%custom_fields%%/', c_ws_plugin__s2member_utils_strings::esc_refs($custom_fields), $code);
 				$code = preg_replace('/%%source_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_checkout']['source_token'])), $code);
 				$code = preg_replace('/%%source_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html(@$_p['s2member_pro_stripe_checkout']['source_token_summary'])), $code);
+				$code = preg_replace("/%%street_value%%/", c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p["s2member_pro_stripe_checkout"]["street"])), $code);
+				$code = preg_replace("/%%city_value%%/", c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p["s2member_pro_stripe_checkout"]["city"])), $code);
 				$code = preg_replace('/%%state_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['state'])), $code);
 				$code = preg_replace('/%%country_options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($country_options), $code);
 				$code = preg_replace('/%%zip_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit(@$_p['s2member_pro_stripe_checkout']['zip'])), $code);
