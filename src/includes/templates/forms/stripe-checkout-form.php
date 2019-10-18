@@ -99,25 +99,24 @@ if(!defined('WPINC')) // MUST have WordPress.
 	%%custom_fields%%
 
 	<!-- Billing Method (powered by Stripe). -->
-	<div id="s2member-pro-stripe-checkout-form-billing-method-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-billing-method-section s2member-pro-stripe-checkout-form-billing-method-section">
-		<div id="s2member-pro-stripe-checkout-form-billing-method-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-checkout-form-section-title s2member-pro-stripe-form-billing-method-section-title s2member-pro-stripe-checkout-form-billing-method-section-title">
-			<?php echo _x("Billing Method", "s2member-front", "s2member"); ?>
-		</div>
-		<div id="s2member-pro-stripe-checkout-form-source-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-source-token-div s2member-pro-stripe-checkout-form-source-token-div">
-			<button id="s2member-pro-stripe-checkout-form-source-token-button" class="s2member-pro-stripe-form-source-token-button s2member-pro-stripe-checkout-form-source-token-button" type="button">
-				<i><?php echo _x("[+]", "s2member-front", "s2member"); ?></i> <span><?php echo _x("Add Billing Method", "s2member-front", "s2member"); ?></span>
-			</button>
-			<div id="s2member-pro-stripe-checkout-form-source-token-summary" class="s2member-pro-stripe-form-source-token-summary s2member-pro-stripe-checkout-form-source-token-summary">
-				%%source_token_summary%%
-			</div>
-		</div>
-		<div style="clear:both;"></div>
-	</div>
+	%%billing_method%%
 
 	<!-- Billing Address (hidden dynamically when/if no tax details are necessary; and/or when no billing info has been provided yet). -->
 	<div id="s2member-pro-stripe-checkout-form-billing-address-section" class="s2member-pro-stripe-form-section  s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-billing-address-section s2member-pro-stripe-checkout-form-billing-address-section">
 		<div id="s2member-pro-stripe-checkout-form-billing-address-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-checkout-form-section-title s2member-pro-stripe-form-billing-address-section-title s2member-pro-stripe-checkout-form-billing-address-section-title">
-			<?php echo _x("Tax Location", "s2member-front", "s2member"); ?>
+			<?php echo _x("Billing Address", "s2member-front", "s2member"); ?>
+		</div>
+		<div id="s2member-pro-stripe-checkout-form-street-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-street-div s2member-pro-stripe-checkout-form-street-div">
+			<label for="s2member-pro-stripe-checkout-street" id="s2member-pro-stripe-checkout-form-street-label" class="s2member-pro-stripe-form-street-label s2member-pro-stripe-checkout-form-street-label">
+				<span><?php echo _x("Street Address", "s2member-front", "s2member"); ?> *</span><br />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_stripe_checkout[street]" id="s2member-pro-stripe-checkout-street" class="s2member-pro-stripe-street s2member-pro-stripe-checkout-street form-control" value="%%street_value%%" tabindex="300" />
+			</label>
+		</div>
+		<div id="s2member-pro-stripe-checkout-form-city-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-city-div s2member-pro-stripe-checkout-form-city-div">
+			<label for="s2member-pro-stripe-checkout-city" id="s2member-pro-stripe-checkout-form-city-label" class="s2member-pro-stripe-form-city-label s2member-pro-stripe-checkout-form-city-label">
+				<span><?php echo _x("City / Town", "s2member-front", "s2member"); ?> *</span><br />
+				<input type="text" aria-required="true" maxlength="100" autocomplete="off" name="s2member_pro_stripe_checkout[city]" id="s2member-pro-stripe-checkout-city" class="s2member-pro-stripe-city s2member-pro-stripe-checkout-city form-control" value="%%city_value%%" tabindex="310" />
+			</label>
 		</div>
 		<div id="s2member-pro-stripe-checkout-form-state-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-checkout-form-div s2member-pro-stripe-form-state-div s2member-pro-stripe-checkout-form-state-div">
 			<label for="s2member-pro-stripe-checkout-state" id="s2member-pro-stripe-checkout-form-state-label" class="s2member-pro-stripe-form-state-label s2member-pro-stripe-checkout-form-state-label">
