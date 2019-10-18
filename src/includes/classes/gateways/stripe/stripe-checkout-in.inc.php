@@ -66,6 +66,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 				$post_vars['attr'] = !empty($post_vars['attr']) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 				$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_stripe_checkout_post_attr', $post_vars['attr'], get_defined_vars());
 
+				// Stripe Payment Method and Intent IDs.
+				$post_vars['pm_id']   = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['stripe_pm_id']));
+				$post_vars['pi_id']   = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['stripe_pi_id']));
+				$post_vars['seti_id'] = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['stripe_seti_id']));
+				$post_vars['sub_id']  = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['stripe_sub_id']));
+
 				$post_vars['name']     = trim($post_vars['first_name'].' '.$post_vars['last_name']);
 				$post_vars['email']    = apply_filters('user_registration_email', sanitize_email(@$post_vars['email']), get_defined_vars());
 				$post_vars['username'] = (is_multisite()) ? strtolower(@$post_vars['username']) : @$post_vars['username']; // Force lowercase.
@@ -86,6 +92,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc'], $is_bitcoin);
 
+						// So, if there's a trial cost or period (free trial period would not match here), but no regular cost...
+						// then turn the trial into the regular amount, which being the first payment, will be charged directly.
 						if($cost_calculations['total'] <= 0 && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)
 						{
 							$post_vars['attr']['tp']              = '0'; // Ditch the trial period completely.
@@ -101,6 +109,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						$use_subscription          = ($post_vars['attr']['rr'] === 'BN' || (!$post_vars['attr']['tp'] && !$post_vars['attr']['rr'])) ? FALSE : TRUE;
 						$is_independent_ccaps_sale = ($post_vars['attr']['level'] === '*') ? TRUE : FALSE; // Selling Independent Custom Capabilities?
 
+						// If we'll use a subscription, there's no trial cost, and there is a total cost.
 						if($use_subscription && $cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
 						{
 							if(!$post_vars['attr']['rr'] && $post_vars['attr']['rt'] !== 'L')
@@ -120,9 +129,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									$post_vars['attr']['level_ccaps_eotper'] .= '::'.($post_vars['attr']['rp'] * $post_vars['attr']['rrt']).' '.$post_vars['attr']['rt'];
 							}
 						}
+						// Subscription, existing user.
 						if($use_subscription && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 						{
 							$plan_attr         = $cp_attr; // For the subscription plan.
+							// Update amount attributes with taxes added.
 							$plan_attr['ta']   = $cost_calculations['trial_total'];
 							$plan_attr['ra']   = $cost_calculations['total'];
 							$plan_attr['desc'] = $cost_calculations['desc'];
@@ -137,52 +148,120 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								c_ws_plugin__s2member_pro_stripe_utilities::start_time($period3); // Or next billing cycle.
 
 							if(!$global_response)
-								if(($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) || (!$post_vars['attr']['tp'] && $cost_calculations['total'] > 0))
+								if($cost_calculations['total'] > 0)
 								{
-									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// The flow in this block is a bit complicated.
 
-									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid'])))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// First we check if we come from authorizing a payment, or setting up an intent
+									// If we have an payment intent ID, maybe its requirement was resolved.
+									if(!empty($post_vars['pi_id'])) {
+										// Check status.
+										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+										// If we get an object, then the charge succeeded!
+										if(is_object($handle_intent_status))
+											$stripe_intent_succeeded = $handle_intent_status;
+									}
+									// If we have a setup intent ID, maybe its requirement was resolved.
+									if(!empty($post_vars['seti_id'])) {
+										// Check status.
+										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+										// If we get an object, then the setup succeeded!
+										if(is_object($handle_intent_status))
+											$stripe_intent_succeeded = $handle_intent_status;
+									}
 
-									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) ? $cost_calculations['trial_total'] : $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_charge, 'error' => TRUE);
+									// If the above didn't succeed, and we have a payment method ID... 
+									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+										// Get the Customer object (create or retrieve).
+										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
+											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+										// Attach payment method to Customer if needed, or get existing one for this card.
+										else if(!is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($stripe_customer->id, $post_vars['pm_id'])))
+											$global_response = array('response' => $payment_method, 'error' => TRUE);
 
-									else // We got what we needed here.
+										// If we have a Payment Intent ID, let's try to update it and handle it again,
+										if(!empty($post_vars['pi_id'])) {
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
+											$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['pi_id']);
+											// If we get an object, then the charge succeeded!
+											if(is_object($handle_intent_status))
+												$stripe_intent_succeeded = $handle_intent_status;
+										}
+										// Or if we have a Setup Intent ID, let's try to update it and handle it again.
+										elseif(!empty($post_vars['seti_id'])) {
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
+											$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+											// If we get an object, then the setup succeeded!
+											if(is_object($handle_intent_status))
+												$stripe_intent_succeeded = $handle_intent_status;
+										}
+
+										// If we don't have successful intent object here, we create the subscription. 
+										if((empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
+											// Get the plan for the subscription.
+											if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
+												$global_response = array('response' => $stripe_plan, 'error' => TRUE);
+											// And now we create the subscription.
+											elseif(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
+												$global_response = array('response' => $stripe_subscription, 'error' => TRUE);
+											else {
+												// Save the subscription ID to have it later for the user profile.
+												$GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'] = $stripe_subscription->id;
+
+												// if I have a payment intent object, then handle it
+												if(!empty($stripe_subscription->latest_invoice->payment_intent) && is_object($stripe_intent = $stripe_subscription->latest_invoice->payment_intent)) {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($stripe_intent->id);
+													// If we get an object, then the charge succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
+												// else if I have a setup intent object, then handle it
+												elseif(!empty($stripe_subscription->pending_setup_intent) && is_object($setup_intent = $stripe_subscription->pending_setup_intent)) {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($setup_intent->id);
+													// If we get an object, then the setup succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
+												// So we just created the subscription, but didn't need an intent, probably trialing already.
+												elseif($stripe_subscription->status == 'trialing' || $stripe_subscription->status == 'active')
+													$subscription_good = true;
+											}
+										}
+									}
+
+									// If intent status didn't succeed, let's get the response with the status requirement.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+										$global_response = $handle_intent_status;
+									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
+									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
+									// Or we have a successful payment intent charge. Rejoice!
+									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
+										|| (isset($subscription_good) && $subscription_good))
 									{
-										$new__txn_cid = $stripe_customer->id;
-										$new__txn_id  = $stripe_charge->id;
+										// The Stripe Customer ID
+										if (!empty($stripe_subscription->customer))
+											$new__subscr_cid = $stripe_subscription->customer;
+										elseif (!empty($stripe_intent_succeeded->customer))
+											$new__subscr_cid = $stripe_intent_succeeded->customer;
+										
+										// Getting the subscription's ID may be a bit trickier.
+										// If we just created the subscription, that's easy.
+										if (!empty($stripe_subscription->id))
+											$new__subscr_id = $stripe_subscription->id;
+										// If this was after a payment intent's 3DS, we need to get it from here...
+										elseif (!empty($stripe_intent_succeeded->charges->data['0']['invoice']->subscription))
+											$new__subscr_id = $stripe_intent_succeeded->charges->data['0']['invoice']->subscription;
+										// Setup intents objects don't have a way to find the subscription, so we'll try getting the one saved from the previous step.
+										elseif (!empty($post_vars['sub_id']))
+											$new__subscr_id = $post_vars['sub_id'];
+										// Let's add this one as a last resort, in case we can use it in the future to identify the subscription... 
+										elseif (!empty($stripe_intent_succeeded->id))
+											$new__subscr_id = $stripe_intent_succeeded->id;
 									}
 								}
-							if(!$global_response)
-								if($cost_calculations['total'] > 0) // NOTE: it is s2Member's job to stop non-recurring subscriptions.
-								{
-									if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
-										$global_response = array('response' => $stripe_plan, 'error' => TRUE);
 
-									else if((empty($stripe_customer) || !is_object($stripe_customer))
-									        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars))
-									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
-
-									else if((empty($stripe_customer_with_source) || !is_object($stripe_customer_with_source))
-									        && !is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid']))
-									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
-
-									else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_subscription, 'error' => TRUE);
-
-									else // We got what we needed here.
-									{
-										$new__subscr_cid = $stripe_customer->id;
-										$new__subscr_id  = $stripe_subscription->id;
-									}
-									if($global_response && !empty($new__txn_id))
-									{
-										$global_response                             = array();
-										$stripe_subscription_failed_charge_succeeded = TRUE;
-									}
-								}
-							if(!$global_response)
+								if(!$global_response)
 							{
 								$old__subscr_cid      = get_user_option('s2member_subscr_cid');
 								$old__subscr_id       = get_user_option('s2member_subscr_id');
@@ -252,6 +331,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
 							}
 						}
+						// Subscription, new user.
 						else if($use_subscription && !is_user_logged_in()) // Create a new account.
 						{
 							$plan_attr         = $cp_attr; // For the subscription plan.
@@ -266,51 +346,119 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								c_ws_plugin__s2member_pro_stripe_utilities::start_time($period3); // Or next billing cycle.
 
 							if(!$global_response)
-								if(($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) || (!$post_vars['attr']['tp'] && $cost_calculations['total'] > 0))
+								if($cost_calculations['total'] > 0)
 								{
-									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// The flow in this block is a bit complicated.
 
-									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid'])))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// First we check if we come from authorizing a payment, or setting up an intent
+									// If we have an payment intent ID, maybe its requirement was resolved.
+									if(!empty($post_vars['pi_id'])) {
+										// Check status.
+										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+										// If we get an object, then the charge succeeded!
+										if(is_object($handle_intent_status))
+											$stripe_intent_succeeded = $handle_intent_status;
+									}
+									// If we have a setup intent ID, maybe its requirement was resolved.
+									if(!empty($post_vars['seti_id'])) {
+										// Check status.
+										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+										// If we get an object, then the setup succeeded!
+										if(is_object($handle_intent_status))
+											$stripe_intent_succeeded = $handle_intent_status;
+									}
 
-									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, ($post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0) ? $cost_calculations['trial_total'] : $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_charge, 'error' => TRUE);
+									// If the above didn't succeed, and we have a payment method ID... 
+									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+										// Get the Customer object (create or retrieve).
+										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
+											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+										// Attach payment method to Customer if needed, or get existing one for this card.
+										else if(!is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($stripe_customer->id, $post_vars['pm_id'])))
+											$global_response = array('response' => $payment_method, 'error' => TRUE);
 
-									else // We got what we needed here.
+										// If we have a Payment Intent ID, let's try to update it and handle it again,
+										if(!empty($post_vars['pi_id'])) {
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
+											$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['pi_id']);
+											// If we get an object, then the charge succeeded!
+											if(is_object($handle_intent_status))
+												$stripe_intent_succeeded = $handle_intent_status;
+										}
+										// Or if we have a Setup Intent ID, let's try to update it and handle it again.
+										elseif(!empty($post_vars['seti_id'])) {
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
+											$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+											// If we get an object, then the setup succeeded!
+											if(is_object($handle_intent_status))
+												$stripe_intent_succeeded = $handle_intent_status;
+										}
+
+										// If we don't have successful intent object here, we create the subscription. 
+										if((empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
+											// Get the plan for the subscription.
+											if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
+												$global_response = array('response' => $stripe_plan, 'error' => TRUE);
+											// And now we create the subscription.
+											elseif(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
+												$global_response = array('response' => $stripe_subscription, 'error' => TRUE);
+											else {
+												// Save the subscription ID to have it later for the user profile.
+												$GLOBALS['ws_plugin__s2member_pro_stripe']['sub_id'] = $stripe_subscription->id;
+
+												// if I have a payment intent object, then handle it
+												if(!empty($stripe_subscription->latest_invoice->payment_intent) && is_object($stripe_intent = $stripe_subscription->latest_invoice->payment_intent)) {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($stripe_intent->id);
+													// If we get an object, then the charge succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
+												// else if I have a setup intent object, then handle it
+												elseif(!empty($stripe_subscription->pending_setup_intent) && is_object($setup_intent = $stripe_subscription->pending_setup_intent)) {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($setup_intent->id);
+													// If we get an object, then the setup succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
+												// So we just created the subscription, but didn't need an intent, probably trialing already.
+												elseif($stripe_subscription->status == 'trialing' || $stripe_subscription->status == 'active')
+													$subscription_good = true;
+											}
+										}
+									}
+
+									// If intent status didn't succeed, let's get the response with the status requirement.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+										$global_response = $handle_intent_status;
+									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
+									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
+									// Or we have a successful payment intent charge. Rejoice!
+									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
+										|| (isset($subscription_good) && $subscription_good))
 									{
-										$new__txn_cid = $stripe_customer->id;
-										$new__txn_id  = $stripe_charge->id;
+										// The Stripe Customer ID
+										if (!empty($stripe_subscription->customer))
+											$new__subscr_cid = $stripe_subscription->customer;
+										elseif (!empty($stripe_intent_succeeded->customer))
+											$new__subscr_cid = $stripe_intent_succeeded->customer;
+										
+										// Getting the subscription's ID may be a bit trickier.
+										// If we just created the subscription, that's easy.
+										if (!empty($stripe_subscription->id))
+											$new__subscr_id = $stripe_subscription->id;
+										// If this was after a payment intent's 3DS, we need to get it from here...
+										elseif (!empty($stripe_intent_succeeded->charges->data['0']['invoice']->subscription))
+											$new__subscr_id = $stripe_intent_succeeded->charges->data['0']['invoice']->subscription;
+										// Setup intents objects don't have a way to find the subscription, so we'll try getting the one saved from the previous step.
+										elseif (!empty($post_vars['sub_id']))
+											$new__subscr_id = $post_vars['sub_id'];
+										// Let's add this one as a last resort, in case we can use it in the future to identify the subscription... 
+										elseif (!empty($stripe_intent_succeeded->id))
+											$new__subscr_id = $stripe_intent_succeeded->id;
 									}
 								}
-							if(!$global_response)
-								if($cost_calculations['total'] > 0) // NOTE: it is s2Member's job to stop non-recurring subscriptions.
-								{
-									if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
-										$global_response = array('response' => $stripe_plan, 'error' => TRUE);
 
-									else if((empty($stripe_customer) || !is_object($stripe_customer))
-									        && !is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars))
-									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
-
-									else if((empty($stripe_customer_with_source) || !is_object($stripe_customer_with_source))
-									        && !is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid']))
-									) $global_response = array('response' => $stripe_customer, 'error' => TRUE);
-
-									else if(!is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_subscription($stripe_customer->id, $stripe_plan->id, array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_subscription, 'error' => TRUE);
-
-									else // We got what we needed here.
-									{
-										$new__subscr_cid = $stripe_customer->id;
-										$new__subscr_id  = $stripe_subscription->id;
-									}
-									if($global_response && !empty($new__txn_id))
-									{
-										$global_response                             = array();
-										$stripe_subscription_failed_charge_succeeded = TRUE;
-									}
-								}
 							if(!$global_response) // No errors thus far?
 							{
 								if(empty($new__subscr_cid)) $new__subscr_cid = strtoupper('free-'.uniqid());
@@ -400,8 +548,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 									else wp_new_user_notification($new__user_id, $create_user['user_pass']);
 
-									if(!empty($stripe_subscription_failed_charge_succeeded))
-										update_user_option($new__user_id, 's2member_auto_eot_time', $start_time);
+									// if(!empty($stripe_subscription_failed_charge_succeeded))
+									// 	update_user_option($new__user_id, 's2member_auto_eot_time', $start_time);
 
 									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
@@ -426,6 +574,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								}
 							}
 						}
+						// Buy-now, existing user.
 						else if(!$use_subscription && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 						{
 							update_user_meta($user_id, 'first_name', $post_vars['first_name']);
@@ -434,19 +583,53 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							if(!$global_response)
 								if($cost_calculations['total'] > 0)
 								{
-									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// The flow in this block is a bit complicated.
 
-									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid'])))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// If we have an intent ID, the some intent requirement was solved.
+									if(!empty($post_vars['pi_id'])) {
+										// Check status.
+										$handle_pi_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+										// If we get an object, then the charge succeeded!
+										if(is_object($handle_pi_status))
+											$stripe_intent_succeeded = $handle_pi_status;
+									}
 
-									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_charge, 'error' => TRUE);
+									// If the above didn't succeed, and we have a payment method ID.
+									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+										// Get the Customer object (create or retrieve).
+										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
+											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else // We got what we needed here.
+										// Attach payment method to Customer if needed, or get existing one for this card.
+										else if(!is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($stripe_customer->id, $post_vars['pm_id'])))
+											$global_response = array('response' => $payment_method, 'error' => TRUE);
+
+										// if we have a Payment Intent, let's try to update it, if not create one.
+										if(!empty($post_vars['pi_id']))
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
+										if(empty($post_vars['pi_id']) || (!empty($stripe_intent) && !is_object($stripe_intent)))
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::create_payment_intent($stripe_customer->id, $payment_method->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations);
+										if(!is_object($stripe_intent))
+											$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+										// Let's see now what the status for this intent is.
+										// If we get an object, then the charge succeeded!
+										else if(is_object($handle_pi_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($stripe_intent->id)))
+											$stripe_intent_succeeded = $handle_pi_status;
+									}
+
+									// If status didn't succeed, let's get the response with the status requirement.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_pi_status) && is_array($handle_pi_status))
+										$global_response = $handle_pi_status;
+
+									// If we got here, maybe we don't have a payment intent or method ID, ask for card.
+									else if(empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
+
+									// Rejoice! We have a successful payment intent charge.
+									else if(isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded')
 									{
-										$new__txn_cid = $stripe_customer->id;
-										$new__txn_id  = $stripe_charge->id;
+										$new__txn_cid = $stripe_intent_succeeded->customer;
+										$new__txn_id  = $stripe_intent_succeeded->id;
 									}
 								}
 							if(!$global_response)
@@ -507,24 +690,59 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
 							}
 						}
+						// Buy-now, new user.
 						else if(!$use_subscription && !is_user_logged_in()) // Create a new account.
 						{
 							if(!$global_response)
 								if($cost_calculations['total'] > 0)
 								{
-									if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// The flow in this block is a bit complicated.
 
-									else if(!is_object($stripe_customer = $stripe_customer_with_source = c_ws_plugin__s2member_pro_stripe_utilities::set_customer_source($stripe_customer->id, $post_vars['source_token'], $post_vars, $post_vars['attr']['reject_prepaid'])))
-										$global_response = array('response' => $stripe_customer, 'error' => TRUE);
+									// If we have an intent ID, the some intent requirement was solved.
+									if(!empty($post_vars['pi_id'])) {
+										// Check status.
+										$handle_pi_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+										// If we get an object, then the charge succeeded!
+										if(is_object($handle_pi_status))
+											$stripe_intent_succeeded = $handle_pi_status;
+									}
 
-									else if(!is_object($stripe_charge = c_ws_plugin__s2member_pro_stripe_utilities::create_customer_charge($stripe_customer->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations)))
-										$global_response = array('response' => $stripe_charge, 'error' => TRUE);
+									// If the above didn't succeed, and we have a payment method ID.
+									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+										// Get the Customer object (create or retrieve).
+										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
+											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
 
-									else // We got what we needed here.
+										// Attach payment method to Customer if needed, or get existing one for this card.
+										else if(!is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($stripe_customer->id, $post_vars['pm_id'])))
+											$global_response = array('response' => $payment_method, 'error' => TRUE);
+
+										// if we have a Payment Intent, let's try to update it, if not create one.
+										if(!empty($post_vars['pi_id']))
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
+										if(empty($post_vars['pi_id']) || (!empty($stripe_intent) && !is_object($stripe_intent)))
+											$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::create_payment_intent($stripe_customer->id, $payment_method->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations);
+										if(!is_object($stripe_intent))
+											$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+										// Let's see now what the status for this intent is.
+										// If we get an object, then the charge succeeded!
+										else if(is_object($handle_pi_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($stripe_intent->id)))
+											$stripe_intent_succeeded = $handle_pi_status;
+									}
+
+									// If status didn't succeed, let's get the response with the status requirement.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_pi_status) && is_array($handle_pi_status))
+										$global_response = $handle_pi_status;
+
+									// If we got here, maybe we don't have a payment intent or method ID, ask for card.
+									else if(empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
+
+									// Rejoice! We have a successful payment intent charge.
+									else if(isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded')
 									{
-										$new__txn_cid = $stripe_customer->id;
-										$new__txn_id  = $stripe_charge->id;
+										$new__txn_cid = $stripe_intent_succeeded->customer;
+										$new__txn_id  = $stripe_intent_succeeded->id;
 									}
 								}
 							if(!$global_response)
