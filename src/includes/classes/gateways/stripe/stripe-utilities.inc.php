@@ -45,6 +45,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 	class c_ws_plugin__s2member_pro_stripe_utilities
 	{
 		/**
+		 * Load Stripe SDK, set API Key, API Version, and App Info.
+		 * 
+		 */
+		public static function init_stripe_sdk()
+		{
+			$stripe_api_version = '2019-10-08';
+			if(!class_exists('Stripe'))
+				require_once dirname(__FILE__).'/stripe-sdk/init.php';
+			\Stripe\Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			\Stripe\Stripe::setApiVersion($stripe_api_version);
+			\Stripe\Stripe::setAppInfo('WordPress s2Member Pro', WS_PLUGIN__S2MEMBER_PRO_VERSION, "https://s2member.com");
+		}
+
+		/**
 		 * Get a Stripe customer object instance.
 		 *
 		 * @param integer $user_id If it's for an existing user; pass the user's ID (optional).
@@ -61,18 +75,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_customer_metadata($post_vars), (array)$metadata);
+			$customer = '';
 
 			try // Obtain existing customer object; else create a new one.
 			{
 				try // Attempt to find an existing customer; if that's possible.
 				{
 					if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
-						$customer = Stripe_Customer::retrieve($customer_id);
+						$customer = \Stripe\Customer::retrieve($customer_id);
+					// Maybe we don't have a cus_id, but the customer does exist... 
+					// Let's try finding a customer by the email address.
+					elseif (!empty($email) && is_object($customers = \Stripe\Customer::all(['email' => $email, 'limit' => 1])))
+						$customer = (isset($customers->data[0])) ? $customers->data[0] : '';
 
 					if(!empty($customer) && is_object($customer) && $metadata)
 					{
@@ -87,12 +104,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				{
 					// Fail silently.
 				}
-				if(empty($customer) || !is_object($customer))
-					$customer = Stripe_Customer::create(array(
-						                                    'email'       => $email,
-						                                    'description' => trim($fname.' '.$lname),
-						                                    'metadata'    => $metadata,
-					                                    ));
+				
+				// If we don't have a Customer, let's create one.
+				if(empty($customer) || !is_object($customer)) { 
+					$args = array(
+						'email'    => $email,
+						'name'     => trim($fname.' '.$lname),
+						'metadata' => $metadata,
+					);
+					// if we don't have a state, we didn't collect billing address.
+					if (!empty($post_vars['state'])) {
+						$args['address'] = array(
+							'line1'       => $post_vars['street'],
+							'city'	      => $post_vars['city'],
+							'state'       => $post_vars['state'],
+							'country'     => $post_vars['country'],
+							'postal_code' => $post_vars['zip'],
+						);
+					}
+					$customer = \Stripe\Customer::create($args);
+				}
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				return $customer;
@@ -135,16 +166,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			$metadata       = self::_additional_customer_metadata($post_vars);
 			$source_details = self::_additional_customer_source_details($post_vars);
 
 			try // Attempt to update the customer's source token.
 			{
-				$customer         = Stripe_Customer::retrieve($customer_id);
+				$customer         = \Stripe\Customer::retrieve($customer_id);
 				$customer->source = $source_token; // Update.
 
 				if($metadata) // Customer metadata?
@@ -164,7 +193,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 							$source = $customer->sources->data[0]; // Just one source.
 							/** @var Stripe_Card|Stripe_BitcoinReceiver $source */
 
-							if($source instanceof Stripe_Card)
+							if($source instanceof Card)
 							{
 								foreach($source_details as $_key => $_value)
 									$source->{$_key} = $_value;
@@ -172,7 +201,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 								$source->save(); // Update.
 							}
-							else if($source instanceof Stripe_BitcoinReceiver)
+							else if($source instanceof BitcoinReceiver)
 							{
 								foreach($source_details as $_key => $_value)
 									$source->metadata->{$_key} = $_value;
@@ -246,9 +275,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_charge_metadata($post_vars, $cost_calculations), (array)$metadata);
 
@@ -256,13 +283,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			{
 				$charge = array(
 					'customer'             => $customer_id,
-					'description'          => $description, 'metadata' => $metadata,
-					'amount'               => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']
+					'description'          => $description, 
+					'metadata'             => $metadata,
+					'amount'               => self::dollar_amount_to_cents($amount, $currency),
+					'currency'             => $currency,
+					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
 				);
-				if(!trim($charge['statement_descriptor'])) unset($charge['statement_descriptor']);
+				if(!trim($charge['statement_descriptor']))
+					unset($charge['statement_descriptor']);
 
-				$charge = Stripe_Charge::create($charge);
+				$charge = \Stripe\Charge::create($charge);
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
 
 				return $charge; // Stripe charge object.
@@ -318,13 +348,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			try // Obtain charge object; if possible.
 			{
-				$charge = Stripe_Charge::retrieve($charge_id);
+				$charge = \Stripe\Charge::retrieve($charge_id);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
 
@@ -339,51 +367,65 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
-		 * Get a Stripe plan object instance.
+		 * Get a Stripe Billing Plan object instance.
 		 *
 		 * @param array $shortcode_attrs An array of shortcode attributes.
 		 * @param array $metadata Any additional metadata.
 		 *
-		 * @return Stripe_Plan|string Plan object; else error message.
+		 * @return Plan|string Plan object; else error message.
 		 */
 		public static function get_plan($shortcode_attrs, $metadata = array())
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			$amount                      = $shortcode_attrs['ra'];
 			$currency                    = $shortcode_attrs['cc'];
 			$name                        = $shortcode_attrs['desc'];
 			$metadata['recurring']       = $shortcode_attrs['rr'] && $shortcode_attrs['rr'] !== 'BN';
+			// rrt installments are not managed by Stripe, it's a regular subscription ended by s2 after number of payments.
+			// This gets tricky with Jason's shift of first regular to a separate charge when there's an unused trial period.
 			$metadata['recurring_times'] = $shortcode_attrs['rr'] && $shortcode_attrs['rrt'] ? (integer)$shortcode_attrs['rrt'] : -1;
 			$trial_period_days           = self::per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
 			$interval_days               = self::per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
 
-			$plan_id = 's2_'.md5($amount.$currency.$name.$trial_period_days.$interval_days.serialize($metadata).$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
+			// The access is more correct for the product's name, and will avoid duplicate products,
+			// but the shortcode's description is probably better in this case...
+			// $product_name = trim('level'$shortcode_attrs['level'].':'.$shortcode_attrs['ccaps']);
+			$product      = self::get_product($name);
+
+			$plan_id      = 's2_plan_'.md5($amount.$currency.$name.$trial_period_days.$interval_days.serialize($metadata).$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
 
 			try // Attempt to get an existing plan; else create a new one.
 			{
 				try // Try to find an existing plan.
 				{
-					$plan = Stripe_Plan::retrieve($plan_id);
+					$plan = \Stripe\Plan::retrieve($plan_id);
 				}
 				catch(exception $exception) // Else create one.
 				{
 					$plan = array(
-						'id'                   => $plan_id,
-						'name'                 => $name, 'metadata' => $metadata,
-						'amount'               => self::dollar_amount_to_cents($amount, $currency), 'currency' => $currency,
-						'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
-						'interval'             => 'day', 'interval_count' => $interval_days,
-						'trial_period_days'    => $trial_period_days ? $trial_period_days : $interval_days,
+						'id'                => $plan_id,
+						'product'           => $product->id,
+						'metadata'          => $metadata,
+						'amount'            => self::dollar_amount_to_cents($amount, $currency),
+						'currency'          => $currency,
+						'interval'          => 'day',
+						'interval_count'    => $interval_days,
+						// This condition in the argument below moves the first regular period out of the subscription when there's an unused trial period.
+						// Basically, if there's an unused trial, it'll use it, it will always set a trial, even when the site owner didn't mean it.
+						// This trial will be "free" in the subscription (trialing...). The period is still charged, but separately.
+						// 'trial_period_days' => $trial_period_days ? $trial_period_days : $interval_days,
 					);
-					if(!trim($plan['statement_descriptor'])) unset($plan['statement_descriptor']);
+					// Stop adding the trial for subscriptions that didn't mean to have it.
+					// To allow paid trials (initial period, different from the regular ones), create invoice item for it right before the subscription,
+					// so it gets charged in the trial's invoice. https://stripe.com/docs/billing/subscriptions/trials
+					if($trial_period_days)
+						$plan['trial_period_days'] = $trial_period_days;
 
-					$plan = Stripe_Plan::create($plan);
+					$plan = \Stripe\Plan::create($plan);
 				}
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $plan);
 
@@ -413,17 +455,38 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
 
+			// Do we have a paid trial.
+			if (!empty($post_vars['attr']['tp']) && !empty($cost_calculations['trial_total']) && $cost_calculations['trial_total'] > 0) {
+				// Create an invoice item for it, so it gets added to the trial's invoice.
+				$invoice_item = \Stripe\InvoiceItem::create(array(
+					'customer'    => $customer_id,
+					'amount'      => self::dollar_amount_to_cents($cost_calculations['trial_total'], $cost_calculations['cur']),
+					'currency'    => $cost_calculations['cur'],
+					'description' => 'Initial period'
+				));
+			}
+
 			try // Attempt to create a new subscription for this customer.
 			{
-				$customer     = Stripe_Customer::retrieve($customer_id);
-				$subscription = $customer->subscriptions->create(array('plan'     => $plan_id,
-				                                                       'metadata' => $metadata));
+				$subscription = array(
+					'customer'        => $customer_id,
+					'items'           => array(
+						array(
+							'plan' => $plan_id,
+						),
+					),
+					'trial_from_plan' => true,
+					'metadata'        => $metadata,
+					'expand'          => array(
+						'latest_invoice.payment_intent',
+						'pending_setup_intent',
+					),
+				);
+				$subscription = \Stripe\Subscription::create($subscription);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
@@ -478,16 +541,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 */
 		public static function get_customer_subscription($customer_id, $subscription_id)
 		{
+			// Subscription IDs start with 'sub_', don't continue if not a sub ID.
+			if (strpos($subscription_id, 'sub_') !== 0)
+				return false;
+
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
-
+			self::init_stripe_sdk();
+			
 			try // Obtain existing customer object; else create a new one.
 			{
-				$customer     = Stripe_Customer::retrieve($customer_id);
+				$customer     = \Stripe\Customer::retrieve($customer_id);
 				$subscription = $customer->subscriptions->retrieve($subscription_id);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
@@ -508,25 +573,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string  $customer_id Customer ID in Stripe.
 		 * @param string  $subscription_id Subscription ID in Stripe.
 		 *
-		 * @param boolean $at_period_end Defaults to a `TRUE` value (optional).
+		 * @param boolean $cancel_at_period_end Defaults to a `TRUE` value (optional).
 		 *    If `TRUE`, cancellation is delayed until the end of the current period.
 		 *    If `FALSE`, cancellation is NOT delayed; i.e., it occurs immediately.
 		 *
 		 * @return Stripe_Subscription|string Subscription object; else error message.
 		 */
-		public static function cancel_customer_subscription($customer_id, $subscription_id, $at_period_end = TRUE)
+		public static function cancel_customer_subscription($customer_id, $subscription_id, $cancel_at_period_end = TRUE)
 		{
+			// Subscription IDs start with 'sub_', don't continue if not a sub ID.
+			if (strpos($subscription_id, 'sub_') !== 0)
+				return false;
+
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			try // Attempt to cancel the subscription for this customer.
 			{
-				$customer     = Stripe_Customer::retrieve($customer_id);
-				$subscription = $customer->subscriptions->retrieve($subscription_id)->cancel(array('at_period_end' => $at_period_end));
+				$customer     = \Stripe\Customer::retrieve($customer_id);
+				$subscription = $customer->subscriptions->retrieve($subscription_id);
+				$subscription = \Stripe\Subscription::update($subscription->id, array(
+					'cancel_at_period_end' => $cancel_at_period_end,
+				));
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
@@ -559,16 +629,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$input_time = time(); // Initialize.
 			$input_vars = array('event_id' => $event->id);
 
-			if(!class_exists('Stripe'))
-				require_once dirname(__FILE__).'/stripe-sdk/lib/Stripe.php';
-			Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
+			self::init_stripe_sdk();
 
 			try // Acquire the event from the Stripe servers.
 			{
 				if(!is_object($event) || empty($event->id))
 					throw new exception('Missing event ID.');
 
-				$event = Stripe_Event::retrieve($event->id);
+				$event = \Stripe\Event::retrieve($event->id);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $event);
 
@@ -664,24 +732,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if($exception && is_string($exception))
 				return $exception;
 
-			if($exception instanceof Stripe_CardError)
+			if($exception instanceof Stripe\Exception\CardException)
 			{
 				$body  = $exception->getJsonBody();
 				$error = $body['error'];
-
-				return sprintf(_x('Error code: <code>%1$s</code>. %2$s.', 's2member-front', 's2member'),
-				               esc_html(trim($error['code'], '.')), esc_html(trim($error['message'], '.')));
+				return sprintf(_x('Error code: <code>%1$s</code>. %2$s.', 's2member-front', 's2member'), esc_html(trim($error['code'], '.')), esc_html(trim($error['message'], '.')));
 			}
-			if($exception instanceof Stripe_InvalidRequestError)
+			if($exception instanceof Stripe\Exception\InvalidRequestException)
 				return _x('Invalid parameters to Stripe; please contact the site owner.', 's2member-front', 's2member');
 
-			if($exception instanceof Stripe_AuthenticationError)
+			if($exception instanceof Stripe\Exception\AuthenticationException)
 				return _x('Invalid Stripe API keys; please contact the site owner.', 's2member-front', 's2member');
 
-			if($exception instanceof Stripe_ApiConnectionError)
+			if($exception instanceof Stripe\Exception\ApiConnectionException)
 				return _x('Network communication failure with Stripe; please try again.', 's2member-front', 's2member');
 
-			if($exception instanceof Stripe_Error)
+			if($exception instanceof Stripe\Exception\ApiErrorException)
 				return _x('Stripe API error; please try again.', 's2member-front', 's2member');
 
 			return _x('Stripe error; please try again.', 's2member-front', 's2member');
@@ -1052,5 +1118,410 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$coupons = new c_ws_plugin__s2member_pro_coupons();
 			return $coupons->apply($attr, $coupon_code, $return, $process);
 		}
+
+
+		// Since 190914 ------------------------
+
+		/**
+		 * Attaches a Payment Method to a Customer if card not there yet.
+		 * Gets the existing Payment Method for that card if already attached.
+		 *
+		 * @param string $customer_id Customer ID in Stripe.
+		 * @param string $payment_method_id Payment Method ID.
+		 *
+		 * @return object Attached PaymentMethod for this card, else error message.
+		 */
+		public static function attached_card_payment_method($customer_id, $payment_method_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			try
+			{
+				// Let's get the new PaymentMethod.
+				$payment_method = \Stripe\PaymentMethod::retrieve($payment_method_id);
+				$attach = true; 
+
+				//!!! It may be a problem to use the previous PM if the new one has Billing info.
+				// Let's get all the cards this customer has.
+				// $customer_pms = \Stripe\PaymentMethod::all([
+				// 		'customer' => $customer_id,
+				// 		'type'     => 'card',
+				// 		'limit'    => 100,
+				// ]);
+				// Let's see if he doesn't already have this card.
+				// if (!empty($customer_pms)) {
+				// 	foreach ($customer_pms as $customer_pm) {
+				// 		if ($payment_method->card->fingerprint == $customer_pm->card->fingerprint
+				// 			&& $payment_method->card->exp_year == $customer_pm->card->exp_year
+				// 			&& $payment_method->card->exp_month == $customer_pm->card->exp_month
+				// 		) {
+				// 			// It's already there, so we won't attach it again.
+				// 			$attach = false;
+				// 			// Let's use this card's existing Payment Method.
+				// 			$payment_method = $customer_pm;
+				// 			break;
+				// 		}
+				// 	}
+				// }
+
+				if ($attach)
+					$payment_method = $payment_method->attach(['customer' => $customer_id]);
+
+				// Let's set this payment method as the default for this customer's invoices.
+				$customer_update = array(
+					'invoice_settings' => array(
+						'default_payment_method' => $payment_method->id,
+					),
+				);
+				\Stripe\Customer::update($customer_id, $customer_update);
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $payment_method);
+
+				return $payment_method;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Create a Payment Intent.
+		 *
+		 * @param string               $cus_id Customer ID in Stripe.
+		 * @param string               $pm_id Payment Method ID in Stripe.
+		 * @param integer|float|string $amount The amount to charge.
+		 * @param string               $currency Three character currency code.
+		 * @param string               $description Description of the charge.
+		 * @param array                $metadata Any additional metadata (optional).
+		 * @param array                $post_vars Pro-Form post vars (optional).
+		 * @param array                $cost_calculations Pro-Form cost calculations (optional).
+		 *
+		 * @return object|string PaymentIntent object; else error message.
+		 */
+		public static function create_payment_intent($cus_id, $pm_id, $amount, $currency, $description, $metadata = array(), $post_vars = array(), $cost_calculations = array())
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			$metadata = array_merge(self::_additional_intent_metadata($post_vars, $cost_calculations), (array)$metadata);
+
+			try // Attempt to create the Payment Intent.
+			{
+				$intent = array(
+					'amount'               => self::dollar_amount_to_cents($amount, $currency),
+					'currency'             => $currency,
+					'customer'             => $cus_id,
+					'payment_method'       => $pm_id,
+					'confirmation_method'  => 'manual',
+					'confirm'              => true,
+					'description'          => $description, 
+					'metadata'             => $metadata,
+					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+				);
+				if(!trim($intent['statement_descriptor']))
+					unset($intent['statement_descriptor']);
+
+				$intent = \Stripe\PaymentIntent::create($intent);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
+
+				return $intent; // Stripe charge object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		//!!! Based on self::create_customer_charge
+		public static function _additional_intent_metadata($post_vars = array(), $cost_calculations = array())
+		{
+			$post_vars         = (array)$post_vars;
+			$cost_calculations = (array)$cost_calculations;
+			$metadata          = array(); // Initialize.
+
+			if(!empty($post_vars['coupon']))
+				$coupon['code'] = $post_vars['coupon'];
+
+			if(isset($cost_calculations['trial_tax'], $cost_calculations['trial_tax_per'])
+			   && isset($post_vars['attr']['tp'], $cost_calculations['trial_total'])
+			   && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0
+			) // Charge is for a trial amount in this case.
+			{
+				$tax_info['tax']     = $cost_calculations['trial_tax'];
+				$tax_info['tax_per'] = $cost_calculations['trial_tax_per'];
+			}
+			else if(isset($cost_calculations['tax'], $cost_calculations['tax_per']))
+			{
+				$tax_info['tax']     = $cost_calculations['tax'];
+				$tax_info['tax_per'] = $cost_calculations['tax_per'];
+			}
+			if(!empty($coupon)) // JSON encode this data.
+				$metadata['coupon'] = json_encode($coupon);
+
+			if(!empty($tax_info)) // JSON encode this data.
+				$metadata['tax_info'] = json_encode($tax_info);
+
+			return $metadata;
+		}
+
+		/**
+		 * Create a Setup Intent.
+		 *
+		 * @param string               $cus_id Customer ID in Stripe.
+		 * @param string               $pm_id PaymentMethod ID in Stripe.
+		 *
+		 * @return object|string SetupIntent object; else error message.
+		 */
+		public static function create_setup_intent($cus_id, $pm_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			try // Attempt to create the Setup Intent.
+			{
+				$intent = array(
+					'customer'       => $cus_id,
+					'payment_method' => $pm_id,
+					'confirm'        => true,
+				);
+
+				$intent = \Stripe\SetupIntent::create($intent);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
+
+				return $intent; // Stripe charge object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Check the SetupIntent's status.
+		 * 
+		 * @param string|int $pi_id SetupIntent id.
+		 * @param object $intent Optional. StetupIntent object.
+		 * 
+		 * @return array|string Response if requires action, else empty string.
+		 */
+		public static function handle_setup_intent_status($seti_id, $intent='')
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			// If we don't have the intent's object, let's get it.
+			if (!is_object($intent))
+				$intent = \Stripe\SetupIntent::retrieve($seti_id);
+
+			// Do we have it?
+			if (!is_object($intent))
+				return $global_response = array('response' => $intent, 'error' => TRUE);
+
+			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent->status);
+
+			// requires_action
+			// Pass the intent's client secret for stripe.handleCardStatus.
+			if ($intent->status == 'requires_action') {
+				$GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret'] = $intent->client_secret;
+				return $global_response = array('response' => _x('Action required: 3D Secure authorization.', 's2member-front', 's2member'), 'error' => TRUE);
+			}
+
+			// requires_payment_method
+			if ($intent->status == 'requires_payment_method')
+				return $global_response = array('response' => _x('Please try again with a different card.', 's2member-front', 's2member'), 'error' => TRUE);
+
+			// succeeded
+			if ($intent->status == 'succeeded')
+				return $intent;
+		}
+
+		/**
+		 * Check the PaymentIntent's status.
+		 * 
+		 * @param string|int $pi_id PaymentIntent id.
+		 * 
+		 * @return object|array PaymentIntent object if succeeded, or response array with error.
+		 */
+		public static function handle_payment_intent_status($pi_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			// Get the intent
+			$intent = self::get_payment_intent($pi_id);
+
+			// Do we have it?
+			if (!is_object($intent))
+				return $global_response = array('response' => $intent, 'error' => TRUE);
+
+			// requires_confirmation
+			if ($intent->status == 'requires_confirmation')
+				try {
+					$intent->confirm();
+				}
+				catch (exception $exception) {
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+					return $global_response = array('response' => self::error_message($exception), 'error' => TRUE);
+				}
+		
+			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent->status);
+
+			// requires_action
+			// Pass the intent's client secret for stripe.handleCard...
+			if ($intent->status == 'requires_action') {
+				$GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret'] = $intent->client_secret;
+				return $global_response = array('response' => _x('Action required: 3D Secure authorization.', 's2member-front', 's2member'), 'error' => TRUE);
+			}
+
+			// requires_payment_method
+			if ($intent->status == 'requires_payment_method')
+				return $global_response = array('response' => _x('The payment failed, please try again with a different card.', 's2member-front', 's2member'), 'error' => TRUE);
+
+			// succeeded
+			if ($intent->status == 'succeeded')
+				return $intent;
+		}
+
+		/**
+		 * Get an existing PaymentIntent.
+		 * 
+		 * @param string|int $pi_id 
+		 * 
+		 * @return object The PaymentIntent object
+		 */
+		public static function get_payment_intent($pi_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			// Get the intent
+			$intent = \Stripe\PaymentIntent::retrieve(
+				array(
+					'id'     => $pi_id,
+					// Expand this to get the subscription id: $intent->charges->data['0']['invoice']->subscription
+					'expand' => array('charges.data.invoice'),
+				)
+			);
+
+			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
+
+			return $intent;
+		}
+
+		/**
+		 * Update an existing Payment Intent.
+		 * 
+		 * @param string|int $pi_id 
+		 * @param array      $args Array of arguments to update. https://stripe.com/docs/api/payment_intents/update
+		 * 
+		 * @return object The PaymentIntent object
+		 */
+		public static function udpate_payment_intent($pi_id, $args)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			// Get the intent
+			$intent = \Stripe\PaymentIntent::update($pi_id, $args);
+
+			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
+
+			return $intent;
+		}
+
+		/**
+		 * Update an existing Setup Intent.
+		 * 
+		 * @param string|int $seti_id 
+		 * @param array      $args Array of arguments to update. https://stripe.com/docs/api/setup_intents/update
+		 * 
+		 * @return object The SetupIntent object
+		 */
+		public static function udpate_setup_intent($seti_id, $args)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			// Get the intent
+			$intent = \Stripe\SetupIntent::update($seti_id, $args);
+
+			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
+
+			return $intent;
+		}
+
+		/**
+		 * Get a Stripe Billing Product object instance.
+		 *
+		 * @param array $name The name for this product ('level:ccaps').
+		 *
+		 * @return Product|string Product object; else error message.
+		 */
+		public static function get_product($name)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			$product_id = 's2_prod_'.md5($name.$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
+
+			try // Attempt to get an existing product; else create a new one.
+			{
+				try // Try to find an existing product.
+				{
+					$product = \Stripe\Product::retrieve($product_id);
+				}
+				catch(exception $exception) // Else create one.
+				{
+					$product = array(
+						'id'                   => $product_id,
+						'name'                 => $name,
+						'type'                 => 'service',
+						'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+					);
+					if(!trim($product['statement_descriptor']))
+						unset($product['statement_descriptor']);
+
+					$product = \Stripe\Product::create($product);
+				}
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $product);
+
+				return $product; // Stripe product object.
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+
+
 	}
 }
