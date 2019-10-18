@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreFile
 
 // Stripe singleton
 require(dirname(__FILE__) . '/lib/Stripe.php');

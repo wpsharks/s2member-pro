@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+// @codingStandardsIgnoreFile
 chdir(dirname(__FILE__));
 
 $autoload = (int)$argv[1];

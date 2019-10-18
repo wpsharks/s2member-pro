@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+// @codingStandardsIgnoreFile
 chdir(dirname(__FILE__));
 
 set_time_limit(0); // unlimited max execution time
