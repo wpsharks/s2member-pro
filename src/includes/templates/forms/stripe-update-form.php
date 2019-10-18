@@ -25,20 +25,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 	</div>
 
 	<!-- Billing Method (powered by Stripe). -->
-	<div id="s2member-pro-stripe-update-form-billing-method-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-update-form-section s2member-pro-stripe-form-billing-method-section s2member-pro-stripe-update-form-billing-method-section">
-		<div id="s2member-pro-stripe-update-form-billing-method-section-title" class="s2member-pro-stripe-form-section-title s2member-pro-stripe-update-form-section-title s2member-pro-stripe-form-billing-method-section-title s2member-pro-stripe-update-form-billing-method-section-title">
-			<?php echo _x("New Billing Method", "s2member-front", "s2member"); ?>
-		</div>
-		<div id="s2member-pro-stripe-update-form-source-token-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-update-form-div s2member-pro-stripe-form-source-token-div s2member-pro-stripe-update-form-source-token-div">
-			<button id="s2member-pro-stripe-update-form-source-token-button" class="s2member-pro-stripe-form-source-token-button s2member-pro-stripe-update-form-source-token-button" type="button">
-				<i><?php echo _x("[+]", "s2member-front", "s2member"); ?></i> <span><?php echo _x("New Billing Method", "s2member-front", "s2member"); ?></span>
-			</button>
-			<div id="s2member-pro-stripe-update-form-source-token-summary" class="s2member-pro-stripe-form-source-token-summary s2member-pro-stripe-update-form-source-token-summary">
-				%%source_token_summary%%
-			</div>
-		</div>
-		<div style="clear:both;"></div>
-	</div>
+	%%billing_method%%
 
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
