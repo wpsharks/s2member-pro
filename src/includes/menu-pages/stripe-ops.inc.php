@@ -70,7 +70,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/src/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
 			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
-			echo '<a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/bitcoin-logo.png" class="ws-menu-page-right" style="clear:both; width:225px; height:74px; border:0; margin-left:5px; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<i class="fa fa-3x fa-plus ws-menu-page-right" style="color:#BECD97;"></i>'."\n";
 
 			echo '<h3>Stripe Account Details (required)</h3>'."\n";
@@ -120,34 +119,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-accept-bitcoin">'."\n";
-			echo 'Accept Bitcoin via Stripe?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" id="ws-plugin--s2member-pro-stripe-api-accept-bitcoin">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>No, do not accept Bitcoin (default Stripe behavior)</option>'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_accept_bitcoin']) ? ' selected="selected"' : '').'>Yes, accept Bitcoin (enabled for "Buy Now" only; i.e., recurring charges not possible at this time)</option>'."\n";
-			echo '</select><br />'."\n";
-			echo 'Works for "Buy Now" transactions in USD only; i.e., other currency conversions not supported by Stripe at this time.<br />'."\n";
-			echo 'Turning this on requires that you <a href="http://www.s2member.com/r/stripe-bitcoin-enable/" target="_blank" rel="external">enable the live Bitcoin API on your account</a>'."\n";
-			echo '<p><em><strong>Tip:</strong> This setting for Bitcoin is a global flag that enables Bitcoin for all Pro-Forms that offer a "Buy Now" item. However, you can also enable/disable Bitcoin in a specific Pro-Form (regardless of your configuration here), by adding the Shortcode Attribute <code>accept="bitcoin"</code> (to enable Bitcoin) or <code>accept=""</code> (to disable Bitcoin). For further details, please see: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong></em></p>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
+			// Bitcoin not an option in Stripe anymore. https://stripe.com/blog/ending-bitcoin-support
+			// I'll just leave this setting hidden, so it has a value and whatever checks for it doesn't fail.
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" value="0" />';
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -211,85 +185,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
 			echo '</select><br />'."\n";
 			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>validate_zipcode="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-billing-address">'."\n";
-			echo 'Stripe Should Collect a Full Billing Address?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_billing_address" id="ws-plugin--s2member-pro-stripe-api-billing-address">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s billing address (default Stripe behavior)</option>'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full billing address</option>'."\n";
-			echo '</select><br />'."\n";
-			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>collect_billing_address="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-shipping-address">'."\n";
-			echo 'Stripe Should Collect a Full Shipping Address?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_shipping_address" id="ws-plugin--s2member-pro-stripe-api-shipping-address">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>No, do not collect a customer\'s shipping address (default Stripe behavior)</option>'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address']) ? ' selected="selected"' : '').'>Yes, collect the customer\'s full shipping address</option>'."\n";
-			echo '</select><br />'."\n";
-			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>collect_shipping_address="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-reject-prepaid">'."\n";
-			echo 'Reject or Allow Prepaid Cards?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_reject_prepaid" id="ws-plugin--s2member-pro-stripe-api-reject-prepaid">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Allow; I will accept all types of cards; even prepaid cards (recommended, default)</option>'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid']) ? ' selected="selected"' : '').'>Reject; refuse to accept cards that Stripe detects as being "prepaid" funding sources</option>'."\n";
-			echo '</select><br />'."\n";
-			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>reject_prepaid="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-allow-remember-me">'."\n";
-			echo 'Stripe Should Offer to Remember Each Customer?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_allow_remember_me" id="ws-plugin--s2member-pro-stripe-api-allow-remember-me">'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_allow_remember_me']) ? ' selected="selected"' : '').'>Yes, Stripe should offer a "Remember Me" checkbox option (default Stripe behavior)</option>'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_allow_remember_me']) ? ' selected="selected"' : '').'>No, do not offer to remember each customer</option>'."\n";
-			echo '</select>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
@@ -890,7 +785,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
-			echo '<p class="warning"><em><strong>Bitcoin:</strong> At this time, due to technical limitations (and conflicting laws), <strong>taxes you configure here are not applied to payments made in Bitcoin</strong>. If you intend to accept Bitcoin via Stripe, and you want to charge tax, please adjust the final purchase price; i.e., change the overall price so that it includes/covers any applicable tax that you plan to charge. See also: <a href="http://s2member.com/r/bitcoin-tax-faq/" target="_blank" rel="external">http://s2member.com/r/bitcoin-tax-faq/</a></em></p>'."\n";
+			// echo '<p class="warning"><em><strong>Bitcoin:</strong> At this time, due to technical limitations (and conflicting laws), <strong>taxes you configure here are not applied to payments made in Bitcoin</strong>. If you intend to accept Bitcoin via Stripe, and you want to charge tax, please adjust the final purchase price; i.e., change the overall price so that it includes/covers any applicable tax that you plan to charge. See also: <a href="http://s2member.com/r/bitcoin-tax-faq/" target="_blank" rel="external">http://s2member.com/r/bitcoin-tax-faq/</a></em></p>'."\n";
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
