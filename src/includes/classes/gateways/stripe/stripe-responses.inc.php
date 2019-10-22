@@ -488,8 +488,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if($attr['level'] === '*' && $attr['rr'] !== 'BN')
 						$response = array('response' => _x('Invalid form configuration. Invalid "level, rr" attributes. The "level" (Level) attribute is "*" for (Independent Custom Capabilities), and "rr" is not "BN" (Buy Now).', "s2member-admin", 's2member'), 'error' => TRUE);
 
-					//else if($attr['ra'] && $attr['ta'] === $attr['ra'] && $attr['tp'] === $attr['rp'] && $attr['tt'] === $attr['rt'])
-					//	$response = array('response' => _x('Invalid form configuration. Invalid "ta, tp, tt" attributes. Trial Period. When provided, these cannot be exactly the same as your "ra, rp, rt" attributes.', 's2member-admin', 's2member'), 'error' => TRUE);
+					else if($attr['ra'] && $attr['ta'] === $attr['ra'] && $attr['tp'] === $attr['rp'] && $attr['tt'] === $attr['rt'])
+						$response = array('response' => _x('Invalid form configuration. Invalid "ta, tp, tt" attributes. Trial Period. When provided, these cannot be exactly the same as your "ra, rp, rt" attributes.', 's2member-admin', 's2member'), 'error' => TRUE);
 
 					else if($attr['rrt'] && (!is_string($attr['rrt']) || !is_numeric($attr['rrt'])))
 						$response = array('response' => _x('Invalid form configuration. Invalid "rrt" attribute. Recurring Times (fixed). When provided, must be numeric.', 's2member-admin', 's2member'), 'error' => TRUE);
