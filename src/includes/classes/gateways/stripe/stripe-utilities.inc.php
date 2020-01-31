@@ -51,7 +51,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		public static function init_stripe_sdk()
 		{
 			$stripe_api_version = '2019-10-08';
-			if(!class_exists('Stripe'))
+			if(!class_exists('Stripe\Stripe'))
 				require_once dirname(__FILE__).'/stripe-sdk/init.php';
 			\Stripe\Stripe::setApiKey($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']);
 			\Stripe\Stripe::setApiVersion($stripe_api_version);
