@@ -588,6 +588,19 @@ jQuery(document).ready( // DOM ready.
 								$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div :input').attr(ariaFalse);
 						}
 
+						//!!! "free" check to hide the billing method when 100% off coupons.
+						if($(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-payment-not-required-or-not-possible').length)
+						{
+							var isFree = true;
+							$(billingMethodSection).hide(), // Hide billing method section.
+								$(billingMethodSection + ' > div').hide(),
+								$(billingMethodSection + ' > label').hide();
+
+							$(billingAddressSection).hide(), // Hide billing address section.
+								$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div').hide(),
+								$(billingAddressSection + ' > div.s2member-pro-stripe-' + coTypeWithDashes + '-form-div :input').attr(ariaFalse);
+						}
+
 						$(sourceTokenButton).on('click', function() // Stripe integration.
 						{
 							var isBuyNow = $(submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-is-buy-now-amount-in-cents').length > 0,
@@ -711,7 +724,8 @@ jQuery(document).ready( // DOM ready.
 
 				// Stripe SCA update.
 				var form = document.getElementsByClassName('s2member-pro-stripe-form')[0];
-				if (form) {
+				var isFree = ($('input#s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible').length || $('input#s2member-pro-stripe-checkout-payment-not-required-or-not-possible').length) ? true : false;
+				if (form && !isFree) {
 					var stripe = Stripe('<?php echo $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]; ?>');
 					var elements = stripe.elements();
 					var piSecret = jQuery('#s2member-pro-stripe-form-pi-secret').val();
