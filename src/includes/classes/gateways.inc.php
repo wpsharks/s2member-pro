@@ -56,7 +56,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_gateways'))
 		{
 			$gateways = array(
 				'paypal' => '<strong>PayPal Website Payments Pro</strong> <em>(w/ Pro-Forms)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring Products.</span>',
-				'stripe' => '<strong>Stripe + Bitcoin</strong> <em>(w/ Pro-Forms)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring Products.</span>',
+				'stripe' => '<strong>Stripe</strong> <em>(w/ Pro-Forms)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring Products.</span>',
 				'authnet' => '<strong>Authorize.Net</strong> <em>(w/ Pro-Forms)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring Products.</span>',
 				'clickbank' => '<strong>ClickBank</strong> <em>(w/ Buttons)</em><br /><span style="font-size:80%;">&uarr; supports Buy Now &amp; Recurring Products.</span>',
 				'google' => '<span style="opacity:0.5;"><strong>Google Wallet</strong> <em>(w/ Buttons)</em><br /><span style="font-size:80%;">&uarr; <a href="http://www.s2member.com/r/google-wallet-retirement/" target="_blank" rel="external">retired by Google</a> March 2nd, 2015.</span></span>',
