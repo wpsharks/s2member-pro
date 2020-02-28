@@ -187,7 +187,7 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s
 	cursor         : pointer;
 	background     : rgba(0, 0, 0, 0.05);
 }
-div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:before
+div.s2member-pro-stripe-form-section > label.s2member-pro-stripe-form-card-element-label:before
 {
 	content    : '';
 	float      : right;
