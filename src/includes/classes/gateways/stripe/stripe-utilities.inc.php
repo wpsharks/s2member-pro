@@ -592,11 +592,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Attempt to cancel the subscription for this customer.
 			{
-				$customer     = \Stripe\Customer::retrieve($customer_id);
-				$subscription = $customer->subscriptions->retrieve($subscription_id);
-				$subscription = \Stripe\Subscription::update($subscription->id, array(
-					'cancel_at_period_end' => $cancel_at_period_end,
-				));
+				//!!! $customer     = \Stripe\Customer::retrieve($customer_id);
+				//!!! $subscription = \Stripe\Subscription::retrieve($subscription_id);
+
+				// Delete subscription if cancel now, update if at period end.
+				if ($cancel_at_period_end) {
+					$subscription = \Stripe\Subscription::update(
+						$subscription_id, 
+						array('cancel_at_period_end' => true)
+					);
+				} else {
+					$subscription = \Stripe\Subscription::retrieve($subscription_id);
+					$subscription = $subscription->delete();
+				}
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
