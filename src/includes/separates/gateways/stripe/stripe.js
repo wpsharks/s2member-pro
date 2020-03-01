@@ -311,11 +311,11 @@ jQuery(document).ready( // DOM ready.
 						var context = this, label = '', error = '', errors = '',
 							$recaptchaResponse = $(captchaSection + ' input#recaptcha_response_field, '+captchaSection+' #g-recaptcha-response');
 
-						if(!$(sourceTokenInput).val())
-						{
-							alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
-							return false; // Error; cannot continue in this scenario.
-						}
+						//!!! if(!$(sourceTokenInput).val())
+						// {
+						// 	alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("No Billing Method; please try again.", "s2member-front", "s2member")); ?>');
+						// 	return false; // Error; cannot continue in this scenario.
+						// }
 						$(':input', context)
 							.each(function(/* Go through them all together. */)
 										{
