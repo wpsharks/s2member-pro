@@ -726,7 +726,9 @@ jQuery(document).ready( // DOM ready.
 				var form = document.getElementsByClassName('s2member-pro-stripe-form')[0];
 				var isFree = ($('input#s2member-pro-stripe-sp-checkout-payment-not-required-or-not-possible').length || $('input#s2member-pro-stripe-checkout-payment-not-required-or-not-possible').length) ? true : false;
 				if (form && !isFree) {
-					var stripe = Stripe('<?php echo $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]; ?>');
+					var stripe = Stripe('<?php echo $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_publishable_key"]; ?>', {
+						apiVersion: '2019-10-08',
+					});
 					var elements = stripe.elements();
 					var piSecret = jQuery('#s2member-pro-stripe-form-pi-secret').val();
 					var setiSecret = jQuery('#s2member-pro-stripe-form-seti-secret').val();
