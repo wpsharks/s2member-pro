@@ -124,20 +124,28 @@ else if(is_admin()) //  Admin compatibility errors.
 {
 	if(!version_compare(PHP_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need PHP v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION.\'+ to use the s2Member Pro Add-on.</p></div>\';'));
+		add_action('all_admin_notices', function(){
+			echo '<div class="error fade"><p>You need PHP v'.WS_PLUGIN__S2MEMBER_PRO_MIN_PHP_VERSION.'+ to use the s2Member Pro Add-on.</p></div>';
+		});
 	}
 	else if(!version_compare(get_bloginfo('version'), WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>You need WordPress v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION.\'+ to use the s2Member Pro Add-on.</p></div>\';'));
+		add_action('all_admin_notices', function(){
+			echo '<div class="error fade"><p>You need WordPress v'.WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION.'+ to use the s2Member Pro Add-on.</p></div>';
+		});
 	}
 	else if(!defined('WS_PLUGIN__S2MEMBER_VERSION') || !defined('WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION') || !version_compare(WS_PLUGIN__S2MEMBER_VERSION, WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION, '>='))
 	{
-		add_action('all_admin_notices', create_function('', 'echo \'<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="http://s2member.com/release-archive/" target="_blank">s2Member Framework</a>, v\'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.\'+. It\\\'s free.</p></div>\';'));
+		add_action('all_admin_notices', function(){
+			echo '<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="http://s2member.com/release-archive/" target="_blank">s2Member Framework</a>, v'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.'+. It\'s free.</p></div>';
+		});
 	}
 	else if(!version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '>=') && file_exists(dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'))
 	{
 		include_once dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'; // Include upgrader class. s2Member Pro autoload functionality will NOT be available in this scenario. Using ``include_once()``.
-		add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade').add_action('all_admin_notices', create_function('', 'echo c_ws_plugin__s2member_pro_upgrader::wizard();'));
+		add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade').add_action('all_admin_notices', function(){
+			echo c_ws_plugin__s2member_pro_upgrader::wizard();
+		});
 	}
 }
 unset(${__FILE__}); // Housekeeping.
