@@ -74,6 +74,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
 							   && ($stripe_invoice_total = number_format(c_ws_plugin__s2member_pro_stripe_utilities::cents_to_dollar_amount($stripe_invoice->total, $stripe_invoice->currency), 2, '.', '')) > 0
 							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
+							   /**
+							    * Make sure that the subscription we're looking at is older than X seconds.
+							    *
+							    * The reason for this is to resolve a double processing bug.  s2Member notifies on a new
+							    * new payment signup, but Stripe also notifies us on a subscription payment.  Therefore
+							    * a double notification takes place.
+							    *
+							    * By putting this check in here we check that we're skipping the first one, the one from
+							    * s2Member, and that we only process the second one, the one from Stripe.
+							    */
+							   && (time() - $stripe_subscription->created) > 10
 							   && ($ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(0, $stripe_subscription->id))
 							)
 							{
