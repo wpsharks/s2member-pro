@@ -462,16 +462,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			// Do we have a paid trial.
 			if (!empty($post_vars['attr']['tp']) && !empty($cost_calculations['trial_total']) && $cost_calculations['trial_total'] > 0) {
 				// Create an invoice item for it, so it gets added to the trial's invoice.
-				$invoice_item = \Stripe\InvoiceItem::create(array(
+				$item = array(
 					'customer'    => $customer_id,
 					'amount'      => self::dollar_amount_to_cents($cost_calculations['trial_total'], $cost_calculations['cur']),
 					'currency'    => $cost_calculations['cur'],
 					'description' => 'Initial period'
+				);
+				$invoice_item = \Stripe\InvoiceItem::create($item, array(
+					'idempotency_key' => md5(serialize($item)),
 				));
 			}
 
 			try // Attempt to create a new subscription for this customer.
 			{
+				// Include the customer's payment method so the sub idemp key changes with new cards.
+				$customer = \Stripe\Customer::retrieve($customer_id);
+
 				$subscription = array(
 					'customer'        => $customer_id,
 					'items'           => array(
@@ -479,6 +485,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 							'plan' => $plan_id,
 						),
 					),
+					'default_payment_method' => $customer->invoice_settings->default_payment_method,
 					'trial_from_plan' => true,
 					'metadata'        => $metadata,
 					'expand'          => array(
@@ -486,7 +493,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						'pending_setup_intent',
 					),
 				);
-				$subscription = \Stripe\Subscription::create($subscription);
+				$subscription = \Stripe\Subscription::create($subscription, array(
+					'idempotency_key' => md5(serialize($subscription)),
+				));
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
@@ -1237,7 +1246,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				if(!trim($intent['statement_descriptor']))
 					unset($intent['statement_descriptor']);
 
-				$intent = \Stripe\PaymentIntent::create($intent);
+				$intent = \Stripe\PaymentIntent::create($intent, array(
+					'idempotency_key' => md5(serialize($intent))
+				));
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
 
 				return $intent; // Stripe charge object.
