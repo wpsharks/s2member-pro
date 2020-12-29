@@ -85,7 +85,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 			echo '<ul>'."\n";
 			echo '	<li>For you to introduce Free Registration Pro-Forms. In fact, you can use Free Registration Pro-Forms w/o even configuring PayPal API credentials.</li>'."\n";
 			echo '	<li>For you to accept PayPal Express Checkout only (not ideal). See: <a href="https://s2member.com/kb-article/do-s2member-pro-forms-work-with-paypal-standard-i-e-without-paypal-pro/" target="_blank" rel="external">this KB article</a> for details and important limitations.</li>'."\n";
-			echo '	<li style="font-style:italic;">If you integrate with Stripe™ instead (free, most popular). See: <a href="https://s2member.com/kb-article/does-s2member-integrate-w-stripe-bitcoin/" target="_blank" rel="external">Does s2Member Pro integrate w/ Stripe? Bitcoin?</a></li>'."\n";
+			echo '	<li style="font-style:italic;">If you integrate with Stripe™ instead (free, most popular). See: <a href="https://s2member.com/kb-article/does-s2member-integrate-w-stripe-bitcoin/" target="_blank" rel="external">Does s2Member Pro integrate w/ Stripe?</a></li>'."\n";
 			echo '</ul>'."\n";
 
 			echo '</div>'."\n";
