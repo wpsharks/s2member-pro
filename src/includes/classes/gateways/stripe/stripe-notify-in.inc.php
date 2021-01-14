@@ -330,6 +330,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							}
 							break; // Break switch handler.
 					}
+					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
+					do_action('ws_plugin__s2member_pro_after_stripe_notify_event_switch', get_defined_vars());
+					unset($__refs, $__v);
+		
 					if(empty($processing)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
