@@ -601,8 +601,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Attempt to cancel the subscription for this customer.
 			{
-				//!!! $customer     = \Stripe\Customer::retrieve($customer_id);
-				//!!! $subscription = \Stripe\Subscription::retrieve($subscription_id);
+				// Check for draft/open invoice and void.
+				$subscription = \Stripe\Subscription::retrieve($subscription_id);
+				if (!empty($subscription->latest_invoice)) {
+					$latest_invoice = \Stripe\Invoice::retrieve($subscription->latest_invoice);
+					// If draft, finalize to change status to "open".
+					if ($latest_invoice->status == 'draft') {
+						$latest_invoice = $latest_invoice->finalizeInvoice([
+							'auto_advance' => false
+						]);
+					}
+					if ($latest_invoice->status == 'open') {
+						$latest_invoice = $latest_invoice->voidInvoice();
+					}
+				}
 
 				// Delete subscription if cancel now, update if at period end.
 				if ($cancel_at_period_end) {
