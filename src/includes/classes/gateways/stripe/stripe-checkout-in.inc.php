@@ -199,7 +199,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 
 										// If we don't have successful intent object here, we create the subscription. 
-										if((empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
+										if(!$global_response && (empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
 											// Get the plan for the subscription.
 											if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
 												$global_response = array('response' => $stripe_plan, 'error' => TRUE);
@@ -399,7 +399,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 
 										// If we don't have successful intent object here, we create the subscription. 
-										if((empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
+										if(!$global_response && (empty($stripe_intent_succeeded) || !is_object($stripe_intent_succeeded))) {
 											// Get the plan for the subscription.
 											if(!is_object($stripe_plan = c_ws_plugin__s2member_pro_stripe_utilities::get_plan($plan_attr)))
 												$global_response = array('response' => $stripe_plan, 'error' => TRUE);
