@@ -65,6 +65,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
 				{
+					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
+					do_action('ws_plugin__s2member_pro_before_stripe_notify_event_switch', get_defined_vars());
+					unset($__refs, $__v);
+
 					switch($event->type)
 					{
 						case 'invoice.payment_succeeded': // Subscription payments.
