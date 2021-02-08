@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 201225
-Stable tag: 201225
-Tested up to: 5.7
+Version: 210208
+Stable tag: 210208
+Tested up to: 5.7-alpha
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 7.4.6
@@ -101,6 +101,24 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v210208 =
+
+- (s2Member Pro) **Enhancement**: In the Stripe integration, cancelling a subscription in the last minutes of a period, may cause the invoice for the new period to remain there and still be charged later. Now s2Member Pro attempts to find a draft or open invoice for the subscription being cancelled, and void it. Thanks Alan for reporting it. See [post 8386](https://f.wpsharks.com/t/8098).
+
+- (s2Member Pro) **UI Enhancement**: Improved Stripe pro-form error message when trying to create a subscription with a bad card. Thanks everyone that reported it. See [issue #1184](https://github.com/wpsharks/s2member/issues/1184), [post 6043](https://f.wpsharks.com/t/6043), and [post 8386](https://f.wpsharks.com/t/8386).
+
+- (s2Member Pro) **Enhancement**: Added the new action hooks `ws_plugin__s2member_pro_before_stripe_notify_event_switch` and `ws_plugin__s2member_pro_after_stripe_notify_event_switch` in the Stripe endpoint to allow customizations, e.g. new event handlers.
+
+- (s2Member Pro) **UI Fix**: Removed some leftover mentions of Bitcoin support in Stripe's options.
+
+- (s2Member Pro) **UI Fix**: Removed a couple of deprecated shortcode attributes from the documentation for Stripe's pro-form, leftovers from the old integration. Kudos to Debbie for bringing my attention to them. See [post 8053](https://f.wpsharks.com/t/8053).
+
+- (s2Member Framework) **UI Fix**: Fixed some broken links and video players in the admin pages.
+
+- (s2Member Framework) **Bug Fix**: Resolved a warning given when changing users role in bulk from the WP Admin > Users page.
+
+- (s2Member Server Scanner) **Bug Fix**: Updated the [Server Scanner](https://s2member.com/kb-article/server-scanner/) to remove some outdated warnings.
 
 = v201225 =
 
