@@ -7,7 +7,7 @@ Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 7.4.6
 License: GNU General Public License v2 or later.
-Contributors: WebSharks, JasWSInc, raamdev, clavaque
+Contributors: WebSharks, JasWSInc, raamdev, clavaque, eduan
 Author: WP Sharks
 Author URI: http://s2member.com/
 Donate link: http://s2member.com/donate/
