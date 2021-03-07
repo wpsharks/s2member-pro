@@ -64,30 +64,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			/** @var $wpdb \wpdb For IDEs. */
 
 			$defaults = array(
-				'args'              => '',
+				'args'               => '',
 
-				'blog'              => $GLOBALS['blog_id'],
+				'blog'               => $GLOBALS['blog_id'],
 
-				'rlc_satisfy'       => 'ALL', // `ALL` or `ANY`
-				'role'              => '', 'level' => '', 'ccap' => '',
-				'roles'             => '', 'levels' => '', 'ccaps' => '',
-				'search'            => '', 'search_columns' => '', 'enable_list_search' => '',
-				'include'           => '', 'exclude' => '',
+				'rlc_satisfy'        => 'ALL', // `ALL` or `ANY`
+				'role'               => '',
+				'level'              => '',
+				'ccap'               => '',
+				'roles'              => '',
+				'levels'             => '',
+				'ccaps'              => '',
+				'search'             => '',
+				'search_columns'     => '',
+				'enable_list_search' => '',
+				'include'            => '',
+				'exclude'            => '',
 
-				'order'             => 'DESC',
-				'orderby'           => 'registered',
-				'limit'             => 25,
+				'order'              => 'DESC',
+				'orderby'            => 'registered',
+				'limit'              => 25,
 
-				'template'          => '',
+				'template'           => '',
 
-				'avatar_size'       => 48,
-				'show_avatar'       => 'yes',
-				'link_avatar'       => '', // http://www.gravatar.com/%%md5.email%%
+				'avatar_size'        => 48,
+				'show_avatar'        => 'yes',
+				'link_avatar'        => '', // http://www.gravatar.com/%%md5.email%%
 
-				'show_display_name' => 'yes',
-				'link_display_name' => '', // /members/%%nicename%%/
+				'show_display_name'  => 'yes',
+				'link_display_name'  => '', // /members/%%nicename%%/
 
-				'show_fields'       => '',
+				'show_fields'        => '',
 			);
 			if(!empty($attr['orderby']) && in_array($attr['orderby'], array('login', 'nicename', 'email', 'url', 'display_name'), TRUE))
 				$defaults['order'] = 'ASC'; // A more logical default when dealing with alphabetic ordering.
