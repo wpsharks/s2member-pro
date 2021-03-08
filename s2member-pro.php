@@ -2,7 +2,7 @@
 /* -- This section for WordPress parsing. ------------------------------------------------------------------------------
 
 Plugin Name: s2Member Pro
-Description: This add-on activates automatically when its version matches the s2Member Framework's version.
+Description: Pro add-on for s2Member. Activates automatically when its version matches the s2Member Framework's.
 Version: 210208
 Plugin URI: https://s2member.com
 Author: WP Sharks
