@@ -59,7 +59,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_admin_css_js"))
 					{
 						echo "\n"; // Add a line break before inclusion of this file.
 
-						include_once dirname (dirname (__FILE__)) . "/menu-pages/menu-pages-s.min.js";
+						// TODO REVAMP: Change this back to .min.js, need to figure out how to generate minimized file
+						// in order to be able to do that.
+						include_once dirname (dirname (__FILE__)) . "/menu-pages/menu-pages-s.js";
 
 						return /* Return for uniformity. */;
 					}

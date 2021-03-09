@@ -54,7 +54,13 @@ add_action('ws_plugin__s2member_during_menu_pages_js', 'c_ws_plugin__s2member_pr
 
 add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_2', 'c_ws_plugin__s2member_pro_menu_pages::add_coupon_codes_page', 10, 2);
 add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_2', 'c_ws_plugin__s2member_pro_menu_pages::add_import_export_page', 10, 2);
+add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_2', 'c_ws_plugin__s2member_pro_menu_pages::add_import_export_page', 10, 2);
 add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_3', 'c_ws_plugin__s2member_pro_menu_pages::add_other_gateways_page', 10, 2);
+// New menu setup for import/export
+add_action('s2x_before_new_tools_page', 'c_ws_plugin__s2member_pro_imports::import');
+add_action('s2x_before_new_tools_page', 'c_ws_plugin__s2member_pro_imports_simple::import');
+require_once dirname(__FILE__) . '/menu-pages/import-export.inc.php';
+add_action('s2x_during_tools_page_after_left_sections', 'c_ws_plugin__s2member_pro_menu_page_import_export::render_sections');
 
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_membership_levels', 'c_ws_plugin__s2member_pro_menu_pages::add_level_instructions');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_login_welcome_page', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_lwp_otos');
@@ -67,6 +73,7 @@ add_action('ws_plugin__s2member_during_paypal_buttons_page_during_left_sections_
 add_action('ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_pdt_after_more_info', 'c_ws_plugin__s2member_pro_menu_pages::paypal_return_template');
 
 add_filter('ws_plugin__s2member_during_scripting_page_during_left_sections_display_api_hooks', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_login_widget_api');
+add_filter('ws_plugin__s2member_during_scripting_page_during_left_sections_display_api_hooks', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_remote_ops_api');
 add_filter('s2x_during_general_options_page_during_left_sections_after_log_settings', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_remote_ops_api');
 add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_api_constants');
 add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_api_constants');

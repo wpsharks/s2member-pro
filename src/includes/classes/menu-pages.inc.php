@@ -182,6 +182,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		 * @since 110713
 		 *
 		 * @attaches-to ``add_filter("ws_plugin__s2member_during_scripting_page_during_left_sections_display_api_hooks");``
+		 * @attaches-to ``add_filter("ws_plugin__s2member_during_sc_paypal_button_success_return_url");``
 		 *
 		 * @param bool $display_api_hooks Expects a boolean value passed through by the Filter.
 		 *
@@ -282,7 +283,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 			c_ws_plugin__s2member_pro_imports::import(); // Handles imports.
 			c_ws_plugin__s2member_pro_imports_simple::import(); // Handles imports.
 
-			include_once dirname(dirname(__FILE__))."/menu-pages/import-export.inc.php";
+			include_once dirname(__FILE__, 2) . '/menu-pages/import-export.inc.php';
+			c_ws_plugin__s2member_pro_menu_page_import_export::render();
 		}
 
 		/**
