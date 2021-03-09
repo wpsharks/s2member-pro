@@ -239,6 +239,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 				c_ws_plugin__s2member_admin_notices::display_admin_notice('<strong>Tip:</strong> If you\'re <em>only</em> planning to use Free Registration Forms (e.g., if you\'re not going to accept payments), you can safely ignore this warning and continue to use the Free Registration Form shortcode provided below.');
 			}
 			include_once dirname(dirname(dirname(dirname(__FILE__))))."/menu-pages/paypal-forms.inc.php";
+			c_ws_plugin__s2member_pro_menu_page_paypal_forms::render();
 		}
 	}
 }

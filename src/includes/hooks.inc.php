@@ -71,6 +71,9 @@ add_action('ws_plugin__s2member_before_sc_paypal_button_after_shortcode_atts', '
 add_filter('ws_plugin__s2member_during_sc_paypal_button_success_return_url', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_success_return_url', 10, 2);
 add_action('ws_plugin__s2member_during_paypal_buttons_page_during_left_sections_during_shortcode_attrs_lis', 'c_ws_plugin__s2member_pro_menu_pages::paypal_button_attrs');
 add_action('ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_pdt_after_more_info', 'c_ws_plugin__s2member_pro_menu_pages::paypal_return_template');
+// New setup for revamp
+require_once dirname(__FILE__) . '/menu-pages/paypal-forms.inc.php';
+add_action('s2x_during_registration_options_page_during_left_sections_before_open_registration', 'c_ws_plugin__s2member_pro_menu_page_paypal_forms::render_free_registration_form_panel');
 
 add_filter('ws_plugin__s2member_during_scripting_page_during_left_sections_display_api_hooks', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_login_widget_api');
 add_filter('ws_plugin__s2member_during_scripting_page_during_left_sections_display_api_hooks', 'c_ws_plugin__s2member_pro_menu_pages::scripting_page_remote_ops_api');

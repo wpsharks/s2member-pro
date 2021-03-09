@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_paypal_forms
 	{
-		public function __construct()
+		public static function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -91,35 +91,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Free Registration Forms">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";
-			echo '<h3>One Form Does It All For Free Registrations (copy/paste)</h3>'."\n";
-			echo '<p>Whenever a visitor registers without paying, they\'ll automatically become a Free Subscriber, at Level #0.</p>'."\n";
-			echo '<p><em><strong>Note:</strong> the use of this particular Form will override your Open Registration configuration. In other words, making this Form available is the same as turning Open Registration <code>(on)</code>. One of the benefits to this functionality, is that it makes it possible for you to integrate this Free Registration Form in creative ways (i.e., making it available ONLY under certain circumstances); while still leaving Open Registration <code>(off)</code> throughout the rest of the site.</em></p>'."\n";
-			echo '<p><em><strong>Tip (optional):</strong> It is also possible to change the <code>level="0"</code> Attribute to something other than the default Level #0 (Free Subscriber). For example, if you need to, you can change it to <code>level="1"</code>, attach Custom Capabilities with the <code>ccaps=""</code> Attribute, and even limit this access to a certain timeframe with <code>tp="30" tt="D"</code> (i.e., 30 Days). So this Form is very flexible. It can be used to allow free access to just about any aspect of your service. For more information on Attributes, please see the section below: Shortcode Attributes (Explained).</em></p>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
-			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
-			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/paypal-registration-form-shortcode.php")));
-			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
-			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level0_label"])), $ws_plugin__s2member_pro_temp_s);
-			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
-			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-registration-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
-			echo '</form>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
+			c_ws_plugin__s2member_pro_menu_page_paypal_forms::render_free_registration_form_panel();
 
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 			{
@@ -849,7 +821,37 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 
 			echo '</div>'."\n";
 		}
+
+		public static function render_free_registration_form_panel() {
+			echo '<div class="ws-menu-page-group" title="Free Registration Forms (Pro)">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";
+			echo '<h3>One Form Does It All For Free Registrations (copy/paste)</h3>'."\n";
+			echo '<p>Whenever a visitor registers without paying, they\'ll automatically become a Free Subscriber, at Level #0.</p>'."\n";
+			echo '<p><em><strong>Note:</strong> the use of this particular Form will override your Open Registration configuration. In other words, making this Form available is the same as turning Open Registration <code>(on)</code>. One of the benefits to this functionality, is that it makes it possible for you to integrate this Free Registration Form in creative ways (i.e., making it available ONLY under certain circumstances); while still leaving Open Registration <code>(off)</code> throughout the rest of the site.</em></p>'."\n";
+			echo '<p><em><strong>Tip (optional):</strong> It is also possible to change the <code>level="0"</code> Attribute to something other than the default Level #0 (Free Subscriber). For example, if you need to, you can change it to <code>level="1"</code>, attach Custom Capabilities with the <code>ccaps=""</code> Attribute, and even limit this access to a certain timeframe with <code>tp="30" tt="D"</code> (i.e., 30 Days). So this Form is very flexible. It can be used to allow free access to just about any aspect of your service. For more information on Attributes, please see the section below: Shortcode Attributes (Explained).</em></p>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<form onsubmit="return false;" autocomplete="off">'."\n";
+			echo '<strong>WordPress Shortcode:</strong> (recommended for both the WordPress Visual &amp; HTML Editors)<br />'."\n";
+			$ws_plugin__s2member_pro_temp_s = trim(c_ws_plugin__s2member_utilities::evl(file_get_contents(dirname(dirname(__FILE__))."/templates/shortcodes/paypal-registration-form-shortcode.php")));
+			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr("0")), $ws_plugin__s2member_pro_temp_s);
+			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%level_label%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["level0_label"])), $ws_plugin__s2member_pro_temp_s);
+			$ws_plugin__s2member_pro_temp_s = preg_replace("/%%custom%%/", c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER["HTTP_HOST"])), $ws_plugin__s2member_pro_temp_s);
+			echo '<input type="text" autocomplete="off" id="ws-plugin--s2member-pro-registration-shortcode" value="'.format_to_edit($ws_plugin__s2member_pro_temp_s).'" onclick="this.select ();" class="monospace" />'."\n";
+			echo '</form>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_paypal_forms ();
