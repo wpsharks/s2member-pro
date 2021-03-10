@@ -136,6 +136,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		 * @since 110720
 		 *
 		 * @attaches-to ``add_action("ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_login_welcome_page");``
+		 * @also-attaches-to ``add_action("s2x_during_general_options_page_during_left_sections_after_login_welcome_page");``
 		 *
 		 * @param array $vars Expects an array of defined variables passed through by the Action Hook.
 		 */

@@ -822,6 +822,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_forms"))
 			echo '</div>'."\n";
 		}
 
+		/**
+		 * @attaches-to ``add_action('s2x_during_registration_options_page_during_left_sections_before_open_registration');``
+		 */
 		public static function render_free_registration_form_panel() {
 			echo '<div class="ws-menu-page-group" title="Free Registration Forms (Pro)">'."\n";
 

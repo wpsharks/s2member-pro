@@ -64,6 +64,7 @@ add_action('s2x_during_tools_page_after_left_sections', 'c_ws_plugin__s2member_p
 
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_membership_levels', 'c_ws_plugin__s2member_pro_menu_pages::add_level_instructions');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_login_welcome_page', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_lwp_otos');
+add_action('s2x_during_general_options_page_during_left_sections_after_login_welcome_page', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_lwp_otos');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_url_shortening', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_captcha_ops');
 
 add_filter('ws_plugin__s2member_sc_paypal_button_default_attrs', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_default_attrs', 10, 2);
