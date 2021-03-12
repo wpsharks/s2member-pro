@@ -44,7 +44,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_stripe_ops
 	{
-		public function __construct()
+		static public function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -64,212 +64,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce('ws-plugin--s2member-options-save')).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Stripe Account Details">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-account-details-section">'."\n";
-
-			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/src/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
-			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
-			echo '<i class="fa fa-3x fa-plus ws-menu-page-right" style="color:#BECD97;"></i>'."\n";
-
-			echo '<h3>Stripe Account Details (required)</h3>'."\n";
-			echo '<p><a href="http://www.s2member.com/r/stripe/" target="_blank" rel="external">Stripe</a> absolutely rocks! It\'s a developer-friendly way to accept payments online and in mobile apps. They process billions of dollars a year for thousands of companies of all sizes. Easy to integrate; and easy for customers to use.</p>'."\n";
-			echo '<p>s2Member Pro has been integrated with Stripe for Direct Payments and also for Subscriptions (Automated Recurring Billing). In order to take advantage of this integration, you will need to have a Stripe Merchant Account (free). Once you have an account, all of the details below can be obtained from inside of your Stripe account. If you need assistance, please check their <a href="http://www.s2member.com/r/stripe-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>Secure Server:</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro-Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Stripe Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>Secure Server:</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro-Forms on an SSL enabled page. When you create Stripe Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro-Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>SSL Compatibility:</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-secret-key">'."\n";
-			echo 'Stripe Secret API Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-publishable-key">'."\n";
-			echo 'Stripe Publishable API Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
-			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			// Bitcoin not an option in Stripe anymore. https://stripe.com/blog/ending-bitcoin-support
-			// I'll just leave this setting hidden, so it has a value and whatever checks for it doesn't fail.
-			echo '<input type="hidden" name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" value="0" />';
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
-			echo 'Stripe Image Branding:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
-			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here.<br />'."\n";
-			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value may or may not be displayed by Stripe. It\'s best to configure it here.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-statement-description">'."\n";
-			echo 'Stripe Statement Description:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" maxlength="15" name="ws_plugin__s2member_pro_stripe_api_statement_description" id="ws-plugin--s2member-pro-stripe-api-statement-description" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']).'" placeholder="MYCOMPANY-INC" /><br />'."\n";
-			echo 'An arbitrary string to be displayed alongside your company name. This appears on your customer\'s credit card statement. 15 characters max. The statement description may NOT include these special characters: <code>'.esc_html('<>"\'').'</code><br />'."\n";
-			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value that you configure in your Stripe Dashboard is used instead.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
-			echo 'Stripe Should Verify Zipcodes?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<select name="ws_plugin__s2member_pro_stripe_api_validate_zipcode" id="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
-			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do not validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
-			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
-			echo '</select><br />'."\n";
-			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>validate_zipcode="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th style="padding-top:0;">'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-sandbox">'."\n";
-			echo 'Sandbox/Test Mode?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
-			echo '<em>Only enable this if you\'ve provided test credentials above. This puts s2Member\'s Stripe integration into Sandbox/Test mode. See: <a href="http://www.s2member.com/r/stripe-test-accounts/" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
-			{
-				echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-				echo '<table class="form-table">'."\n";
-				echo '<tbody>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<th>'."\n";
-				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
-				echo 'Enable Logging Routines?<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
-				echo '</label>'."\n";
-				echo '</th>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, Webhook/IPN &amp; Return Page logging.</label><br />'."\n";
-				echo '<em>This enables API, Webhook/IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir'])).'</code></em><br />'."\n";
-				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url('/admin.php?page=ws-plugin--s2member-logs')).'">Log Viewer</a></em>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<div class="info" style="margin-bottom:0;">'."\n";
-				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url('/admin.php?page=ws-plugin--s2member-logs')).'">Log Files (Debug)</a>.</span></p>'."\n";
-				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
-				echo '</div>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-				echo '</tbody>'."\n";
-				echo '</table>'."\n";
-			}
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
-
-			echo '<div class="ws-menu-page-group" title="Stripe Webhook/IPN Integration">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
-			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
-			echo '<h3>Stripe Webhook/IPN Integration (required)</h3>'."\n";
-			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings → Webhooks</strong></p>'."\n";
-			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(home_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
-			echo '<div class="info" style="margin-bottom:0;">'."\n";
-			echo '<p>If you are currently in Test/Sandbox mode (i.e., you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
-			echo '</div>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
+			c_ws_plugin__s2member_pro_menu_page_stripe_ops::render_stripe_settings_panels();
 
 			echo '<div class="ws-menu-page-group" title="Signup Confirmation Email">'."\n";
 
@@ -1174,7 +969,217 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '</div>'."\n";
 		}
+
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_after_paypal_options');``
+		 */
+		static public function render_stripe_settings_panels() {
+			echo '<div class="ws-menu-page-group" title="Stripe Account Details">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-account-details-section">'."\n";
+
+			echo '<img src="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['c']['dir_url']).'/src/images/large-icon.png" title="s2Member (a Membership management system for WordPress)" alt="" style="float:right; margin:0 0 0 25px; border:0;" />'."\n";
+			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
+			echo '<i class="fa fa-3x fa-plus ws-menu-page-right" style="color:#BECD97;"></i>'."\n";
+
+			echo '<h3>Stripe Account Details (required)</h3>'."\n";
+			echo '<p><a href="http://www.s2member.com/r/stripe/" target="_blank" rel="external">Stripe</a> absolutely rocks! It\'s a developer-friendly way to accept payments online and in mobile apps. They process billions of dollars a year for thousands of companies of all sizes. Easy to integrate; and easy for customers to use.</p>'."\n";
+			echo '<p>s2Member Pro has been integrated with Stripe for Direct Payments and also for Subscriptions (Automated Recurring Billing). In order to take advantage of this integration, you will need to have a Stripe Merchant Account (free). Once you have an account, all of the details below can be obtained from inside of your Stripe account. If you need assistance, please check their <a href="http://www.s2member.com/r/stripe-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>Secure Server:</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro-Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Stripe Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>Secure Server:</strong> In order to comply with Stripe and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Stripe Pro-Forms on an SSL enabled page. When you create Stripe Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro-Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>SSL Compatibility:</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-secret-key">'."\n";
+			echo 'Stripe Secret API Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_secret_key" id="ws-plugin--s2member-pro-stripe-api-secret-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_secret_key']).'" /><br />'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-publishable-key">'."\n";
+			echo 'Stripe Publishable API Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_publishable_key" id="ws-plugin--s2member-pro-stripe-api-publishable-key" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_publishable_key']).'" /><br />'."\n";
+			echo 'You\'ll find this in your Stripe Merchant account, under: <strong>Account Settings → API Keys</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			// Bitcoin not an option in Stripe anymore. https://stripe.com/blog/ending-bitcoin-support
+			// I'll just leave this setting hidden, so it has a value and whatever checks for it doesn't fail.
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" value="0" />';
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
+			echo 'Stripe Image Branding:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
+			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here.<br />'."\n";
+			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value may or may not be displayed by Stripe. It\'s best to configure it here.</small>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-statement-description">'."\n";
+			echo 'Stripe Statement Description:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" maxlength="15" name="ws_plugin__s2member_pro_stripe_api_statement_description" id="ws-plugin--s2member-pro-stripe-api-statement-description" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']).'" placeholder="MYCOMPANY-INC" /><br />'."\n";
+			echo 'An arbitrary string to be displayed alongside your company name. This appears on your customer\'s credit card statement. 15 characters max. The statement description may NOT include these special characters: <code>'.esc_html('<>"\'').'</code><br />'."\n";
+			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value that you configure in your Stripe Dashboard is used instead.</small>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
+			echo 'Stripe Should Verify Zipcodes?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<select name="ws_plugin__s2member_pro_stripe_api_validate_zipcode" id="ws-plugin--s2member-pro-stripe-api-validate-zipcode">'."\n";
+			echo '<option value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>No, do not validate a customer\'s billing zipcode (default Stripe behavior)</option>'."\n";
+			echo '<option value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_validate_zipcode']) ? ' selected="selected"' : '').'>Yes, validate the customer\'s zipcode to be sure it matches the card\'s billing address</option>'."\n";
+			echo '</select><br />'."\n";
+			echo '<small><strong>Note:</strong> You can override this global default in a specific Pro-Form with the <code>validate_zipcode="0|1"</code> attribute. See: <strong>s2Member → Stripe Pro-Forms → Shortcode Attributes (Explained)</strong> for details.</small>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th style="padding-top:0;">'."\n";
+			echo '<label for="ws-plugin--s2member-pro-stripe-sandbox">'."\n";
+			echo 'Sandbox/Test Mode?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_stripe_sandbox" id="ws-plugin--s2member-pro-stripe-sandbox-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_sandbox']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-stripe-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
+			echo '<em>Only enable this if you\'ve provided test credentials above. This puts s2Member\'s Stripe integration into Sandbox/Test mode. See: <a href="http://www.s2member.com/r/stripe-test-accounts/" target="_blank" rel="external">Stripe Test Accounts</a></em>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
+			{
+				echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+				echo '<table class="form-table">'."\n";
+				echo '<tbody>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<th>'."\n";
+				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
+				echo 'Enable Logging Routines?<br />'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '</label>'."\n";
+				echo '</th>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['gateway_debug_logs']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, Webhook/IPN &amp; Return Page logging.</label><br />'."\n";
+				echo '<em>This enables API, Webhook/IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS['WS_PLUGIN__']['s2member']['c']['logs_dir'])).'</code></em><br />'."\n";
+				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url('/admin.php?page=ws-plugin--s2member-logs')).'">Log Viewer</a></em>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<div class="info" style="margin-bottom:0;">'."\n";
+				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url('/admin.php?page=ws-plugin--s2member-logs')).'">Log Files (Debug)</a>.</span></p>'."\n";
+				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
+				echo '</div>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+				echo '</tbody>'."\n";
+				echo '</table>'."\n";
+			}
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+
+			echo '<div class="ws-menu-page-group" title="Stripe Webhook/IPN Integration">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
+			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
+			echo '<h3>Stripe Webhook/IPN Integration (required)</h3>'."\n";
+			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings → Webhooks</strong></p>'."\n";
+			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(home_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
+			echo '<div class="info" style="margin-bottom:0;">'."\n";
+			echo '<p>If you are currently in Test/Sandbox mode (i.e., you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
+			echo '</div>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_stripe_ops ();
