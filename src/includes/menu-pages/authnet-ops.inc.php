@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_authnet_ops
 	{
-		public function __construct()
+		static public function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -64,162 +64,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Authorize.Net Account Details">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-authnet-account-details-section">'."\n";
-			echo '<h3>Authorize.Net Account Details (required)</h3>'."\n";
-			echo '<p><a href="http://s2member.com/r/authorize-net/" target="_blank" rel="external">Authorize.Net</a> is a leading provider of payment gateway services, managing the submission of billions of transactions to processing networks on behalf of merchant customers. Authorize.Net is a solution offered by the CyberSource Corporation, a wholly owned subsidiary of Visa (NYSE: V).</p>'."\n";
-			echo '<p>s2Member has been integrated with Authorize.Net for Direct Payments and also for ARB (Automated Recurring Billing). In order to take advantage of this integration, you will need to have an Authorize.Net Merchant Account. Once you have an account, all of the details below can be obtained from inside of your Authorize.Net account. If you need assistance, please check their <a href="http://s2member.com/r/authorize-net-developers/" target="_blank" rel="external">help section</a>.</p>'."\n";
-			echo '<p><em><strong>Authorize.Net Version (3.1):</strong> s2Member integrates with Transaction Version 3.1 for Authorize.Net. Please log into your Authorize.Net Merchant account and make sure your Transaction Version setting is configured as: <code>3.1</code>. You will find this inside your Authorize.Net Merchant account, under: <strong>Account → Settings → Transaction Version</strong>.</em></p>'."\n";
-			echo '<p><em><strong>Recurring Billing:</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generator for Authorize.Net, you will ALSO need <a href="http://s2member.com/r/authorize-net-arb/" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the s2Member Form Generator, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. See: <strong>s2Member → Authorize.Net Pro-Forms</strong>. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled page. When you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro-Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
-			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>SSL Compatibility:</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-api-login-id">'."\n";
-			echo 'Authorize.Net API Login ID:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_login_id" id="ws-plugin--s2member-pro-authnet-api-login-id" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"]).'" /><br />'."\n";
-			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-api-trans-key">'."\n";
-			echo 'Authorize.Net API Transaction Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_trans_key" id="ws-plugin--s2member-pro-authnet-api-trans-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"]).'" /><br />'."\n";
-			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-api-sign-key">'."\n";
-			echo 'Authorize.Net Signature Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			if(!in_array("sha512", hash_algos()))
-				echo ' <span class="ws-menu-page-error">The Authorize.Net Signature Key requires the SHA512 hashing algorithm, but is not enabled on your server. Please contact your hosting provider to enable it.</span>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_sign_key" id="ws-plugin--s2member-pro-authnet-api-sign-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_sign_key"]).'" /><br />'."\n";
-			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account → Settings → API Credentials & Keys</strong>.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-api-salt-key">'."\n";
-			echo 'Authorize.Net Secret MD5 Hash (Deprecated):'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_salt_key" id="ws-plugin--s2member-pro-authnet-api-salt-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"]).'" disabled="disabled" /><br />'."\n";
-			echo 'See: <a href="https://support.authorize.net/s/article/MD5-Hash-End-of-Life-Signature-Key-Replacement">MD5 Hash End of Life & Signature Key Replacement</a>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th style="padding-top:0;">'."\n";
-			echo '<label for="ws-plugin--s2member-pro-authnet-sandbox">'."\n";
-			echo 'Developer/Sandbox Testing?'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="radio" name="ws_plugin__s2member_pro_authnet_sandbox" id="ws-plugin--s2member-pro-authnet-sandbox-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-authnet-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_authnet_sandbox" id="ws-plugin--s2member-pro-authnet-sandbox-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-authnet-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
-			echo '<em>Only enable this if you\'ve provided Developer credentials above.<br />This puts s2Member\'s Authorize.Net integration into Sandbox/Test mode.<br />See: <a href="http://s2member.com/r/authorize-net-test-accounts/" target="_blank" rel="external">Authorize.Net Test Accounts</a></em>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-
-			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
-			{
-				echo '<tr>'."\n";
-
-				echo '<th>'."\n";
-				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
-				echo 'Enable Logging Routines?<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
-				echo '</label>'."\n";
-				echo '</th>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, IPN &amp; Return Page logging.</label><br />'."\n";
-				echo '<em>This enables API, IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"])).'</code></em><br />'."\n";
-				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Viewer</a></em>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<div class="info" style="margin-bottom:0;">'."\n";
-				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Files (Debug)</a>.</span></p>'."\n";
-				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
-				echo '</div>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-			}
-
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
-
-			echo '<div class="ws-menu-page-group" title="Authorize.Net SP / IPN Integration">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-authnet-ipn-section">'."\n";
-			echo '<h3>Authorize.Net Silent Post Integration (required)<br />aka: Authorize.Net IPN (Instant Payment Notifications)</h3>'."\n";
-			echo '<p>Log into your Authorize.Net Merchant account and navigate to this section:<br /><strong>Account → Settings → Silent Post URL</strong></p>'."\n";
-			echo '<p>Your Authorize.Net Silent Post URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_authnet_notify=1")).'</code></p>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
+			self::render_authnet_settings_panels();
 
 			echo '<div class="ws-menu-page-group" title="Signup Confirmation Email">'."\n";
 
@@ -1138,7 +983,167 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '</div>'."\n";
 		}
+
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_after_paypal_options');``
+		 */
+		static public function render_authnet_settings_panels() {
+			echo '<div class="ws-menu-page-group" title="Authorize.Net Account Details">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-authnet-account-details-section">'."\n";
+			echo '<h3>Authorize.Net Account Details (required)</h3>'."\n";
+			echo '<p><a href="http://s2member.com/r/authorize-net/" target="_blank" rel="external">Authorize.Net</a> is a leading provider of payment gateway services, managing the submission of billions of transactions to processing networks on behalf of merchant customers. Authorize.Net is a solution offered by the CyberSource Corporation, a wholly owned subsidiary of Visa (NYSE: V).</p>'."\n";
+			echo '<p>s2Member has been integrated with Authorize.Net for Direct Payments and also for ARB (Automated Recurring Billing). In order to take advantage of this integration, you will need to have an Authorize.Net Merchant Account. Once you have an account, all of the details below can be obtained from inside of your Authorize.Net account. If you need assistance, please check their <a href="http://s2member.com/r/authorize-net-developers/" target="_blank" rel="external">help section</a>.</p>'."\n";
+			echo '<p><em><strong>Authorize.Net Version (3.1):</strong> s2Member integrates with Transaction Version 3.1 for Authorize.Net. Please log into your Authorize.Net Merchant account and make sure your Transaction Version setting is configured as: <code>3.1</code>. You will find this inside your Authorize.Net Merchant account, under: <strong>Account → Settings → Transaction Version</strong>.</em></p>'."\n";
+			echo '<p><em><strong>Recurring Billing:</strong> If you plan to use any of the ( `Subscription` ) options in the s2Member Form Generator for Authorize.Net, you will ALSO need <a href="http://s2member.com/r/authorize-net-arb/" target="_blank" rel="external">ARB (Automated Recurring Billing)</a> enabled for your Authorize.Net account. Authorize.Net\'s Recurring Billing service is <strong>required</strong> for all types of ( `Subscriptions` ), whether you intend for them to be recurring or not. However, it is NOT required for ( `Buy Now` ) functionality. The drop-down menus in the s2Member Form Generator, have been marked ( `Subscription` ) and ( `Buy Now` ) just for this reason. See: <strong>s2Member → Authorize.Net Pro-Forms</strong>. This way you can see which options will require the use of Authorize.Net\'s Recurring Billing service. Authorize.Net will charge you a small monthly fee for their Automated Recurring Billing service.</em></p>'."\n";
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled site. Please check with your hosting provider to ask about obtaining an SSL certificate for your domain. Please note... when you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). &mdash; You can skip the SSL certificate during Development/Sandbox testing. SSL is not required until you officially go live. Once you\'re live, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page.</em></p>'."\n" : '<p><em><strong>Secure Server:</strong> In order to comply with Authorize.Net and PCI Compliance policies, as set forth by major credit card companies; you will need to host all of your Authorize.Net Pro-Forms on an SSL enabled page. When you create Authorize.Net Pro-Forms with s2Member; you\'ll be supplied with WordPress Shortcodes, which you\'ll insert into Posts/Pages of your choosing. These special Posts/Pages will need to be displayed in SSL mode, using links that start with (<code>https://</code>). You can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page that contains a Pro-Form Shortcode. This tells s2Member to force those special Posts/Pages to be viewed over SSL at all times; no matter what.</em></p>'."\n";
+			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? '<p><em><strong>SSL Compatibility:</strong> Most themes available at <a href="http://www.s2member.com/r/themeforest/" target="_blank" rel="external">ThemeForest™</a> include full support for SSL, as does WordPress itself. However, there are many themes/plugins that do NOT support SSL enabled Posts/Pages like they should. For this reason, you should be very careful when choosing a WordPress theme to use with s2Member Pro. Otherwise, your visitors could see the famous "Secure/Insecure" warnings in Internet Explorer browsers. With s2Member installed, you can add the Custom Field <code>s2member_force_ssl = yes</code> to any Post/Page. s2Member will buffer output on those special Posts/Pages, converting everything over to <code>https://</code> for you automatically, and forcing those specific Posts/Pages to be viewed over a secure SSL connection; so long as your server supports the https protocol.</em></p>'."\n" : '';
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-login-id">'."\n";
+			echo 'Authorize.Net API Login ID:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_login_id" id="ws-plugin--s2member-pro-authnet-api-login-id" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_login_id"]).'" /><br />'."\n";
+			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-trans-key">'."\n";
+			echo 'Authorize.Net API Transaction Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_trans_key" id="ws-plugin--s2member-pro-authnet-api-trans-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_trans_key"]).'" /><br />'."\n";
+			echo 'You\'ll find this in your Authorize.Net Merchant account, under: <strong>Account → Settings</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-sign-key">'."\n";
+			echo 'Authorize.Net Signature Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			if(!in_array("sha512", hash_algos()))
+				echo ' <span class="ws-menu-page-error">The Authorize.Net Signature Key requires the SHA512 hashing algorithm, but is not enabled on your server. Please contact your hosting provider to enable it.</span>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_sign_key" id="ws-plugin--s2member-pro-authnet-api-sign-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_sign_key"]).'" /><br />'."\n";
+			echo 'You\'ll set this in your Authorize.Net Merchant account, under: <strong>Account → Settings → API Credentials & Keys</strong>.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-api-salt-key">'."\n";
+			echo 'Authorize.Net Secret MD5 Hash (Deprecated):'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_authnet_api_salt_key" id="ws-plugin--s2member-pro-authnet-api-salt-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_api_salt_key"]).'" disabled="disabled" /><br />'."\n";
+			echo 'See: <a href="https://support.authorize.net/s/article/MD5-Hash-End-of-Life-Signature-Key-Replacement">MD5 Hash End of Life & Signature Key Replacement</a>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th style="padding-top:0;">'."\n";
+			echo '<label for="ws-plugin--s2member-pro-authnet-sandbox">'."\n";
+			echo 'Developer/Sandbox Testing?'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="radio" name="ws_plugin__s2member_pro_authnet_sandbox" id="ws-plugin--s2member-pro-authnet-sandbox-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-authnet-sandbox-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_pro_authnet_sandbox" id="ws-plugin--s2member-pro-authnet-sandbox-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_authnet_sandbox"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-pro-authnet-sandbox-1">Yes, enable support for Sandbox testing.</label><br />'."\n";
+			echo '<em>Only enable this if you\'ve provided Developer credentials above.<br />This puts s2Member\'s Authorize.Net integration into Sandbox/Test mode.<br />See: <a href="http://s2member.com/r/authorize-net-test-accounts/" target="_blank" rel="external">Authorize.Net Test Accounts</a></em>'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+
+			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
+			{
+				echo '<tr>'."\n";
+
+				echo '<th>'."\n";
+				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
+				echo 'Enable Logging Routines?<br />'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '</label>'."\n";
+				echo '</th>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, IPN &amp; Return Page logging.</label><br />'."\n";
+				echo '<em>This enables API, IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"])).'</code></em><br />'."\n";
+				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Viewer</a></em>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<div class="info" style="margin-bottom:0;">'."\n";
+				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Files (Debug)</a>.</span></p>'."\n";
+				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
+				echo '</div>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+			}
+
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+
+			echo '<div class="ws-menu-page-group" title="Authorize.Net SP / IPN Integration">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-authnet-ipn-section">'."\n";
+			echo '<h3>Authorize.Net Silent Post Integration (required)<br />aka: Authorize.Net IPN (Instant Payment Notifications)</h3>'."\n";
+			echo '<p>Log into your Authorize.Net Merchant account and navigate to this section:<br /><strong>Account → Settings → Silent Post URL</strong></p>'."\n";
+			echo '<p>Your Authorize.Net Silent Post URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_authnet_notify=1")).'</code></p>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_authnet_ops ();
