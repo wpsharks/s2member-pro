@@ -270,7 +270,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		{
 			c_ws_plugin__s2member_menu_pages::update_all_options(FALSE, FALSE, TRUE, TRUE, FALSE, TRUE);
 
-			include_once dirname(dirname(__FILE__))."/menu-pages/other-gateways.inc.php";
+			include_once dirname(__FILE__, 2) . '/menu-pages/other-gateways.inc.php';
+			c_ws_plugin__s2member_pro_menu_page_other_gateways::render();
 		}
 
 		/**

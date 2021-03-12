@@ -100,3 +100,6 @@ add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_p
 
 add_filter('update_feedback', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches');
 add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro_menu_pages::before_mms_ops_page_hook');
+
+require_once dirname(__FILE__) . '/menu-pages/other-gateways.inc.php';
+add_action('s2x_during_payment_gateways_options_page_before_left_sections', 'c_ws_plugin__s2member_pro_menu_page_other_gateways::render_settings_panel');

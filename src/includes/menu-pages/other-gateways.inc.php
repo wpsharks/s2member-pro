@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_other_gateways
 	{
-		public function __construct()
+		static public function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -64,7 +64,30 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Other Payment Gateways" default-state="open">'."\n";
+			c_ws_plugin__s2member_pro_menu_page_other_gateways::render_settings_panel(true);
+
+			echo '<p class="submit"><input type="submit" value="Save Changes, (then refresh)" /></p>'."\n";
+
+			echo '</form>'."\n";
+
+			echo '</td>'."\n";
+
+			echo '<td class="ws-menu-page-table-r">'."\n";
+			c_ws_plugin__s2member_menu_pages_rs::display();
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '</div>'."\n";
+		}
+
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_before_left_sections');``
+		 */
+		static public function render_settings_panel($default_state_open = false) {
+			echo '<div class="ws-menu-page-group" title="Other Payment Gateways"' . ($default_state_open ? ' default-state="open"' : '') . '>'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-other-gateways-section">'."\n";
 			echo '<h3>Other Payment Gateways (enable/disable)</h3>'."\n";
@@ -91,24 +114,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
-
-			echo '<p class="submit"><input type="submit" value="Save Changes, (then refresh)" /></p>'."\n";
-
-			echo '</form>'."\n";
-
-			echo '</td>'."\n";
-
-			echo '<td class="ws-menu-page-table-r">'."\n";
-			c_ws_plugin__s2member_menu_pages_rs::display();
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '</div>'."\n";
 		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_other_gateways ();
