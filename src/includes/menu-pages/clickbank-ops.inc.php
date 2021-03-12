@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_clickbank_ops
 	{
-		public function __construct()
+		static public function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -64,193 +64,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
-			echo '<div class="ws-menu-page-group" title="ClickBank Account Details">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-account-details-section">'."\n";
-			echo '<h3>ClickBank Account Details (required)</h3>'."\n";
-			echo '<p><a href="http://s2member.com/r/clickbank/" target="_blank" rel="external">ClickBank</a> is a secure online retail outlet for more than 70,000 digital product vendors and 110,000 active affiliate marketers. ClickBank makes a sale somewhere in the world every three seconds, safely processing more than 27,000 digital transactions a day. They serve more than 200 countries, and are consistently ranked as one of the most highly-trafficked sites on the web.</p>'."\n";
-			echo '<p>s2Member has been integrated with ClickBank for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a ClickBank Merchant Account. Once you have an account, all of the details below can be generated from inside of your ClickBank Merchant account. If you need assistance, please check their <a href="http://s2member.com/r/clickbank-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-clickbank-username">'."\n";
-			echo 'ClickBank Account Username:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_username" id="ws-plugin--s2member-pro-clickbank-username" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"]).'" /><br />'."\n";
-			echo 'This is provided by ClickBank. Check your ClickBank account for this information.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-clickbank-clerk-key">'."\n";
-			echo 'ClickBank Clerk/API Key (Read Access):'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_clerk_key" id="ws-plugin--s2member-pro-clickbank-clerk-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_clerk_key"]).'" /><br />'."\n";
-			echo 'This can be generated at ClickBank. s2Member needs a Clerk Key with "Read Access".'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-clickbank-developer-key">'."\n";
-			echo 'ClickBank Developer/API Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_developer_key" id="ws-plugin--s2member-pro-clickbank-developer-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_developer_key"]).'" /><br />'."\n";
-			echo 'This can be generated at ClickBank. Check your ClickBank account for this Key.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-
-			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
-			{
-				echo '<tr>'."\n";
-
-				echo '<th>'."\n";
-				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
-				echo 'Enable Logging Routines?<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
-				echo '</label>'."\n";
-				echo '</th>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, IPN &amp; Return Page logging.</label><br />'."\n";
-				echo '<em>This enables API, IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"])).'</code></em><br />'."\n";
-				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Viewer</a></em>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-				echo '<tr>'."\n";
-
-				echo '<td>'."\n";
-				echo '<div class="info" style="margin-bottom:0;">'."\n";
-				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Files (Debug)</a>.</span></p>'."\n";
-				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
-				echo '</div>'."\n";
-				echo '</td>'."\n";
-
-				echo '</tr>'."\n";
-			}
-
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
-
-			echo '<div class="ws-menu-page-group" title="ClickBank IPN v2.1 or v6 Integration">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">'."\n";
-			echo '<h3>ClickBank IPN "Instant Payment Notifications" (required)</h3>'."\n";
-			echo '<p><strong>1.</strong> Log into your ClickBank account and navigate to this section:<br /><strong>Account Settings → My Site → Advanced Tools</strong></p>'."\n";
-			echo '<p><strong>2.</strong> Edit your IPN settings &amp; generate a Secret Key.</strong></p>'."\n";
-			echo '<p><strong>3.</strong> You\'ll need your IPN v2.1 URL, which is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=2.1")).'</code> (or <code>=1</code>; same thing)</p>'."\n";
-			echo '<p>Or, you can choose to use v6. Your v6 IPN URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=6")).'</code></p>'."\n";
-
-			echo '<p class="warning">Please do NOT integrate both IPN URLs. Choose one version or the other.</strong></p>'."\n";
-
-			echo '<p><strong>4.</strong> Now provide s2Member with your Secret Key in the field below.</strong></p>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-clickbank-secret-key">'."\n";
-			echo 'ClickBank IPN/Secret Key:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_secret_key" id="ws-plugin--s2member-pro-clickbank-secret-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_secret_key"]).'" /><br />'."\n";
-			echo 'The Secret Key for IPN service that is configured in your ClickBank account.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
-
-			echo '<div class="ws-menu-page-group" title="ClickBank Thank-You Page">'."\n";
-
-			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">'."\n";
-			echo '<h3>ClickBank Thank-You Page Integration (required)</h3>'."\n";
-			echo '<p>Whenever you create <strong>Products</strong> at ClickBank, you\'ll be asked to supply a Thank-You Page. This is where a Customer lands after they complete checkout. s2Member handles this dynamically, so you can use the same Thank-You Page for all of your ClickBank Products. As long as you follow the instructions provided under: <em>s2Member → ClickBank Buttons</em>, s2Member will be able to handle Thank-You Page and IPN (Instant Payment Notifications) for you automatically. The integration from ClickBank → s2Member is seamless.</p>'."\n";
-			echo '<p>You\'ll need the URL for your <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">Thank-You Page</a>, which is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_return=1")).'</code></p>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			echo '<h3>Thank-You Page Template (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-clickbank-return-page-template\').toggle(); return false;" class="ws-dotted-link">optional customizations</a>)</h3>'."\n";
-			echo '<div id="ws-plugin--s2member-pro-clickbank-return-page-template" style="display:none;">'."\n";
-			echo '<p>With s2Member Pro installed, you have the ability to customize your <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">Thank-You Page Template</a>. Each of your Customers are returned back to your site immediately after they complete checkout at ClickBank. Your Thank-You Page displays a message and instructions for the Customer. s2Member may change the message and instructions dynamically, based on what the Customer is actually doing <em>(i.e., based on the type of transaction that is taking place)</em>. So, although we do NOT recommend that you attempt to change the message and instructions presented dynamically by s2Member, you CAN certainly control the Header, and/or the overall appearance of s2Member\'s Thank-You Page Template.</p>'."\n";
-			echo '<p>The quickest/easiest way, is to simply add some HTML code in the box below. For instance, you might include an &lt;img&gt; tag with your logo. The box below, allows you to customize the Header section <em>(i.e., the top)</em> of s2Member\'s default Thank-You Page Template. Everything else, including the textual response and other important details that each Customer needs to know about, are already handled dynamically by s2Member <em>(based on the type of transaction that is taking place)</em>. All you need to do is customize the Header with your logo and anything else you feel is important. Although this Header customization is completely optional, we recommend an <a href="http://s2member.com/r/image-tag-reference/" target="_blank" rel="external">&lt;img&gt; tag</a>, with a logo that is around 300px wide. After you "Save All Changes" below, you may <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">click this link to see what your Header looks like</a>.</p>'."\n";
-
-			echo '<table class="form-table">'."\n";
-			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-clickbank-return-template-header">'."\n";
-			echo 'Thank-You Page Template Header:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_pro_clickbank_return_template_header" id="ws-plugin--s2member-pro-clickbank-return-template-header" rows="5" wrap="off" spellcheck="false">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_return_template_header"]).'</textarea><br />'."\n";
-			echo 'Any valid XHTML / JavaScript'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' (or even PHP)').' code will work just fine here.'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
-
-			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
-				echo '<p>It is also possible to build your own Thank-You Page Template, if you prefer. If you feel the need to create your own Thank-You Page Template, please make a copy of s2Member\'s default template: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir"]."/src/includes/templates/returns/default-template.php")).'</code>. Place your copy of this default template, inside your active WordPress theme directory, and name the file: <code>/clickbank-return.php</code>. s2Member will automatically find your Thank-You Page Template in this location, and s2Member will use your template, instead of the default. Further details are provided inside s2Member\'s default template file. Once your custom template file is in place, you may <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">click this link to see what it looks like</a>.</p>'."\n";
-
-			echo '<p>It is also possible to bypass s2Member\'s Thank-You Page altogether, if you prefer. You can take s2Member\'s Thank-You Page URL <em>(shown above)</em>, and add <code>&s2member_pro_clickbank_return_success=http://...</code> where the value can be set to a custom Thank-You Page URL that you prefer. In other words, if you use the <code>&s2member_pro_clickbank_return_success=http://...</code> parameter in your Thank-You Page URL, the initial redirection back to s2Member\'s default handler MUST still occur. However, instead of s2Member displaying its Thank-You Page Template to the Customer, s2Member will silently redirect the Customer to the URL that you specified in the <code>&s2member_pro_clickbank_return_success=http://...</code> parameter, allowing you to take complete control over what happens next. Click for an [ <a href="#" onclick="alert(\'Basic Example (please remember to URL encode the value):\\n'.esc_attr(home_url("/?s2member_pro_clickbank_return=1&s2member_pro_clickbank_return_success=".home_url("/thank-you/"))).'\\n\\nProper Example (with the URL having been encoded properly):\\n'.esc_attr(home_url("/?s2member_pro_clickbank_return=1&s2member_pro_clickbank_return_success=".rawurlencode(home_url("/thank-you/")))).'\\n\\n* For help on URL encoding, please see:\\nhttp://www.w3schools.com/tags/ref_urlencode.asp\'); return false;">example</a> ].</p>'."\n";
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
-
-			echo '</div>'."\n";
+			self::render_clickbank_settings_panels();
 
 			echo '<div class="ws-menu-page-group" title="Signup Confirmation Email">'."\n";
 
@@ -1063,6 +877,199 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '</tr>'."\n";
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
+
+			echo '</div>'."\n";
+		}
+
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_after_paypal_options');``
+		 */
+		static public function render_clickbank_settings_panels() {
+			echo '<div class="ws-menu-page-group" title="ClickBank Account Details">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-account-details-section">'."\n";
+			echo '<h3>ClickBank Account Details (required)</h3>'."\n";
+			echo '<p><a href="http://s2member.com/r/clickbank/" target="_blank" rel="external">ClickBank</a> is a secure online retail outlet for more than 70,000 digital product vendors and 110,000 active affiliate marketers. ClickBank makes a sale somewhere in the world every three seconds, safely processing more than 27,000 digital transactions a day. They serve more than 200 countries, and are consistently ranked as one of the most highly-trafficked sites on the web.</p>'."\n";
+			echo '<p>s2Member has been integrated with ClickBank for Direct Payments and also for Recurring Billing. In order to take advantage of this integration, you will need to have a ClickBank Merchant Account. Once you have an account, all of the details below can be generated from inside of your ClickBank Merchant account. If you need assistance, please check their <a href="http://s2member.com/r/clickbank-help/" target="_blank" rel="external">help section</a>.</p>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-clickbank-username">'."\n";
+			echo 'ClickBank Account Username:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_username" id="ws-plugin--s2member-pro-clickbank-username" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_username"]).'" /><br />'."\n";
+			echo 'This is provided by ClickBank. Check your ClickBank account for this information.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-clickbank-clerk-key">'."\n";
+			echo 'ClickBank Clerk/API Key (Read Access):'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_clerk_key" id="ws-plugin--s2member-pro-clickbank-clerk-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_clerk_key"]).'" /><br />'."\n";
+			echo 'This can be generated at ClickBank. s2Member needs a Clerk Key with "Read Access".'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-clickbank-developer-key">'."\n";
+			echo 'ClickBank Developer/API Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_developer_key" id="ws-plugin--s2member-pro-clickbank-developer-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_developer_key"]).'" /><br />'."\n";
+			echo 'This can be generated at ClickBank. Check your ClickBank account for this Key.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+
+			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
+			{
+				echo '<tr>'."\n";
+
+				echo '<th>'."\n";
+				echo '<label for="ws-plugin--s2member-gateway-debug-logs">'."\n";
+				echo 'Enable Logging Routines?<br />'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '</label>'."\n";
+				echo '</th>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-0" value="0"'.((!$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_gateway_debug_logs" id="ws-plugin--s2member-gateway-debug-logs-1" value="1"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"]) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-gateway-debug-logs-1">Yes, enable debugging, with API, IPN &amp; Return Page logging.</label><br />'."\n";
+				echo '<em>This enables API, IPN and Return Page logging. The log files are stored here: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["logs_dir"])).'</code></em><br />'."\n";
+				echo '<em class="ws-menu-page-hilite">If you have any trouble, please review your s2Member log files for problems. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Viewer</a></em>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<div class="info" style="margin-bottom:0;">'."\n";
+				echo '<p style="margin-top:0;"><span>We highly recommend that you enable logging during your initial testing phase. Logs produce lots of useful details that can help in debugging. Logs can help you find issues in your configuration and/or problems during payment processing. See: <a href="'.esc_attr(admin_url("/admin.php?page=ws-plugin--s2member-logs")).'">Log Files (Debug)</a>.</span></p>'."\n";
+				echo '<p style="margin-bottom:0;"><span class="ws-menu-page-error">However, it is very important to disable logging once you go live. Log files may contain personally identifiable information, credit card numbers, secret API credentials, passwords and/or other sensitive information. We strongly suggest that logging be disabled on a live site (for security reasons).</span></p>'."\n";
+				echo '</div>'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+			}
+
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+
+			echo '<div class="ws-menu-page-group" title="ClickBank IPN v2.1 or v6 Integration">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">'."\n";
+			echo '<h3>ClickBank IPN "Instant Payment Notifications" (required)</h3>'."\n";
+			echo '<p><strong>1.</strong> Log into your ClickBank account and navigate to this section:<br /><strong>Account Settings → My Site → Advanced Tools</strong></p>'."\n";
+			echo '<p><strong>2.</strong> Edit your IPN settings &amp; generate a Secret Key.</strong></p>'."\n";
+			echo '<p><strong>3.</strong> You\'ll need your IPN v2.1 URL, which is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=2.1")).'</code> (or <code>=1</code>; same thing)</p>'."\n";
+			echo '<p>Or, you can choose to use v6. Your v6 IPN URL is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_notify=6")).'</code></p>'."\n";
+
+			echo '<p class="warning">Please do NOT integrate both IPN URLs. Choose one version or the other.</strong></p>'."\n";
+
+			echo '<p><strong>4.</strong> Now provide s2Member with your Secret Key in the field below.</strong></p>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-clickbank-secret-key">'."\n";
+			echo 'ClickBank IPN/Secret Key:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<input type="password" autocomplete="off" name="ws_plugin__s2member_pro_clickbank_secret_key" id="ws-plugin--s2member-pro-clickbank-secret-key" value="'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_secret_key"]).'" /><br />'."\n";
+			echo 'The Secret Key for IPN service that is configured in your ClickBank account.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
+
+			echo '<div class="ws-menu-page-group" title="ClickBank Thank-You Page">'."\n";
+
+			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-clickbank-ipn-section">'."\n";
+			echo '<h3>ClickBank Thank-You Page Integration (required)</h3>'."\n";
+			echo '<p>Whenever you create <strong>Products</strong> at ClickBank, you\'ll be asked to supply a Thank-You Page. This is where a Customer lands after they complete checkout. s2Member handles this dynamically, so you can use the same Thank-You Page for all of your ClickBank Products. As long as you follow the instructions provided under: <em>s2Member → ClickBank Buttons</em>, s2Member will be able to handle Thank-You Page and IPN (Instant Payment Notifications) for you automatically. The integration from ClickBank → s2Member is seamless.</p>'."\n";
+			echo '<p>You\'ll need the URL for your <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">Thank-You Page</a>, which is:<br /><code>'.esc_html(home_url("/?s2member_pro_clickbank_return=1")).'</code></p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			echo '<h3>Thank-You Page Template (<a href="#" onclick="jQuery(\'div#ws-plugin--s2member-pro-clickbank-return-page-template\').toggle(); return false;" class="ws-dotted-link">optional customizations</a>)</h3>'."\n";
+			echo '<div id="ws-plugin--s2member-pro-clickbank-return-page-template" style="display:none;">'."\n";
+			echo '<p>With s2Member Pro installed, you have the ability to customize your <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">Thank-You Page Template</a>. Each of your Customers are returned back to your site immediately after they complete checkout at ClickBank. Your Thank-You Page displays a message and instructions for the Customer. s2Member may change the message and instructions dynamically, based on what the Customer is actually doing <em>(i.e., based on the type of transaction that is taking place)</em>. So, although we do NOT recommend that you attempt to change the message and instructions presented dynamically by s2Member, you CAN certainly control the Header, and/or the overall appearance of s2Member\'s Thank-You Page Template.</p>'."\n";
+			echo '<p>The quickest/easiest way, is to simply add some HTML code in the box below. For instance, you might include an &lt;img&gt; tag with your logo. The box below, allows you to customize the Header section <em>(i.e., the top)</em> of s2Member\'s default Thank-You Page Template. Everything else, including the textual response and other important details that each Customer needs to know about, are already handled dynamically by s2Member <em>(based on the type of transaction that is taking place)</em>. All you need to do is customize the Header with your logo and anything else you feel is important. Although this Header customization is completely optional, we recommend an <a href="http://s2member.com/r/image-tag-reference/" target="_blank" rel="external">&lt;img&gt; tag</a>, with a logo that is around 300px wide. After you "Save All Changes" below, you may <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">click this link to see what your Header looks like</a>.</p>'."\n";
+
+			echo '<table class="form-table">'."\n";
+			echo '<tbody>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<th>'."\n";
+			echo '<label for="ws-plugin--s2member-pro-clickbank-return-template-header">'."\n";
+			echo 'Thank-You Page Template Header:'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+
+			echo '</tr>'."\n";
+			echo '<tr>'."\n";
+
+			echo '<td>'."\n";
+			echo '<textarea name="ws_plugin__s2member_pro_clickbank_return_template_header" id="ws-plugin--s2member-pro-clickbank-return-template-header" rows="5" wrap="off" spellcheck="false">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_clickbank_return_template_header"]).'</textarea><br />'."\n";
+			echo 'Any valid XHTML / JavaScript'.((is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site()) ? '' : ' (or even PHP)').' code will work just fine here.'."\n";
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+			if(!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site())
+				echo '<p>It is also possible to build your own Thank-You Page Template, if you prefer. If you feel the need to create your own Thank-You Page Template, please make a copy of s2Member\'s default template: <code>'.esc_html(c_ws_plugin__s2member_utils_dirs::doc_root_path($GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["dir"]."/src/includes/templates/returns/default-template.php")).'</code>. Place your copy of this default template, inside your active WordPress theme directory, and name the file: <code>/clickbank-return.php</code>. s2Member will automatically find your Thank-You Page Template in this location, and s2Member will use your template, instead of the default. Further details are provided inside s2Member\'s default template file. Once your custom template file is in place, you may <a href="'.esc_attr(home_url("/?s2member_pro_clickbank_return&s2member_paypal_return=1&s2member_paypal_proxy=clickbank&s2member_paypal_proxy_use=x-preview")).'" target="_blank" rel="external">click this link to see what it looks like</a>.</p>'."\n";
+
+			echo '<p>It is also possible to bypass s2Member\'s Thank-You Page altogether, if you prefer. You can take s2Member\'s Thank-You Page URL <em>(shown above)</em>, and add <code>&s2member_pro_clickbank_return_success=http://...</code> where the value can be set to a custom Thank-You Page URL that you prefer. In other words, if you use the <code>&s2member_pro_clickbank_return_success=http://...</code> parameter in your Thank-You Page URL, the initial redirection back to s2Member\'s default handler MUST still occur. However, instead of s2Member displaying its Thank-You Page Template to the Customer, s2Member will silently redirect the Customer to the URL that you specified in the <code>&s2member_pro_clickbank_return_success=http://...</code> parameter, allowing you to take complete control over what happens next. Click for an [ <a href="#" onclick="alert(\'Basic Example (please remember to URL encode the value):\\n'.esc_attr(home_url("/?s2member_pro_clickbank_return=1&s2member_pro_clickbank_return_success=".home_url("/thank-you/"))).'\\n\\nProper Example (with the URL having been encoded properly):\\n'.esc_attr(home_url("/?s2member_pro_clickbank_return=1&s2member_pro_clickbank_return_success=".rawurlencode(home_url("/thank-you/")))).'\\n\\n* For help on URL encoding, please see:\\nhttp://www.w3schools.com/tags/ref_urlencode.asp\'); return false;">example</a> ].</p>'."\n";
+			echo '</div>'."\n";
+
+			echo '</div>'."\n";
 
 			echo '</div>'."\n";
 		}

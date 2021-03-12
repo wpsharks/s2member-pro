@@ -119,7 +119,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_menu_pages"))
 									c_ws_plugin__s2member_admin_notices::display_admin_notice ('Unprotected. The .htaccess protection file (<code>' . esc_html (c_ws_plugin__s2member_utils_dirs::doc_root_path ($htaccess)) . '</code>) does not contain <code>deny from all</code>. Inside your .htaccess file, add this:<br /><pre>' . esc_html ($htaccess_contents) . '</pre>', true);
 							}
 
-						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/menu-pages/clickbank-ops.inc.php";
+						include_once dirname(__FILE__, 4) . '/menu-pages/clickbank-ops.inc.php';
+						c_ws_plugin__s2member_pro_menu_page_clickbank_ops::render();
 
 						return /* Return for uniformity. */;
 					}
