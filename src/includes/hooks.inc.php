@@ -103,3 +103,7 @@ add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro
 
 require_once dirname(__FILE__) . '/menu-pages/other-gateways.inc.php';
 add_action('s2x_during_payment_gateways_options_page_before_left_sections', 'c_ws_plugin__s2member_pro_menu_page_other_gateways::render_settings_panel');
+require_once dirname(__FILE__) . '/menu-pages/paypal-ops-tax-rates.inc.php';
+add_action('s2x_during_payment_gateways_options_page_taxes', 'c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates::render');
+require_once dirname(__FILE__) . '/menu-pages/gen-ops-captcha-ops.inc.php';
+add_action('s2x_during_payment_gateways_options_page_captcha', 'c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops::render');

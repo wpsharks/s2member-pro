@@ -53,4 +53,4 @@ add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_durin
 add_action('ws_plugin__s2member_during_scripting_page_during_left_sections_during_list_of_api_constants_farm', 'c_ws_plugin__s2member_pro_clickbank_menu_pages::clickbank_scripting_page_api_constants');
 
 require_once dirname(__FILE__, 4) . '/menu-pages/clickbank-ops.inc.php';
-add_action('s2x_during_payment_gateways_options_page_after_paypal_options', 'c_ws_plugin__s2member_pro_menu_page_clickbank_ops::render_clickbank_settings_panels');
+add_action('s2x_during_payment_gateways_options_page_gateways_settings', 'c_ws_plugin__s2member_pro_menu_page_clickbank_ops::render_clickbank_settings_panels');

@@ -44,7 +44,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates
 	{
-		public function __construct()
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_taxes');``
+		 */
+		static public function render()
 		{
 			echo '<div class="ws-menu-page-group" title="Tax Rate Calculations (Pro-Form)">'."\n";
 
@@ -103,5 +106,3 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates"))
 		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates ();

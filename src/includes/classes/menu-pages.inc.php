@@ -157,7 +157,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		 */
 		public static function gen_ops_captcha_ops($vars = array())
 		{
-			include_once dirname(dirname(__FILE__))."/menu-pages/gen-ops-captcha-ops.inc.php";
+			include_once dirname(__FILE__, 2) . '/menu-pages/gen-ops-captcha-ops.inc.php';
+			c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops::render();
 		}
 
 		/**

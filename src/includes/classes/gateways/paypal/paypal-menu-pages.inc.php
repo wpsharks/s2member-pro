@@ -200,7 +200,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_menu_pages"))
 		 */
 		public static function paypal_ops_page_tax_rates($vars = array())
 		{
-			include_once dirname(dirname(dirname(dirname(__FILE__))))."/menu-pages/paypal-ops-tax-rates.inc.php";
+			include_once dirname(__FILE__, 4) . '/menu-pages/paypal-ops-tax-rates.inc.php';
+			c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates::render();
 		}
 
 		/**

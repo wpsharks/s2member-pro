@@ -971,7 +971,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 		}
 
 		/**
-		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_after_paypal_options');``
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_gateways_settings');``
 		 */
 		static public function render_stripe_settings_panels() {
 			echo '<div class="ws-menu-page-group" title="Stripe Account Details">'."\n";
