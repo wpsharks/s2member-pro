@@ -192,7 +192,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		 */
 		public static function scripting_page_remote_ops_api($display_api_hooks = FALSE)
 		{
-			include_once dirname(dirname(__FILE__))."/menu-pages/scripting-api-remote-ops.inc.php";
+			include_once dirname(__FILE__, 2) . '/menu-pages/scripting-api-remote-ops.inc.php';
+			c_ws_plugin__s2member_pro_menu_page_remote_ops_api::render();
 
 			return $display_api_hooks; // Now display API Hooks.
 		}
