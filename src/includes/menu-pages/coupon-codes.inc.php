@@ -44,7 +44,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 	 */
 	class c_ws_plugin__s2member_pro_menu_page_coupon_codes
 	{
-		public function __construct()
+		/**
+		 * @attaches-to ``add_action('s2x_during_payment_gateways_options_page_coupon_codes');``
+		 */
+		static public function render()
 		{
 			echo '<div class="wrap ws-menu-page">'."\n";
 
@@ -64,6 +67,26 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<form method="post" name="ws_plugin__s2member_pro_options_form" id="ws-plugin--s2member-pro-options-form" autocomplete="off">'."\n";
 			echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 
+			self::render_coupon_codes_panels();
+
+			echo '<p class="submit"><input type="submit" value="Save All Changes" /></p>'."\n";
+
+			echo '</form>'."\n";
+
+			echo '</td>'."\n";
+
+			echo '<td class="ws-menu-page-table-r">'."\n";
+			c_ws_plugin__s2member_menu_pages_rs::display();
+			echo '</td>'."\n";
+
+			echo '</tr>'."\n";
+			echo '</tbody>'."\n";
+			echo '</table>'."\n";
+
+			echo '</div>'."\n";
+		}
+
+		static public function render_coupon_codes_panels() {
 			echo '<div class="ws-menu-page-group" title="Pro-Form Coupon Code Configuration">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-coupon-codes-section">'."\n";
@@ -305,24 +328,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '</div>'."\n";
 
 			echo '</div>'."\n";
-
-			echo '<p class="submit"><input type="submit" value="Save All Changes" /></p>'."\n";
-
-			echo '</form>'."\n";
-
-			echo '</td>'."\n";
-
-			echo '<td class="ws-menu-page-table-r">'."\n";
-			c_ws_plugin__s2member_menu_pages_rs::display();
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
-			echo '</tbody>'."\n";
-			echo '</table>'."\n";
-
-			echo '</div>'."\n";
 		}
 	}
 }
-
-new c_ws_plugin__s2member_pro_menu_page_coupon_codes ();

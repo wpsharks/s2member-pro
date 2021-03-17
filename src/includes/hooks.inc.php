@@ -107,3 +107,5 @@ require_once dirname(__FILE__) . '/menu-pages/paypal-ops-tax-rates.inc.php';
 add_action('s2x_during_payment_gateways_options_page_taxes', 'c_ws_plugin__s2member_pro_menu_page_paypal_ops_tax_rates::render');
 require_once dirname(__FILE__) . '/menu-pages/gen-ops-captcha-ops.inc.php';
 add_action('s2x_during_payment_gateways_options_page_captcha', 'c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops::render');
+require_once dirname(__FILE__) . '/menu-pages/coupon-codes.inc.php';
+add_action('s2x_during_payment_gateways_options_page_coupon_codes', 'c_ws_plugin__s2member_pro_menu_page_coupon_codes::render_coupon_codes_panels');
