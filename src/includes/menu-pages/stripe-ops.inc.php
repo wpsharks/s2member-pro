@@ -119,30 +119,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
-			// Bitcoin not an option in Stripe anymore. https://stripe.com/blog/ending-bitcoin-support
 			// I'll just leave this setting hidden, so it has a value and whatever checks for it doesn't fail.
+			// Bitcoin not an option in Stripe anymore. https://stripe.com/blog/ending-bitcoin-support
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_stripe_api_accept_bitcoin" value="0" />';
+			// Image branding is not used in the current integration with Stripe.
+			echo '<input type="hidden" name="ws_plugin__s2member_pro_stripe_api_image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" />';
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<th>'."\n";
-			echo '<label for="ws-plugin--s2member-pro-stripe-api-image">'."\n";
-			echo 'Stripe Image Branding:'."\n";
-			echo '</label>'."\n";
-			echo '</th>'."\n";
-
-			echo '</tr>'."\n";
-			echo '<tr>'."\n";
-
-			echo '<td>'."\n";
-			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_stripe_api_image" id="ws-plugin--s2member-pro-stripe-api-image" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_image']).'" /><br />'."\n";
-			echo 'Minimum size of <code>128px</code> x <code>128px</code> (square). Stripe displays this image above credit card input fields; <code>https://...</code> recommended here.<br />'."\n";
-			echo '<small><strong>Note:</strong> If you leave this empty, an account-level default value may or may not be displayed by Stripe. It\'s best to configure it here.</small>'."\n";
-			echo '</td>'."\n";
-
-			echo '</tr>'."\n";
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
