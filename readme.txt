@@ -2,7 +2,7 @@
 
 Version: 210526
 Stable tag: 210526
-Tested up to: 5.7-RC3-50511
+Tested up to: 6.0-alpha-52937
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 7.4.6
