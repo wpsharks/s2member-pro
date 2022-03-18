@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 210526
-Stable tag: 210526
-Tested up to: 6.0-alpha-52937
+Version: 220318
+Stable tag: 220318
+Tested up to: 5.7-RC3-50511
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 7.4.6
@@ -101,6 +101,12 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v220318 =
+
+- (Framework) **Enhancement**: New `current_user_gateway_is` function for conditionals. Useful for sites using more than one gateway. E.g. `[s2If current_user_gateway_is(stripe)] ...`
+
+- (Pro) **UI Fix**: Removed "Image Branding" setting from s2's Stripe options, not used in current integration.
 
 = v210526 =
 
