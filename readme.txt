@@ -1,11 +1,11 @@
 === s2Member® Pro ===
 
-Version: 220318
-Stable tag: 220318
-Tested up to: 5.7-RC3-50511
+Version: 220421
+Stable tag: 220421
+Tested up to: 6.0-beta2-53236
 Requires at least: 4.2
 Requires PHP: 5.6.2
-Tested up to PHP: 7.4.6
+Tested up to PHP: 8.1
 License: GNU General Public License v2 or later.
 Contributors: WebSharks, JasWSInc, raamdev, clavaque, eduan
 Author: WP Sharks
@@ -101,6 +101,12 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v220421 =
+
+- (Framework & Pro) **Enhancement**: Improved PHP compatibility to 8.1.
+
+- (Framework) **UI Fix**: `More Updates` link fixed.
 
 = v220318 =
 
