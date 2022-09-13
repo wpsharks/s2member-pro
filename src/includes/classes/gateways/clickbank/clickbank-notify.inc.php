@@ -54,6 +54,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify'))
 		 */
 		public static function clickbank_notify()
 		{
+			if (!empty($_GET['s2member_pro_cb_notify'])) {
+				$_GET['s2member_pro_clickbank_notify']     = $_GET['s2member_pro_cb_notify'];
+				$_REQUEST['s2member_pro_clickbank_notify'] = $_GET['s2member_pro_cb_notify'];
+			}
+				
 			if(!empty($_GET['s2member_pro_clickbank_notify']))
 			{
 				if($_GET['s2member_pro_clickbank_notify'] === '6')

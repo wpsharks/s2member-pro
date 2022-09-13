@@ -56,6 +56,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_return"))
 				*/
 				public static function clickbank_return ()
 					{
+						if (!empty($_GET['s2member_pro_cb_return'])) {
+							$_GET['s2member_pro_clickbank_return']     = $_GET['s2member_pro_cb_return'];
+							$_REQUEST['s2member_pro_clickbank_return'] = $_GET['s2member_pro_cb_return'];
+						}
+							
+						if (!empty($_GET['s2member_pro_cb_return_success'])) {
+							$_GET['s2member_pro_clickbank_return_success']     = $_GET['s2member_pro_cb_return_success'];
+							$_REQUEST['s2member_pro_clickbank_return_success'] = $_GET['s2member_pro_cb_return_success'];
+						}
+							
 						if (!empty($_GET["s2member_pro_clickbank_return"]))
 							{
 								return c_ws_plugin__s2member_pro_clickbank_return_in::clickbank_return ();
