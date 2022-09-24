@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 220809
-Stable tag: 220809
-Tested up to: 6.1-alpha-53862
+Version: 220924
+Stable tag: 220924
+Tested up to: 6.1-beta1-54288
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -101,6 +101,22 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v220924 =
+
+- (Pro) **UI Enhancement**: In ClickBank Options admin page, added note about keeping IPN encryption disabled.
+
+- (Pro) **Enhancement**: Removed ClickBank's name from the notify, return, and success URLs, replaced with just `cb`. Kudos to Eduardo for telling me about this. See [thread 9910](https://f.wpsharks.com/t/9910)
+
+- (Pro) **Enhancement**: Added a PayPal payment request ID to help prevent random/rare PayPal duplicate charges. Kudos to Nathan for his help. See [thread 7999](https://f.wpsharks.com/t/7999/27)
+
+- (Framework) **UI Enhancement**: Admin page panels widened for larger displays.
+
+- (Framework) **UI Enhancement**: Simplified Getting Started and Getting Help admin pages.
+
+- (Framework) **UI Enhancement**: In PayPal Options admin page, updated paths and links to PayPal settings.
+
+- (Framework) **Bug Fix**: Removed the Security Badge's link to the old Flash powered page on s2Member's site.
 
 = v220809 =
 

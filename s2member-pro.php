@@ -3,7 +3,7 @@
 
 Plugin Name: s2Member Pro
 Description: Pro add-on for s2Member. Activates automatically when its version matches the s2Member Framework's.
-Version: 220809
+Version: 220924
 Plugin URI: https://s2member.com
 Author: WP Sharks
 Author URI: https://s2member.com
