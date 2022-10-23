@@ -140,12 +140,28 @@ else if(is_admin()) //  Admin compatibility errors.
 			echo '<div class="error fade"><p>In order to load the s2Member Pro Add-on, you need the <a href="http://s2member.com/release-archive/" target="_blank">s2Member Framework</a>, v'.WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION.'+. It\'s free.</p></div>';
 		});
 	}
-	else if(!version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '>=') && file_exists(dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'))
-	{
-		include_once dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'; // Include upgrader class. s2Member Pro autoload functionality will NOT be available in this scenario. Using ``include_once()``.
-		add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade').add_action('all_admin_notices', function(){
-			echo c_ws_plugin__s2member_pro_upgrader::wizard();
-		});
+}
+
+//221021 If we have Pro add-on older than latest release, show updater.
+if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION, '<') // Current Pro older than Framework.
+	&& file_exists(dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'))
+{
+	$product = @file_get_contents('https://s2member.com/?product_api[action]=latest_pro_version');
+	if (!empty($product)) {
+		$product = json_decode($product);
+		if (is_object($product)
+			&& !empty($product->pro_version)
+			&& version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, $product->pro_version, '<')) // Current Pro older than latest.
+		{
+			define('WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION', $product->pro_version);
+			// Include upgrader, s2Member Pro autoload won't be available here.
+			include_once dirname(__FILE__).'/src/includes/classes/upgrader.inc.php';
+			add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade').
+			add_action('all_admin_notices', function() {
+				echo c_ws_plugin__s2member_pro_upgrader::wizard();
+			});
+		}
 	}
 }
+
 unset(${__FILE__}); // Housekeeping.

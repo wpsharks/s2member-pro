@@ -103,12 +103,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 $wizard .= $credentials_form."\n";
                 //
             } else { // Otherwise, default handling.
-                $wizard = '<div class="error fade">'."\n";
-
-                $wizard .= '<p style="color:#962722;"><strong>The s2Member Pro add-on is outdated for this installation and isn\'t active.<br />'."\n".
-                'Please update it to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).' or higher to reactivate it.</strong><br />'."\n";
-                $wizard .= '<p>Get the latest release from your s2member.com <a href="https://s2member.com/account/" target="_blank" rel="external">Account page</a>,<br />'."\n";
-                $wizard .= '<strong>or update automatically using your s2Member.com username &amp; <a href="https://s2member.com/account/" target="_blank" rel="external">license key</a>.</strong>.</p>'."\n";
+                //221021 Show error if Pro older than min required version.
+                if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '<')) {
+                    $wizard = '<div class="notice notice-error">'."\n";
+                    $wizard .= '<p style="color:#962722;"><strong>The s2Member Pro add-on is outdated for this installation and has been deactivated.<br />'."\n".
+                    'Please update it to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).(version_compare(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION, '<') ? ' or higher' :'').' to reactivate it.</strong><br />'."\n";
+                }
+                else {
+                    $wizard = '<div class="notice notice-warning is-dismissible">'."\n";
+                }
+                $wizard .= '<p>The latest release of s2Member Pro is v'.esc_html(WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION).'. Get it from your s2member.com <a href="https://s2member.com/account/" target="_blank" rel="external">Account page</a>,<br />'."\n";
+                $wizard .= '<strong>or upgrade automatically using your s2Member.com username &amp; <a href="https://s2member.com/account/" target="_blank" rel="external">license key</a>.</strong>.</p>'."\n";
 
                 $wizard .= '<form method="post" action="'.esc_attr($_SERVER['REQUEST_URI']).'" style="margin: 5px 0 5px 0;" autocomplete="off">'."\n";
                 $wizard .= '<input type="hidden" name="ws_plugin__s2member_pro_upgrade" id="ws-plugin--s2member-pro-upgrade" value="'.esc_attr(wp_create_nonce('ws-plugin--s2member-pro-upgrade')).'" />'."\n";
