@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 220925
-Stable tag: 220925
+Version: 221028
+Stable tag: 221028
 Tested up to: 6.1-beta1-54288
 Requires at least: 4.2
 Requires PHP: 5.6.2
@@ -101,6 +101,16 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v221028 =
+
+- (Framework) **Fix**: Initialized some array keys to prevent PHP warnings in PayPal notify and return files. Thanks Greg Mulhauser for your help.
+
+- (Framework) **UI**: Widened the Logs viewer. Thanks Sim. See [thread 10064](https://f.wpsharks.com/t/10064)
+
+- (Framework) **UI**: Framework auto-update is now allowed when Pro add-on installed.
+
+- (Pro) **UI**: The Pro updater now shows when a newer version available, not just when required.
 
 = v220925 =
 
