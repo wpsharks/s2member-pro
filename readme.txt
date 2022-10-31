@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 221028
-Stable tag: 221028
+Version: 221031
+Stable tag: 221031
 Tested up to: 6.1-beta1-54288
 Requires at least: 4.2
 Requires PHP: 5.6.2
