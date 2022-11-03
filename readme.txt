@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 221031
-Stable tag: 221031
+Version: 221103
+Stable tag: 221103
 Tested up to: 6.1-beta1-54288
 Requires at least: 4.2
 Requires PHP: 5.6.2
@@ -101,6 +101,10 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v221103 =
+
+- (Framework) **Bug Fix**: Removed latest changes to gateway notification and return handlers, that were causing difficulties with member access in some scenarios. 
 
 = v221031 =
 
