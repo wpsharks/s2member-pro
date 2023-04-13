@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 221103
-Stable tag: 221103
-Tested up to: 6.1-beta1-54288
+Version: 230413
+Stable tag: 230413
+Tested up to: 6.3-alpha-55647
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,19 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v160801 =
+= v230413 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v230413 =
+
+- (Pro) **Bug Fix**: An error could happen on PHP8 during Pro installation in a multisite network. Fixed in this release.
+
+- (Framework) **Bug Fix**: An error could happen on PHP8 when saving an edited user profile. Fixed in this release.
+
+- (Framework) **UI Enhancement**: In the List Servers admin page, removed mentions of the AWeber email parser, which isn't available any more. 
 
 = v221103 =
 
