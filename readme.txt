@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 230425
-Stable tag: 230425
-Tested up to: 6.3-alpha-55678
+Version: 230504
+Stable tag: 230504
+Tested up to: 6.3-alpha-55716
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,17 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v230425 =
+= v230504 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v230504 =
+
+- (Pro) **Fix**: Stripe subscriptions weren't using customer cards updated with the Billing Update pro-form. The subscription saved the first card, instead of defaulting to the card in the customer's profile. This release fixes that. The card is not added to a new subscription anymore, only to the customer's profile, and updating his profile's card with the Billing Update pro-form, will also update the subscription so it uses it. Thanks to Jim Antonucci for his help with this.
+
+- (Pro) **Enhancement**: The Stripe Billing Update pro-form now includes a field for the cardholder's name (i.e. Name On Card). Adding the name to the card will improve successful subscription charges. Thanks to Andy Johnsen for the idea.
 
 = v230425 =
 
