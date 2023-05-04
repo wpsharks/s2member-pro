@@ -485,7 +485,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 							'plan' => $plan_id,
 						),
 					),
-					'default_payment_method' => $customer->invoice_settings->default_payment_method,
+					//230503 Remove default here, it'll then use the customer's default
+					// still needs update for existing subs that already got this parameter
+					// 'default_payment_method' => $customer->invoice_settings->default_payment_method,
 					'trial_from_plan' => true,
 					'metadata'        => $metadata,
 					'expand'          => array(
