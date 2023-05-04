@@ -98,6 +98,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 							{
 								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($cur__subscr_cid, $cur__subscr_id)) && !preg_match('/^canceled$/i', $stripe_subscription->status) && !$stripe_subscription->cancel_at_period_end)
 								{
+									//230503 Remove default_payment_method from subscription so customer's default is actually used
+									c_ws_plugin__s2member_pro_stripe_utilities::subscr_remove_default_card($cur__subscr_id);
+
 									// Attach the new payment method to the customer and update his default.
 									if(is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($cur__subscr_cid, $post_vars['pm_id'])))
 									{

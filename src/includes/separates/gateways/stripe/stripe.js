@@ -849,6 +849,16 @@ jQuery(document).ready( // DOM ready.
 							postal_code: addrZip,
 						};
 
+						//230503 Payment method update needs the name on card
+						if ($('form#s2member-pro-stripe-update-form').length === 1) {
+							fullName = jQuery('.s2member-pro-stripe-update-name-on-card').val();
+							// Stop if name on card not given, don't get to createPaymentMethod below
+							if (!fullName || fullName.trim() === "") {
+								console.log('Name on card is empty. Aborting form submission.');
+								return false;
+							}
+						}
+
 						// Create the Payment Method.
 						stripe.createPaymentMethod(
 							'card',

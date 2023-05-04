@@ -27,6 +27,16 @@ if(!defined('WPINC')) // MUST have WordPress.
 	<!-- Billing Method (powered by Stripe). -->
 	%%billing_method%%
 
+	<!-- Name on Card -->
+	<div class="s2member-pro-stripe-form-section">
+		<div id="s2member-pro-stripe-update-form-name-on-card-div" class="s2member-pro-stripe-form-div s2member-pro-stripe-form-name-on-card-div">
+			<label for="s2member-pro-stripe-update-name-on-card" id="s2member-pro-stripe-update-form-name-on-card-label" class="s2member-pro-stripe-form-name-on-card-label s2member-pro-stripe-update-form-name-on-card-label">
+				<span><?php echo _x("Name on Card", "s2member-front", "s2member"); ?></span> *<br />
+				<input type="text" aria-required="true" maxlength="50" autocomplete="off" name="s2member_pro_stripe_update[name_on_card]" id="s2member-pro-stripe-update-name-on-card" class="s2member-pro-stripe-name-on-card s2member-pro-stripe-update-name-on-card form-control" value="" tabindex="10" style="border: 1px solid #b6b6b3; border-radius: 4px; padding: 10px 13px; font-size: 17px; color: #333;" />
+			</label>
+		</div>
+	</div>
+
 	<!-- Captcha ( A reCaptcha section, with a required security code will appear here; if captcha="1" ). -->
 	%%captcha%%
 

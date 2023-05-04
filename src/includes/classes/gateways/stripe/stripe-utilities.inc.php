@@ -1220,6 +1220,37 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Remove card from subscription, so customer's default is used
+		 * @since 230504
+		 * @param string $subscr_id Subscription ID in Stripe.
+		 * @return bool true after removed
+		 */
+		function subscr_remove_default_card($subscr_id) {
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+			self::init_stripe_sdk();
+
+			// Just let it catch the exeption if not a sub id? 
+			// if (strpos($subscr_id, 'sub_') !== 0)
+			// 	return false;
+
+			try {
+				// https://stripe.com/docs/api/subscriptions/update#update_subscription
+				$subscription = \Stripe\Subscription::update(
+					$subscr_id,
+					['default_payment_method' => ''],
+				);
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
+				return true;
+			}
+			catch (exception $exception) {
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+				return false;
+			}
+		}
+
+		/**
 		 * Create a Payment Intent.
 		 *
 		 * @param string               $cus_id Customer ID in Stripe.
