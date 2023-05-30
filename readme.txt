@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 230504
-Stable tag: 230504
-Tested up to: 6.3-alpha-55716
+Version: 230530
+Stable tag: 230530
+Tested up to: 6.3-alpha-55864
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,15 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v230504 =
+= v230530 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v230530 =
+
+- (Framework) **Enhancement**: Updated the Mailchimp integration to v3 of their API.  I made it so you shouldn't need to change anything, it should work with your existing configuration. Still worth doing a test or checking that things are normal after the update, and report any issues you notice. See: [thread 10666](https://f.wpsharks.com/t/10666)
 
 = v230504 =
 
