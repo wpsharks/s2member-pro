@@ -1227,7 +1227,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * @param string $subscr_id Subscription ID in Stripe.
 		 * @return bool true after removed
 		 */
-		function subscr_remove_default_card($subscr_id) {
+		public static function subscr_remove_default_card($subscr_id) {
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
 			self::init_stripe_sdk();
