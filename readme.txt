@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 230530
-Stable tag: 230530
-Tested up to: 6.3-alpha-55864
+Version: 230808
+Stable tag: 230808
+Tested up to: 6.3-RC4-56369
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,27 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v230530 =
+= v230808 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v230808 =
+
+- (Framework) **Fix**: Potential security issue under rare circumstances. Fixed in this release.
+
+- (Framework) **Fix**: Mailchimp's groups/interests were not transitioning correctly with the updated integration. Fixed in this release.
+
+- (Framework) **UI**: Added a notice about PayPal giving trouble with encrypted buttons recently, recommending to not encrypt them for now. You may need to disable button encryption, and allow non-encrypted payments. _s2Member > PayPal Options > Account Details > Button Encryption_ 
+ 
+- (Framework) **UI**: Brought back the "Expand All" and "Collapse All" buttons for the admin panels. See [thread 10796](https://f.wpsharks.com/t/10796)
+
+- (Framework) **UI**: Updated the link to the PayPal IPN configuration.
+
+- (Framework) **UI**: Added link to PayPal's IPN History page. _s2Member > PayPal Options > PayPal IPN > More Information_
+
+- (Pro) **Fix**: Stripe's billing update pro-form gave an error sometimes. Fixed in this release.  See [thread 10752](https://f.wpsharks.com/t/10752)
 
 = v230530 =
 
