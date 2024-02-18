@@ -44,7 +44,7 @@ if(!defined('WPINC')) // MUST have WordPress.
  *
  * @var string
  */
-${__FILE__}['tmp'] = '230815'; //version//
+${__FILE__}['tmp'] = '240218'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_VERSION', ${__FILE__}['tmp']);
 /**
@@ -77,7 +77,7 @@ if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_WP_VERSION'))
  *
  * @var string
  */
-${__FILE__}['tmp'] = '230815'; //version//
+${__FILE__}['tmp'] = '240218'; //version//
 if(!defined('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION'))
 	define('WS_PLUGIN__S2MEMBER_PRO_MIN_FRAMEWORK_VERSION', ${__FILE__}['tmp']);
 /*
