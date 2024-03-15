@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 240218
-Stable tag: 240218
-Tested up to: 6.5-beta1-57644
+Version: 240315
+Stable tag: 240315
+Tested up to: 6.5-RC2-57834
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,15 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v240218 =
+= v240315 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v240315 =
+
+- (Framework) **Enhancement**: Improved access restrictions applied to WP REST requests.
 
 = v240218 =
 
