@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 240315
-Stable tag: 240315
-Tested up to: 6.5-RC2-57834
+Version: 240325
+Stable tag: 240325
+Tested up to: 6.5-RC2-57866
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,19 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v240315 =
+= v240325 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v240325 =
+
+- (Framework) **Fix**: Some sites were getting a warning from v240315's restriction improvement when the WP REST request doesn't include a type or ID. Fixed in this release.See [thread 11347](https://f.wpsharks.com/t/11347)
+
+- (Pro) **Enhancement**: Checkout success redirection URLs are now validated as safe with WordPress' _wp_validate_redirect_. To use a domain different than the site's, it can be allowed with wp's filter [allowed_redirect_hosts](https://developer.wordpress.org/reference/hooks/allowed_redirect_hosts/).
+
+- (Framework) **Enhancement**: Additional validation to prevent an invalid s2Member Level role during registration. 
 
 = v240315 =
 
