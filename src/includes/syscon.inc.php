@@ -97,7 +97,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			'pro_sp_email_recipients'                 => '"%%full_name%%" <%%payer_email%%>',
 			'pro_sp_email_subject'                    => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
-			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%!\n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here:\n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%! \n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here: \n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
 
 			'pro_eot_reminder_email_enable'           => '0',
 			'pro_eot_reminder_email_on_npt_also'      => '0',
@@ -105,7 +105,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			'pro_eot_reminder_email_recipients'       => array('_' => '"%%user_full_name%%" <%%user_email%%>'),
 			'pro_eot_reminder_email_subject'          => array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member'))),
-			'pro_eot_reminder_email_message'          => array('_' => sprintf(_x("Hi %%%%first_name%%%%!\n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew:\n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name'))),
+			'pro_eot_reminder_email_message'          => array('_' => sprintf(_x("Hi %%%%first_name%%%%! \n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew: \n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name'))),
 
 			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
@@ -134,7 +134,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_alipay_seller_email'                 => '', 'pro_alipay_partner_id' => '', 'pro_alipay_security_code' => '', 'pro_alipay_return_template_header' => '',
 			'pro_authnet_api_login_id'                => '', 'pro_authnet_api_trans_key' => '', 'pro_authnet_api_sign_key' => '', 'pro_authnet_api_salt_key' => '', 'pro_authnet_sandbox' => '0', 'pro_authnet_max_payment_failures' => '2',
 			'pro_ccbill_client_id'                    => '', 'pro_ccbill_client_sid' => '0000', 'pro_ccbill_form_name' => '', 'pro_ccbill_dl_user' => '', 'pro_ccbill_dl_pass' => '', 'pro_ccbill_dl_cancellations' => '0', 'pro_ccbill_salt_key' => '', 'pro_ccbill_return_template_header' => '',
-			'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => '<div><small style="font-size:70%;">ClickBank is the retailer of products on this site. CLICKBANK® is a registered trademark of Click Sales, Inc., a Delaware corporation located at 917 S. Lusk Street, Suite 200, Boise Idaho, 83706, USA and used by permission. ClickBank\'s role as retailer does not constitute an endorsement, approval or review of these products or any claim, statement or opinion used in promotion of these products.</small></div><p>%1$s <strong><em>says&hellip;</em></strong></p>',
+			'pro_clickbank_username'                  => '', 'pro_clickbank_clerk_key' => '', 'pro_clickbank_developer_key' => '', 'pro_clickbank_secret_key' => '', 'pro_clickbank_return_template_header' => '<div><small style="font-size:70%;">ClickBank is the retailer of products on this site. CLICKBANK® is a registered trademark of Click Sales, Inc., a Delaware corporation located at 917 S. Lusk Street, Suite 200, Boise Idaho, 83706, USA and used by permission. ClickBank\'s role as retailer does not constitute an endorsement, approval or review of these products or any claim, statement or opinion used in promotion of these products.</small></div><p><strong><em>says&hellip;</em></strong></p>',
 			'pro_google_merchant_id'                  => '', 'pro_google_merchant_key' => '', 'pro_google_sandbox' => '0',
 
 			'pro_recaptcha_public_key'                => '', 'pro_recaptcha_private_key'  => '',
