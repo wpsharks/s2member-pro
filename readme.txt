@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 240325
-Stable tag: 240325
-Tested up to: 6.5-RC2-57866
+Version: 241114
+Stable tag: 241114
+Tested up to: 6.8-alpha-59403
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.1
@@ -96,11 +96,17 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v240325 =
+= v241114 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v241114 =
+
+- (Framework & Pro) **Fix**: An error could happen on PHP8 during Pro activation. Fixed in this release.
+
+- (Framework) **Enhancement**: s2Get shortcode can now be used to show s2's current user constants. E.g. `[s2Get constant="S2MEMBER_CURRENT_USER_DISPLAY_NAME" /]` _WP Admin > s2Member > API / Scripting > s2Member PHP/API Constants_
 
 = v240325 =
 
