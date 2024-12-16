@@ -1,11 +1,11 @@
 === s2Member® Pro ===
 
-Version: 241114
-Stable tag: 241114
-Tested up to: 6.8-alpha-59403
+Version: 241216
+Stable tag: 241216
+Tested up to: 6.8-alpha-59514
 Requires at least: 4.2
 Requires PHP: 5.6.2
-Tested up to PHP: 8.1
+Tested up to PHP: 8.3
 License: GNU General Public License v2 or later.
 Contributors: WebSharks, JasWSInc, raamdev, clavaque, eduan
 Author: WP Sharks
@@ -96,11 +96,17 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v241114 =
+= v241216 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v241216 =
+
+- (Framework) **Enhancement**: Added extra attribute validation to the s2Get shortcode. Props to wcraft.
+
+- (Framework) **Enhancement**: Improved New User email preparation before send. Props to Hakiduck.
 
 = v241114 =
 
