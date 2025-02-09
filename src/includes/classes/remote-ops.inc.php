@@ -132,7 +132,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_remote_ops')) {
             }
             $op = trim(stripslashes((string) $_POST['s2member_pro_remote_op']));
 
-            if (is_array($serialized_op = maybe_unserialize($op))) {
+            if (is_serialized($op) && is_array($serialized_op = @unserialize(trim($op), ['allowed_classes' => false]))) { 
                 $serialized_op    = c_ws_plugin__s2member_utils_strings::trim_deep($serialized_op);
                 return $remote_op = array('format' => 'serialized', 'data' => $serialized_op);
                 //
