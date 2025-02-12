@@ -182,6 +182,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$custom_template = is_file(TEMPLATEPATH.'/member-list.php') ? TEMPLATEPATH.'/member-list.php' : '';
 			$custom_template = is_file(get_stylesheet_directory().'/member-list.php') ? get_stylesheet_directory().'/member-list.php' : $custom_template;
 
+			//250211 Sanitize template attr.
+			$upload_folder = basename(wp_upload_dir()['basedir']); // Get uploads folder name
+			$attr['template'] = str_replace(['..', 'upload', $upload_folder], '', sanitize_text_field(esc_url_raw($attr['template'])));
+
 			$custom_template = $attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template']) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
 			$custom_template = $attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template']) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
 			$custom_template = $attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template']) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
