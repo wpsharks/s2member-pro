@@ -55,6 +55,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$args         = array_intersect_key($args, $default_args);
 
 			$this->list_to_coupons($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes'], $args['update']);
+
+			//250213 Ensure coupon usage log is initialized
+			c_ws_plugin__s2member_pro_coupons::maybe_initialize_coupon_uses_log();
 		}
 
 		public function list_to_coupons($list, $update = TRUE)
@@ -113,6 +116,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				if($update && strpos((string)$update, 'counters') !== FALSE && isset($_coupon_parts[7]))
 					$this->update_uses($_coupon['code'], $_coupon_parts[7]);
+
+				//240927
+				$_coupon['pforms'] = !empty($_coupon_parts[8]) && strtolower($_coupon_parts[8]) !== 'all' ? $_coupon_parts[8] : '';
+				$_coupon['pforms'] = $_coupon['pforms'] ? explode(',', $_coupon['pforms']) : array();
+
+				//250212
+				$_coupon['user_max_uses'] = isset($_coupon_parts[9]) ? '1' : '0';
 
 				$_coupon['is_gift'] = FALSE; // Hard-coded coupons are never gifts.
 
@@ -203,11 +213,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				else $list .= '|'; // Unspecified in this case.
 
+				//240827 Coupon forms; i.e., particular form names where it's applicable.
+				if(isset($_coupon['pforms']) && is_array($_coupon['pforms']))
+					$list .= implode(',', $_coupon['pforms']).'|';
+				else if(isset($_coupon['pforms']))
+					$list .= strtolower(str_replace('|', '', trim((string)$_coupon['pforms']))).'|';
+				else $list .= '|'; // Unspecified in this case.
+
+				//250212 User Once; i.e. whether this coupon can be used only once per user.
+				if(isset($_coupon['user_max_uses']))
+					$list .= (int)$_coupon['user_max_uses'].'|';
+				else
+					$list .= '|'; // Default to 0 (unlimited per user)
+
 				# Line ending; always.
 
-				// `code|discount|dates|directive|singulars|users|max uses`.
-
 				$list .= "\n"; // One coupon per line.
+
+				//       `code|discount|dates|directive|singulars|users|max_uses`.
+				//240827 `code|discount|dates|directive|singulars|users|max_uses|pforms`.
+				//250212 `code|discount|dates|directive|singulars|users|max_uses|pforms|user_max_uses`.
 			}
 			unset($_coupon); // Housekeeping.
 
@@ -497,7 +522,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
 							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
-									return $_coupon; // It's discount time! :-)
+									//240829 Specific pro-forms
+									if (!$_coupon['pforms'] || (!empty($attr['pform']) && in_array($attr['pform'], $_coupon['pforms'], TRUE)))
+										//250213 Single use per user
+										if (!$_coupon['user_max_uses'] || (empty($user_coupon_uses = get_user_option('s2member_coupon_uses', $current_user->ID))) || (!isset($user_coupon_uses[strtolower($_coupon['code'])])))
+											return $_coupon; // It's discount time! :-)
 				return array(); // Not valid at this time.
 			}
 			unset($_coupon); // Housekeeping.
@@ -630,7 +659,99 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			{
 				$coupons                                                     = new c_ws_plugin__s2member_pro_coupons(array('update' => 'counters'));
 				$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_coupon_codes'] = $coupons->list;
+
+				//240829 Need to force a reload after save 
+				// so it shows the pforms values...
+				echo '<script>location.reload(true);</script>';
+				header("Location: " . $_SERVER['REQUEST_URI']);
+				exit();
 			}
+		}
+
+		/**
+		 * Initializes the `s2member_coupon_uses` log if it does not exist.
+		 *
+		 * This ensures that previously used coupons from `s2member_coupon_codes` are stored
+		 * in the new log format, which tracks multiple uses and differentiates base vs. affiliate versions.
+		 *
+		 * **Example Log Format:**
+		 * ```php
+		 * [
+		 *   'holiday50' => [''], // Imported (unknown timestamps)
+		 *   'save10' => ['', 1707708000], // Imported & later logged new use time
+		 *   'save10-a:1234' => [1707708000] // Logged affiliate version used
+		 * ]
+		 * ```
+		 *
+		 * @since 250213
+		 */
+		public static function maybe_initialize_coupon_uses_log()
+		{
+			global $current_user;
+			if (get_user_option('s2member_coupon_uses', $current_user->ID)) {
+				return; // Already initialized.
+			}
+
+			$user_coupons = is_array($user_coupons = get_user_option('s2member_coupon_codes', $current_user->ID)) ? $user_coupons : [];
+			$user_coupon_uses = [];
+
+			foreach ($user_coupons as $_full_code) {
+				$_full_code = strtolower($_full_code);
+				$_code = explode('-a:', $_full_code)[0];
+
+				$user_coupon_uses[$_code][] = ''; // Logs as used at least once.
+				if ($_full_code !== $_code) {
+					$user_coupon_uses[$_full_code][] = ''; // Also logs affiliate-linked version.
+				}
+			}
+
+			update_user_option($current_user->ID, 's2member_coupon_uses', $user_coupon_uses);
+		}
+
+		/**
+		 * Logs a coupon use for a given user, updating both the legacy `s2member_coupon_codes` 
+		 * and new `s2member_coupon_uses` tracking options.
+		 *
+		 * @package s2Member\Coupons
+		 * @since 250214
+		 *
+		 * @param int    $user_id User ID.
+		 * @param array  $coupon  Coupon data, including 'full_coupon_code'.
+		 * @return bool  True if the coupon was processed successfully, false otherwise.
+		 */
+		public static function log_user_coupons_use($user_id, $coupon)
+		{
+			if (empty($user_id) || empty($coupon['full_coupon_code'])) {
+				return false; // Sanity check: Ensure valid user and coupon data.
+			}
+
+			// Retrieve and initialize user coupon logs
+			$user_coupon_uses = is_array($user_coupon_uses = get_user_option('s2member_coupon_uses', $user_id)) ? $user_coupon_uses : [];
+			$user_coupons = is_array($user_coupons = get_user_option('s2member_coupon_codes', $user_id)) ? $user_coupons : [];
+
+			// Ensure `s2member_coupon_uses` is initialized if empty
+			if (!$user_coupon_uses && $user_coupons) {
+				c_ws_plugin__s2member_pro_coupons::maybe_initialize_coupon_uses_log();
+				$user_coupon_uses = get_user_option('s2member_coupon_uses', $user_id);
+			}
+
+			// Standardize coupon codes (base + affiliate variant)
+			$_full_code = strtolower($coupon['full_coupon_code']);
+			$_code = explode('-a:', $_full_code)[0];
+
+			// Log coupon use (base + affiliate if applicable)
+			$user_coupon_uses[$_code][] = time();
+			if ($_full_code !== $_code) {
+				$user_coupon_uses[$_full_code][] = time();
+			}
+
+			// Update both coupon tracking options
+			update_user_option($user_id, 's2member_coupon_uses', $user_coupon_uses);
+
+			$user_coupons = array_unique(array_merge($user_coupons, (array)$_full_code));
+			update_user_option($user_id, 's2member_coupon_codes', $user_coupons);
+
+			return true; // Successfully logged coupon use
 		}
 	}
 }

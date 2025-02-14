@@ -187,6 +187,7 @@ jQuery(document).ready(
 				         '<td class="-users"><input type="text" spellcheck="false" value="" /></td>' +
 				         '<td class="-max_uses"><input type="text" spellcheck="false" value="" /></td>' +
 				         '<td class="-uses"><input type="text" spellcheck="false" value="0" /></td>' +
+								 '<td class="-user_max_uses"><input type="text" spellcheck="false" value="" /></td>' +
 				         '<td class="-actions"><a href="#" class="-up" title="Move Up" tabindex="-1"><i class="fa fa-chevron-circle-up"></i></a><a href="#" class="-down" title="Move Down" tabindex="-1"><i class="fa fa-chevron-circle-down"></i></a><a href="#" class="-delete" title="Delete" tabindex="-1"><i class="fa fa-times-circle"></i></a></td>' +
 				         '</tr>';
 			$couponsTable.find('tbody').on('click', 'a.-up,a.-down', function(e)

@@ -96,11 +96,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<th class="-users"><i class="fa fa-users"></i> User IDs</td>'."\n";
 			echo '<th class="-max_uses"><i class="fa fa-gavel"></i> Max Uses</td>'."\n";
 			echo '<th class="-uses"><i class="fa fa-line-chart"></i> Uses</td>'."\n";
+			echo '<th class="-pforms"><i class="fa fa-line-list-alt"></i>Pro-Forms (beta)</td>'."\n"; //240927
+			echo '<th class="-user_max_uses"><i class="fa fa-line-list-alt"></i>User Once (beta)</td>'."\n"; //250212
 			echo '<th class="-actions">&nbsp;</td>'."\n";
 			echo '</tr>'."\n";
 			echo '</thead>'."\n";
 			echo '<tbody>'."\n";
 			$_coupons = new c_ws_plugin__s2member_pro_coupons();
+			
 			foreach($_coupons->coupons as $_coupon)
 			{
 				echo '<tr>'."\n";
@@ -113,6 +116,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 				echo '<td class="-users"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['users'] ? implode(',', $_coupon['users']) : '').'" /></td>'."\n";
 				echo '<td class="-max_uses"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['max_uses'] ? $_coupon['max_uses'] : '').'" /></td>'."\n";
 				echo '<td class="-uses"><input type="text" spellcheck="false" value="'.esc_attr($_coupons->get_uses($_coupon['code'])).'" /></td>'."\n";
+				echo '<td class="-pforms"><input type="text" spellcheck="false" value="'.esc_attr($_coupon['pforms'] ? implode(',', $_coupon['pforms']) : '').'" /></td>'."\n"; //240929
+				echo '<td class="-user_max_uses"><input type="text" spellcheck="false" pattern="^1?$" maxlength="1" value="'.esc_attr($_coupon['user_max_uses'] ? $_coupon['user_max_uses'] : '').'" oninput="this.value=this.value?\'1\':\'\';" /></td>'."\n"; //250212
 				echo '<td class="-actions"><a href="#" class="-up" title="Move Up" tabindex="-1"><i class="fa fa-chevron-circle-up"></i></a><a href="#" class="-down" title="Move Down" tabindex="-1"><i class="fa fa-chevron-circle-down"></i></a><a href="#" class="-delete" title="Delete" tabindex="-1"><i class="fa fa-times-circle"></i></a></td>'."\n";
 				echo '</tr>'."\n";
 			}
@@ -137,6 +142,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_coupon_codes"))
 			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-users"></i> User IDs</strong>&nbsp;&nbsp;&nbsp; e.g., <code>456</code> or <code>8,673,93</code> <em>By default (i.e., if this is empty), s2Member accepts Coupon Codes from any User, whether they are logged-in or not. However, you may configure Coupon Codes that only work for specific WordPress User IDs. This can be entered as a single WordPress User ID, or as a comma-delimited list of multiple IDs. <strong>Note:</strong> adding this limitation requires that a user be logged-in when they use the Coupon Code.</em></li>'."\n";
 			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-gavel"></i> Max Uses</strong>&nbsp;&nbsp;&nbsp; e.g., <code>1000</code> <em>By default (i.e., if this is empty), a Coupon Code can be used any number of times, or until it expires. However, you can set a limit on the number of times that a Coupon Code can be used to complete checkout by any number of customers overall. If you fill this in, when the limit is reached, because X number of customers used the Coupon Code to complete checkout, the Coupon will automatically expire. <strong>Note:</strong> setting this to <code>0</code> is the same as leaving it empty; i.e., if you set this to <code>0</code>, the Coupon Code can be used any number of times, or until it expires. No difference.</em></li>'."\n";
 			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-line-chart"></i> Uses (Counter)</strong>&nbsp;&nbsp;&nbsp; e.g., <code>0</code> <em>s2Member updates this field automatically, incrementing it by <code>1</code> each time the Coupon Code is used to complete checkout. However, you can reset this to <code>0</code> (or any other number) if you so desire.</em></li>'."\n";
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-list-alt"></i> Pro-Forms (beta)</strong>&nbsp;&nbsp;&nbsp; e.g., <code>newcourse</code> or <code>offer2</code> <em>You may configure Coupon Codes that only work on specific pro-forms using the <code>pform=""</code> attribute in the pro-form shortcode, e.g., <code>pform="offer2"</code>. In the Coupons table, this field allows specifying a single pro-form name or a comma-separated list, e.g., <code>offer2,offer3</code>. If a coupon has a pro-form restriction, it will only work in the specified pro-forms. Coupons without a pro-form restriction remain valid for any pro-form that accepts coupons.</em></li>'."\n"; //240927
+			echo '<li style="list-style:none;margin-top:1em;"><strong><i class="fa fa-list-alt"></i> User Once (beta)</strong>&nbsp;&nbsp;&nbsp; <em>Enter "1" if you want this coupon to be usable only once per user.</em></li>'."\n"; //250212
 			echo '</ul>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
