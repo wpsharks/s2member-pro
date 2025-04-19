@@ -121,8 +121,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				$_coupon['pforms'] = !empty($_coupon_parts[8]) && strtolower($_coupon_parts[8]) !== 'all' ? $_coupon_parts[8] : '';
 				$_coupon['pforms'] = $_coupon['pforms'] ? explode(',', $_coupon['pforms']) : array();
 
-				//250212
-				$_coupon['user_max_uses'] = isset($_coupon_parts[9]) ? '1' : '0';
+				//250418
+				$_coupon['user_max_uses'] = (isset($_coupon_parts[9]) && ($v = (int)$_coupon_parts[9]) > 0) ? $v : 0;
 
 				$_coupon['is_gift'] = FALSE; // Hard-coded coupons are never gifts.
 
@@ -220,7 +220,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 					$list .= strtolower(str_replace('|', '', trim((string)$_coupon['pforms']))).'|';
 				else $list .= '|'; // Unspecified in this case.
 
-				//250212 User Once; i.e. whether this coupon can be used only once per user.
+				//250418 Max number of uses per user.
 				if(isset($_coupon['user_max_uses']))
 					$list .= (int)$_coupon['user_max_uses'].'|';
 				else
@@ -524,8 +524,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
 									//240829 Specific pro-forms
 									if (!$_coupon['pforms'] || (!empty($attr['pform']) && in_array($attr['pform'], $_coupon['pforms'], TRUE)))
-										//250213 Single use per user
-										if (!$_coupon['user_max_uses'] || (empty($user_coupon_uses = get_user_option('s2member_coupon_uses', $current_user->ID))) || (!isset($user_coupon_uses[strtolower($_coupon['code'])])))
+										//250418 Max uses per user.
+										if (!$_coupon['user_max_uses'] || (empty($user_coupon_uses = get_user_option('s2member_coupon_uses', $current_user->ID))) || (!isset($user_coupon_uses[strtolower($_coupon['code'])])) || (count($user_coupon_uses[strtolower($_coupon['code'])]) < $_coupon['user_max_uses']))
 											return $_coupon; // It's discount time! :-)
 				return array(); // Not valid at this time.
 			}
