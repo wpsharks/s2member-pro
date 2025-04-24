@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 250419
-Stable tag: 250419
+Version: 250424
+Stable tag: 250424
 Tested up to: 6.9-alpha-60174
 Requires at least: 4.2
 Requires PHP: 5.6.2
@@ -96,16 +96,20 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v250419 =
+= v250424 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
 
+= v250424 =
+
+- (Framework) **Enhancement**: Added additional sanitation/validation to the Logs Viewer, although only Administrators have access to it.
+
 = v250419 =
 
 - (Pro) **Enhancement**: Improved the new coupon code limit per user which prevents a user from applying a coupon code unlimited times, Instead of single use, it can now be limited to more uses, e.g. 3. It's been renamed from "User Once" to "User Max", max number of times a user can use that coupon. This is optional and leaving it blank will give the default "no limit".
-- 
+
 - (Pro) **Enhancement**: Improved validation of the template attribute in the s2Member-List-Search-Box shortcode.
 
 - (Framework) **UI**: Temporary admin notice about Easter promo for Pro add-on at 20% off.
