@@ -1,7 +1,7 @@
 === s2Member® Pro ===
 
-Version: 250424
-Stable tag: 250424
+Version: 250502
+Stable tag: 250502
 Tested up to: 6.9-alpha-60174
 Requires at least: 4.2
 Requires PHP: 5.6.2
@@ -96,11 +96,17 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v250424 =
+= v250502 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v250502 =
+
+- (Pro) **Enhancement**: Added optional fallback behavior for missing IPN Signup Vars during Stripe webhook processing. When enabled, s2Member will generate a makeshift IPN vars array if none are stored for the user. This helps support migrated or manually imported subscriptions. The setting is available under _s2Member Pro > Stripe Options > Stripe Webhook/IPN Integration_. See [thread 11334](https://f.wpsharks.com/t/11334).
+
+- (Framework) **UI**: Removed admin notice about Easter promo for Pro add-on.
 
 = v250424 =
 
