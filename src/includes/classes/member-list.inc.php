@@ -108,7 +108,7 @@ class c_ws_plugin__s2member_pro_member_list
         /* ---------------------------------------------------------- */
 
         $first_last_name_meta_queries = array(
-            'relaton'    => 'AND',
+            'relation'    => 'AND',
             'first_name' => array(
                 'key'     => 'first_name',
                 'value'   => '___',
