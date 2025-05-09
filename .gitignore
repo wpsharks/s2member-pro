@@ -104,3 +104,4 @@ Icon?
 # .sass-cache;.idea;*.sublime-workspace;*.sublime-project;.git;.svn;_svn;CVS;.bzr;.hg;SCCS;RCS;$RECYCLE.BIN;Desktop.ini;Thumbs.db;ehthumbs.db;.AppleDB;.AppleDouble;.AppleDesktop;.com.apple.timemachine.donotpresent;Network Trash Folder;Temporary Items;.LSOverride;.Spotlight-V100;.VolumeIcon.icns;.TemporaryItems;.fseventsdv.DS_Store;.Trashes;.apdisk;._*;.vagrant
 
 # Custom code reinserted here via [custom] marker. Add your <custom></custom> comment markers here please.
+.~build/
