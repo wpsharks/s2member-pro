@@ -65,7 +65,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$list    = trim((string)$list);
 			$coupons = array(); // Initialize.
 
-			foreach(array_map('trim', preg_split('/['."\r\n".']+/', $list, NULL, PREG_SPLIT_NO_EMPTY)) as $_line)
+			foreach(array_map('trim', preg_split('/['."\r\n".']+/', $list, -1, PREG_SPLIT_NO_EMPTY)) as $_line)
 			{
 				if(!($_line = trim($_line, " \r\n\t\0\x0B|")))
 					continue; // Empty line; continue.
@@ -107,10 +107,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				$_coupon['directive'] = preg_match('/^(?:ta\-only|ra\-only)$/', $_coupon['directive']) ? $_coupon['directive'] : '';
 
 				$_coupon['singulars'] = !empty($_coupon_parts[4]) && strtolower($_coupon_parts[4]) !== 'all' ? $_coupon_parts[4] : '';
-				$_coupon['singulars'] = $_coupon['singulars'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['singulars']), NULL, PREG_SPLIT_NO_EMPTY)) : array();
+				$_coupon['singulars'] = $_coupon['singulars'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['singulars']), -1, PREG_SPLIT_NO_EMPTY)) : array();
 
 				$_coupon['users'] = !empty($_coupon_parts[5]) && strtolower($_coupon_parts[5]) !== 'all' ? $_coupon_parts[5] : '';
-				$_coupon['users'] = $_coupon['users'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['users']), NULL, PREG_SPLIT_NO_EMPTY)) : array();
+				$_coupon['users'] = $_coupon['users'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['users']), -1, PREG_SPLIT_NO_EMPTY)) : array();
 
 				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
 
@@ -460,7 +460,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 						$attr['desc'] = sprintf(_x('%1$s ~ ORIGINALLY: %2$s', 's2member-front', 's2member'), $desc, $attr['desc']);
 
 						if($affiliate_id && empty($_COOKIE['idev']) && (in_array('affiliates-silent-post', $process) || in_array('affiliates-1px-response', $process)))
-							foreach(preg_split('/['."\r\n\t".']+/', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_affiliate_coupon_code_tracking_urls'], NULL, PREG_SPLIT_NO_EMPTY) as $_url)
+							foreach(preg_split('/['."\r\n\t".']+/', $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_affiliate_coupon_code_tracking_urls'], -1, PREG_SPLIT_NO_EMPTY) as $_url)
 							{
 								if(($_url = preg_replace('/%%full_coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($full_coupon_code)), $_url)))
 									if(($_url = preg_replace('/%%coupon_code%%/i', c_ws_plugin__s2member_utils_strings::esc_refs(urlencode($coupon_code)), $_url)))

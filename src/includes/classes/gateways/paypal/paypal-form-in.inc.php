@@ -95,7 +95,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 
 						if($content && ($content_options = do_shortcode($content)))
 							{
-								foreach(preg_split('/\s*\|\:\:\|\s*/', $content_options, NULL, PREG_SPLIT_NO_EMPTY) as $_content_option_key => $_content_option)
+								foreach(preg_split('/\s*\|\:\:\|\s*/', $content_options, -1, PREG_SPLIT_NO_EMPTY) as $_content_option_key => $_content_option)
 									{
 										$_content_option_id = $_content_option_key + 1;
 										$options[$_content_option_id] = maybe_unserialize(trim($_content_option));

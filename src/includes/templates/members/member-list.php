@@ -43,7 +43,7 @@ else $s_val = ''; // No query yet.
 								</div>
 							<?php endif; ?>
 
-							<?php if(($_fields = preg_split('/[,]+/', $attr['show_fields'], NULL, PREG_SPLIT_NO_EMPTY))): ?>
+							<?php if(($_fields = preg_split('/[,]+/', $attr['show_fields'], -1, PREG_SPLIT_NO_EMPTY))): ?>
 								<table class="ws-plugin--s2member-list-user-fields">
 									<tbody>
 									<?php foreach($_fields as $_field): ?>

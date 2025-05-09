@@ -121,9 +121,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 
 					'meta_query'     => array(),
 					'search'         => $attr['search'],
-					'search_columns' => preg_split('/[;,\s]+/', $attr['search_columns'], NULL, PREG_SPLIT_NO_EMPTY),
-					'include'        => preg_split('/[;,\s]+/', $attr['include'], NULL, PREG_SPLIT_NO_EMPTY),
-					'exclude'        => preg_split('/[;,\s]+/', $attr['exclude'], NULL, PREG_SPLIT_NO_EMPTY),
+					'search_columns' => preg_split('/[;,\s]+/', $attr['search_columns'], -1, PREG_SPLIT_NO_EMPTY),
+					'include'        => preg_split('/[;,\s]+/', $attr['include'], -1, PREG_SPLIT_NO_EMPTY),
+					'exclude'        => preg_split('/[;,\s]+/', $attr['exclude'], -1, PREG_SPLIT_NO_EMPTY),
 
 					'order'          => $attr['order'],
 					'orderby'        => $attr['orderby'],
@@ -131,7 +131,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 				);
 				if($attr['roles']) // Must satisfy all Roles in the list (default behavior).
 				{
-					foreach(preg_split('/[;,\s]+/', $attr['roles'], NULL, PREG_SPLIT_NO_EMPTY) as $_role)
+					foreach(preg_split('/[;,\s]+/', $attr['roles'], -1, PREG_SPLIT_NO_EMPTY) as $_role)
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"'.$_role.'"',
@@ -144,7 +144,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 				}
 				if(isset($attr['levels'][0])) // Must satisfy all Levels in the list (default behavior).
 				{
-					foreach(preg_split('/[;,\s]+/', $attr['levels'], NULL, PREG_SPLIT_NO_EMPTY) as $_level)
+					foreach(preg_split('/[;,\s]+/', $attr['levels'], -1, PREG_SPLIT_NO_EMPTY) as $_level)
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => (int)$_level === 0 ? '"subscriber"' : '"s2member_level'.$_level.'"',
@@ -157,7 +157,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 				}
 				if($attr['ccaps']) // Must satisfy all CCAPs in the list (default behavior).
 				{
-					foreach(preg_split('/[;,\s]+/', $attr['ccaps'], NULL, PREG_SPLIT_NO_EMPTY) as $_ccap)
+					foreach(preg_split('/[;,\s]+/', $attr['ccaps'], -1, PREG_SPLIT_NO_EMPTY) as $_ccap)
 						$args['meta_query'][] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"access_s2member_ccap_'.$_ccap.'"',
