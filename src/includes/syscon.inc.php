@@ -92,20 +92,20 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 	{
 		$pro_default_options = array( // Defaults for the Pro Add-on.
 			'pro_signup_email_recipients'             => '"%%full_name%%" <%%payer_email%%>',
-			'pro_signup_email_subject'                => _x('Congratulations! (your membership has been approved)', 's2member-front', 's2member'),
-			'pro_signup_email_message'                => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_signup_email_subject'                => 'Congratulations! (your membership has been approved)',
+			'pro_signup_email_message'                => sprintf("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", get_bloginfo('name')),
 
 			'pro_sp_email_recipients'                 => '"%%full_name%%" <%%payer_email%%>',
-			'pro_sp_email_subject'                    => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
-			'pro_sp_email_message'                    => sprintf(_x("Thanks %%%%first_name%%%%! \n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here: \n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_sp_email_subject'                    => 'Thank You! (instructions for access)',
+			'pro_sp_email_message'                    => sprintf("Thanks %%%%first_name%%%%! \n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here: \n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", get_bloginfo('name')),
 
 			'pro_eot_reminder_email_enable'           => '0',
 			'pro_eot_reminder_email_on_npt_also'      => '0',
 			'pro_eot_reminder_email_days'             => '-5,-1',
 
 			'pro_eot_reminder_email_recipients'       => array('_' => '"%%user_full_name%%" <%%user_email%%>'),
-			'pro_eot_reminder_email_subject'          => array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member'))),
-			'pro_eot_reminder_email_message'          => array('_' => sprintf(_x("Hi %%%%first_name%%%%! \n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew: \n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name'))),
+			'pro_eot_reminder_email_subject'          => array('_' => sprintf('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)')),
+			'pro_eot_reminder_email_message'          => array('_' => sprintf("Hi %%%%first_name%%%%! \n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew: \n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", wp_login_url(), get_bloginfo('name'))),
 
 			'pro_coupon_codes'                        => '',
 			'pro_default_tax'                         => '0.0%', 'pro_tax_rates' => '',
@@ -271,3 +271,39 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 		return $options; // $GLOBALS['WS_PLUGIN__']['s2member']['o'] by reference.
 	}
 }
+
+//250509 Move _x's to init to avoid PHP Notice since WP 6.7
+add_action('init', function () {
+	$o =& $GLOBALS['WS_PLUGIN__']['s2member']['o'];
+
+	// Fetch the default options using the method for Pro
+	$pro_default_options = ws_plugin__s2member_pro_default_options();
+
+	// Translated defaults for Pro options, only applied if still at their original defaults
+	$pro_translated_defaults = [
+			'pro_signup_email_subject' => _x('Congratulations! (your membership has been approved)', 's2member-front', 's2member'),
+			'pro_signup_email_message' => sprintf(_x("Thanks %%%%first_name%%%%! Your membership has been approved.\n\n%%%%item_name%%%%\n\nSubscr. ID: %%%%subscr_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%initial%%%%\nRecurring charges: %%%%currency_symbol%%%%%%%%recurring/regular_cycle%%%%\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_sp_email_subject' => _x('Thank You! (instructions for access)', 's2member-front', 's2member'),
+			'pro_sp_email_message' => sprintf(_x("Thanks %%%%first_name%%%%! \n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here: \n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), get_bloginfo('name')),
+			'pro_eot_reminder_email_subject' => array('_' => sprintf(_x('Renewal Reminder (Account Expires in %%%%eot_descriptive_time%%%%)', 's2member-front', 's2member'))),
+			'pro_eot_reminder_email_message' => array('_' => sprintf(_x("Hi %%%%first_name%%%%! \n\nJust a reminder that your account access will expire: %%%%eot_date_time_tz%%%% (%%%%eot_descriptive_time%%%% from now).\n\nPlease log in if you'd like to renew: \n%s\n\nIf you have any trouble, feel free to contact us.\n\nBest Regards,\n%s", 's2member-front', 's2member'), wp_login_url(), get_bloginfo('name'))),
+	];
+
+	// Add missing reminder email defaults: -5 and -1.
+	foreach (array('subject', 'message') as $part){
+		// Assign the translated value to -5 and -1 from the default '_'
+		foreach (array('-5', '-1') as $offset) {
+			$pro_translated_defaults['pro_eot_reminder_email_'.$part][$offset] = $pro_translated_defaults['pro_eot_reminder_email_'.$part]['_'];
+		}
+		// JSON encode the entire array object for the subject and message
+		$pro_translated_defaults['pro_eot_reminder_email_'.$part] = json_encode((object)$pro_translated_defaults['pro_eot_reminder_email_'.$part]);
+	}
+
+	// Apply translations to options if they are at their default
+	foreach ($pro_translated_defaults as $key => $translated) {
+			// Check if the value is still at the default
+			if (isset($o[$key]) && $o[$key] == $pro_default_options[$key]) {
+					$o[$key] = $translated;
+			}
+	}
+});
