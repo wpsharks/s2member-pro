@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 250511
-Stable tag: 250511
-Tested up to: 6.9-alpha-60229
+Version: 250525
+Stable tag: 250525
+Tested up to: 6.9-alpha-60248
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.3
@@ -96,11 +96,15 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v250511 =
+= v250525 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v250525 =
+
+- (Framework & Pro) **Fix**: Some translations were being applied too early, causing PHP notices since WP 6.7. Now all translations are only loaded at the `init` hook or later. See [thread 12813](https://f.wpsharks.com/t/12813)
 
 = v250511 =
 
