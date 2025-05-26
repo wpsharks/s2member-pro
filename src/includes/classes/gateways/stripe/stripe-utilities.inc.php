@@ -389,14 +389,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			// This gets tricky with Jason's shift of first regular to a separate charge when there's an unused trial period.
 			$metadata['recurring_times'] = $shortcode_attrs['rr'] && $shortcode_attrs['rrt'] ? (integer)$shortcode_attrs['rrt'] : -1;
 			$trial_period_days           = self::per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
-			$interval_days               = self::per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
+			$interval_term = "";
+			switch (strtoupper($shortcode_attrs['rt']))
+			{
+				case 'D':
+					$interval_term = "day";
+					break;
+				case 'W':
+					$interval_term = "week";
+					break;
+				case 'M':
+					$interval_term = "month";
+					break;
+				case 'Y':
+					$interval_term = "year";
+					break;
+			}
+			$interval_period = is_numeric($shortcode_attrs['rp'])? (integer)$shortcode_attrs['rp'] : 0;
 
 			// The access is more correct for the product's name, and will avoid duplicate products,
 			// but the shortcode's description is probably better in this case...
 			// $product_name = trim('level'$shortcode_attrs['level'].':'.$shortcode_attrs['ccaps']);
 			$product      = self::get_product($name);
 
-			$plan_id      = 's2_plan_'.md5($amount.$currency.$name.$trial_period_days.$interval_days.serialize($metadata).$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
+			$plan_id      = 's2_plan_'.md5($amount.$currency.$name.$trial_period_days.$interval_period.$interval_term.serialize($metadata).$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description']);
 
 			try // Attempt to get an existing plan; else create a new one.
 			{
@@ -412,8 +428,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						'metadata'          => $metadata,
 						'amount'            => self::dollar_amount_to_cents($amount, $currency),
 						'currency'          => $currency,
-						'interval'          => 'day',
-						'interval_count'    => $interval_days,
+						'interval'          => $interval_term,
+						'interval_count'    => $interval_period,
 						// This condition in the argument below moves the first regular period out of the subscription when there's an unused trial period.
 						// Basically, if there's an unused trial, it'll use it, it will always set a trial, even when the site owner didn't mean it.
 						// This trial will be "free" in the subscription (trialing...). The period is still charged, but separately.
