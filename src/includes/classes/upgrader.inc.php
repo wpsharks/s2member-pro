@@ -263,7 +263,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
 
             do_action('ws_plugin__s2member_pro_during_successfull_upgrade', get_defined_vars());
 
-            wp_redirect(self_admin_url('/plugins.php')).exit();
+            //250605 Reload page so WP doesn't show update wizard again.
+            echo '<script>window.location.href = "' . esc_js(self_admin_url('/plugins.php')) . '";</script>';
+            exit;
         }
 
         /**
