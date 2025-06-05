@@ -46,6 +46,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_other_gateways"))
 	{
 		public function __construct()
 		{
+			//250605 Reload page so WP updates admin menu.
+			if (!empty($_POST['ws_plugin__s2member_options_save'])) {
+				echo '<script>window.location.href = "' . esc_js(esc_url_raw($_SERVER['REQUEST_URI'])) . '";</script>';
+				exit;
+			}
+
 			echo '<div class="wrap ws-menu-page">'."\n";
 
 			echo '<div class="wp-header-end"></div>'."\n";
