@@ -278,6 +278,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 				echo '</tbody>'."\n";
 				echo '</table>'."\n";
 
+				//250606 Skip Custom Value Domain Validation.
+				echo '<div class="ws-menu-page-hr"></div>'."\n";
+
+				echo '<table class="form-table">'."\n";
+				echo '<tbody>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<th>'."\n";
+				echo '<label for="ws-plugin--s2member-skip-ipn-domain-validation">'."\n";
+				echo 'Skip Domain Validation of the `custom` Value? (beta)<br />'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies to all gateways. [ <a href="#" onclick="alert(\'This configuration option may also appear under the other gateways. You can change it here, but remember that this setting is shared among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '</label>'."\n";
+				echo '</th>'."\n";
+
+				echo '</tr>'."\n";
+				echo '<tr>'."\n";
+
+				echo '<td>'."\n";
+				echo '<input type="radio" name="ws_plugin__s2member_skip_ipn_domain_validation" id="ws-plugin--s2member-skip-ipn-domain-validation-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['skip_ipn_domain_validation']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-skip-ipn-domain-validation-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_skip_ipn_domain_validation" id="ws-plugin--s2member-skip-ipn-domain-validation-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['skip_ipn_domain_validation']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-skip-ipn-domain-validation-1">Yes, skip domain checks in the `custom` value.</label><br />'."\n";
+				echo '<em>This allows continued processing of notifications even if the domain in the `custom` value doesn\'t match the current <code>'.esc_html($_SERVER["HTTP_HOST"]).'</code>. Useful for subscriptions originated outside of s2Member installation, or under a different domain.</em><br />'."\n";
+				echo '</td>'."\n";
+
+				echo '</tr>'."\n";
+				echo '</tbody>'."\n";
+				echo '</table>'."\n";
+
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 
