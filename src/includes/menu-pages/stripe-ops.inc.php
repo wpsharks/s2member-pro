@@ -262,7 +262,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 				echo '<th>'."\n";
 				echo '<label for="ws-plugin--s2member-ipn-signup-vars-fallback">'."\n";
 				echo 'Enable Fallback for Missing User "IPN Signup Vars"? (beta)<br />'."\n";
-				echo '<small><em class="ws-menu-page-hilite">* This setting applies universally. [ <a href="#" onclick="alert(\'This configuration option may ALSO appear under (s2Member → PayPal Options). Feel free to configure it here; but please remember that this setting is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
+				echo '<small><em class="ws-menu-page-hilite">* This setting applies to all gateways. [ <a href="#" onclick="alert(\'This configuration option may also appear under the other gateways. You can change it here, but remember that this setting is shared among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></small>'."\n";
 				echo '</label>'."\n";
 				echo '</th>'."\n";
 
@@ -271,7 +271,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 				echo '<td>'."\n";
 				echo '<input type="radio" name="ws_plugin__s2member_ipn_signup_vars_fallback" id="ws-plugin--s2member-ipn-signup-vars-fallback-0" value="0"'.((!$GLOBALS['WS_PLUGIN__']['s2member']['o']['ipn_signup_vars_fallback']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-ipn-signup-vars-fallback-0">No</label> &nbsp;&nbsp;&nbsp; <input type="radio" name="ws_plugin__s2member_ipn_signup_vars_fallback" id="ws-plugin--s2member-ipn-signup-vars-fallback-1" value="1"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['ipn_signup_vars_fallback']) ? ' checked="checked"' : '').' /> <label for="ws-plugin--s2member-ipn-signup-vars-fallback-1">Yes, enable user IPN Signup Vars fallback.</label><br />'."\n";
-				echo '<em>Enable fallback behavior when the user\'s IPN Signup Variables are missing during the Stripe webhook event processing (useful for migrated or imported subscriptions, for example).</em><br />'."\n";
+				echo '<em>Enable fallback behavior when the user\'s IPN Signup Variables are missing during the IPN event processing (useful for migrated or imported subscriptions, for example).</em><br />'."\n";
 				echo '</td>'."\n";
 
 				echo '</tr>'."\n";
