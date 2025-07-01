@@ -153,8 +153,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     continue; // Final validation must not fail.
                 }
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
-                    wp_mail($_recipient, $_subject, $_message, // `text/plain` emails.
-                        'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+					//250617 HTML email support.
+					if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+						wp_mail($_recipient, $_subject, $_message, // text/plain emails.
+							'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+					} else {
+						c_ws_plugin__s2member_utilities::mail($_recipient, $_subject, $_message);
+					}
 
                     $_log_entry = array(
                         'eot'        => $_eot,

@@ -363,7 +363,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_signup_email_message" id="ws-plugin--s2member-signup-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["signup_email_message"]).'</textarea><br />'."\n";
+			//250615 Visual editor for HTML emails.
+			if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+				echo '<textarea name="ws_plugin__s2member_signup_email_message" id="ws-plugin--s2member-signup-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["signup_email_message"]).'</textarea><br />'."\n";
+			} else {
+				c_ws_plugin__s2member_utilities::editor('signup_email_message'); 
+			}
+
 			echo 'Message Body used in the email sent to a Customer after a successful signup has occurred through ClickBank.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
@@ -467,7 +473,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_modification_email_message" id="ws-plugin--s2member-modification-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["modification_email_message"]).'</textarea><br />'."\n";
+			//250615 Visual editor for HTML emails.
+			if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+				echo '<textarea name="ws_plugin__s2member_modification_email_message" id="ws-plugin--s2member-modification-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["modification_email_message"]).'</textarea><br />'."\n";
+			} else {
+				c_ws_plugin__s2member_utilities::editor('modification_email_message'); 
+			}
+
 			echo 'Message Body used in the email sent to a Customer after a successful modification has occurred through ClickBank.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
@@ -584,7 +596,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_ccap_email_message" id="ws-plugin--s2member-ccap-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["ccap_email_message"]).'</textarea><br />'."\n";
+			//250615 Visual editor for HTML emails.
+			if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+				echo '<textarea name="ws_plugin__s2member_ccap_email_message" id="ws-plugin--s2member-ccap-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["ccap_email_message"]).'</textarea><br />'."\n";
+			} else {
+				c_ws_plugin__s2member_utilities::editor('ccap_email_message'); 
+			}
+
 			echo 'Message Body used in the email sent to a Customer after a purchase is completed through ClickBank.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
@@ -694,7 +712,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_sp_email_message" id="ws-plugin--s2member-sp-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["sp_email_message"]).'</textarea><br />'."\n";
+			//250615 Visual editor for HTML emails.
+			if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+				echo '<textarea name="ws_plugin__s2member_sp_email_message" id="ws-plugin--s2member-sp-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["sp_email_message"]).'</textarea><br />'."\n";
+			} else {
+				c_ws_plugin__s2member_utilities::editor('sp_email_message'); 
+			}
+
 			echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through ClickBank, for Specific Post/Page Access.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";

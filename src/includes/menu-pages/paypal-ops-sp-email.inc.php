@@ -101,7 +101,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_sp_email"))
 			echo '<tr>'."\n";
 
 			echo '<td>'."\n";
-			echo '<textarea name="ws_plugin__s2member_pro_sp_email_message" id="ws-plugin--s2member-pro-sp-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_sp_email_message"]).'</textarea><br />'."\n";
+			//250615 Visual editor for HTML emails.
+			if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+				echo '<textarea name="ws_plugin__s2member_pro_sp_email_message" id="ws-plugin--s2member-pro-sp-email-message" rows="10">'.format_to_edit($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_sp_email_message"]).'</textarea><br />'."\n";
+			} else {
+				c_ws_plugin__s2member_utilities::editor('pro_sp_email_message'); 
+			}
+
 			echo 'Message Body used in the email sent to a Customer after a successful purchase has occurred through a PayPal Pro-Form, for Specific Post/Page Access.<br /><br />'."\n";
 			echo '<strong>You can also use these special Replacement Codes if you need them:</strong>'."\n";
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
