@@ -61,6 +61,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
+			do_action("ws_plugin__s2member_during_stripe_forms_page_before_left_sections", get_defined_vars());
+
 			echo '<div class="ws-menu-page-group" title="Free Registration Forms">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-registration-forms-section">'."\n";

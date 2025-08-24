@@ -63,6 +63,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_mms_ops"))
 
 						if(is_multisite() && is_main_site()) // These panels will ONLY be available on the Main Site; with Multisite Networking.
 							{
+								do_action("ws_plugin__s2member_during_mms_ops_page_before_left_sections_form", get_defined_vars());
+
 								echo '<form method="post" name="ws_plugin__s2member_options_form" id="ws-plugin--s2member-options-form" autocomplete="off">'."\n";
 								echo '<input type="hidden" name="ws_plugin__s2member_options_save" id="ws-plugin--s2member-options-save" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-options-save")).'" />'."\n";
 								echo '<input type="hidden" name="ws_plugin__s2member_configured" id="ws-plugin--s2member-configured" value="1" />'."\n";

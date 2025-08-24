@@ -61,6 +61,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
+			do_action("ws_plugin__s2member_during_import_export_page_before_left_sections", get_defined_vars());
+
 			if(isset($_REQUEST['enable_advanced_tools']))
 				c_ws_plugin__s2member_menu_pages::update_all_options(array('ws_plugin__s2member_pro_import_export_advanced_mode' => (string)(integer)$_REQUEST['enable_advanced_tools']), TRUE, FALSE, FALSE, FALSE, FALSE);
 			$enable_advanced_tools = $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_import_export_advanced_mode'];

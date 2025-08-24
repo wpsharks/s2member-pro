@@ -61,6 +61,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_buttons"))
 			echo '<tr class="ws-menu-page-table-tr">'."\n";
 			echo '<td class="ws-menu-page-table-l">'."\n";
 
+			do_action("ws_plugin__s2member_during_clickbank_buttons_page_before_left_sections", get_defined_vars());
+
 			for($n = 1; $n <= $GLOBALS["WS_PLUGIN__"]["s2member"]["c"]["levels"]; $n++)
 			{
 				echo '<div class="ws-menu-page-group" title="Buttons For Level #'.$n.' Access">'."\n";
