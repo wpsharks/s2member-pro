@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 250701
-Stable tag: 250701
-Tested up to: 6.9-alpha-60398
+Version: 250905
+Stable tag: 250905
+Tested up to: 6.9-alpha-60709
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.3
@@ -96,11 +96,17 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v250701 =
+= v250905 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v250905 =
+
+- (Framework) **Security**: Improve handling of registration fields in multisite.
+
+- (Framework & Pro) **UI**: Add a Help panel with contact form to all admin pages.
 
 = v250701 =
 
