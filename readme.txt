@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 250905
-Stable tag: 250905
-Tested up to: 6.9-alpha-60709
+Version: 251005
+Stable tag: 251005
+Tested up to: 6.9-alpha-60900
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.3
@@ -96,11 +96,19 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v250905 =
+= v251005 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v251005 =
+
+- (Framework) **Security**: Improved sanitization for Tracking API replacement values.
+
+- (Framework) **Fix**: Use the site URL host instead of HTTP_HOST for proxy key when Skip Domain Check is enabled.
+
+- (Framework) **Fix**: Ensure the Fallback IPN Signup Vars provide a valid item_number for cancellation handling.
 
 = v250905 =
 
