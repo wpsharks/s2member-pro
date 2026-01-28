@@ -1,8 +1,8 @@
 === s2Member® Pro ===
 
-Version: 260101
-Stable tag: 260101
-Tested up to: 7.0-alpha-61413
+Version: 260127
+Stable tag: 260127
+Tested up to: 7.0-alpha-61539
 Requires at least: 4.2
 Requires PHP: 5.6.2
 Tested up to PHP: 8.3
@@ -96,11 +96,15 @@ Released under the terms of the [GNU General Public License](http://www.gnu.org/
 
 == Upgrade Notice ==
 
-= v260101 =
+= v260127 =
 
 (Maintenance Release) Upgrade immediately.
 
 == Changelog ==
+
+= v260127 =
+
+- (Framework) **PayPal Enhancement**: Modernized s2Member’s PayPal integration by adding support for PayPal Checkout with their latest REST APIs, Smart Buttons, and webhook event handling. This release introduces PayPal’s current Checkout platform as an optional, reliable alternative to the legacy PayPal Standard buttons. Existing s2Member PayPal button shortcodes continue to work as-is (no edits required). See: _WP Admin > s2Member > PayPal Options > PayPal Checkout (Beta)_. Thanks to the beta testers, especially Sim Architect.
 
 = v260101 =
 
