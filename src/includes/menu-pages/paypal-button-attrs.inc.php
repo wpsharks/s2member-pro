@@ -52,6 +52,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_button_attrs"))
 
 			echo '<ul class="ws-menu-page-li-margins">'."\n";
 			echo '<li><code>success=""</code> Success Return URL <em>(optional)</em>. s2Member handles this automatically for you. However, if you would prefer to take control over the landing page after checkout <em>(i.e., your own custom Thank-You Page)</em>, you can. If supplied, this must be a full URL, starting with <code>http://</code>. Note, s2Member will NOT use this value if an existing account holder is being modified. s2Member handles account updates <em>(i.e., billing modification)</em> in a more dynamic way. Your Success Return URL is only applied to (new) Customers.</li>'."\n";
+			echo '<li><code>accept="card"</code> Enables card funding in the PayPal-hosted Checkout experience <em>(optional)</em>. When PayPal allows it, buyers may be offered an option to pay by debit/credit card as a guest (without logging into a PayPal account). Availability is controlled by PayPal and can vary based on merchant account settings (e.g., guest checkout/account optional), buyer country/region, PayPal eligibility/risk rules, and browser privacy/tracking protections. s2Member cannot force this option to appear.</li>'."\n";
 		}
 	}
 }

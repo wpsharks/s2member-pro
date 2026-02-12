@@ -63,6 +63,7 @@ add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_u
 add_filter('ws_plugin__s2member_sc_paypal_button_default_attrs', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_default_attrs', 10, 2);
 add_action('ws_plugin__s2member_before_sc_paypal_button_after_shortcode_atts', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_after_attrs');
 add_filter('ws_plugin__s2member_during_sc_paypal_button_success_return_url', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_success_return_url', 10, 2);
+add_filter('ws_plugin__s2member_ppco_sdk_src', 'c_ws_plugin__s2member_pro_paypal_extras::ppco_sdk_src', 10, 2);
 add_action('ws_plugin__s2member_during_paypal_buttons_page_during_left_sections_during_shortcode_attrs_lis', 'c_ws_plugin__s2member_pro_menu_pages::paypal_button_attrs');
 add_action('ws_plugin__s2member_during_paypal_ops_page_during_left_sections_during_paypal_pdt_after_more_info', 'c_ws_plugin__s2member_pro_menu_pages::paypal_return_template');
 

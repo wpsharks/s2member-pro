@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*/
 				public static function paypal_button_default_attrs ($default_attrs = FALSE, $vars = FALSE)
 					{
-						return array_merge ((array)$default_attrs, array("success" => ""));
+						return array_merge ((array)$default_attrs, array("success" => "", "accept" => ""));
 					}
 				/**
 				* Cleans up extra Attributes in PayPal Button Shortcodes.
@@ -76,6 +76,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 						$attr = &$vars["__refs"]["attr"]; // By reference.
 
 						$attr["success"] = str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]);
+
+						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array();
 
 						return /* Return for uniformity. */;
 					}
@@ -100,6 +102,71 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 
 						else // Else default.
 							return $success_return_url;
+					}
+				/**
+				* Filters PayPal Checkout SDK URL for shortcode options (introduced by s2Member Pro).
+				*
+				* @package s2Member\PayPal
+				* @since 260208
+				*
+				* @attaches-to ``add_filter("ws_plugin__s2member_ppco_sdk_src");``
+				*
+				* @param string $ppco_sdk_src PayPal SDK URL.
+				* @param array  $vars An array of defined variables, passed in by the Filter Hook.
+				*
+				* @return string Filtered URL.
+				*/
+				public static function ppco_sdk_src ($ppco_sdk_src = '', $vars = FALSE)
+					{
+						if(!is_array($vars) || empty($vars["attr"]))
+							return (string)$ppco_sdk_src;
+
+						$attr = $vars["attr"]; // Shortcode Attributes.
+						$accept = array();
+
+						if(!empty($attr["accept"]) && is_array($attr["accept"]))
+							$accept = $attr["accept"];
+						else if(!empty($attr["accept"]) && is_string($attr["accept"]))
+							$accept = preg_split("/[;,]+/", preg_replace("/[\r\n\t\s]+/", "", strtolower($attr["accept"])));
+
+						$wants_card = (in_array("card", $accept, TRUE) || in_array("cards", $accept, TRUE) || in_array("creditcard", $accept, TRUE) || in_array("credit-card", $accept, TRUE));
+
+						if(!$wants_card)
+							return (string)$ppco_sdk_src;
+
+						$u = @parse_url((string)$ppco_sdk_src);
+						if(empty($u["scheme"]) || empty($u["host"]))
+							return (string)$ppco_sdk_src;
+
+						$q = array();
+						if(!empty($u["query"]))
+							parse_str($u["query"], $q);
+
+						// Remove 'card' from disable-funding (or remove param if empty).
+						if(!empty($q["disable-funding"]))
+							{
+								$df = array_filter(array_map("trim", explode(",", (string)$q["disable-funding"])));
+								$df = array_values(array_diff($df, array("card")));
+								if($df) $q["disable-funding"] = implode(",", $df);
+								else unset($q["disable-funding"]);
+							}
+
+						// Prefer requesting card funding explicitly.
+						if(!empty($q["enable-funding"]))
+							{
+								$ef = array_filter(array_map("trim", explode(",", (string)$q["enable-funding"])));
+								if(!in_array("card", $ef, TRUE)) $ef[] = "card";
+								$q["enable-funding"] = implode(",", $ef);
+							}
+						else $q["enable-funding"] = "card";
+
+						$u["query"] = http_build_query($q, '', '&', PHP_QUERY_RFC3986);
+
+						$new = $u["scheme"]."://".$u["host"].(!empty($u["port"]) ? ":".$u["port"] : "").(!empty($u["path"]) ? $u["path"] : "");
+						if($u["query"]) $new .= "?".$u["query"];
+						if(!empty($u["fragment"])) $new .= "#".$u["fragment"];
+
+						return $new;
 					}
 			}
 	}
