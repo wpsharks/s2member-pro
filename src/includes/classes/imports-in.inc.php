@@ -317,6 +317,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 										if(strpos($_user_meta_key, $wpdb->prefix) !== 0 && !in_array($_user_meta_key, array('first_name', 'last_name', 'nickname', 'description'), TRUE))
 											continue; // Child sites may NOT update meta data for other child blogs.
 
+									//260219 Convert imported EOT time to timestamp if value is just a date string.
+									if(preg_match('/^'.preg_quote($wpdb->base_prefix, '/').'(\d+_)?s2member_auto_eot_time$/', $_user_meta_key) || $_user_meta_key === 's2member_auto_eot_time')
+									{
+										if($_new_meta_value !== '' && !is_numeric($_new_meta_value))
+										{
+											$_raw_meta_value = $_new_meta_value;
+											$_new_meta_value = strtotime((string)$_new_meta_value);
+											if($_new_meta_value === FALSE)
+											{
+												$errors[] = 'Line #'.$line.'. Invalid Auto-EOT time (<code>'.esc_html($_raw_meta_value).'</code>); please try again.';
+												continue;
+											}
+										}
+										if(is_numeric($_new_meta_value))
+											$_new_meta_value = (string)(int)$_new_meta_value;
+									}
+
 									switch($_user_meta_key)
 									{
 										case $wpdb->prefix.'capabilities':
