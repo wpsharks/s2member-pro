@@ -520,7 +520,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 		 */
 		public static function stripe_form_submission_validation_errors($form, $s = array())
 		{
-			$cp_attr             = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($s['attr'], @$s['coupon'], 'attr');
+			$cp_attr             = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($s['attr'], (string)@$s['coupon'], 'attr');
 			$is_free_checkout    = in_array($form, array('sp-checkout', 'checkout'), TRUE) && $cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0;
 			$is_bitcoin_checkout = !$is_free_checkout && in_array($form, array('sp-checkout', 'checkout'), TRUE) && isset($s['source_token']) && stripos($s['source_token'], 'btcrcv_') === 0;
 
@@ -567,7 +567,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog(@$s['username'], $s['email'])))
+					else if(email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s['username'], $s['email'])))
 						$response = array('response' => _x('That Email Address is already in use. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if(empty($s['username']) || !is_string($s['username']) || empty($s['_o_username']) || !is_string($s['_o_username']))
@@ -654,7 +654,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(!is_user_logged_in() && !is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog(@$s['username'], $s['email'])))
+					else if(!is_user_logged_in() && email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s['username'], $s['email'])))
 						$response = array('response' => _x('That Email Address is already in use. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
 					else if(!is_user_logged_in() && (empty($s['username']) || !is_string($s['username']) || empty($s['_o_username']) || !is_string($s['_o_username'])))

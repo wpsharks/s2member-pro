@@ -76,8 +76,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 								if(!empty($xco_post_vars)) $post_vars["attr"]["captcha"] = "0"; // No need to revalidate captcha in this case.
 
 								$post_vars["name"] = trim ($post_vars["first_name"] . " " . $post_vars["last_name"]);
-								$post_vars["email"] = apply_filters("user_registration_email", sanitize_email (@$post_vars["email"]), get_defined_vars ());
-								$post_vars["username"] = (is_multisite()) ? strtolower(@$post_vars["username"]) : @$post_vars["username"]; // Force lowercase.
+								$post_vars["email"] = apply_filters("user_registration_email", sanitize_email ((string)@$post_vars["email"]), get_defined_vars ());
+								$post_vars["username"] = (is_multisite()) ? strtolower((string)@$post_vars["username"]) : (string)@$post_vars["username"]; // Force lowercase.
 								$post_vars["username"] = sanitize_user (($post_vars["_o_username"] = $post_vars["username"]), is_multisite ());
 
 								if(empty($post_vars["card_expiration"]) && isset($post_vars["card_expiration_month"], $post_vars["card_expiration_year"]))

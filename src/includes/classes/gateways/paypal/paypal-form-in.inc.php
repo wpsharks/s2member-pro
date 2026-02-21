@@ -515,8 +515,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								Configure internal attributes.
 								*/
 								$attr["sp_ids_exp"] = /* Combined "sp:ids:expiration hours". */ "sp:".$attr["ids"].":".$attr["exp"];
-								$attr["coupon"] = (@$_p["s2member_pro_paypal_sp_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_sp_checkout"]["coupon"] : $attr["coupon"];
-								/*
+								$attr["coupon"] = (!empty($_p["s2member_pro_paypal_sp_checkout"]["coupon"])) ? (string)$_p["s2member_pro_paypal_sp_checkout"]["coupon"] : $attr["coupon"];								/*
 								Obtain a possible response and/or validation error.
 								*/
 								$response = c_ws_plugin__s2member_pro_paypal_responses::paypal_sp_checkout_response($attr);
@@ -693,8 +692,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								*/
 								$attr["level_ccaps_eotper"] = ($attr["rr"] === "BN" && $attr["rt"] !== "L") ? $attr["level"].":".$attr["ccaps"].":".$attr["rp"]." ".$attr["rt"] : $attr["level"].":".$attr["ccaps"];
 								$attr["level_ccaps_eotper"] = /* Clean any trailing separators from this string. */ rtrim($attr["level_ccaps_eotper"], ":");
-								$attr["coupon"] = (@$_p["s2member_pro_paypal_checkout"]["coupon"]) ? $_p["s2member_pro_paypal_checkout"]["coupon"] : $attr["coupon"];
-								/*
+								$attr["coupon"] = (!empty($_p["s2member_pro_paypal_checkout"]["coupon"])) ? (string)$_p["s2member_pro_paypal_checkout"]["coupon"] : $attr["coupon"];								/*
 								Obtain a possible response and/or validation error.
 								*/
 								$response = c_ws_plugin__s2member_pro_paypal_responses::paypal_checkout_response($attr);

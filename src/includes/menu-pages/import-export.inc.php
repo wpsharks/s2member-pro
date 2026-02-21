@@ -97,7 +97,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 				echo '<input type="hidden" name="ws_plugin__s2member_pro_import_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 				echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
-				echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes(@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
+				echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes((string)@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
 
 				echo 'One User/Member per line please. See <a href="http://www.s2member.com/kb/advanced-import-tools/" target="_blank" rel="external">this KB article for details</a>.'."\n";
 				echo '</form>'."\n";
@@ -134,7 +134,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 					echo '<input type="hidden" name="ws_plugin__s2member_pro_import_simple_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 					echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
-					echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes(@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
+					echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes((string)@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
 
 					echo 'One User/Member per line please. Here is a quick example:<br />'."\n";
 					echo '<code>"ID","Username","First Name","Last Name","Display Name","Email"</code>'."\n";
@@ -192,7 +192,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_import_export"))
 					echo '<input type="hidden" name="ws_plugin__s2member_pro_import_simple_users" id="ws-plugin--s2member-pro-import-users" value="'.esc_attr(wp_create_nonce("ws-plugin--s2member-pro-import-users")).'" />'."\n";
 
 					echo '<input type="file" name="ws_plugin__s2member_pro_import_users_file" id="ws-plugin--s2member-pro-import-users-file" />&nbsp;&nbsp;&nbsp;(up to 1000 lines per file)&nbsp;&nbsp;&nbsp;<input type="submit" value="Import Now" style="font-size:120%; font-weight:normal;" /><br /><br />'."\n";
-					echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes(@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
+					echo '<textarea name="ws_plugin__s2member_pro_import_users_direct_input" id="ws-plugin--s2member-pro-import-users-direct-input" rows="10" wrap="off" spellcheck="false" style="width:99%;">'.format_to_edit(trim(stripslashes((string)@$_POST["ws_plugin__s2member_pro_import_users_direct_input"]))).'</textarea><br />'."\n";
 
 					echo 'One User/Member per line please. Here is a quick example:<br />'."\n";
 					echo '<code>"ID","Username","Password","First Name","Last Name","Display Name","Email"</code><br /><br />'."\n";

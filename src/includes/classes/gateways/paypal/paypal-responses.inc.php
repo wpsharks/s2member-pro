@@ -662,7 +662,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog(@$s["username"], $s["email"])))
+										else if(email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(empty($s["username"]) || !is_string($s["username"]) || empty($s["_o_username"]) || !is_string($s["_o_username"]))
@@ -774,7 +774,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!is_user_logged_in() && !is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
-										else if(!is_user_logged_in() && email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog(@$s["username"], $s["email"])))
+										else if(!is_user_logged_in() && email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
 
 										else if(!is_user_logged_in() && (empty($s["username"]) || !is_string($s["username"]) || empty($s["_o_username"]) || !is_string($s["_o_username"])))
