@@ -282,15 +282,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try // Attempt to charge the customer.
 			{
 				$charge = array(
-					'customer'             => $customer_id,
-					'description'          => $description, 
-					'metadata'             => $metadata,
-					'amount'               => self::dollar_amount_to_cents($amount, $currency),
-					'currency'             => $currency,
-					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+					'customer'                    => $customer_id,
+					'description'                 => $description, 
+					'metadata'                    => $metadata,
+					'amount'                      => self::dollar_amount_to_cents($amount, $currency),
+					'currency'                    => $currency,
+					'statement_descriptor_suffix' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
 				);
-				if(!trim($charge['statement_descriptor']))
-					unset($charge['statement_descriptor']);
+				if(!trim($charge['statement_descriptor_suffix']))
+					unset($charge['statement_descriptor_suffix']);
 
 				$charge = \Stripe\Charge::create($charge);
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $charge);
@@ -1276,18 +1276,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try // Attempt to create the Payment Intent.
 			{
 				$intent = array(
-					'amount'               => self::dollar_amount_to_cents($amount, $currency),
-					'currency'             => $currency,
-					'customer'             => $cus_id,
-					'payment_method'       => $pm_id,
-					'confirmation_method'  => 'manual',
-					'confirm'              => true,
-					'description'          => $description, 
-					'metadata'             => $metadata,
-					'statement_descriptor' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
+					'amount'                      => self::dollar_amount_to_cents($amount, $currency),
+					'currency'                    => $currency,
+					'customer'                    => $cus_id,
+					'payment_method'              => $pm_id,
+					'confirmation_method'         => 'manual',
+					'confirm'                     => true,
+					'description'                 => $description, 
+					'metadata'                    => $metadata,
+					'statement_descriptor_suffix' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_statement_description'],
 				);
-				if(!trim($intent['statement_descriptor']))
-					unset($intent['statement_descriptor']);
+				if(!trim($intent['statement_descriptor_suffix']))
+					unset($intent['statement_descriptor_suffix']);
 
 				$intent = \Stripe\PaymentIntent::create($intent, array(
 					'idempotency_key' => md5(serialize($intent))
