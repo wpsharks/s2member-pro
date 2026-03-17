@@ -101,23 +101,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_update_in'))
 									//230503 Remove default_payment_method from subscription so customer's default is actually used
 									c_ws_plugin__s2member_pro_stripe_utilities::subscr_remove_default_card($cur__subscr_id);
 
-									// Attach the new payment method to the customer and update his default.
+									// Get the new payment method.
 									if(is_object($payment_method = c_ws_plugin__s2member_pro_stripe_utilities::attached_card_payment_method($cur__subscr_cid, $post_vars['pm_id'])))
 									{
-										// Create a SetupIntent for with this card.
-										if(is_object($stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::create_setup_intent($cur__subscr_cid, $post_vars['pm_id']))
-											&& is_object($handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($stripe_intent->id))
-										)
+										// Create a SetupIntent for this card.
+										if(is_object($stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::create_setup_intent($cur__subscr_cid, $post_vars['pm_id'])))
 										{
-											$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
-											if($post_vars['attr']['success']
-												&& ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success']))
-												&& ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-											) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+											$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($stripe_intent->id);
+
+											if(is_object($handle_intent_status))
+											{
+												$global_response = array('response' => _x('<strong>Confirmed.</strong> Your billing information has been updated.', 's2member-front', 's2member'));
+												if($post_vars['attr']['success']
+													&& ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $post_vars['attr']['success']))
+													&& ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+												) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+											}
+											else
+												$global_response = $handle_intent_status;
 										}
-										else {
-											$global_response = $handle_intent_status;
-										}
+										else
+											$global_response = array('response' => $stripe_intent, 'error' => TRUE);
 									}
 									else $global_response = array('response' => $payment_method, 'error' => TRUE);
 								}

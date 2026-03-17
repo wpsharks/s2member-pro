@@ -1154,14 +1154,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		// Since 190914 ------------------------
 
 		/**
-		 * Attaches a Payment Method to a Customer if card not there yet.
-		 * Gets the existing Payment Method for that card if already attached.
+		 * Gets a Payment Method.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
 		 * @param string $payment_method_id Payment Method ID.
 		 *
-		 * @return object Attached PaymentMethod for this card, else error message.
+		 * @return object PaymentMethod object, else error message.
 		 */
+		//260317 !!! TO-DO Rename this helper later; it now retrieves a Payment Method and no longer attaches it.
 		public static function attached_card_payment_method($customer_id, $payment_method_id)
 		{
 			$input_time = time(); // Initialize.
@@ -1171,47 +1171,39 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try
 			{
-				// Let's get the new PaymentMethod.
 				$payment_method = \Stripe\PaymentMethod::retrieve($payment_method_id);
-				$attach = true; 
-
-				//!!! It may be a problem to use the previous PM if the new one has Billing info.
-				// Let's get all the cards this customer has.
-				// $customer_pms = \Stripe\PaymentMethod::all([
-				// 		'customer' => $customer_id,
-				// 		'type'     => 'card',
-				// 		'limit'    => 100,
-				// ]);
-				// Let's see if he doesn't already have this card.
-				// if (!empty($customer_pms)) {
-				// 	foreach ($customer_pms as $customer_pm) {
-				// 		if ($payment_method->card->fingerprint == $customer_pm->card->fingerprint
-				// 			&& $payment_method->card->exp_year == $customer_pm->card->exp_year
-				// 			&& $payment_method->card->exp_month == $customer_pm->card->exp_month
-				// 		) {
-				// 			// It's already there, so we won't attach it again.
-				// 			$attach = false;
-				// 			// Let's use this card's existing Payment Method.
-				// 			$payment_method = $customer_pm;
-				// 			break;
-				// 		}
-				// 	}
-				// }
-
-				if ($attach)
-					$payment_method = $payment_method->attach(['customer' => $customer_id]);
-
-				// Let's set this payment method as the default for this customer's invoices.
-				$customer_update = array(
-					'invoice_settings' => array(
-						'default_payment_method' => $payment_method->id,
-					),
-				);
-				\Stripe\Customer::update($customer_id, $customer_update);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $payment_method);
 
 				return $payment_method;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return self::error_message($exception);
+			}
+		}
+
+		public static function set_customer_default_payment_method($customer_id, $payment_method_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			try
+			{
+				$customer_update = array(
+					'invoice_settings' => array(
+						'default_payment_method' => $payment_method_id,
+					),
+				);
+				$customer = \Stripe\Customer::update($customer_id, $customer_update);
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
+
+				return $customer;
 			}
 			catch(exception $exception)
 			{
@@ -1417,18 +1409,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return $global_response = array('response' => _x('Please try again with a different card.', 's2member-front', 's2member'), 'error' => TRUE);
 
 			// succeeded
-			if ($intent->status == 'succeeded')
+			if ($intent->status == 'succeeded') {
+				if(!empty($intent->customer) && !empty($intent->payment_method)) {
+					$set_customer_default_payment_method = self::set_customer_default_payment_method($intent->customer, $intent->payment_method);
+					if(!is_object($set_customer_default_payment_method))
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260317 Non-fatal: unable to set customer default payment method after successful SetupIntent. '.print_r($set_customer_default_payment_method, TRUE));
+				}
+
 				return $intent;
+			}
 		}
 
 		/**
 		 * Check the PaymentIntent's status.
 		 * 
 		 * @param string|int $pi_id PaymentIntent id.
+		 * @param bool       $set_customer_default_payment_method Optional. Set the customer's default payment method after success.
 		 * 
 		 * @return object|array PaymentIntent object if succeeded, or response array with error.
 		 */
-		public static function handle_payment_intent_status($pi_id)
+		public static function handle_payment_intent_status($pi_id, $set_customer_default_payment_method = FALSE)
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -1466,8 +1466,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return $global_response = array('response' => _x('The payment failed, please try again with a different card.', 's2member-front', 's2member'), 'error' => TRUE);
 
 			// succeeded
-			if ($intent->status == 'succeeded')
+			if ($intent->status == 'succeeded') {
+				if($set_customer_default_payment_method && !empty($intent->customer) && !empty($intent->payment_method)) {
+					$set_customer_default_payment_method_response = self::set_customer_default_payment_method($intent->customer, $intent->payment_method);
+					if(!is_object($set_customer_default_payment_method_response))
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260317 Non-fatal: unable to set customer default payment method after successful PaymentIntent. '.print_r($set_customer_default_payment_method_response, TRUE));
+				}
+
 				return $intent;
+			}
 		}
 
 		/**
@@ -1506,7 +1513,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * 
 		 * @return object The PaymentIntent object
 		 */
-		public static function udpate_payment_intent($pi_id, $args)
+		public static function update_payment_intent($pi_id, $args)
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -1521,6 +1528,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			return $intent;
 		}
 
+		public static function udpate_payment_intent($pi_id, $args)
+		{
+			return self::update_payment_intent($pi_id, $args);
+		}
+
 		/**
 		 * Update an existing Setup Intent.
 		 * 
@@ -1529,7 +1541,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * 
 		 * @return object The SetupIntent object
 		 */
-		public static function udpate_setup_intent($seti_id, $args)
+		public static function update_setup_intent($seti_id, $args)
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -1542,6 +1554,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
 
 			return $intent;
+		}
+
+		public static function udpate_setup_intent($seti_id, $args)
+		{
+			return self::update_setup_intent($seti_id, $args);
 		}
 
 		/**
