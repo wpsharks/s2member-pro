@@ -1275,6 +1275,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			$metadata = array_merge(self::_additional_intent_metadata($post_vars, $cost_calculations), (array)$metadata);
 
+			if(empty($pm_id))
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Missing payment method.');
+				return _x('The payment failed, please try again with a different card.', 's2member-front', 's2member');
+			}
+
 			try // Attempt to create the Payment Intent.
 			{
 				$intent = array(

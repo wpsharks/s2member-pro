@@ -183,18 +183,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											// If we have a Payment Intent ID, let's try to update it and handle it again,
 											if(!empty($post_vars['pi_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
-												$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['pi_id']);
-												// If we get an object, then the charge succeeded!
-												if(is_object($handle_intent_status))
-													$stripe_intent_succeeded = $handle_intent_status;
+												if(!is_object($stripe_intent))
+													$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+												else {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+													// If we get an object, then the charge succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
 											}
 											// Or if we have a Setup Intent ID, let's try to update it and handle it again.
 											elseif(!empty($post_vars['seti_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
-												$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
-												// If we get an object, then the setup succeeded!
-												if(is_object($handle_intent_status))
-													$stripe_intent_succeeded = $handle_intent_status;
+												if(!is_object($stripe_intent))
+													$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+												else {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+													// If we get an object, then the setup succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
 											}
 										}
 
@@ -383,18 +391,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											// If we have a Payment Intent ID, let's try to update it and handle it again,
 											if(!empty($post_vars['pi_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
-												$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['pi_id']);
-												// If we get an object, then the charge succeeded!
-												if(is_object($handle_intent_status))
-													$stripe_intent_succeeded = $handle_intent_status;
+												if(!is_object($stripe_intent))
+													$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+												else {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_payment_intent_status($post_vars['pi_id']);
+													// If we get an object, then the charge succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
 											}
 											// Or if we have a Setup Intent ID, let's try to update it and handle it again.
 											elseif(!empty($post_vars['seti_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
-												$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
-												// If we get an object, then the setup succeeded!
-												if(is_object($handle_intent_status))
-													$stripe_intent_succeeded = $handle_intent_status;
+												if(!is_object($stripe_intent))
+													$global_response = array('response' => $stripe_intent, 'error' => TRUE);
+												else {
+													$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
+													// If we get an object, then the setup succeeded!
+													if(is_object($handle_intent_status))
+														$stripe_intent_succeeded = $handle_intent_status;
+												}
 											}
 										}
 
