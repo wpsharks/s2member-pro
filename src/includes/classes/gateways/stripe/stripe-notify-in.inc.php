@@ -69,7 +69,38 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					do_action('ws_plugin__s2member_pro_before_stripe_notify_event_switch', get_defined_vars());
 					unset($__refs, $__v);
 
-					switch($event->type)
+					$event_id                         = !empty($event->id) ? (string)$event->id : '';
+					$stripe_event_lock               = '';
+					$stripe_event_lock_acquired      = FALSE;
+					$stripe_event_processed_key      = '';
+					$stripe_event_processed          = FALSE;
+					$skip_event_switch               = FALSE;
+
+					if($event_id)
+					{
+						$stripe_event_lock          = 's2m_stripe_wh_lock_'.md5($event_id);
+						$stripe_event_processed_key = 's2m_stripe_wh_done_'.md5($event_id);
+
+						if(get_transient($stripe_event_processed_key))
+						{
+							$processing        = TRUE;
+							$skip_event_switch = TRUE;
+
+							$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+							$stripe['s2member_log'][] = 'Ignoring duplicate Stripe Webhook/IPN event. s2Member has already processed Stripe event ID: `'.$event_id.'`.';
+						}
+						else if(($stripe_event_lock_acquired = self::_acquire_event_lock($stripe_event_lock)) === FALSE)
+						{
+							$processing        = TRUE;
+							$skip_event_switch = TRUE;
+
+							$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+							$stripe['s2member_log'][] = 'Ignoring in-progress duplicate Stripe Webhook/IPN event. s2Member is already processing Stripe event ID: `'.$event_id.'`.';
+						}
+					}
+
+					if(!$skip_event_switch)
+						switch($event->type)
 					{
 						case 'invoice.payment_succeeded': // Subscription payments.
 
@@ -116,7 +147,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 
@@ -147,6 +178,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'`. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
 								$stripe['s2member_log'][] = 'You may control the behavior(s) associated w/ subscription payment failures from your Stripe Dashboard please.';
+								$stripe_event_processed = TRUE;
 							}
 							break; // Break switch handler.
 
@@ -184,7 +216,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
@@ -226,7 +258,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
@@ -276,7 +308,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor.';
@@ -326,7 +358,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
 								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor.';
@@ -337,8 +369,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 					do_action('ws_plugin__s2member_pro_after_stripe_notify_event_switch', get_defined_vars());
 					unset($__refs, $__v);
-		
-					if(empty($processing)) $stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
+
+					if(empty($processing))
+					{
+						$stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
+						$stripe_event_processed = TRUE;
+					}
+					if($stripe_event_processed && $stripe_event_processed_key)
+						set_transient($stripe_event_processed_key, time(), 31556952);
+
+					if($stripe_event_lock_acquired && $stripe_event_lock)
+						self::_release_event_lock($stripe_event_lock);
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
@@ -353,6 +394,79 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				header('Content-Type: text/plain; charset=UTF-8');
 				while(@ob_end_clean()); exit();
 			}
+		}
+
+		/**
+		 * Attempts to acquire a short-lived lock for a Stripe webhook event.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 260318
+		 *
+		 * @param string  $stripe_event_lock Stripe webhook event lock key.
+		 * @param integer $lock_timeout      Optional. Lock timeout in seconds.
+		 *
+		 * @return bool TRUE if lock acquired; else FALSE.
+		 */
+		public static function _acquire_event_lock($stripe_event_lock, $lock_timeout = 900)
+		{
+			if(!$stripe_event_lock || !is_string($stripe_event_lock))
+				return FALSE;
+
+			if(add_option($stripe_event_lock, time(), '', 'no'))
+				return TRUE;
+
+			$stripe_event_lock_time = (integer)get_option($stripe_event_lock);
+
+			if($stripe_event_lock_time > 0 && (time() - $stripe_event_lock_time) > abs($lock_timeout))
+			{
+				delete_option($stripe_event_lock);
+
+				if(add_option($stripe_event_lock, time(), '', 'no'))
+					return TRUE;
+			}
+			return FALSE;
+		}
+
+		/**
+		 * Releases a short-lived lock for a Stripe webhook event.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 260318
+		 *
+		 * @param string $stripe_event_lock Stripe webhook event lock key.
+		 *
+		 * @return void
+		 */
+		public static function _release_event_lock($stripe_event_lock)
+		{
+			if($stripe_event_lock && is_string($stripe_event_lock))
+				delete_option($stripe_event_lock);
+		}
+
+		/**
+		 * Proxies a Stripe webhook event into s2Member's PayPal notify handler.
+		 *
+		 * @package s2Member\Stripe
+		 * @since 260318
+		 *
+		 * @param array $ipn    PayPal-proxy payload.
+		 * @param array $stripe Stripe log accumulator.
+		 *
+		 * @return bool TRUE on success; else FALSE.
+		 */
+		public static function _proxy_event_to_paypal($ipn, &$stripe)
+		{
+			$r = c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20), TRUE);
+
+			if(!is_array($r))
+				$r = array('code' => 0, 'message' => 'request_failed', 'body' => '');
+
+			if(($code = (integer)$r['code']) >= 200 && $code <= 299)
+				return TRUE;
+
+			$stripe['s2member_log'][] = 'Unable to proxy this Stripe Webhook/IPN event through s2Member\'s core gateway processor.';
+			$stripe['s2member_log'][] = 'Proxy response code: `'.$code.'`; message: `'.((string)$r['message']).'`.';
+			return FALSE;
 		}
 
 		/**
