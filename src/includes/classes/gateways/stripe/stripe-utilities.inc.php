@@ -1298,7 +1298,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				// https://stripe.com/docs/api/subscriptions/update#update_subscription
 				$subscription = \Stripe\Subscription::update(
 					$subscr_id,
-					['default_payment_method' => ''],
+					['default_payment_method' => '']
 				);
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
