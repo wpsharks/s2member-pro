@@ -579,6 +579,72 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Gets the transient key for a Stripe replacement-cancellation guard.
+		 *
+		 * @since 260319
+		 *
+		 * @param string $subscription_id Subscription ID in Stripe.
+		 *
+		 * @return string Transient key.
+		 */
+		public static function replacement_cancellation_guard_key($subscription_id)
+		{
+			return 's2m_stripe_rpl_sub_'.md5((string)$subscription_id);
+		}
+
+		/**
+		 * Sets a short-lived guard for a Stripe replacement-cancellation.
+		 *
+		 * @since 260319
+		 *
+		 * @param string  $subscription_id Subscription ID in Stripe.
+		 * @param integer $expiration Optional. Guard expiration time in seconds.
+		 *
+		 * @return boolean TRUE if successful; else FALSE.
+		 */
+		public static function set_replacement_cancellation_guard($subscription_id, $expiration = 21600)
+		{
+			if(!$subscription_id || !is_string($subscription_id))
+				return FALSE;
+
+			return set_transient(self::replacement_cancellation_guard_key($subscription_id), time(), abs((integer)$expiration));
+		}
+
+		/**
+		 * Checks for a short-lived guard for a Stripe replacement-cancellation.
+		 *
+		 * @since 260319
+		 *
+		 * @param string $subscription_id Subscription ID in Stripe.
+		 *
+		 * @return boolean TRUE if guard exists; else FALSE.
+		 */
+		public static function has_replacement_cancellation_guard($subscription_id)
+		{
+			if(!$subscription_id || !is_string($subscription_id))
+				return FALSE;
+
+			return (boolean)get_transient(self::replacement_cancellation_guard_key($subscription_id));
+		}
+
+		/**
+		 * Clears a short-lived guard for a Stripe replacement-cancellation.
+		 *
+		 * @since 260319
+		 *
+		 * @param string $subscription_id Subscription ID in Stripe.
+		 *
+		 * @return boolean TRUE if successful; else FALSE.
+		 */
+		public static function clear_replacement_cancellation_guard($subscription_id)
+		{
+			if(!$subscription_id || !is_string($subscription_id))
+				return FALSE;
+
+			return delete_transient(self::replacement_cancellation_guard_key($subscription_id));
+		}
+
+		/**
 		 * Cancel a Stripe customer subscription.
 		 *
 		 * @param string  $customer_id Customer ID in Stripe.

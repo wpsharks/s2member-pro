@@ -233,36 +233,45 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							{
 								$processing = TRUE;
 
-								$ipn['txn_type']   = 'subscr_eot';
-								$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
-								$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
-								$ipn['custom']     = $ipn_signup_vars['custom'];
+								if(c_ws_plugin__s2member_pro_stripe_utilities::has_replacement_cancellation_guard($stripe_subscription->id))
+								{
+									$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+									$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'` for old Stripe subscription ID `'.$stripe_subscription->id.'` because it was cancelled as part of a subscription replacement/modification flow.';
+									$stripe_event_processed = TRUE;
+								}
+								else
+								{
+									$ipn['txn_type']   = 'subscr_eot';
+									$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
+									$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
+									$ipn['custom']     = $ipn_signup_vars['custom'];
 
-								$ipn['period1'] = $ipn_signup_vars['period1'];
-								$ipn['period3'] = $ipn_signup_vars['period3'];
+									$ipn['period1'] = $ipn_signup_vars['period1'];
+									$ipn['period3'] = $ipn_signup_vars['period3'];
 
-								$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
-								$ipn['first_name']  = $ipn_signup_vars['first_name'];
-								$ipn['last_name']   = $ipn_signup_vars['last_name'];
+									$ipn['payer_email'] = $ipn_signup_vars['payer_email'];
+									$ipn['first_name']  = $ipn_signup_vars['first_name'];
+									$ipn['last_name']   = $ipn_signup_vars['last_name'];
 
-								$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
-								$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
+									$ipn['option_name1']      = $ipn_signup_vars['option_name1'];
+									$ipn['option_selection1'] = $ipn_signup_vars['option_selection1'];
 
-								$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
-								$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
+									$ipn['option_name2']      = $ipn_signup_vars['option_name2'];
+									$ipn['option_selection2'] = $ipn_signup_vars['option_selection2'];
 
-								$ipn['item_name']   = $ipn_signup_vars['item_name'];
-								$ipn['item_number'] = $ipn_signup_vars['item_number'];
+									$ipn['item_name']   = $ipn_signup_vars['item_name'];
+									$ipn['item_number'] = $ipn_signup_vars['item_number'];
 
-								$ipn['s2member_paypal_proxy']              = 'stripe';
-								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+									$ipn['s2member_paypal_proxy']              = 'stripe';
+									$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
+									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
+									$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
-								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-								$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
-								$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+									$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+									$stripe['s2member_log'][] = 'Webhook/IPN event `'.$event->type.'` reformulated. Piping through s2Member\'s core gateway processor as `txn_type` (`'.$ipn['txn_type'].'`).';
+									$stripe['s2member_log'][] = 'Please check core IPN logs for further processing details.';
+								}
 							}
 							break; // Break switch handler.
 
