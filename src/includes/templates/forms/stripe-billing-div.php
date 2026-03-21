@@ -23,6 +23,7 @@ if(!defined('WPINC')) // MUST have WordPress.
 		<input type="hidden" id="s2member-pro-stripe-form-pi-id" name="stripe_pi_id" value="" />
 		<input type="hidden" id="s2member-pro-stripe-form-seti-id" name="stripe_seti_id" value="" />
 		<input type="hidden" id="s2member-pro-stripe-form-sub-id" name="stripe_sub_id" value="%%sub_id%%" />
+		<input type="hidden" id="s2member-pro-stripe-form-cancel-incomplete-sub-id" name="stripe_cancel_incomplete_sub_id" value="" />
 		<input type="hidden" id="s2member-pro-stripe-form-pi-secret" name="stripe_pi_secret" value="%%pi_secret%%" />
 		<input type="hidden" id="s2member-pro-stripe-form-seti-secret" name="stripe_seti_secret" value="%%seti_secret%%" />
 

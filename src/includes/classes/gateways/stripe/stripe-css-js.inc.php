@@ -81,6 +81,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_css_js'))
 		public static function stripe_js_w_globals($vars)
 		{
 			$g = 'var S2MEMBER_PRO_STRIPE_GATEWAY = true,';
+			$g .= 'S2MEMBER_PRO_STRIPE_PAYMENT_FAILED = '.json_encode(_x('The payment failed, please try again with a different card.', 's2member-front', 's2member')).',';
 
 			$g = trim($g, ' ,').';'; // Trim & add semicolon.
 

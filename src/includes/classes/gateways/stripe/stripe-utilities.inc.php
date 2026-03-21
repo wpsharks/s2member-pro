@@ -279,6 +279,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			$metadata = array_merge(self::_additional_charge_metadata($post_vars, $cost_calculations), (array)$metadata);
 
+			if($customer_id && !self::cancel_incomplete_customer_subscriptions($customer_id))
+			{
+				$error = 'Unable to cancel incomplete Stripe subscription(s) before creating a new charge.';
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $error);
+
+				return $error;
+			}
+
 			try // Attempt to charge the customer.
 			{
 				$charge = array(
@@ -458,6 +467,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
+
+			if(!self::cancel_incomplete_customer_subscriptions($customer_id))
+			{
+				$error = 'Unable to cancel incomplete Stripe subscription(s) before creating a new subscription.';
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $error);
+
+				return $error;
+			}
 
 			// Do we have a paid trial.
 			if (!empty($post_vars['attr']['tp']) && !empty($cost_calculations['trial_total']) && $cost_calculations['trial_total'] > 0) {
@@ -1278,6 +1296,146 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
 
 				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Cancels incomplete Stripe subscriptions for a customer.
+		 *
+		 * @since 260321
+		 *
+		 * @param string $customer_id Stripe customer ID.
+		 *
+		 * @return bool True on success; else false.
+		 */
+		public static function cancel_incomplete_customer_subscriptions($customer_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			self::init_stripe_sdk();
+
+			try
+			{
+				$subscriptions = \Stripe\Subscription::all(array(
+					'customer' => $customer_id,
+					'status'   => 'incomplete',
+					'limit'    => 100,
+				));
+
+				if(!empty($subscriptions->data) && is_array($subscriptions->data))
+					foreach($subscriptions->data as $_subscription)
+						if(!empty($_subscription->id))
+							$_subscription->cancel();
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), true);
+
+				return true;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return false;
+			}
+		}
+
+		/**
+		 * Cancels the incomplete Stripe subscription associated with a PaymentIntent.
+		 *
+		 * @since 260321
+		 *
+		 * @param string $payment_intent_id Stripe PaymentIntent ID.
+		 *
+		 * @return bool True on success; else false.
+		 */
+		public static function cancel_incomplete_subscription_by_payment_intent($payment_intent_id)
+		{
+			$input_time = time(); // Initialize.
+			$input_vars = get_defined_vars(); // Arguments.
+
+			if(strpos((string)$payment_intent_id, 'pi_') !== 0)
+				return false;
+
+			self::init_stripe_sdk();
+
+			try
+			{
+				$payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+
+				if(empty($payment_intent->invoice))
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Skipped cancellation because the PaymentIntent has no invoice.');
+
+					return true;
+				}
+
+				$invoice = \Stripe\Invoice::retrieve($payment_intent->invoice);
+
+				if(empty($invoice->subscription) || strpos((string)$invoice->subscription, 'sub_') !== 0)
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Skipped cancellation because the invoice has no subscription.');
+
+					return true;
+				}
+
+				try
+				{
+					$subscription = \Stripe\Subscription::retrieve($invoice->subscription);
+				}
+				catch(exception $exception)
+				{
+					if((string)$exception->getMessage() && stripos($exception->getMessage(), 'No such subscription') !== false)
+					{
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Subscription already gone; treating cleanup as successful.');
+
+						return true;
+					}
+					throw $exception;
+				}
+
+				if((string)$subscription->status !== 'incomplete')
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Skipped cancellation because the subscription is no longer incomplete.');
+
+					return true;
+				}
+
+				if(!empty($subscription->latest_invoice))
+				{
+					$latest_invoice = \Stripe\Invoice::retrieve($subscription->latest_invoice);
+
+					if($latest_invoice->status === 'draft')
+						$latest_invoice = $latest_invoice->finalizeInvoice(array('auto_advance' => false));
+
+					if($latest_invoice->status === 'open')
+						$latest_invoice = $latest_invoice->voidInvoice();
+				}
+
+				try
+				{
+					$subscription = $subscription->delete();
+				}
+				catch(exception $exception)
+				{
+					if((string)$exception->getMessage() && stripos($exception->getMessage(), 'No such subscription') !== false)
+					{
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Subscription already gone during cancellation; treating cleanup as successful.');
+
+						return true;
+					}
+					throw $exception;
+				}
+
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
+
+				return true;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+				return false;
 			}
 		}
 

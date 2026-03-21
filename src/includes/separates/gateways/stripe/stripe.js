@@ -778,9 +778,33 @@ jQuery(document).ready( // DOM ready.
 						handleCardResult.then(function(result) {
 							// Handle result.error or result.paymentIntent
 							if (result.error) {
-								// Display result.error.message in UI.
 								var errorElement = document.getElementById('s2member-pro-stripe-form-card-errors');
+								var paymentIntentId = '';
+
+								if (result.error.payment_intent && result.error.payment_intent.id) {
+									paymentIntentId = result.error.payment_intent.id;
+								} else if (jQuery('#s2member-pro-stripe-form-pi-id').val()) {
+									paymentIntentId = jQuery('#s2member-pro-stripe-form-pi-id').val();
+								}
+
 								errorElement.textContent = result.error.message;
+
+								jQuery('#s2member-pro-stripe-form-response')
+									.removeClass('s2member-pro-stripe-form-response-info')
+									.addClass('s2member-pro-stripe-form-response-error')
+									.text(S2MEMBER_PRO_STRIPE_PAYMENT_FAILED);
+
+								if (paymentIntentId) {
+									jQuery('#s2member-pro-stripe-form-pi-id').val(paymentIntentId);
+									jQuery('#s2member-pro-stripe-form-cancel-incomplete-sub-id').val('1');
+
+									jQuery('.s2member-pro-stripe-submit')
+										.prop('disabled', true)
+										.addClass('ws-plugin--s2member-animate-processing');
+									jQuery(form).addClass('s2member-pro-stripe-form-disabled');
+
+									form.submit();
+								}
 							} else {
 								// The PaymentIntent has successfully been authorized.
 								// Update Payment Intent hidden field with ID.
