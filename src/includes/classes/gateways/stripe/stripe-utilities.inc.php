@@ -475,26 +475,54 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Attempt to create a new subscription for this customer.
 			{
-				// Include the customer's payment method so the sub idemp key changes with new cards.
 				$customer = \Stripe\Customer::retrieve($customer_id);
 
+				if(!empty($post_vars['pm_id']))
+				{
+					if(!is_object($payment_method = self::attached_card_payment_method($customer_id, $post_vars['pm_id'])))
+					{
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $payment_method);
+
+						return $payment_method;
+					}
+					if(empty($payment_method->customer))
+					{
+						try
+						{
+							$payment_method->attach(array('customer' => $customer_id));
+							$payment_method = \Stripe\PaymentMethod::retrieve($payment_method->id);
+						}
+						catch(exception $exception)
+						{
+							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+
+							return self::error_message($exception);
+						}
+					}
+					$default_payment_method = (string)$payment_method->id;
+				}
+				else if(!empty($customer->invoice_settings->default_payment_method))
+					$default_payment_method = (string)$customer->invoice_settings->default_payment_method;
+				else $default_payment_method = '';
+
 				$subscription = array(
-					'customer'        => $customer_id,
-					'items'           => array(
+					'customer'               => $customer_id,
+					'items'                  => array(
 						array(
 							'plan' => $plan_id,
 						),
 					),
-					//230503 Remove default here, it'll then use the customer's default
-					// still needs update for existing subs that already got this parameter
-					// 'default_payment_method' => $customer->invoice_settings->default_payment_method,
-					'trial_from_plan' => true,
-					'metadata'        => $metadata,
-					'expand'          => array(
+					'default_payment_method' => $default_payment_method,
+					'trial_from_plan'        => true,
+					'metadata'               => $metadata,
+					'expand'                 => array(
 						'latest_invoice.payment_intent',
 						'pending_setup_intent',
 					),
 				);
+				if(!$subscription['default_payment_method'])
+					unset($subscription['default_payment_method']);
+
 				$subscription = \Stripe\Subscription::create($subscription, array(
 					'idempotency_key' => md5(serialize($subscription)),
 				));
@@ -1227,7 +1255,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return object PaymentMethod object, else error message.
 		 */
-		//260317 !!! TO-DO Rename this helper later; it now retrieves a Payment Method and no longer attaches it.
 		public static function attached_card_payment_method($customer_id, $payment_method_id)
 		{
 			$input_time = time(); // Initialize.
@@ -1238,6 +1265,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			try
 			{
 				$payment_method = \Stripe\PaymentMethod::retrieve($payment_method_id);
+
+				if(!empty($payment_method->customer) && (string)$payment_method->customer !== (string)$customer_id)
+					throw new \Exception('This payment method is attached to a different Stripe customer and cannot be reused for this customer.');
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $payment_method);
 
