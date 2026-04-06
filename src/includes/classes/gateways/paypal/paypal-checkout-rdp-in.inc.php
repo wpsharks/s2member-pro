@@ -467,7 +467,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 
 																						$ipn["s2member_paypal_proxy_return_url"] = trim (c_ws_plugin__s2member_utils_urls::remote (home_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																					}
-																				if (!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
+																				if (!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
 																					{
 																						$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
 																						$paypal["ACTION"] = "Cancel";
@@ -915,7 +915,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_checkout_rdp_in"))
 																				$ipn["s2member_paypal_proxy_return_url"] = trim (c_ws_plugin__s2member_utils_urls::remote (home_url ("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
 																		if (!$is_independent_ccaps_sale) // Independent?
-																			if (!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", TRUE, get_defined_vars()))
+																			if (!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
 																				{
 																					$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
 																					$paypal["ACTION"] = "Cancel";
