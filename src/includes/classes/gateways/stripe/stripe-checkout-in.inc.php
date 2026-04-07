@@ -300,11 +300,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								if(!$global_response)
 							{
 								$old__subscr_gateway  = get_user_option('s2member_subscr_gateway');
-								$old__subscr_cid      = get_user_option('s2member_subscr_cid');
 								$old__subscr_id       = get_user_option('s2member_subscr_id');
 								$old__subscr_baid     = get_user_option('s2member_subscr_baid');
+								$old__subscr_cid      = get_user_option('s2member_subscr_cid');
 								$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
-								$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
+								$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id(); //260407 Capture the old context before the simulated IPN updates the member's current profile.
 
 								if(empty($new__subscr_cid)) $new__subscr_cid = strtoupper('free-'.uniqid());
 								if(empty($new__subscr_id)) $new__subscr_id = strtoupper('free-'.uniqid());
@@ -356,7 +356,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									update_user_option($user_id, 's2member_auto_eot_time', $start_time);
 
 								if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-									c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
+									c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
 								c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
 
@@ -700,11 +700,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 							if(!$global_response)
 							{
 								$old__subscr_gateway  = get_user_option('s2member_subscr_gateway');
-								$old__subscr_cid      = get_user_option('s2member_subscr_cid');
 								$old__subscr_id       = get_user_option('s2member_subscr_id');
 								$old__subscr_baid     = get_user_option('s2member_subscr_baid');
+								$old__subscr_cid      = get_user_option('s2member_subscr_cid');
 								$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
-								$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
+								$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id(); //260407 Capture the old context before the simulated IPN updates the member's current profile.
 
 								if(empty($new__txn_cid)) $new__txn_cid = strtoupper('free-'.uniqid());
 								if(empty($new__txn_id)) $new__txn_id = strtoupper('free-'.uniqid());
@@ -741,7 +741,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 								if(!$is_independent_ccaps_sale) // Independent?
 									if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-										c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
+										c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
 								c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
 
