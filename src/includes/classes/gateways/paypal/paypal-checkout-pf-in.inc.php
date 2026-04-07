@@ -263,9 +263,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 													}
 												else if($use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
-														if(($old__subscr_id = get_user_option("s2member_subscr_id")))
-															$paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($old__subscr_id);
-														$old__baid = (!empty($paypal) && !empty($paypal["BAID"])) ? $paypal["BAID"] : "";
+														$old__subscr_gateway = get_user_option("s2member_subscr_gateway");
+														$old__subscr_id = get_user_option("s2member_subscr_id");
+														$old__subscr_baid = get_user_option("s2member_subscr_baid");
+														$old__subscr_cid = get_user_option("s2member_subscr_cid");
+														$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
 														$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 
 														$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars["attr"]["tp"]." ".$post_vars["attr"]["tt"]);
@@ -402,7 +404,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
 																if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
+																	c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
 																c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars["custom_fields"]["opt_in"], TRUE, TRUE);
 
@@ -635,9 +637,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 													}
 												else if(!$use_recurring_profile && is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID))
 													{
-														if(($old__subscr_id = get_user_option("s2member_subscr_id")))
-															$paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($old__subscr_id);
-														$old__baid = (!empty($paypal) && !empty($paypal["BAID"])) ? $paypal["BAID"] : "";
+														$old__subscr_gateway = get_user_option("s2member_subscr_gateway");
+														$old__subscr_id = get_user_option("s2member_subscr_id");
+														$old__subscr_baid = get_user_option("s2member_subscr_baid");
+														$old__subscr_cid = get_user_option("s2member_subscr_cid");
+														$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
 														$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 
 														update_user_meta($user_id, "first_name", $post_vars["first_name"]).update_user_meta($user_id, "last_name", $post_vars["last_name"]);
@@ -751,7 +755,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
 																if(!$is_independent_ccaps_sale && $old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-																	c_ws_plugin__s2member_pro_paypal_utilities::payflow_cancel_profile($old__subscr_id, $old__baid);
+																	c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
 																c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars["custom_fields"]["opt_in"], TRUE, TRUE);
 

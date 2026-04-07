@@ -283,7 +283,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																if(($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 																	{
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
+																		$old__subscr_gateway = get_user_option("s2member_subscr_gateway");
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
+																		$old__subscr_baid = get_user_option("s2member_subscr_baid");
+																		$old__subscr_cid = get_user_option("s2member_subscr_cid");
+																		$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
 
 																		if($cost_calculations["trial_total"] <= 0 && $cost_calculations["total"] <= 0)
 																			$new__subscr_id = strtoupper('free-'.uniqid()); // Auto-generated ID in this case.
@@ -332,13 +336,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 
 																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
-																		if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-																			{
-																				$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
-																				$paypal["ACTION"] = "Cancel";
+																		if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
+																			c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
-																				c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal);
-																			}
 																		c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars["custom_fields"]["opt_in"], TRUE, TRUE);
 
 																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
@@ -624,7 +624,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																	}
 																if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 																	{
+																		$old__subscr_gateway = get_user_option("s2member_subscr_gateway");
 																		$old__subscr_id = get_user_option("s2member_subscr_id");
+																		$old__subscr_baid = get_user_option("s2member_subscr_baid");
+																		$old__subscr_cid = get_user_option("s2member_subscr_cid");
+																		$old__ipn_signup_vars = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars();
 																		$old__subscr_or_wp_id = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id();
 
 																		if($cost_calculations["total"] <= 0) $new__subscr_id = $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
@@ -666,14 +670,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																			}
 																		if /* Independent? */(!$is_independent_ccaps_sale)
-																			if(!($paypal = array()) && ($paypal["PROFILEID"] = $old__subscr_id) && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-																				{
-																					$paypal["METHOD"] = "ManageRecurringPaymentsProfileStatus";
-																					$paypal["ACTION"] = "Cancel";
+																			if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
+																				c_ws_plugin__s2member_pro_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
-																					c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal);
-																				}
-																		c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars["custom_fields"]["opt_in"], TRUE, TRUE);
+																			c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars["custom_fields"]["opt_in"], TRUE, TRUE);
 
 																		setcookie("s2member_tracking", ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).setcookie("s2member_tracking", $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).($_COOKIE["s2member_tracking"] = $s2member_tracking);
 
