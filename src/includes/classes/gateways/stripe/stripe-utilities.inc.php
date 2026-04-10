@@ -82,31 +82,44 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			try // Obtain existing customer object; else create a new one.
 			{
-				try // Attempt to find an existing customer; if that's possible.
+				//260408 First try the stored Stripe customer id, but still fall back to email lookup if that id is stale or no longer retrievable.
+				if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
 				{
-					if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
-						$customer = \Stripe\Customer::retrieve($customer_id);
-					// Maybe we don't have a cus_id, but the customer does exist... 
-					// Let's try finding a customer by the email address.
-					elseif (!empty($email) && is_object($customers = \Stripe\Customer::all(['email' => $email, 'limit' => 1])))
-						$customer = (isset($customers->data[0])) ? $customers->data[0] : '';
-
-					if(!empty($customer) && is_object($customer) && $metadata)
+					try
 					{
-						foreach($metadata as $_key => $_value)
-							$customer->metadata->{$_key} = $_value;
-						unset($_key, $_value); // Housekeeping.
-
-						$customer->save(); // Update.
+						$customer = \Stripe\Customer::retrieve($customer_id);
+					}
+					catch(exception $exception)
+					{
+						$customer = '';
 					}
 				}
-				catch(exception $exception)
+
+				//260408 A stale stored customer id should not prevent reusing an existing customer found by email.
+				if((empty($customer) || !is_object($customer)) && !empty($email))
 				{
-					// Fail silently.
+					try
+					{
+						if(is_object($customers = \Stripe\Customer::all(array('email' => $email, 'limit' => 1))))
+							$customer = (isset($customers->data[0])) ? $customers->data[0] : '';
+					}
+					catch(exception $exception)
+					{
+						$customer = '';
+					}
 				}
-				
+
+				if(!empty($customer) && is_object($customer) && $metadata)
+				{
+					foreach($metadata as $_key => $_value)
+						$customer->metadata->{$_key} = $_value;
+					unset($_key, $_value); // Housekeeping.
+
+					$customer->save(); // Update.
+				}
+
 				// If we don't have a Customer, let's create one.
-				if(empty($customer) || !is_object($customer)) { 
+				if(empty($customer) || !is_object($customer)) {
 					$args = array(
 						'email'    => $email,
 						'name'     => trim($fname.' '.$lname),
@@ -116,7 +129,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					if (!empty($post_vars['state'])) {
 						$args['address'] = array(
 							'line1'       => $post_vars['street'],
-							'city'	      => $post_vars['city'],
+							'city'        => $post_vars['city'],
 							'state'       => $post_vars['state'],
 							'country'     => $post_vars['country'],
 							'postal_code' => $post_vars['zip'],
