@@ -49,6 +49,8 @@ class CurlClient implements ClientInterface
 
     protected $requestStatusCallback = null;
 
+    protected $randomGenerator;
+
     /**
      * CurlClient constructor.
      *
