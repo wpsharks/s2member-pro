@@ -195,6 +195,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 						case 'invoice.payment_failed': // Subscription payment failures.
 
+							//260619 Log failed first-payment pending subscriptions explicitly.
+							if(!empty($event->data->object)
+							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
+							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
+							   && ($pending_subscr_details = c_ws_plugin__s2member_pro_stripe_utilities::get_pending_subscr_details($stripe_invoice->subscription))
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Pending Stripe subscription found for subscription ID: `'.$stripe_invoice->subscription.'`; first payment failed or is incomplete. No paid access is being granted by this event.';
+
+								if(is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription)))
+									$stripe['s2member_log'][] = 'Pending Stripe subscription status after failed first payment: `'.$stripe_subscription->status.'`.';
+								else
+									$stripe['s2member_log'][] = 'Unable to retrieve pending Stripe subscription after failed first payment.';
+
+								$stripe_event_processed = TRUE;
+								break;
+							}
+
 							if(!empty($event->data->object)
 							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
@@ -212,6 +233,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'`. s2Member does NOT respond to individual payment failures; only to subscription cancellations.';
 								$stripe['s2member_log'][] = 'You may control the behavior(s) associated w/ subscription payment failures from your Stripe Dashboard please.';
+								$stripe_event_processed = TRUE;
+							}
+							else if(empty($processing)
+							   && !empty($event->data->object)
+							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
+							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'No pending Stripe subscription found for subscription ID: `'.$stripe_invoice->subscription.'`.';
+								$stripe['s2member_log'][] = 'Ignoring `'.$event->type.'`; no pending subscription matched, or no active s2Member signup vars were found for this subscription.';
 								$stripe_event_processed = TRUE;
 							}
 							break; // Break switch handler.

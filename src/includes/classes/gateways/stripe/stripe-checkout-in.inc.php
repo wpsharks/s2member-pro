@@ -265,10 +265,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 									}
 
-									//260619 Keep first-payment subscriptions pending when Stripe has created the subscription but the charge is not final yet.
+									//260619 Keep first-payment subscriptions pending only for recoverable/in-progress Stripe intent statuses.
 									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && !empty($stripe_subscription->id)
-									   && (empty($stripe_intent) || !is_object($stripe_intent) || !in_array((string)$stripe_intent->status, array('requires_payment_method', 'canceled'), TRUE))
-									   && (empty($setup_intent) || !is_object($setup_intent) || !in_array((string)$setup_intent->status, array('requires_payment_method', 'canceled'), TRUE)))
+									   && ((!empty($stripe_intent) && is_object($stripe_intent) && in_array((string)$stripe_intent->status, array('requires_action', 'processing'), TRUE))
+									       || (!empty($setup_intent) && is_object($setup_intent) && in_array((string)$setup_intent->status, array('requires_action', 'processing'), TRUE))))
 									{
 										$stripe_pending_subscr = TRUE;
 										$stripe_pending_subscr_response = $handle_intent_status;
@@ -528,10 +528,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 									}
 
-									//260619 Keep first-payment subscriptions pending when Stripe has created the subscription but the charge is not final yet.
+									//260619 Keep first-payment subscriptions pending only for recoverable/in-progress Stripe intent statuses.
 									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && !empty($stripe_subscription->id)
-									   && (empty($stripe_intent) || !is_object($stripe_intent) || !in_array((string)$stripe_intent->status, array('requires_payment_method', 'canceled'), TRUE))
-									   && (empty($setup_intent) || !is_object($setup_intent) || !in_array((string)$setup_intent->status, array('requires_payment_method', 'canceled'), TRUE)))
+									   && ((!empty($stripe_intent) && is_object($stripe_intent) && in_array((string)$stripe_intent->status, array('requires_action', 'processing'), TRUE))
+									       || (!empty($setup_intent) && is_object($setup_intent) && in_array((string)$setup_intent->status, array('requires_action', 'processing'), TRUE))))
 									{
 										$stripe_pending_subscr = TRUE;
 										$stripe_pending_subscr_response = $handle_intent_status;
