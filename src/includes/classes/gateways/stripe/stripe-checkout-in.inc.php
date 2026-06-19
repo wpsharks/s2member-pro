@@ -265,15 +265,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 									}
 
-									// If intent status didn't succeed, let's get the response with the status requirement.
-									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+									//260619 Keep first-payment subscriptions pending when Stripe has created the subscription but the charge is not final yet.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && !empty($stripe_subscription->id)
+									   && (empty($stripe_intent) || !is_object($stripe_intent) || !in_array((string)$stripe_intent->status, array('requires_payment_method', 'canceled'), TRUE))
+									   && (empty($setup_intent) || !is_object($setup_intent) || !in_array((string)$setup_intent->status, array('requires_payment_method', 'canceled'), TRUE)))
+									{
+										$stripe_pending_subscr = TRUE;
+										$stripe_pending_subscr_response = $handle_intent_status;
+									}
+									// If intent status didn't succeed and no pending subscription is possible, let's get the response with the status requirement.
+									else if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
 										$global_response = $handle_intent_status;
 									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
 									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
 										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
 									// Or we have a successful payment intent charge. Rejoice!
 									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
-										|| (isset($subscription_good) && $subscription_good))
+										|| (isset($subscription_good) && $subscription_good)
+										|| !empty($stripe_pending_subscr))
 									{
 										// The Stripe Customer ID
 										if (!empty($stripe_subscription->customer))
@@ -296,6 +305,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$new__subscr_id = $stripe_intent_succeeded->id;
 									}
 								}
+
+								if(!$global_response && $cost_calculations['total'] > 0 && empty($new__subscr_id))
+									$global_response = array('response' => _x('The payment could not be completed. Please try again or contact Support.', 's2member-front', 's2member'), 'error' => TRUE); //260617 Do not activate paid Stripe subscriptions without confirmed payment/subscription status.
 
 								if(!$global_response)
 							{
@@ -350,24 +362,50 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+								//260619 Keep current access unchanged until Stripe confirms the first subscription payment.
+								if(!empty($stripe_pending_subscr))
+								{
+									if(empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret']) && empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret']))
+										$stripe_pending_subscr_response = array('response' => _x('<strong>Thank you.</strong> Your payment is still pending. Your access will be updated once payment is confirmed, usually within a few minutes, but it can take up to 24 hours. Please do not submit the form again; contact support if access is not updated after 24 hours.', 's2member-front', 's2member'));
 
-								if(!empty($stripe_subscription_failed_charge_succeeded))
-									update_user_option($user_id, 's2member_auto_eot_time', $start_time);
+									if(c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $user_id, 'ipn' => $ipn, 'old_subscr_gateway' => $old__subscr_gateway, 'old_subscr_id' => $old__subscr_id, 'old_subscr_baid' => $old__subscr_baid, 'old_subscr_cid' => $old__subscr_cid, 'old_ipn_signup_vars' => $old__ipn_signup_vars, 'list_server_opt_in' => (boolean)@$post_vars['custom_fields']['opt_in'])))
+										$global_response = $stripe_pending_subscr_response;
+									else
+									{
+										c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Unable to store pending Stripe subscription details during existing-user checkout; attempting to cancel subscription.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $user_id));
 
-								if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-									c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
+										if(!empty($new__subscr_cid) && !empty($new__subscr_id))
+											c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($new__subscr_cid, $new__subscr_id, FALSE);
 
-								c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+										$global_response = array('response' => _x('<strong>Oops.</strong> A problem occurred while saving your pending payment details. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+									}
+								}
+								else
+								{
+									if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id))
+										$ipn['s2member_stripe_proxy_return_url'] = '';
+									else $ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
 
-								setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
-								setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
-								($_COOKIE['s2member_tracking'] = $s2member_tracking);
+									if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id))
+										c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
 
-								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated :-)', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+									if(!empty($stripe_subscription_failed_charge_succeeded))
+										update_user_option($user_id, 's2member_auto_eot_time', $start_time);
 
-								if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
+									if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
+										c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
+
+									c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+
+									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+									($_COOKIE['s2member_tracking'] = $s2member_tracking);
+
+									$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated :-)', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+
+									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
+										wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
+								}
 							}
 						}
 						// Subscription, new user.
@@ -490,15 +528,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										}
 									}
 
-									// If intent status didn't succeed, let's get the response with the status requirement.
-									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+									//260619 Keep first-payment subscriptions pending when Stripe has created the subscription but the charge is not final yet.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && !empty($stripe_subscription->id)
+									   && (empty($stripe_intent) || !is_object($stripe_intent) || !in_array((string)$stripe_intent->status, array('requires_payment_method', 'canceled'), TRUE))
+									   && (empty($setup_intent) || !is_object($setup_intent) || !in_array((string)$setup_intent->status, array('requires_payment_method', 'canceled'), TRUE)))
+									{
+										$stripe_pending_subscr = TRUE;
+										$stripe_pending_subscr_response = $handle_intent_status;
+									}
+									// If intent status didn't succeed and no pending subscription is possible, let's get the response with the status requirement.
+									else if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
 										$global_response = $handle_intent_status;
 									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
 									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
 										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
 									// Or we have a successful payment intent charge. Rejoice!
 									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
-										|| (isset($subscription_good) && $subscription_good))
+										|| (isset($subscription_good) && $subscription_good)
+										|| !empty($stripe_pending_subscr))
 									{
 										// The Stripe Customer ID
 										if (!empty($stripe_subscription->customer))
@@ -521,6 +568,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$new__subscr_id = $stripe_intent_succeeded->id;
 									}
 								}
+
+							if(!$global_response && $cost_calculations['total'] > 0 && empty($new__subscr_id))
+								$global_response = array('response' => _x('The payment could not be completed. Please try again or contact Support.', 's2member-front', 's2member'), 'error' => TRUE); //260617 Do not activate paid Stripe subscriptions without confirmed payment/subscription status.
 
 							if(!$global_response) // No errors thus far?
 							{
@@ -583,15 +633,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_'.$field_var]
 												= $post_vars['custom_fields'][$field_var];
 									}
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_gateway'] = 'stripe';
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_cid']     = $new__subscr_cid;
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_id']      = $new__subscr_id;
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']          = $post_vars['attr']['level'];
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
-								@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
-								if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
-									= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
+								//260619 Create pending subscription accounts without paid access until Stripe confirms payment.
+								if(!empty($stripe_pending_subscr))
+								{
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']  = '0';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']  = '';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom'] = $post_vars['attr']['custom'];
+								}
+								else
+								{
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_gateway'] = 'stripe';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_cid']     = $new__subscr_cid;
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_id']      = $new__subscr_id;
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']          = $post_vars['attr']['level'];
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
+									@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
+									if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
+										= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
+								}
 
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
@@ -614,24 +674,67 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									// if(!empty($stripe_subscription_failed_charge_succeeded))
 									// 	update_user_option($new__user_id, 's2member_auto_eot_time', $start_time);
 
-									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+									//260619 Keep new subscription accounts at Level 0 until Stripe confirms the first payment.
+									if(!empty($stripe_pending_subscr))
+									{
+										$ipn['option_name1']      = 'Referencing Customer ID';
+										$ipn['option_selection1'] = $new__user_id;
 
-									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
-									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
-									($_COOKIE['s2member_tracking'] = $s2member_tracking);
+										if(empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret']) && empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret']))
+											$stripe_pending_subscr_response = array('response' => _x('<strong>Thank you.</strong> Your account has been created, but your payment is still pending. Paid access will be enabled once payment is confirmed, usually within a few minutes, but it can take up to 24 hours. Please do not submit the form again; contact support if access is not enabled after 24 hours.', 's2member-front', 's2member'));
 
-									if($has_custom_password)
-										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
-									else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
+										if(c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $new__user_id, 'ipn' => $ipn)))
+										{
+											wp_set_current_user($new__user_id);
+											wp_set_auth_cookie($new__user_id, false, is_ssl());
 
-									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
-									   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
-									   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-									) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
+											$global_response = $stripe_pending_subscr_response;
+										}
+										else
+										{
+											c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Unable to store pending Stripe subscription details during new-user checkout; attempting to cancel subscription.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $new__user_id));
+
+											if(!empty($new__subscr_cid) && !empty($new__subscr_id))
+												c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($new__subscr_cid, $new__subscr_id, FALSE);
+
+											$global_response = array('response' => _x('<strong>Oops.</strong> A problem occurred while saving your pending payment details. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+										}
+									}
+									else
+									{
+										if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
+											$ipn['s2member_stripe_proxy_return_url'] = '';
+										else $ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+
+										if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
+											c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
+
+										setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+										setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+										($_COOKIE['s2member_tracking'] = $s2member_tracking);
+
+										if($has_custom_password)
+											$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+										else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
+
+										if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
+										   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
+										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+										) wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
+									}
 								}
 								else // Else, an error reponse should be given.
 								{
-									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+									//260619 Do not proxy pending subscription IPNs when the local user was not created.
+									if(empty($stripe_pending_subscr))
+										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+									else
+									{
+										c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Local user creation failed during pending Stripe subscription checkout; attempting to cancel subscription.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid));
+
+										if(!empty($new__subscr_cid) && !empty($new__subscr_id))
+											c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription($new__subscr_cid, $new__subscr_id, FALSE);
+									}
 
 									$global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 								}

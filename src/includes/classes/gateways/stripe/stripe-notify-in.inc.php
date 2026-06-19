@@ -104,6 +104,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					{
 						case 'invoice.payment_succeeded': // Subscription payments.
 
+							//260619 Process pending subscriptions before the on-session duplicate-prevention window.
+							if(!empty($event->data->object)
+							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
+							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
+							   && ($pending_subscr_details = c_ws_plugin__s2member_pro_stripe_utilities::get_pending_subscr_details($stripe_invoice->subscription))
+							   && is_object($stripe_subscription = c_ws_plugin__s2member_pro_stripe_utilities::get_customer_subscription($stripe_invoice->customer, $stripe_invoice->subscription))
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Pending Stripe subscription found for subscription ID: `'.$stripe_invoice->subscription.'`.';
+
+								if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_ready_to_process($stripe_subscription))
+								{
+									if(($pending_subscr_result = c_ws_plugin__s2member_pro_stripe_utilities::process_pending_subscr($stripe_invoice->subscription)))
+									{
+										$stripe_event_processed = TRUE;
+										$stripe['s2member_log'][] = $pending_subscr_result;
+
+										if(($maybe_end_subscription = self::_maybe_end_subscription_after_payment($stripe_invoice->customer, $stripe_subscription)))
+											$stripe['s2member_log'][] = $maybe_end_subscription;
+									}
+									else $stripe['s2member_log'][] = 'Pending Stripe subscription could not be processed yet for subscription ID: `'.$stripe_invoice->subscription.'`.';
+								}
+								else
+								{
+									$stripe_event_processed = TRUE;
+									$stripe['s2member_log'][] = 'Pending Stripe subscription not processed yet because it is not ready for activation; subscription status: `'.$stripe_subscription->status.'`.';
+								}
+
+								break;
+							}
+
 							if(!empty($event->data->object)
 							   && ($stripe_invoice = $event->data->object) instanceof \Stripe\Invoice
 							   && !empty($stripe_invoice->customer) && !empty($stripe_invoice->subscription)
@@ -224,7 +258,63 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							}
 							break; // Break switch handler.
 
+						case 'customer.subscription.updated': // Customer subscription update.
+
+							//260619 Process or discard pending subscriptions when Stripe changes their status.
+							if(!empty($event->data->object)
+							   && ($stripe_subscription = $event->data->object) instanceof \Stripe\Subscription
+							   && ($pending_subscr_details = c_ws_plugin__s2member_pro_stripe_utilities::get_pending_subscr_details($stripe_subscription->id))
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Pending Stripe subscription found for subscription ID: `'.$stripe_subscription->id.'`; subscription status: `'.$stripe_subscription->status.'`.';
+
+								if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_ready_to_process($stripe_subscription))
+								{
+									if(($pending_subscr_result = c_ws_plugin__s2member_pro_stripe_utilities::process_pending_subscr($stripe_subscription->id)))
+									{
+										$stripe_event_processed = TRUE;
+										$stripe['s2member_log'][] = $pending_subscr_result;
+
+										if(($maybe_end_subscription = self::_maybe_end_subscription_after_payment($stripe_subscription->customer, $stripe_subscription)))
+											$stripe['s2member_log'][] = $maybe_end_subscription;
+									}
+									else $stripe['s2member_log'][] = 'Pending Stripe subscription could not be processed yet for subscription ID: `'.$stripe_subscription->id.'`.';
+								}
+								else if((string)$stripe_subscription->status === 'incomplete_expired')
+								{
+									$stripe_event_processed = TRUE;
+									c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($stripe_subscription->id);
+									$stripe['s2member_log'][] = 'Pending Stripe subscription discarded because it expired incomplete.';
+								}
+								else
+								{
+									$stripe_event_processed = TRUE;
+									$stripe['s2member_log'][] = 'Pending Stripe subscription not processed yet because it is not ready for activation.';
+								}
+							}
+							break; // Break switch handler.
+
 						case 'customer.subscription.deleted': // Customer subscription deletion.
+
+							//260619 Discard pending subscription details when Stripe deletes the subscription before activation.
+							if(!empty($event->data->object)
+							   && ($stripe_subscription = $event->data->object) instanceof \Stripe\Subscription
+							   && c_ws_plugin__s2member_pro_stripe_utilities::get_pending_subscr_details($stripe_subscription->id)
+							)
+							{
+								$processing = TRUE;
+								$stripe_event_processed = TRUE;
+
+								c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($stripe_subscription->id);
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+								$stripe['s2member_log'][] = 'Pending Stripe subscription discarded because the subscription was deleted before activation.';
+
+								break;
+							}
 
 							if(!empty($event->data->object)
 							   && ($stripe_subscription = $event->data->object) instanceof \Stripe\Subscription

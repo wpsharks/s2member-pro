@@ -638,6 +638,316 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Gets the User ID associated with a pending Stripe subscription.
+		 *
+		 * @since 260619
+		 *
+		 * @param string $subscr_id Stripe Subscription ID.
+		 *
+		 * @return integer|bool A WordPress User ID on success; else FALSE.
+		 */
+		public static function get_user_id_with_pending_subscr_id($subscr_id)
+		{
+			global $wpdb;
+			/** @var wpdb $wpdb */
+
+			if(!$subscr_id || !is_string($subscr_id))
+				return FALSE;
+
+			if(($user_id = $wpdb->get_var($wpdb->prepare("SELECT `user_id` FROM `".$wpdb->usermeta."` WHERE `meta_key` = %s AND `meta_value` = %s LIMIT 1", $wpdb->prefix.'s2member_stripe_pending_subscr_id', (string)$subscr_id))))
+				return (integer)$user_id;
+
+			return FALSE;
+		}
+
+		/**
+		 * Stores pending Stripe subscription details.
+		 *
+		 * Used when Stripe creates a subscription but the first payment is not final yet.
+		 * A later browser return or webhook can process these details to grant paid access.
+		 *
+		 * @since 260619
+		 *
+		 * @param string  $subscr_id Stripe Subscription ID.
+		 * @param array   $details Pending subscription details.
+		 * @param integer $expiration Optional expiration time in seconds.
+		 *
+		 * @return boolean TRUE if successful; else FALSE.
+		 */
+		public static function store_pending_subscr_details($subscr_id, $details = array(), $expiration = WEEK_IN_SECONDS)
+		{
+			if(!$subscr_id || !is_string($subscr_id))
+				return FALSE;
+
+			$details = array_merge(array(
+				'gateway'         => 'stripe',
+				'subscription_id' => (string)$subscr_id,
+				'user_id'         => 0,
+				'ipn'             => array(),
+				'created'         => time(),
+				'expires'         => time() + abs((integer)$expiration),
+			), (array)$details);
+
+			$details['subscription_id'] = (string)$subscr_id;
+			$user_id = !empty($details['user_id']) ? (integer)$details['user_id'] : 0;
+
+			if(!$user_id || !get_userdata($user_id) || empty($details['ipn']) || !is_array($details['ipn']))
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Pending Stripe subscription details could not be stored because the details were invalid.'), 'subscr_id' => $subscr_id, 'user_id' => $user_id));
+
+				return FALSE;
+			}
+
+			update_user_option($user_id, 's2member_stripe_pending_subscr_id', (string)$subscr_id);
+			update_user_option($user_id, 's2member_stripe_pending_subscr_details', $details);
+
+			$stored_details = get_user_option('s2member_stripe_pending_subscr_details', $user_id);
+			$stored         = (string)get_user_option('s2member_stripe_pending_subscr_id', $user_id) === (string)$subscr_id && is_array($stored_details) && !empty($stored_details['subscription_id']) && (string)$stored_details['subscription_id'] === (string)$subscr_id;
+
+			c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array($stored ? 'Pending Stripe subscription details stored.' : 'Pending Stripe subscription details could not be verified after storage.'), 'subscr_id' => $subscr_id, 'user_id' => $user_id));
+
+			return $stored;
+		}
+
+		/**
+		 * Gets pending Stripe subscription details.
+		 *
+		 * @since 260619
+		 *
+		 * @param string $subscr_id Stripe Subscription ID.
+		 *
+		 * @return array|bool Pending subscription details; else FALSE.
+		 */
+		public static function get_pending_subscr_details($subscr_id)
+		{
+			if(!($user_id = self::get_user_id_with_pending_subscr_id($subscr_id)))
+				return FALSE;
+
+			$details = get_user_option('s2member_stripe_pending_subscr_details', $user_id);
+
+			if(!is_array($details) || empty($details['subscription_id']) || (string)$details['subscription_id'] !== (string)$subscr_id)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Pending Stripe subscription lookup exists, but details are missing, invalid, or mismatched.'), 'subscr_id' => $subscr_id, 'user_id' => $user_id, 'stored_subscr_id' => is_array($details) && !empty($details['subscription_id']) ? $details['subscription_id'] : '', 'details_type' => gettype($details)));
+
+				return FALSE;
+			}
+
+			if(empty($details['user_id']))
+				$details['user_id'] = $user_id;
+
+			if(!empty($details['expires']) && time() > (integer)$details['expires'])
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Pending Stripe subscription details expired and were deleted.'), 'subscr_id' => $subscr_id, 'user_id' => $user_id));
+				self::delete_pending_subscr_details($subscr_id);
+
+				return FALSE;
+			}
+
+			return $details;
+		}
+
+		/**
+		 * Checks whether a pending Stripe SetupIntent has succeeded.
+		 *
+		 * @since 260619
+		 *
+		 * @param string|object $pending_setup_intent Pending SetupIntent ID or object.
+		 *
+		 * @return boolean TRUE if there is no pending SetupIntent, or it has succeeded.
+		 */
+		public static function pending_setup_intent_succeeded($pending_setup_intent)
+		{
+			if(empty($pending_setup_intent))
+				return TRUE;
+
+			$input_vars   = array('pending_setup_intent' => is_object($pending_setup_intent) && !empty($pending_setup_intent->id) ? $pending_setup_intent->id : $pending_setup_intent);
+			$setup_intent = NULL;
+
+			if(is_object($pending_setup_intent) && !empty($pending_setup_intent->status))
+				$setup_intent = $pending_setup_intent;
+			else if(is_string($pending_setup_intent) && strpos($pending_setup_intent, 'seti_') === 0)
+			{
+				self::init_stripe_sdk();
+
+				try
+				{
+					$setup_intent = \Stripe\SetupIntent::retrieve($pending_setup_intent);
+				}
+				catch(exception $exception)
+				{
+					c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Unable to verify pending SetupIntent status.'), 'input_vars' => $input_vars, 'exception' => $exception));
+
+					return FALSE;
+				}
+			}
+
+			if(!is_object($setup_intent) || empty($setup_intent->status))
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Unable to verify pending SetupIntent status.'), 'input_vars' => $input_vars));
+
+				return FALSE;
+			}
+
+			$status = (string)$setup_intent->status;
+			c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Pending SetupIntent status: `'.$status.'`.'), 'input_vars' => $input_vars));
+
+			if($status !== 'succeeded')
+				return FALSE;
+
+			//260619 Mirror browser-return handling by setting the customer default payment method after a successful SetupIntent.
+			if(!empty($setup_intent->customer) && !empty($setup_intent->payment_method))
+			{
+				$set_customer_default_payment_method = self::set_customer_default_payment_method($setup_intent->customer, $setup_intent->payment_method);
+
+				if(!is_object($set_customer_default_payment_method))
+					c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Non-fatal: unable to set customer default payment method after successful pending SetupIntent.'), 'input_vars' => $input_vars, 'set_customer_default_payment_method' => $set_customer_default_payment_method));
+			}
+
+			return TRUE;
+		}
+
+		/**
+		 * Checks whether a pending Stripe subscription is ready to be processed.
+		 *
+		 * @since 260619
+		 *
+		 * @param object $stripe_subscription Stripe Subscription object.
+		 *
+		 * @return boolean TRUE if ready to process.
+		 */
+		public static function pending_subscr_is_ready_to_process($stripe_subscription)
+		{
+			if(!is_object($stripe_subscription) || empty($stripe_subscription->id) || empty($stripe_subscription->status))
+				return FALSE;
+
+			if(!in_array((string)$stripe_subscription->status, array('active', 'trialing'), TRUE))
+				return FALSE;
+
+			if(!empty($stripe_subscription->pending_setup_intent) && !self::pending_setup_intent_succeeded($stripe_subscription->pending_setup_intent))
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Pending Stripe subscription is not ready because its SetupIntent has not succeeded yet.'), 'subscr_id' => $stripe_subscription->id, 'status' => $stripe_subscription->status));
+
+				return FALSE;
+			}
+
+			return TRUE;
+		}
+
+		/**
+		 * Deletes pending Stripe subscription details.
+		 *
+		 * @since 260619
+		 *
+		 * @param string $subscr_id Stripe Subscription ID.
+		 *
+		 * @return boolean TRUE if deleted; else FALSE.
+		 */
+		public static function delete_pending_subscr_details($subscr_id)
+		{
+			if(!($user_id = self::get_user_id_with_pending_subscr_id($subscr_id)))
+				return FALSE;
+
+			delete_user_option($user_id, 's2member_stripe_pending_subscr_details');
+			delete_user_option($user_id, 's2member_stripe_pending_subscr_id');
+
+			return TRUE;
+		}
+
+		/**
+		 * Checks whether a pending Stripe subscription has already been processed.
+		 *
+		 * @since 260619
+		 *
+		 * @param string  $subscr_id Stripe Subscription ID.
+		 * @param integer $user_id Optional WordPress User ID.
+		 *
+		 * @return boolean TRUE if already processed.
+		 */
+		public static function pending_subscr_is_processed($subscr_id, $user_id = 0)
+		{
+			if(!$subscr_id || !is_string($subscr_id))
+				return FALSE;
+
+			if(!$user_id && !($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($subscr_id)))
+				return FALSE;
+
+			if((string)get_user_option('s2member_subscr_id', $user_id) === (string)$subscr_id && is_array($ipn_signup_vars = get_user_option('s2member_ipn_signup_vars', $user_id)) && !empty($ipn_signup_vars['subscr_id']) && (string)$ipn_signup_vars['subscr_id'] === (string)$subscr_id)
+				return TRUE;
+
+			return FALSE;
+		}
+
+		/**
+		 * Processes a pending Stripe subscription by replaying the saved s2Member IPN proxy.
+		 *
+		 * @since 260619
+		 *
+		 * @param string $subscr_id Stripe Subscription ID.
+		 *
+		 * @return string|bool Log message if handled; else FALSE.
+		 */
+		public static function process_pending_subscr($subscr_id)
+		{
+			if(!($details = self::get_pending_subscr_details($subscr_id)))
+				return FALSE;
+
+			$lock_key = 's2m_stripe_pending_subscr_lock_'.md5((string)$subscr_id);
+
+			if(get_transient($lock_key))
+				return FALSE;
+
+			set_transient($lock_key, time(), 10 * MINUTE_IN_SECONDS);
+
+			$user_id = !empty($details['user_id']) ? (integer)$details['user_id'] : 0;
+			$ipn     = !empty($details['ipn']) && is_array($details['ipn']) ? $details['ipn'] : array();
+
+			if(!$user_id || empty($ipn['subscr_id']) || (string)$ipn['subscr_id'] !== (string)$subscr_id)
+			{
+				delete_transient($lock_key);
+
+				return FALSE;
+			}
+
+			if(self::pending_subscr_is_processed($subscr_id, $user_id))
+			{
+				self::delete_pending_subscr_details($subscr_id);
+				delete_transient($lock_key);
+
+				return 'Pending Stripe subscription already processed for subscription ID: `'.$subscr_id.'`.';
+			}
+
+			$ipn['s2member_paypal_proxy']              = 'stripe';
+			$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+			c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+			if(!self::pending_subscr_is_processed($subscr_id, $user_id))
+			{
+				delete_transient($lock_key);
+
+				return FALSE;
+			}
+
+			if(!empty($details['old_subscr_id']) && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', ((string)$details['old_subscr_id'] !== (string)$ipn['subscr_id']), array('pending_subscr_details' => $details, 'ipn' => $ipn)))
+				c_ws_plugin__s2member_utilities::cancel_gateway_subscription(!empty($details['old_subscr_gateway']) ? $details['old_subscr_gateway'] : '', $details['old_subscr_id'], !empty($details['old_subscr_baid']) ? $details['old_subscr_baid'] : '', !empty($details['old_subscr_cid']) ? $details['old_subscr_cid'] : '', !empty($details['old_ipn_signup_vars']) && is_array($details['old_ipn_signup_vars']) ? $details['old_ipn_signup_vars'] : array());
+
+			if(array_key_exists('list_server_opt_in', $details))
+			{
+				$previous_user_id = get_current_user_id();
+
+				wp_set_current_user($user_id);
+				c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)$details['list_server_opt_in'], TRUE, TRUE);
+
+				wp_set_current_user($previous_user_id);
+			}
+
+			self::delete_pending_subscr_details($subscr_id);
+			delete_transient($lock_key);
+
+			return 'Pending Stripe subscription processed for subscription ID: `'.$subscr_id.'`.';
+		}
+
+		/**
 		 * Gets the transient key for a Stripe replacement-cancellation guard.
 		 *
 		 * @since 260319
@@ -1685,6 +1995,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				return $intent;
 			}
+
+			//260617 Block checkout fall-through on unhandled SetupIntent statuses.
+			return array('response' => sprintf(_x('The payment method could not be confirmed. Stripe returned status: %s.', 's2member-front', 's2member'), esc_html((string)$intent->status)), 'error' => TRUE);
 		}
 
 		/**
@@ -1742,6 +2055,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				return $intent;
 			}
+
+			//260617 Block checkout fall-through on unhandled PaymentIntent statuses.
+			return array('response' => sprintf(_x('The payment could not be completed. Stripe returned status: %s.', 's2member-front', 's2member'), esc_html((string)$intent->status)), 'error' => TRUE);
 		}
 
 		/**
