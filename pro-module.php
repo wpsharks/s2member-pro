@@ -151,7 +151,8 @@ if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION
 		$product = json_decode($product);
 		if (is_object($product)
 			&& !empty($product->pro_version)
-			&& version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, $product->pro_version, '<')) // Current Pro older than latest.
+			&& version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, $product->pro_version, '<') // Current Pro older than latest.
+			&& version_compare($product->pro_version, WS_PLUGIN__S2MEMBER_VERSION, '<=')) //260806 Available Pro compatible with installed Framework.
 		{
 			define('WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION', $product->pro_version);
 			// Include upgrader, s2Member Pro autoload won't be available here.

@@ -186,6 +186,11 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 self::$error = 'Upgrade failed. Error #0003. Invalid username or license key. Please try again.';
                 return; // Nothing more we can do here.
             }
+            //260806 Block installation when the available Pro release requires a newer Framework.
+            if (version_compare($latest['pro_version'], WS_PLUGIN__S2MEMBER_VERSION, '>')) {
+                self::$error = 'Upgrade failed. Error #0011. Please update the s2Member Framework before updating s2Member Pro.';
+                return; // The available Pro release is newer than the installed Framework.
+            }
             set_transient(md5('ws_plugin__s2member_pro_upgrade_credentials'), compact('username', 'password'), 5184000);
 
             $plugin_dir  = dirname(dirname(dirname(dirname(__FILE__)))); // Pro.
