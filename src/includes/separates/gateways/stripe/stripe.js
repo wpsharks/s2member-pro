@@ -856,6 +856,10 @@ jQuery(document).ready( // DOM ready.
 
 					// Control form submit.
 					form.addEventListener('submit', function(event) {
+						//260807 The earlier s2Member submit handler may already have rejected missing or invalid fields.
+						if (event.defaultPrevented) {
+							return;
+						}
 						event.preventDefault();
 
 						var fullName = jQuery('.s2member-pro-stripe-first-name').val() + ' ' + jQuery('.s2member-pro-stripe-last-name').val();
