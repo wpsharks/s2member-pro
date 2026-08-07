@@ -833,7 +833,9 @@ jQuery(document).ready( // DOM ready.
 							color: '#333',
 						}
 					};
-					var hideZip = '<?php echo $GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["pro_stripe_api_validate_zipcode"]; ?>' == 1 ? false : true;
+					//260807 Respect the Pro-Form's validate_zipcode override instead of only the global Stripe option.
+					var validateZipCode = jQuery('input[id$="-should-validate-zipcode"]', form).val() == '1';
+					var hideZip = !validateZipCode;
 					
 					// Create an instance of the card Element.
 					var cardElement = elements.create('card', {
