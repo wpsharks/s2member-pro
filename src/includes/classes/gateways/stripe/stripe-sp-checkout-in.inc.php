@@ -65,7 +65,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 				$global_response                                                = &$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'];
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_sp_checkout']));
-				$post_vars['attr'] = !empty($post_vars['attr']) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
+				//260808 Safely unserialize the form attributes.
+				$post_vars['attr'] = !empty($post_vars['attr']) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 				$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_stripe_sp_checkout_post_attr', $post_vars['attr'], get_defined_vars());
 
 				// Stripe Payment Method and Intent IDs.

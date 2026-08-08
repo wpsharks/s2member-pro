@@ -414,7 +414,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 
 				if(!empty($file)) // Only process if we have an importation file.
 				{
-					if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(@unserialize($file), TRUE)) && !empty($import) && ($import['configured'] = '1'))
+					//260808 Safely unserialize the imported options.
+					if(is_array($import = c_ws_plugin__s2member_pro_utils_ops::op_replace(c_ws_plugin__s2member_utils_arrays::maybe_unserialize($file), TRUE)) && !empty($import) && ($import['configured'] = '1'))
 					{
 						unset($import['options_checksum'], $import['options_version']);
 

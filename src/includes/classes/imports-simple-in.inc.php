@@ -113,7 +113,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 							$custom_capabilities = $data[8];
 
 							$user_registered         = ($data[9]) ? date('Y-m-d H:i:s', strtotime($data[9])) : '';
-							$paid_registration_times = ($data[10]) ? maybe_unserialize($data[10]) : '';
+							$paid_registration_times = ($data[10]) ? c_ws_plugin__s2member_utils_arrays::maybe_unserialize($data[10]) : ''; //260808 Safely unserialize the imported registration times.
 							$last_payment_time       = ($data[11]) ? strtotime($data[11]) : '';
 							$auto_eot_time           = ($data[12]) ? strtotime($data[12]) : '';
 
@@ -125,7 +125,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 							if(count($data) > 16) // Now loop through Custom Fields.
 								for($i = 16, $j = 0; $i < count($data); $i++, $j++)
 									if(isset($custom_field_vars[$j])) // A field in this position?
-										$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
+										$custom_fields[$custom_field_vars[$j]] = c_ws_plugin__s2member_utils_arrays::maybe_unserialize($data[$i]); //260808 Safely unserialize the imported custom field.
 						}
 						else // Otherwise, we use the standardized format for importation.
 						{
@@ -146,7 +146,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 							$custom_capabilities = $data[9];
 
 							$user_registered         = ($data[10]) ? date('Y-m-d H:i:s', strtotime($data[10])) : '';
-							$paid_registration_times = ($data[11]) ? maybe_unserialize($data[11]) : '';
+							$paid_registration_times = ($data[11]) ? c_ws_plugin__s2member_utils_arrays::maybe_unserialize($data[11]) : ''; //260808 Safely unserialize the imported registration times.
 							$last_payment_time       = ($data[12]) ? strtotime($data[12]) : '';
 							$auto_eot_time           = ($data[13]) ? strtotime($data[13]) : '';
 
@@ -158,7 +158,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_simple_in'))
 							if(count($data) > 17) // Now loop through Custom Fields.
 								for($i = 17, $j = 0; $i < count($data); $i++, $j++)
 									if(isset($custom_field_vars[$j])) // A field in this position?
-										$custom_fields[$custom_field_vars[$j]] = maybe_unserialize($data[$i]);
+										$custom_fields[$custom_field_vars[$j]] = c_ws_plugin__s2member_utils_arrays::maybe_unserialize($data[$i]); //260808 Safely unserialize the imported custom field.
 						}
 						$role = (is_numeric($role)) ? (($role == 0) ? 'subscriber' : 's2member_level'.$role) : $role;
 

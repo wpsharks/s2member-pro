@@ -640,7 +640,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 
 								if(!empty($_POST["ws_plugin__s2member_pro_authnet_ajax_tax_vars"]) && is_array($_p_tax_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["ws_plugin__s2member_pro_authnet_ajax_tax_vars"]))))
 									{
-										if(is_array($attr = (!empty($_p_tax_vars["attr"])) ? unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($_p_tax_vars["attr"])) : false))
+										//260808 Safely unserialize the tax attributes.
+										if(is_array($attr = (!empty($_p_tax_vars["attr"])) ? c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($_p_tax_vars["attr"])) : false))
 											{
 												$attr = (!empty($attr["coupon"])) ? c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon($attr, $attr["coupon"]) : $attr;
 

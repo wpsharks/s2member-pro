@@ -62,7 +62,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_update_response"]; // This is a shorter reference.
 
 								$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep (stripslashes_deep ($_POST["s2member_pro_paypal_update"]));
-								$post_vars["attr"]   = (!empty($post_vars["attr"])) ? (array)unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])) : array();
+								//260808 Safely unserialize the form attributes.
+								$post_vars["attr"]   = (!empty($post_vars["attr"])) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])) : array();
 								$post_vars["attr"] = apply_filters("ws_plugin__s2member_pro_paypal_update_post_attr", $post_vars["attr"], get_defined_vars ());
 
 								$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars); // Collect reCAPTCHA™ post vars.
