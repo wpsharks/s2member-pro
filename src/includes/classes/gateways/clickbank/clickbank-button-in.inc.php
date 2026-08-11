@@ -72,6 +72,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 						$attr["rr"] = /* Lifetime Subscriptions do NOT recur. Only after running shortcode_atts(). */ ($attr["rt"] === "L") ? "0" : $attr["rr"];
 						$attr["rr"] = /* Independent Ccaps do NOT recur. Only after running shortcode_atts(). */ ($attr["level"] === "*") ? "0" : $attr["rr"];
 
+						//260811 Sanitize custom image URL.
+						if($attr["image"] !== "default")
+							$attr["image"] = esc_url_raw($attr["image"], array('http', 'https'));
+
 						$attr["desc"] = str_replace("+", "plus", $attr["desc"]); // Workaround for a known bug @ ClickBank.
 						// ClickBank will NOT properly parse `+` signs in URLs leading to (and returning from) ClickBank checkout forms.
 
