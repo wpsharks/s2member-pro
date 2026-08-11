@@ -147,7 +147,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_gift_codes_in'))
 							$content .= '<tr class="-status-unused">'.
 							            '<td class="-code">'.
 							            ($attr['one_click'] && $_one_click_url // A click URL has been provided?
-								            ? '<a href="'.esc_attr($_one_click_url).'" target="_blank" title="'._x('Click to Redeem', 's2member-front', 's2member').'" data-toggle="tooltip">'.esc_html($_gift['code']).'</a>'
+								            ? '<a href="'.esc_url($_one_click_url).'" target="_blank" title="'._x('Click to Redeem', 's2member-front', 's2member').'" data-toggle="tooltip">'.esc_html($_gift['code']).'</a>' //260811 Escape URL.
 								            : esc_html($_gift['code'])).'</td>'.
 							            '<td class="-status">'._x('unused', 's2member-front', 's2member').'</td>'.
 							            '</tr>'."\n";
