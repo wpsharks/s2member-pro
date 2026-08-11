@@ -66,22 +66,38 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_summary_in'))
 
 			$attr_args_options = (array)$attr_args_options;
 
+			//260811 The shortcode attributes.
+			$allowed_attr = array_flip(array(
+				'display_gravatar',
+				'display_name',
+				'link_gravatar',
+				'logout_redirect',
+				'my_account_url',
+				'my_profile_url',
+				'profile_title',
+				'show_login_if_not_logged_in',
+			));
+			$attr_args_options = array_intersect_key($attr_args_options, $allowed_attr);
+			unset($allowed_attr);
+
 			$default_attr = array(
 				'show_login_if_not_logged_in' => '0',
 			);
-			$attr    = array_merge($default_attr, $attr_args_options);
-			$attr    = array_intersect_key($attr, $default_attr);
+			$attr = array_merge($default_attr, $attr_args_options);
+			$attr = array_intersect_key($attr, $default_attr);
 
-			$default_args = array(
+			$args = array(
 				'before_widget' => '',
 				'before_title'  => '<h3>',
 				'after_title'   => '</h3>',
 				'after_widget'  => '',
 			);
-			$args    = array_merge($default_args, $attr_args_options);
-			$args    = array_intersect_key($args, $default_args);
 
-			$options = array_diff_key($attr_args_options, $attr, $args);
+			$options = array_diff_key($attr_args_options, $attr);
+
+			//260811 Sanitize shortcode title.
+			if(isset($options['profile_title']))
+				$options['profile_title'] = sanitize_text_field($options['profile_title']);
 
 			if(!is_user_logged_in() && !filter_var($attr['show_login_if_not_logged_in'], FILTER_VALIDATE_BOOLEAN))
 				$summary = ''; // Empty. Logged in already.

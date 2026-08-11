@@ -139,7 +139,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 
 				echo '<div class="ws-plugin--s2member-pro-login-widget-lost-password">'."\n";
 				$reg_cookies_ok_url = (is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && is_main_site()) ? c_ws_plugin__s2member_utils_urls::wp_signup_url() : c_ws_plugin__s2member_utils_urls::wp_register_url();
-				echo ($options['signup_url']) ? '<a href="'.esc_attr(($options['signup_url'] !== '%%automatic%%') ? $options['signup_url'] : ((c_ws_plugin__s2member_register_access::reg_cookies_ok()) ? $reg_cookies_ok_url : $links['membership_options_page'])).'" tabindex="-1">'._x('signup now', 's2member-front', 's2member').'</a> | ' : '';
+				echo ($options['signup_url']) ? '<a href="'.esc_url(($options['signup_url'] !== '%%automatic%%') ? $options['signup_url'] : ((c_ws_plugin__s2member_register_access::reg_cookies_ok()) ? $reg_cookies_ok_url : $links['membership_options_page'])).'" tabindex="-1">'._x('signup now', 's2member-front', 's2member').'</a> | ' : ''; //260811 Escape signup URL.
 				echo '<a href="'.esc_attr(wp_lostpassword_url()).'" tabindex="-1">'._x('forgot password?', 's2member-front', 's2member').'</a>'."\n";
 				echo '</div>'."\n";
 
@@ -200,8 +200,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 
 				echo '</div>'."\n";
 
-				echo ($options['my_account_url']) ? '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-my-account"><a href="'.esc_attr(($options['my_account_url'] !== '%%automatic%%') ? c_ws_plugin__s2member_login_redirects::fill_login_redirect_rc_vars($options['my_account_url']) : (($login_redirection_url = c_ws_plugin__s2member_login_redirects::login_redirection_url($user)) ? $login_redirection_url : $links['login_welcome_page'])).'">'._x('My Account', 's2member-front', 's2member').'</a></div>'."\n" : '';
-				echo ($options['my_profile_url']) ? '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-edit-profile"><a href="'.(($options['my_profile_url'] !== '%%automatic%%') ? esc_attr(c_ws_plugin__s2member_login_redirects::fill_login_redirect_rc_vars($options['my_profile_url'])) : esc_attr(home_url('/?s2member_profile=1')).'" onclick="if(!window.open(\''.c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr(home_url('/?s2member_profile=1'))).'\',\'_profile\', \'width=600,height=400,left=\'+((screen.width/2)-(600/2))+\',screenX=\'+((screen.width/2)-(600/2))+\',top=\'+((screen.height/2)-(400/2))+\',screenY=\'+((screen.height/2)-(400/2))+\',location=0,menubar=0,toolbar=0,status=0,scrollbars=1,resizable=1\')) alert(\''.c_ws_plugin__s2member_utils_strings::esc_js_sq(_x('Please disable popup blockers and try again!', 's2member-front', 's2member')).'\'); return false;').'">'._x('Edit My Profile', 's2member-front', 's2member').'</a></div>'."\n" : '';
+				echo ($options['my_account_url']) ? '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-my-account"><a href="'.esc_url(($options['my_account_url'] !== '%%automatic%%') ? c_ws_plugin__s2member_login_redirects::fill_login_redirect_rc_vars($options['my_account_url']) : (($login_redirection_url = c_ws_plugin__s2member_login_redirects::login_redirection_url($user)) ? $login_redirection_url : $links['login_welcome_page'])).'">'._x('My Account', 's2member-front', 's2member').'</a></div>'."\n" : ''; //260811 Escape URL.
+				echo ($options['my_profile_url']) ? '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-edit-profile"><a href="'.(($options['my_profile_url'] !== '%%automatic%%') ? esc_url(c_ws_plugin__s2member_login_redirects::fill_login_redirect_rc_vars($options['my_profile_url'])) : esc_url(home_url('/?s2member_profile=1')).'" onclick="if(!window.open(\''.c_ws_plugin__s2member_utils_strings::esc_js_sq(esc_attr(home_url('/?s2member_profile=1'))).'\',\'_profile\', \'width=600,height=400,left=\'+((screen.width/2)-(600/2))+\',screenX=\'+((screen.width/2)-(600/2))+\',top=\'+((screen.height/2)-(400/2))+\',screenY=\'+((screen.height/2)-(400/2))+\',location=0,menubar=0,toolbar=0,status=0,scrollbars=1,resizable=1\')) alert(\''.c_ws_plugin__s2member_utils_strings::esc_js_sq(_x('Please disable popup blockers and try again!', 's2member-front', 's2member')).'\'); return false;').'">'._x('Edit My Profile', 's2member-front', 's2member').'</a></div>'."\n" : ''; //260811 Escape URL.
 				echo '<div class="ws-plugin--s2member-pro-login-widget-profile-summary-logout"><a href="'.esc_attr(wp_logout_url($redirect_to)).'">'._x('Logout', 's2member-front', 's2member').'</a></div>'."\n";
 
 				echo '<div style="clear:both;"></div>'."\n";
@@ -308,6 +308,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_widget'))
 			unset($__refs, $__v); // Housekeeping.
 
 			$instance = (array)c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($instance));
+
+			//260811 Sanitize widget titles.
+			foreach(array('title', 'profile_title') as $_option)
+				if(isset($instance[$_option]) && is_string($instance[$_option]))
+					$instance[$_option] = sanitize_text_field($instance[$_option]);
+			unset($_option);
 
 			return $this->configure_options_and_their_defaults($instance);
 		}
