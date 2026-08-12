@@ -114,6 +114,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_login_welcome_page_otos'             => '', // A line-delimited list of Login Welcome Page offers.
 			'pro_import_export_advanced_mode'         => '0', // Enable the advanced mode?
 
+			'pro_sc_templates_whitelist'              => '', //260812 Custom shortcode template files approved relative to WP_CONTENT_DIR.
+
 			'pro_remote_ops_key'                      => '', // Customizable Remote OPs key.
 
 			'pro_gateways_seen'                       => '0', // Default value.
@@ -217,6 +219,10 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_import_export_advanced_mode' && (!is_string($value) || !is_numeric($value)))
+					$value = $pro_default_options[$key];
+
+				//260812 Custom shortcode templates whitelist is stored as newline-delimited text.
+				else if($key === 'pro_sc_templates_whitelist' && !is_string($value))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_remote_ops_key' && (!is_string($value) || !strlen($value)))

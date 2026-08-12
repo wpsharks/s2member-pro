@@ -185,6 +185,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 			do_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', get_defined_vars());
 			unset($__refs, $__v); // Ditch these temporary vars.
 
+			//260812 Match the final shortcode attributes to the standard template for this form.
+			if($attr['cancel'])
+				$standard_template_filename = 'stripe-cancellation-form.php';
+			else if($attr['register'])
+				$standard_template_filename = 'stripe-registration-form.php';
+			else if($attr['update'])
+				$standard_template_filename = 'stripe-update-form.php';
+			else if($attr['sp'])
+				$standard_template_filename = 'stripe-sp-checkout-form.php';
+			else
+				$standard_template_filename = 'stripe-checkout-form.php';
+
+			//260812 Resolve the final custom template path and record unapproved files for the administrator notice.
+			$shortcode_template = ($attr['template']) ? c_ws_plugin__s2member_utils_dirs::shortcode_template($attr['template'], array($standard_template_filename), $shortcode, $attr['singular']) : '';
+			unset($standard_template_filename);
+
 			if($attr['cancel']) // Cancellations.
 			{
 				$_p       = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
@@ -218,13 +234,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-cancellation-form.php')) ? TEMPLATEPATH.'/stripe-cancellation-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-cancellation-form.php')) ? get_stylesheet_directory().'/stripe-cancellation-form.php' : $custom_template;
 
-				//250211 Sanitize template attr.
-				$upload_folder = basename(wp_upload_dir()['basedir']); // Get uploads folder name
-				$attr['template'] = str_replace(['..', 'upload', $upload_folder], '', sanitize_text_field(esc_url_raw($attr['template'])));
-
-				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+				if($shortcode_template)
+					$custom_template = $shortcode_template;
 
 				$code = trim(file_get_contents($custom_template ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-cancellation-form.php'));
 				$code = trim(!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
@@ -317,9 +329,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-registration-form.php')) ? TEMPLATEPATH.'/stripe-registration-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-registration-form.php')) ? get_stylesheet_directory().'/stripe-registration-form.php' : $custom_template;
 
-				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+				if($shortcode_template)
+					$custom_template = $shortcode_template;
 
 				$code = trim(file_get_contents($custom_template ? $custom_template : dirname(dirname(dirname(dirname(__FILE__)))).'/templates/forms/stripe-registration-form.php'));
 				$code = trim(!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code) : $code);
@@ -381,9 +393,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-update-form.php')) ? TEMPLATEPATH.'/stripe-update-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-update-form.php')) ? get_stylesheet_directory().'/stripe-update-form.php' : $custom_template;
 
-				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+				if($shortcode_template)
+					$custom_template = $shortcode_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
 				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)
@@ -501,9 +513,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-sp-checkout-form.php')) ? TEMPLATEPATH.'/stripe-sp-checkout-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-sp-checkout-form.php')) ? get_stylesheet_directory().'/stripe-sp-checkout-form.php' : $custom_template;
 
-				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+				if($shortcode_template)
+					$custom_template = $shortcode_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
 				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)
@@ -672,9 +684,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$custom_template = (is_file(TEMPLATEPATH.'/stripe-checkout-form.php')) ? TEMPLATEPATH.'/stripe-checkout-form.php' : '';
 				$custom_template = (is_file(get_stylesheet_directory().'/stripe-checkout-form.php')) ? get_stylesheet_directory().'/stripe-checkout-form.php' : $custom_template;
 
-				$custom_template = ($attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template'])) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template'])) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-				$custom_template = ($attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template'])) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
+				//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+				if($shortcode_template)
+					$custom_template = $shortcode_template;
 
 				$custom_template_contents = $custom_template ? trim(file_get_contents($custom_template)) : '';
 				if($custom_template_contents && stripos($custom_template_contents, '%%billing_method%%') === FALSE)

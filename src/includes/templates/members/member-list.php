@@ -30,7 +30,7 @@ else $s_val = ''; // No query yet.
 							<?php if($attr['avatar_size'] && $attr['show_avatar'] && ($_avatar = get_avatar($_user->ID, $attr['avatar_size']))): ?>
 								<div class="ws-plugin--s2member-list-user-avatar">
 									<?php if(($_avatar_link = c_ws_plugin__s2member_pro_sc_member_list_in::parse_link_replacement_codes($attr['link_avatar'], $_user))): ?>
-										<a href="<?php echo esc_attr($_avatar_link); ?>"<?php echo c_ws_plugin__s2member_pro_sc_member_list_in::link_attributes($_avatar_link); ?>><?php echo $_avatar; ?></a>
+										<a href="<?php echo esc_url($_avatar_link); //260811 Escape URL. ?>"<?php echo c_ws_plugin__s2member_pro_sc_member_list_in::link_attributes($_avatar_link); ?>><?php echo $_avatar; ?></a>
 									<?php else: echo $_avatar; endif; ?>
 								</div>
 							<?php endif; ?>
@@ -38,7 +38,7 @@ else $s_val = ''; // No query yet.
 							<?php if($attr['show_display_name'] && $_user->display_name): ?>
 								<div class="ws-plugin--s2member-list-user-display-name">
 									<?php if(($_display_name_link = c_ws_plugin__s2member_pro_sc_member_list_in::parse_link_replacement_codes($attr['link_display_name'], $_user))): ?>
-										<a href="<?php echo esc_attr($_display_name_link); ?>"<?php echo c_ws_plugin__s2member_pro_sc_member_list_in::link_attributes($_display_name_link); ?>><?php echo esc_html($_user->display_name); ?></a>
+										<a href="<?php echo esc_url($_display_name_link); //260811 Escape URL. ?>"<?php echo c_ws_plugin__s2member_pro_sc_member_list_in::link_attributes($_display_name_link); ?>><?php echo esc_html($_user->display_name); ?></a>
 									<?php else: echo esc_html($_user->display_name); endif; ?>
 								</div>
 							<?php endif; ?>
@@ -60,8 +60,17 @@ else $s_val = ''; // No query yet.
 
 										$_field_value = get_user_field($_field, $_user->ID);
 
-										if($_field_value && is_array($_field_value))
-											$_field_value = implode(', ', $_field_value);
+										//260812 Only render scalar values; flatten one-dimensional arrays while omitting nested values, and reject objects entirely.
+										if(is_array($_field_value))
+										{
+											$_field_values = array();
+											foreach($_field_value as $_field_value_item)
+												if(is_scalar($_field_value_item))
+													$_field_values[] = (string)$_field_value_item;
+											$_field_value = implode(', ', $_field_values);
+										}
+										if(!is_scalar($_field_value))
+											$_field_value = '';
 										else $_field_value = (string)$_field_value;
 
 										$_field_label = esc_html($_field_label);

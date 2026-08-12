@@ -160,6 +160,21 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		}
 
 		/**
+		 * Add options for approved custom shortcode templates.
+		 *
+		 * @package s2Member\Menu_Pages
+		 * @since 260812
+		 *
+		 * @attaches-to ``add_action("ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_sc_s2get_shortcode");``
+		 *
+		 * @param array $vars Expects an array of defined variables passed through by the Action Hook.
+		 */
+		public static function gen_ops_shortcode_templates($vars = array())
+		{
+			include_once dirname(dirname(__FILE__))."/menu-pages/gen-ops-shortcode-templates.inc.php";
+		}
+
+		/**
 		 * Add instructions to configure Membership Levels.
 		 *
 		 * @package s2Member\Menu_Pages

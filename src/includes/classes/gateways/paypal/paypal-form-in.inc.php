@@ -147,6 +147,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						do_action("ws_plugin__s2member_pro_before_sc_paypal_form_after_shortcode_atts", get_defined_vars());
 						unset($__refs, $__v);
 
+						//260812 Match the final shortcode attributes to the standard template for this form.
+						if($attr["cancel"])
+							$standard_template_filename = 'paypal-cancellation-form.php';
+						else if($attr["register"])
+							$standard_template_filename = 'paypal-registration-form.php';
+						else if($attr["update"])
+							$standard_template_filename = 'paypal-update-form.php';
+						else if($attr["sp"])
+							$standard_template_filename = 'paypal-sp-checkout-form.php';
+						else
+							$standard_template_filename = 'paypal-checkout-form.php';
+
+						//260812 Resolve the final custom template path and record unapproved files for the administrator notice.
+						$shortcode_template = ($attr['template']) ? c_ws_plugin__s2member_utils_dirs::shortcode_template($attr['template'], array($standard_template_filename), $shortcode, $attr['singular']) : '';
+						unset($standard_template_filename);
+
 						if /* Cancellations. */($attr["cancel"])
 							{
 								$_p = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
@@ -192,13 +208,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = (is_file(TEMPLATEPATH."/paypal-cancellation-form.php")) ? TEMPLATEPATH."/paypal-cancellation-form.php" : '';
 								$custom_template = (is_file(get_stylesheet_directory()."/paypal-cancellation-form.php")) ? get_stylesheet_directory()."/paypal-cancellation-form.php" : $custom_template;
 
-								//250211 Sanitize template attr.
-								$upload_folder = basename(wp_upload_dir()['basedir']); // Get uploads folder name
-								$attr['template'] = str_replace(['..', 'upload', $upload_folder], '', sanitize_text_field(esc_url_raw($attr['template'])));
-
-								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+								if($shortcode_template)
+									$custom_template = $shortcode_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-cancellation-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -322,9 +334,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = (is_file(TEMPLATEPATH."/paypal-registration-form.php")) ? TEMPLATEPATH."/paypal-registration-form.php" : '';
 								$custom_template = (is_file(get_stylesheet_directory()."/paypal-registration-form.php")) ? get_stylesheet_directory()."/paypal-registration-form.php" : $custom_template;
 
-								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+								if($shortcode_template)
+									$custom_template = $shortcode_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-registration-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -460,9 +472,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = (is_file(TEMPLATEPATH."/paypal-update-form.php")) ? TEMPLATEPATH."/paypal-update-form.php" : '';
 								$custom_template = (is_file(get_stylesheet_directory()."/paypal-update-form.php")) ? get_stylesheet_directory()."/paypal-update-form.php" : $custom_template;
 
-								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+								if($shortcode_template)
+									$custom_template = $shortcode_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-update-form.php")));
 								$code = trim(((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ? c_ws_plugin__s2member_utilities::evl($code) : $code));
@@ -615,9 +627,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = (is_file(TEMPLATEPATH."/paypal-sp-checkout-form.php")) ? TEMPLATEPATH."/paypal-sp-checkout-form.php" : '';
 								$custom_template = (is_file(get_stylesheet_directory()."/paypal-sp-checkout-form.php")) ? get_stylesheet_directory()."/paypal-sp-checkout-form.php" : $custom_template;
 
-								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+								if($shortcode_template)
+									$custom_template = $shortcode_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-sp-checkout-form.php")));
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-sp-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-sp-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;
@@ -828,9 +840,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$custom_template = (is_file(TEMPLATEPATH."/paypal-checkout-form.php")) ? TEMPLATEPATH."/paypal-checkout-form.php" : '';
 								$custom_template = (is_file(get_stylesheet_directory()."/paypal-checkout-form.php")) ? get_stylesheet_directory()."/paypal-checkout-form.php" : $custom_template;
 
-								$custom_template = ($attr["template"] && is_file(TEMPLATEPATH."/".$attr["template"])) ? TEMPLATEPATH."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(get_stylesheet_directory()."/".$attr["template"])) ? get_stylesheet_directory()."/".$attr["template"] : $custom_template;
-								$custom_template = ($attr["template"] && is_file(WP_CONTENT_DIR."/".$attr["template"])) ? WP_CONTENT_DIR."/".$attr["template"] : $custom_template;
+								//260812 Use the resolved shortcode template; otherwise keep the standard theme override, if any.
+								if($shortcode_template)
+									$custom_template = $shortcode_template;
 
 								$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(dirname(dirname(__FILE__))))."/templates/forms/paypal-checkout-form.php")));
 								$code = ($attr["accept"] === array("paypal")) ? preg_replace("/ s2member-pro-paypal-checkout-form-billing-method-section\"\>/", ' s2member-pro-paypal-checkout-form-billing-method-section" data-paypal-only="true">', $code) : $code;

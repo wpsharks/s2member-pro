@@ -44,6 +44,13 @@ add_action('init', 'c_ws_plugin__s2member_pro_remote_ops::remote_ops');
 add_action('admin_init', 'c_ws_plugin__s2member_pro_stats_pinger::maybe_ping');
 add_action('admin_init', 'c_ws_plugin__s2member_pro_lock_icons::configure_lock_icons');
 
+//260812 Manage Pro shortcode template approvals and administrator warnings.
+add_filter('ws_plugin__s2member_shortcode_templates_whitelist', 'c_ws_plugin__s2member_pro_admin_notices::shortcode_templates_whitelist');
+add_action('ws_plugin__s2member_shortcode_template_approved', 'c_ws_plugin__s2member_pro_admin_notices::shortcode_template_approved', 10, 3);
+add_action('ws_plugin__s2member_shortcode_template_unapproved', 'c_ws_plugin__s2member_pro_admin_notices::shortcode_template_unapproved', 10, 3);
+add_action('admin_init', 'c_ws_plugin__s2member_pro_admin_notices::dismiss_shortcode_template_notice');
+add_action('admin_notices', 'c_ws_plugin__s2member_pro_admin_notices::shortcode_template_notice', 11);
+
 add_action('widgets_init', 'c_ws_plugin__s2member_pro_widgets::login_widget_register');
 
 add_filter('ws_plugin__s2member_during_constants_c', 'c_ws_plugin__s2member_pro_constants::constants', 9, 2);
@@ -59,6 +66,9 @@ add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_3', 'c_ws_p
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_membership_levels', 'c_ws_plugin__s2member_pro_menu_pages::add_level_instructions');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_login_welcome_page', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_lwp_otos');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_url_shortening', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_captcha_ops');
+
+//260812 Add the Pro Shortcode Templates Whitelist after the shared Shortcode User Fields Whitelist panel.
+add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_sc_s2get_shortcode', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_shortcode_templates');
 
 add_filter('ws_plugin__s2member_sc_paypal_button_default_attrs', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_default_attrs', 10, 2);
 add_action('ws_plugin__s2member_before_sc_paypal_button_after_shortcode_atts', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_after_attrs');

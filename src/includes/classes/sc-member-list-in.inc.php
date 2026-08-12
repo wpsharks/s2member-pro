@@ -111,6 +111,35 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$attr['show_display_name']  = filter_var($attr['show_display_name'], FILTER_VALIDATE_BOOLEAN);
 			$attr['enable_list_search'] = filter_var($attr['enable_list_search'], FILTER_VALIDATE_BOOLEAN);
 
+			//260812 Transition period: detect Member List fields that are not yet approved, without changing current output.
+			$shortcode_user_fields_whitelist = trim((string)$GLOBALS['WS_PLUGIN__']['s2member']['o']['sc_user_fields_whitelist']);
+			$shortcode_user_fields_whitelist = ($shortcode_user_fields_whitelist !== '') ? preg_split('/\s*,\s*/', strtolower($shortcode_user_fields_whitelist), -1, PREG_SPLIT_NO_EMPTY) : array();
+			$shortcode_user_fields_whitelist = array_flip($shortcode_user_fields_whitelist);
+			$_unlisted_show_fields = array();
+			if($attr['show_fields'])
+			{
+				foreach(preg_split('/[,]+/', $attr['show_fields'], -1, PREG_SPLIT_NO_EMPTY) as $_show_field)
+				{
+					//260812 Match the Member List template's `Label:field` parsing.
+					$_show_field_parts = explode(':', $_show_field, 2);
+					$_show_field_id = trim((count($_show_field_parts) > 1) ? $_show_field_parts[1] : $_show_field_parts[0]);
+					if($_show_field_id !== '' && !isset($shortcode_user_fields_whitelist[strtolower($_show_field_id)]))
+						$_unlisted_show_fields[] = $_show_field_id;
+				}
+				$_unlisted_show_fields = array_values(array_unique($_unlisted_show_fields));
+
+				//260813 Report unapproved fields through the shared Framework warning used by s2Get and Member List.
+				if($_unlisted_show_fields)
+				{
+					$_post_id = (int)get_the_ID();
+					foreach($_unlisted_show_fields as $_show_field_id)
+						c_ws_plugin__s2member_admin_notices::shortcode_user_field_unapproved($_show_field_id, ($shortcode) ? $shortcode : 's2Member-List', $_post_id);
+				}
+
+				//260813 Housekeeping for temporary field-parsing variables.
+				unset($_show_field, $_show_field_parts, $_show_field_id, $_post_id);
+			}
+
 			if($attr['args']) // Custom args?
 				$args = wp_parse_args($attr['args']);
 
@@ -182,16 +211,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$custom_template = is_file(TEMPLATEPATH.'/member-list.php') ? TEMPLATEPATH.'/member-list.php' : '';
 			$custom_template = is_file(get_stylesheet_directory().'/member-list.php') ? get_stylesheet_directory().'/member-list.php' : $custom_template;
 
-			//250211 Sanitize template attr.
-			$upload_folder = basename(wp_upload_dir()['basedir']); // Get uploads folder name
-			$attr['template'] = str_replace(['..', 'upload', $upload_folder], '', sanitize_text_field(esc_url_raw($attr['template'])));
-
-			$custom_template = $attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template']) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-			$custom_template = $attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template']) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-			$custom_template = $attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template']) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
-
-			if($attr['template'] && !$custom_template) // Unable to locate the template file?
-				trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr['template'])), E_USER_ERROR);
+			//260812 Resolve the shortcode template and record unapproved custom files for the administrator notice.
+			if($attr['template'] && ($_shortcode_template = c_ws_plugin__s2member_utils_dirs::shortcode_template($attr['template'], array('member-list.php'), $shortcode, get_the_ID())))
+				$custom_template = $_shortcode_template;
+			unset($_shortcode_template);
 
 			$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__)).'/templates/members/member-list.php')));
 			$code = trim((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
@@ -227,16 +250,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$custom_template = is_file(TEMPLATEPATH.'/member-list-search-box.php') ? TEMPLATEPATH.'/member-list-search-box.php' : '';
 			$custom_template = is_file(get_stylesheet_directory().'/member-list-search-box.php') ? get_stylesheet_directory().'/member-list-search-box.php' : $custom_template;
 
-			//250214 Sanitize template attr.
-			$upload_folder = basename(wp_upload_dir()['basedir']); // Get uploads folder name
-			$attr['template'] = str_replace(['..', 'upload', $upload_folder], '', sanitize_text_field(esc_url_raw($attr['template'])));
-
-			$custom_template = $attr['template'] && is_file(TEMPLATEPATH.'/'.$attr['template']) ? TEMPLATEPATH.'/'.$attr['template'] : $custom_template;
-			$custom_template = $attr['template'] && is_file(get_stylesheet_directory().'/'.$attr['template']) ? get_stylesheet_directory().'/'.$attr['template'] : $custom_template;
-			$custom_template = $attr['template'] && is_file(WP_CONTENT_DIR.'/'.$attr['template']) ? WP_CONTENT_DIR.'/'.$attr['template'] : $custom_template;
-
-			if($attr['template'] && !$custom_template) // Unable to locate the template file?
-				trigger_error(sprintf('Invalid `template=""` attribute. Could not find: `%1$s`.', esc_html($attr['template'])), E_USER_ERROR);
+			//260812 Resolve the shortcode template and record unapproved custom files for the administrator notice.
+			if($attr['template'] && ($_shortcode_template = c_ws_plugin__s2member_utils_dirs::shortcode_template($attr['template'], array('member-list-search-box.php'), $shortcode, get_the_ID())))
+				$custom_template = $_shortcode_template;
+			unset($_shortcode_template);
 
 			$code = trim(file_get_contents((($custom_template) ? $custom_template : dirname(dirname(__FILE__)).'/templates/members/member-list-search-box.php')));
 			$code = trim((!$custom_template || !is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site() ? c_ws_plugin__s2member_utilities::evl($code, get_defined_vars()) : $code));
