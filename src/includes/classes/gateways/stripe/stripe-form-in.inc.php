@@ -89,9 +89,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 			c_ws_plugin__s2member_no_cache::no_cache_constants(TRUE);
 
-			$attr              = c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
-			$options           = array(); // Initialize options to an empty array.
-			$option_selections = ''; // Initialize w/ no options.
+			$attr                        = c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
+			$options                     = array(); // Initialize options to an empty array.
+			$option_selections           = ''; // Initialize w/ no options.
+			//260814 Allow the parent Pro-Form to provide an inert Checkout Options placeholder.
+			$option_placeholder          = (!empty($attr['placeholder']) && empty($attr['cancel']) && empty($attr['update'])) ? trim((string)$attr['placeholder']) : '';
+			$option_placeholder_selected = FALSE;
 
 			if($content && ($content = strip_tags($content))) // This allows for nested Pro-Form Shortcodes as options.
 				$content = str_replace('s2Member-Pro-Stripe-Form ', 's2Member-Pro-Stripe-xFormOption ', $content);
@@ -120,17 +123,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				}
 				unset($_option_id, $_option); // Housekeeping.
 
-				if(empty($_selected_option_id)) foreach($options as $_option_id => $_option)
+				if(empty($_selected_option_id))
 				{
-					$attr = array_merge($attr, $_option);
-					break; // Force a selected option (default).
+					if($option_placeholder !== '' && !empty($options))
+						$option_placeholder_selected = TRUE;
+					else foreach($options as $_option_id => $_option)
+						{
+							$attr = array_merge($attr, $_option);
+							break; // Force a selected option (default).
+						}
 				}
 				unset($_option_id, $_option, $_selected_option_id); // Housekeeping.
+
+				if($option_placeholder !== '' && !empty($options))
+					$option_selections .= '<option value="" disabled="disabled"'.($option_placeholder_selected ? ' selected="selected"' : '').'>'.esc_html($option_placeholder).'</option>';
 
 				foreach($options as $_option_id => $_option) // Build option selections.
 					$option_selections .= '<option value="'.esc_attr($_option_id).'"'.(!empty($_option['selected']) ? ' selected="selected"' : '').'>'.esc_html($_option['desc']).'</option>';
 				unset($_option_id, $_option); // Housekeeping.
 			}
+
+			//260814 Placeholder state needs a harmless internal description for form validation.
+			if($option_placeholder_selected && empty($attr['desc']))
+				$attr['desc'] = 'Checkout Options Placeholder';
+
 			$attr = shortcode_atts(array(
 				'ids'                      => '0',
 				'exp'                      => '72',
@@ -736,6 +752,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				($attr['modify']) ? do_action('ws_plugin__s2member_pro_during_sc_stripe_modification_form', get_defined_vars()) : do_action('ws_plugin__s2member_pro_during_sc_stripe_form', get_defined_vars());
 				unset($__refs, $__v); // Ditch these temporary vars.
 			}
+			if($option_placeholder_selected)
+			{
+				$code = preg_replace('/(<form\b[^>]*\bclass="[^"]*)"/i', '$1 s2member-pro-form-option-placeholder-selected"', $code, 1);
+				//260814 Keep the placeholder-only state inert even if hidden form fields are submitted manually.
+				$code = preg_replace('/(<input\b[^>]*\bid="s2member-pro-stripe-(?:registration|sp-checkout|checkout)-nonce"[^>]*\bvalue=")[^"]*(")/i', '$1option$2', $code, 1);
+			}
+
 			return apply_filters('ws_plugin__s2member_pro_sc_stripe_form', $code, get_defined_vars());
 		}
 	}

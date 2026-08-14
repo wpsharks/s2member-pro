@@ -716,6 +716,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-form-options-section">'."\n";
 			echo '<h3>Wrapping Multiple Shortcodes as "Checkout Options"</h3>'."\n";
 			echo '<p>If you would like to offer a single Pro-Form w/ multiple "Checkout Options", it\'s quite easy. Generate each of your Pro-Form Shortcodes the same as you normally would (using some of the Pro-Form Generators on this page). Then, you can simply wrap them all inside another Pro-Form Shortcode (as seen below). For instance, if you generate two Pro-Form Shortcodes (or you have multiple Pro-Form Shortcodes on-site already); you can simply take those and wrap them inside another Pro-Form Shortcode and it consolidates all the Pro-Form Shortcodes into a single Pro-Form with multiple "Checkout Options" (i.e., it creates a drop-down menu for your customers to choose from). The following is a VERY simple example.</p>'."\n";
+			echo '<p>By default, the first Checkout Option is selected automatically. If you would prefer the Pro-Form to begin with a non-payable prompt instead, add a <code>placeholder="Please choose..."</code> attribute to the top-level parent Shortcode. While the placeholder is selected, only the Checkout Options menu is shown; the customer must select a real Checkout Option before the rest of the Pro-Form is shown. The <code>placeholder</code> attribute belongs on the parent Shortcode, not on a child Checkout Option.</p>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -724,7 +725,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 			echo '<td>'."\n";
 			echo '<pre class="code">';
 			echo '<code>';
-			echo '[s2Member-Pro-AuthNet-Form]'."\n";
+			echo '[s2Member-Pro-AuthNet-Form placeholder="Please choose..."]'."\n";
 			echo "\t".'[s2Member-Pro-AuthNet-Form /]'."\n";
 			echo "\t".'[s2Member-Pro-AuthNet-Form /]'."\n";
 			echo '[/s2Member-Pro-AuthNet-Form]';
@@ -761,7 +762,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
-			echo '<p style="font-style:italic;">In this example, the default checkout Level is 1 (because the default Checkout Option is always the first Checkout Option); but that can change depending on which Checkout Option is selected by the customer. All of these Checkout Options will be associated with different prices; and each Checkout Option will provide access to a different Membership Level. The customer may choose which one they would like to pay for and gain access to.</p>'."\n";
+			echo '<p style="font-style:italic;">In this example, no placeholder is specified, so the default checkout Level is 1 (because the default Checkout Option is the first Checkout Option); but that can change depending on which Checkout Option is selected by the customer. All of these Checkout Options will be associated with different prices; and each Checkout Option will provide access to a different Membership Level. The customer may choose which one they would like to pay for and gain access to.</p>'."\n";
 			echo '<p style="font-style:italic;">All of these Checkout Options will allow a Coupon Code; because that\'s an absolute default Shortcode Attribute (in this particular example); which is not overwritten by any of the children. All of these Checkout Options will charge the customer on a recurring basis (once each month); because those are absolute default Shortcode Attributes (in this particular example) i.e., <code>rp="1" rt="M" rr="1"</code>; which are not overwritten by any of the children.</p>'."\n";
 			echo '<p style="font-style:italic;">~ You\'ll be happy to know that ANY Shortcode Attribute can be declared (and/or overridden); in any of these tags. There is no special subset of restricted Shortcode Attributes in any of these; you can do whatever you like once you understand how this works. In addition, this works for Specific Post/Page Access, Buy Now Access, Recurring Access; etc. You can even mix these together if you like. Just wrap all of your Pro-Form Shortcodes with another Pro-Form Shortcode :-)</p>'."\n";
 			echo '</div>'."\n";
@@ -784,8 +785,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_forms"))
 			echo '</code>';
 			echo '</pre>'."\n";
 
-			echo 'The absolute default Checkout Option is always the first one (Checkout Option 1).<br />'."\n";
-			echo 'This would pre-select option 1 (but this is NOT necessary, because it\'s the default already).'."\n";
+			echo 'Without a placeholder, the default Checkout Option is the first one (Checkout Option 1). With a placeholder, no Checkout Option is selected until the customer chooses one, unless a valid <code>?s2p-option=</code> value pre-selects it.<br />'."\n";
+			echo 'This would explicitly pre-select option 1.'."\n";
 			echo '<pre class="code">';
 			echo '<code>';
 			echo 'http://www.example.com/my-checkout-form/?s2p-option=1';

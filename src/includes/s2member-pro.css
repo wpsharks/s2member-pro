@@ -260,3 +260,16 @@ div.ws-plugin--s2member-list-search-box table > tbody > tr > td:last-child > but
 {
 	width : 100%;
 }
+
+/*
+Checkout Options placeholder state.
+*/
+form.s2member-pro-form-option-placeholder-selected > div[class*="-form-section"]
+{
+	display : none !important;
+}
+form.s2member-pro-form-option-placeholder-selected > div[class*="-form-response-section"],
+form.s2member-pro-form-option-placeholder-selected > div[class*="-form-options-section"]
+{
+	display : block !important;
+}
