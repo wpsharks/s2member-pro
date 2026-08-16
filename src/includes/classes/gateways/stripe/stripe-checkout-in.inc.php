@@ -369,7 +369,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if(empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret']) && empty($GLOBALS['ws_plugin__s2member_pro_stripe']['seti_secret']))
 										$stripe_pending_subscr_response = array('response' => _x('<strong>Thank you.</strong> Your payment is still pending. Your access will be updated once payment is confirmed, usually within a few minutes, but it can take up to 24 hours. Please do not submit the form again; contact support if access is not updated after 24 hours.', 's2member-front', 's2member'));
 
-									if(c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $user_id, 'ipn' => $ipn, 'old_subscr_gateway' => $old__subscr_gateway, 'old_subscr_id' => $old__subscr_id, 'old_subscr_baid' => $old__subscr_baid, 'old_subscr_cid' => $old__subscr_cid, 'old_ipn_signup_vars' => $old__ipn_signup_vars, 'list_server_opt_in' => (boolean)@$post_vars['custom_fields']['opt_in'])))
+									if(c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $user_id, 'ipn' => $ipn, 'old_subscr_gateway' => $old__subscr_gateway, 'old_subscr_id' => $old__subscr_id, 'old_subscr_baid' => $old__subscr_baid, 'old_subscr_cid' => $old__subscr_cid, 'old_ipn_signup_vars' => $old__ipn_signup_vars, 'list_server_opt_in' => (bool)@$post_vars['custom_fields']['opt_in'])))
 										$global_response = $stripe_pending_subscr_response;
 									else
 									{
@@ -396,7 +396,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
 										c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
-									c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+									c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
 
 									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
@@ -847,7 +847,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
 										c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
-								c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+								c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
 
 								setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 								setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).

@@ -84,7 +84,7 @@ if(!function_exists('s2member_pro_paypal_rbp_for_user'))
 {
 	function s2member_pro_paypal_rbp_for_user($user_id = FALSE)
 	{
-		$user_id = (integer)$user_id;
+		$user_id = (int)$user_id;
 		$user_id = ($user_id) ? $user_id : get_current_user_id();
 		if(!$user_id) return array();
 
@@ -163,7 +163,7 @@ if(!function_exists('s2member_pro_payflow_rbp_for_user'))
 {
 	function s2member_pro_payflow_rbp_for_user($user_id = FALSE)
 	{
-		$user_id = (integer)$user_id;
+		$user_id = (int)$user_id;
 		$user_id = ($user_id) ? $user_id : get_current_user_id();
 		if(!$user_id) return array();
 

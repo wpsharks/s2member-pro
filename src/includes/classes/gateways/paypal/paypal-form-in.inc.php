@@ -104,7 +104,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 										//260808 Safely unserialize the form option.
 										$options[$_content_option_id] = c_ws_plugin__s2member_utils_arrays::maybe_unserialize(trim($_content_option));
 										if(!is_array($options[$_content_option_id])){ unset($options[$_content_option_id]); continue; }
-										if(!empty($_REQUEST['s2p-option']) && (integer)$_REQUEST['s2p-option'] === $_content_option_id)
+										if(!empty($_REQUEST['s2p-option']) && (int)$_REQUEST['s2p-option'] === $_content_option_id)
 											$options[$_content_option_id]['selected'] = TRUE;
 									}
 								unset($_content_option_key, $_content_option, $_content_option_id); // Housekeeping.

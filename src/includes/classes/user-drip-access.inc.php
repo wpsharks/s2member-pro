@@ -100,12 +100,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 		{
 			$drip     = FALSE;
 			$access   = trim((string)$access);
-			$from_day = self::$from_day = (integer)$from_day;
-			$to_day   = self::$to_day = (integer)$to_day;
+			$from_day = self::$from_day = (int)$from_day;
+			$to_day   = self::$to_day = (int)$to_day;
 
 			if(!isset($user_id))
 				$user_id = get_current_user_id();
-			$user_id = self::$user_id = (integer)$user_id;
+			$user_id = self::$user_id = (int)$user_id;
 
 			if(user_can($user_id, 'administrator'))
 				$drip = TRUE;

@@ -59,7 +59,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 		{
 			if(!empty($op['op']) && $op['op'] === 'get_user' && !empty($op['data']) && is_array($op['data']))
 			{
-				if(!empty($op['data']['user_id']) && ($_user = new WP_User((integer)$op['data']['user_id'])) && !empty($_user->ID))
+				if(!empty($op['data']['user_id']) && ($_user = new WP_User((int)$op['data']['user_id'])) && !empty($_user->ID))
 					$user = $_user;
 
 				else if(!empty($op['data']['user_login']) && ($_user = new WP_User(0, (string)$op['data']['user_login'])) && !empty($_user->ID))
@@ -234,7 +234,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 		{
 			if(!empty($op['op']) && $op['op'] === 'modify_user' && !empty($op['data']) && is_array($op['data']))
 			{
-				if(!empty($op['data']['user_id']) && ($_user = new WP_User((integer)$op['data']['user_id'])) && !empty($_user->ID))
+				if(!empty($op['data']['user_id']) && ($_user = new WP_User((int)$op['data']['user_id'])) && !empty($_user->ID))
 					$user = $_user;
 
 				else if(!empty($op['data']['user_login']) && ($_user = new WP_User((string)$op['data']['user_login'])) && !empty($_user->ID))
@@ -267,15 +267,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 				if(!empty($op['data']['last_name']))
 					$userdata['last_name'] = (string)$op['data']['last_name'];
 
-				if(isset ($op['data']['s2member_level']) && (integer)$op['data']['s2member_level'] === 0)
+				if(isset ($op['data']['s2member_level']) && (int)$op['data']['s2member_level'] === 0)
 				{
 					if(c_ws_plugin__s2member_user_access::user_access_role($user) !== get_option('default_role'))
 						$userdata['role'] = get_option('default_role');
 				}
-				else if(!empty($op['data']['s2member_level']) && (integer)$op['data']['s2member_level'] > 0)
+				else if(!empty($op['data']['s2member_level']) && (int)$op['data']['s2member_level'] > 0)
 				{
-					if(c_ws_plugin__s2member_user_access::user_access_role($user) !== 's2member_level'.(integer)$op['data']['s2member_level'])
-						$userdata['role'] = 's2member_level'.(integer)$op['data']['s2member_level'];
+					if(c_ws_plugin__s2member_user_access::user_access_role($user) !== 's2member_level'.(int)$op['data']['s2member_level'])
+						$userdata['role'] = 's2member_level'.(int)$op['data']['s2member_level'];
 				}
 				wp_update_user(wp_slash($userdata)); // OK. Now send this array for an update.
 
@@ -301,7 +301,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 							$user->add_cap('access_s2member_ccap_'.$ccap);
 
 				if(isset($op['data']['s2member_originating_blog']) && is_multisite())
-					update_user_meta($user->ID, 's2member_originating_blog', (integer)$op['data']['s2member_originating_blog']);
+					update_user_meta($user->ID, 's2member_originating_blog', (int)$op['data']['s2member_originating_blog']);
 
 				if(isset($op['data']['s2member_subscr_gateway']))
 					update_user_option($user->ID, 's2member_subscr_gateway', (string)$op['data']['s2member_subscr_gateway']);
@@ -383,7 +383,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_remote_ops_in'))
 		{
 			if(!empty($op['op']) && $op['op'] === 'delete_user' && !empty($op['data']) && is_array($op['data']))
 			{
-				if(!empty($op['data']['user_id']) && ($_user = new WP_User((integer)$op['data']['user_id'])) && !empty($_user->ID))
+				if(!empty($op['data']['user_id']) && ($_user = new WP_User((int)$op['data']['user_id'])) && !empty($_user->ID))
 					$user = $_user;
 
 				else if(!empty($op['data']['user_login']) && ($_user = new WP_User((string)$op['data']['user_login'])) && !empty($_user->ID))

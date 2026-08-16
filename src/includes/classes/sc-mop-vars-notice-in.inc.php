@@ -231,13 +231,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_mop_vars_notice_in'))
 
 			if(!empty($_g['_s2member_seeking']['type']) && $_g['_s2member_seeking']['type'] == 'post')
 			{
-				$content = str_ireplace(array('%%POST_TITLE%%', '%%PAGE_TITLE%%'), get_the_title((integer)$_g['_s2member_seeking']['post']), $content);
-				$content = str_ireplace('%%POST_EXCERPT%%', c_ws_plugin__s2member_pro_sc_mop_vars_notice_in::get_excerpt((integer)$_g['_s2member_seeking']['post']), $content);
+				$content = str_ireplace(array('%%POST_TITLE%%', '%%PAGE_TITLE%%'), get_the_title((int)$_g['_s2member_seeking']['post']), $content);
+				$content = str_ireplace('%%POST_EXCERPT%%', c_ws_plugin__s2member_pro_sc_mop_vars_notice_in::get_excerpt((int)$_g['_s2member_seeking']['post']), $content);
 			}
 			# ---------------------------------------------------------------------------------------------------
 
 			if(!empty($_g['_s2member_seeking']['type']) && $_g['_s2member_seeking']['type'] == 'page')
-				$content = str_ireplace(array('%%POST_TITLE%%', '%%PAGE_TITLE%%'), get_the_title((integer)$_g['_s2member_seeking']['page']), $content);
+				$content = str_ireplace(array('%%POST_TITLE%%', '%%PAGE_TITLE%%'), get_the_title((int)$_g['_s2member_seeking']['page']), $content);
 
 			# ---------------------------------------------------------------------------------------------------
 

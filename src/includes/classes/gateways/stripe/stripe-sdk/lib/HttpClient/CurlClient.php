@@ -483,7 +483,10 @@ class CurlClient implements ClientInterface
     private function closeCurlHandle()
     {
         if (!is_null($this->curlHandle)) {
-            curl_close($this->curlHandle);
+            //260816 curl_close() is a no-op on PHP 8+ and deprecated in PHP 8.5; PHP 5-7 still need it.
+            if (PHP_VERSION_ID < 80000) {
+                curl_close($this->curlHandle);
+            }
             $this->curlHandle = null;
         }
     }

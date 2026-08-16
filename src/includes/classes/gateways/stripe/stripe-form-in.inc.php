@@ -111,7 +111,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 						unset($options[$_content_option_id]);
 						continue; // Invalid option.
 					}
-					if(!empty($_REQUEST['s2p-option']) && (integer)$_REQUEST['s2p-option'] === $_content_option_id)
+					if(!empty($_REQUEST['s2p-option']) && (int)$_REQUEST['s2p-option'] === $_content_option_id)
 						$options[$_content_option_id]['selected'] = TRUE;
 				}
 				unset($_content_option_key, $_content_option, $_content_option_id); // Housekeeping.

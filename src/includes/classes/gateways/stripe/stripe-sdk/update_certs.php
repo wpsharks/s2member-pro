@@ -16,5 +16,8 @@ $options = array(
 $ch = curl_init();
 curl_setopt_array($ch, $options);
 curl_exec($ch);
-curl_close($ch);
+//260816 curl_close() is a no-op on PHP 8+ and deprecated in PHP 8.5; PHP 5-7 still need it.
+if (PHP_VERSION_ID < 80000) {
+    curl_close($ch);
+}
 fclose($fp);

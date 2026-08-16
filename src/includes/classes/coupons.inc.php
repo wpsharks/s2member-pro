@@ -92,11 +92,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 					else $_expires_time = $_coupon['dates']; // Back compat.
 
 					if($_active_time && ($_active_time = strtotime($_active_time)))
-						$_coupon['active_time'] = (integer)$_active_time;
+						$_coupon['active_time'] = (int)$_active_time;
 
 					if($_expires_time && ($_expires_time = strtotime($_expires_time)))
 						{
-							$_coupon['expires_time'] = (integer)$_expires_time;
+							$_coupon['expires_time'] = (int)$_expires_time;
 							if(date('H:i:s', $_coupon['expires_time']) === '00:00:00')
 								$_coupon['expires_time'] += 86399; // End of the day.
 						}
@@ -112,7 +112,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 				$_coupon['users'] = !empty($_coupon_parts[5]) && strtolower($_coupon_parts[5]) !== 'all' ? $_coupon_parts[5] : '';
 				$_coupon['users'] = $_coupon['users'] ? array_map('intval', preg_split('/,+/', preg_replace('/[^0-9,]/', '', $_coupon['users']), -1, PREG_SPLIT_NO_EMPTY)) : array();
 
-				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (integer)$_coupon_parts[6] : 0;
+				$_coupon['max_uses'] = !empty($_coupon_parts[6]) ? (int)$_coupon_parts[6] : 0;
 
 				if($update && strpos((string)$update, 'counters') !== FALSE && isset($_coupon_parts[7]))
 					$this->update_uses($_coupon['code'], $_coupon_parts[7]);
@@ -174,8 +174,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 					$list .= str_replace('|', '', trim((string)$_coupon['dates'])).'|';
 
 				else if(isset($_coupon['active_time']) || isset($_coupon['expires_time']))
-					$list .= str_replace('|', '', (isset($_coupon['active_time']) && (integer)$_coupon['active_time'] ? date('Y/m/d', (integer)$_coupon['active_time']) : '').
-					                              '~'.(isset($_coupon['expires_time']) && (integer)$_coupon['expires_time'] ? date('Y/m/d', (integer)$_coupon['expires_time']) : '')).'|';
+					$list .= str_replace('|', '', (isset($_coupon['active_time']) && (int)$_coupon['active_time'] ? date('Y/m/d', (int)$_coupon['active_time']) : '').
+					                              '~'.(isset($_coupon['expires_time']) && (int)$_coupon['expires_time'] ? date('Y/m/d', (int)$_coupon['expires_time']) : '')).'|';
 
 				else $list .= '|'; // Unspecified in this case.
 
@@ -519,8 +519,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 
 				if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
 					if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
-						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
-							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
+						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((int)$attr['singular'], $_coupon['singulars'], TRUE)))
+							if(!$_coupon['users'] || ($current_user->ID && in_array((int)$current_user->ID, $_coupon['users'], TRUE)))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
 									//240829 Specific pro-forms
 									if (!$_coupon['pforms'] || (!empty($attr['pform']) && in_array($attr['pform'], $_coupon['pforms'], TRUE)))
@@ -535,8 +535,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			{
 				if(!$_coupon['active_time'] || $current_time >= $_coupon['active_time'])
 					if(!$_coupon['expires_time'] || $current_time <= $_coupon['expires_time'])
-						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((integer)$attr['singular'], $_coupon['singulars'], TRUE)))
-							if(!$_coupon['users'] || ($current_user->ID && in_array((integer)$current_user->ID, $_coupon['users'], TRUE)))
+						if(!$_coupon['singulars'] || (!empty($attr['singular']) && in_array((int)$attr['singular'], $_coupon['singulars'], TRUE)))
+							if(!$_coupon['users'] || ($current_user->ID && in_array((int)$current_user->ID, $_coupon['users'], TRUE)))
 								if(!$_coupon['max_uses'] || $this->get_uses($_coupon['code']) < $_coupon['max_uses'])
 									return $_coupon; // It's discount time! :-)
 				return array(); // Not valid at this time.
@@ -567,12 +567,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$args         = array_merge($default_args, $args);
 			$args         = array_intersect_key($args, $default_args);
 
-			$quantity  = (integer)$args['quantity'];
+			$quantity  = (int)$args['quantity'];
 			$discount  = str_replace('|', '', trim((string)$args['discount']));
 			$directive = str_replace('|', '', trim((string)$args['directive']));
 			$singulars = str_replace('|', '', trim((string)$args['singulars']));
 
-			if(!($quantity = (integer)$quantity) || $quantity < 1)
+			if(!($quantity = (int)$quantity) || $quantity < 1)
 				return array(); // Not possible.
 
 			for($_i = 0, $gifts = array(); $_i < $quantity; $_i++)
@@ -598,7 +598,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			if(!($coupon_code = trim((string)$coupon_code)))
 				return 0; // Not possible.
 
-			return (integer)get_option($this->uses_option_key($coupon_code));
+			return (int)get_option($this->uses_option_key($coupon_code));
 		}
 
 		public function update_uses($coupon_code, $to = NULL)
@@ -609,8 +609,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_coupons'))
 			$uses_option_key = $this->uses_option_key($coupon_code);
 
 			if(($current_uses = get_option($uses_option_key)) === FALSE)
-				add_option($uses_option_key, isset($to) ? (integer)$to : 1, '', 'no');
-			else update_option($uses_option_key, isset($to) ? (integer)$to : $current_uses + 1);
+				add_option($uses_option_key, isset($to) ? (int)$to : 1, '', 'no');
+			else update_option($uses_option_key, isset($to) ? (int)$to : $current_uses + 1);
 		}
 
 		public function delete_uses($coupon_code)

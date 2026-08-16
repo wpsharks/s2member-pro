@@ -146,7 +146,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			else // Convert shortcode attributes to args.
 			{
 				$args = array(
-					'blog_id'        => (integer)$attr['blog'],
+					'blog_id'        => (int)$attr['blog'],
 
 					'meta_query'     => array(),
 					'search'         => $attr['search'],
@@ -156,7 +156,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 
 					'order'          => $attr['order'],
 					'orderby'        => $attr['orderby'],
-					'number'         => (integer)$attr['limit'],
+					'number'         => (int)$attr['limit'],
 				);
 				if($attr['roles']) // Must satisfy all Roles in the list (default behavior).
 				{

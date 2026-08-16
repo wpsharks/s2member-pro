@@ -548,7 +548,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			if(add_option($stripe_event_lock, time(), '', 'no'))
 				return TRUE;
 
-			$stripe_event_lock_time = (integer)get_option($stripe_event_lock);
+			$stripe_event_lock_time = (int)get_option($stripe_event_lock);
 
 			if($stripe_event_lock_time > 0 && (time() - $stripe_event_lock_time) > abs($lock_timeout))
 			{
@@ -594,7 +594,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			if(!is_array($r))
 				$r = array('code' => 0, 'message' => 'request_failed', 'body' => '');
 
-			if(($code = (integer)$r['code']) >= 200 && $code <= 299)
+			if(($code = (int)$r['code']) >= 200 && $code <= 299)
 				return TRUE;
 
 			$stripe['s2member_log'][] = 'Unable to proxy this Stripe Webhook/IPN event through s2Member\'s core gateway processor.';
@@ -634,7 +634,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 			else if(isset($stripe_subscription->plan->metadata->recurring)
 				&& filter_var($stripe_subscription->plan->metadata->recurring, FILTER_VALIDATE_BOOLEAN)
 				&& isset($stripe_subscription->plan->metadata->recurring_times)
-				&& (integer)$stripe_subscription->plan->metadata->recurring_times === 1
+				&& (int)$stripe_subscription->plan->metadata->recurring_times === 1
 				&& strtolower($stripe_subscription->status) !== 'trialing' // Past the initial/trial period?
 			)
 			{

@@ -231,7 +231,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					}
 				$reject_prepaid = !empty($reject_prepaid) || $reject_prepaid === false || $reject_prepaid === '0'
 					? filter_var($reject_prepaid, FILTER_VALIDATE_BOOLEAN) // Use the value passed in.
-					: (boolean)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid'];
+					: (bool)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid'];
 
 				if($reject_prepaid && !empty($customer->sources->data[0]->funding) && $customer->sources->data[0]->funding === 'prepaid')
 				{ // Reject prepaid cards in this case.
@@ -409,7 +409,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$metadata['recurring']       = $shortcode_attrs['rr'] && $shortcode_attrs['rr'] !== 'BN';
 			// rrt installments are not managed by Stripe, it's a regular subscription ended by s2 after number of payments.
 			// This gets tricky with Jason's shift of first regular to a separate charge when there's an unused trial period.
-			$metadata['recurring_times'] = $shortcode_attrs['rr'] && $shortcode_attrs['rrt'] ? (integer)$shortcode_attrs['rrt'] : -1;
+			$metadata['recurring_times'] = $shortcode_attrs['rr'] && $shortcode_attrs['rrt'] ? (int)$shortcode_attrs['rrt'] : -1;
 			$trial_period_days           = self::per_term_2_days($shortcode_attrs['tp'], $shortcode_attrs['tt']);
 			$interval_days               = self::per_term_2_days($shortcode_attrs['rp'], $shortcode_attrs['rt']);
 
@@ -655,7 +655,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return FALSE;
 
 			if(($user_id = $wpdb->get_var($wpdb->prepare("SELECT `user_id` FROM `".$wpdb->usermeta."` WHERE `meta_key` = %s AND `meta_value` = %s LIMIT 1", $wpdb->prefix.'s2member_stripe_pending_subscr_id', (string)$subscr_id))))
-				return (integer)$user_id;
+				return (int)$user_id;
 
 			return FALSE;
 		}
@@ -685,11 +685,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				'user_id'         => 0,
 				'ipn'             => array(),
 				'created'         => time(),
-				'expires'         => time() + abs((integer)$expiration),
+				'expires'         => time() + abs((int)$expiration),
 			), (array)$details);
 
 			$details['subscription_id'] = (string)$subscr_id;
-			$user_id = !empty($details['user_id']) ? (integer)$details['user_id'] : 0;
+			$user_id = !empty($details['user_id']) ? (int)$details['user_id'] : 0;
 
 			if(!$user_id || !get_userdata($user_id) || empty($details['ipn']) || !is_array($details['ipn']))
 			{
@@ -735,7 +735,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if(empty($details['user_id']))
 				$details['user_id'] = $user_id;
 
-			if(!empty($details['expires']) && time() > (integer)$details['expires'])
+			if(!empty($details['expires']) && time() > (int)$details['expires'])
 			{
 				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Pending Stripe subscription details expired and were deleted.'), 'subscr_id' => $subscr_id, 'user_id' => $user_id));
 				self::delete_pending_subscr_details($subscr_id);
@@ -898,7 +898,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			set_transient($lock_key, time(), 10 * MINUTE_IN_SECONDS);
 
-			$user_id = !empty($details['user_id']) ? (integer)$details['user_id'] : 0;
+			$user_id = !empty($details['user_id']) ? (int)$details['user_id'] : 0;
 			$ipn     = !empty($details['ipn']) && is_array($details['ipn']) ? $details['ipn'] : array();
 
 			if(!$user_id || empty($ipn['subscr_id']) || (string)$ipn['subscr_id'] !== (string)$subscr_id)
@@ -936,7 +936,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$previous_user_id = get_current_user_id();
 
 				wp_set_current_user($user_id);
-				c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((boolean)$details['list_server_opt_in'], TRUE, TRUE);
+				c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)$details['list_server_opt_in'], TRUE, TRUE);
 
 				wp_set_current_user($previous_user_id);
 			}
@@ -976,7 +976,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if(!$subscription_id || !is_string($subscription_id))
 				return FALSE;
 
-			return set_transient(self::replacement_cancellation_guard_key($subscription_id), time(), abs((integer)$expiration));
+			return set_transient(self::replacement_cancellation_guard_key($subscription_id), time(), abs((int)$expiration));
 		}
 
 		/**
@@ -993,7 +993,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			if(!$subscription_id || !is_string($subscription_id))
 				return FALSE;
 
-			return (boolean)get_transient(self::replacement_cancellation_guard_key($subscription_id));
+			return (bool)get_transient(self::replacement_cancellation_guard_key($subscription_id));
 		}
 
 		/**
@@ -1144,10 +1144,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				case 'RWF':
 				case 'XAF':
 				case 'XPF':
-					return (integer)$amount;
+					return (int)$amount;
 
 				default: // In cents.
-					return (integer)number_format($amount * 100, 0, '.', '');
+					return (int)number_format($amount * 100, 0, '.', '');
 			}
 		}
 
@@ -1179,7 +1179,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				case 'RWF':
 				case 'XAF':
 				case 'XPF':
-					return (integer)$amount;
+					return (int)$amount;
 
 				default: // In dollars.
 					return (float)number_format($amount / 100, 2, '.', '');
@@ -1278,7 +1278,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					$days = ($span === 'M') ? 30 : $days;
 					$days = ($span === 'Y') ? 365 : $days;
 				}
-				$p1_days = (integer)$num * (integer)$days;
+				$p1_days = (int)$num * (int)$days;
 				$p1_time = $p1_days * 86400;
 			}
 			if(!($p3_time = 0) && ($period3 = trim(strtoupper($period3))))
@@ -1294,7 +1294,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					$days = ($span === 'M') ? 30 : $days;
 					$days = ($span === 'Y') ? 365 : $days;
 				}
-				$p3_days = (integer)$num * (integer)$days;
+				$p3_days = (int)$num * (int)$days;
 				$p3_time = $p3_days * 86400;
 			}
 			$start_time = strtotime('now') + $p1_time + $p3_time;
@@ -1326,7 +1326,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				$days = ($term === 'M') ? 30 : $days;
 				$days = ($term === 'Y') ? 365 : $days;
 
-				return (integer)$period * (integer)$days;
+				return (int)$period * (int)$days;
 			}
 			return 0;
 		}

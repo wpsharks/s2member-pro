@@ -109,7 +109,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_imports_in'))
 							break; // Stop here; we have no headers in this importation.
 						}
 						$_user_ID_key = array_search('ID', $headers);
-						$_user_id     = $_user_ID_key !== FALSE && !empty($_csv_data[$_user_ID_key]) ? (integer)$_csv_data[$_user_ID_key] : 0;
+						$_user_id     = $_user_ID_key !== FALSE && !empty($_csv_data[$_user_ID_key]) ? (int)$_csv_data[$_user_ID_key] : 0;
 						unset($_user_ID_key); // Housekeeping.
 
 						$_user_login_key = array_search('user_login', $headers);
