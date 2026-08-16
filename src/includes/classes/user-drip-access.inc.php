@@ -93,8 +93,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 		 *
 		 * @return boolean `TRUE` if user can `$access`; and dripping should occur; based on `$from_day` & `$to_day`.
 		 *
-		 * @triggers `E_USER_ERROR` if an invalid `$access` syntax is detected; with invalid chars.
-		 * @triggers `E_USER_ERROR` if an invalid `$access` syntax is detected; without any word chars.
+		 * @triggers `E_USER_ERROR` on PHP < 8.4 if invalid `$access` syntax is detected.
+		 * @throws \InvalidArgumentException On PHP >= 8.4 if invalid `$access` syntax is detected.
 		 */
 		public static function user_can_access_drip($access, $from_day = 0, $to_day = 0, $user_id = NULL)
 		{
@@ -120,10 +120,24 @@ if(!class_exists('c_ws_plugin__s2member_pro_user_drip_access'))
 				$access_expression = str_replace(array(' and ', ' or '), array(' && ', ' || '), $access_expression);
 
 				if($invalid_chars)
-					trigger_error('Syntax error: invalid chars. Please use only `A-Za-z0-9 _()` in the `access` parameter of s2Drip.', E_USER_ERROR);
+				{
+					$error = 'Syntax error: invalid chars. Please use only `A-Za-z0-9 _()` in the `access` parameter of s2Drip.';
+					//260816 PHP 8.4 deprecates trigger_error(..., E_USER_ERROR); preserve the previous fatal-style path on older PHP.
+					if(PHP_VERSION_ID >= 80400)
+						throw new \InvalidArgumentException($error);
+					else
+						trigger_error($error, E_USER_ERROR);
+				}
 
 				if(!$access_expression || !preg_match('/\w+/', $access_expression))
-					trigger_error('Syntax error: no word chars in `access` parameter of s2Drip. Valid example: `level1 and ccap_music`.', E_USER_ERROR);
+				{
+					$error = 'Syntax error: no word chars in `access` parameter of s2Drip. Valid example: `level1 and ccap_music`.';
+					//260816 PHP 8.4 deprecates trigger_error(..., E_USER_ERROR); preserve the previous fatal-style path on older PHP.
+					if(PHP_VERSION_ID >= 80400)
+						throw new \InvalidArgumentException($error);
+					else
+						trigger_error($error, E_USER_ERROR);
+				}
 
 				$access_expression = preg_replace_callback('/\w+/', 'c_ws_plugin__s2member_pro_user_drip_access::_user_can_access_drip_cb', $access_expression);
 				$drip              = eval('return ('.$access_expression.');');

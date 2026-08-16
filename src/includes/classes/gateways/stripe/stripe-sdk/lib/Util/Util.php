@@ -162,7 +162,8 @@ abstract class Util
         }
 
         if (is_string($value) && self::$isMbstringAvailable && mb_detect_encoding($value, "UTF-8", true) != "UTF-8") {
-            return utf8_encode($value);
+            //260816 utf8_encode() is deprecated on PHP 8.2+; preserve its ISO-8859-1-to-UTF-8 conversion with mbstring.
+            return mb_convert_encoding($value, "UTF-8", "ISO-8859-1");
         } else {
             return $value;
         }
