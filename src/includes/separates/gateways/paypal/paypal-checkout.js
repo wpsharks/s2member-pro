@@ -38,19 +38,50 @@ jQuery(document).ready(function($)
 		var sdkScriptId = 's2member-pro-paypal-checkout-sdk-' + sdkNamespace;
 
 		var buttonId = options.prefix + '-paypal-checkout-button';
-		var errorId = options.prefix + '-paypal-checkout-error';
+		var messageId = options.prefix + '-paypal-checkout-message';
+		var responseId = options.prefix + '-paypal-checkout-response';
+		var $submissionSection = $form.find('div#' + options.prefix + '-form-submission-section');
+		var $responseDiv = $form.find('div#' + options.prefix + '-form-response-div');
 		var $button = $('<div />', {'id': buttonId, 'class': 's2member-pro-paypal-checkout-button'}).css({'display': 'none', 'max-width': '145px', 'width': 'auto', 'margin': '0'});
-		var $error = $('<div />', {'id': errorId, 'class': 's2member-pro-paypal-checkout-error'}).css({'display': 'none', 'margin': '6px 0 0'});
+		//260819.0124 Announce inline Checkout feedback without requiring visible keyboard focus on the message.
+		var $message = $('<div />', {'id': messageId, 'class': 's2member-pro-paypal-checkout-message ws-plugin--s2member-ppco-message', 'role': 'status', 'aria-live': 'polite'}).css({'display': 'none', 'clear': 'both', 'margin': '6px 0 0', 'text-align': 'right'});
+		var $response = $('<div />', {'id': responseId}).hide();
 
-		$submitDiv.append($button).append($error);
+		$submitDiv.append($button);
+		$submissionSection.append($message); //260819.0009 Keep the inline copy outside the floated submit div so messages cannot move the PayPal button.
+		$responseDiv.append($response);
 
+		var showMessage = function(message, type)
+		{
+			var content = message || cfg.messages.payment_failed;
+			var responseType = (type === 'info') ? 'info' : 'error';
+			var responseClass = 's2member-pro-paypal-form-response-' + responseType + ' ' + options.prefix + '-form-response-' + responseType;
+			var messageClass = 'ws-plugin--s2member-ppco-' + responseType;
+
+			//260819.0042 Mirror the full Pro-Form response above and shared compact Checkout feedback beside the payment control.
+			$response.attr('class', responseClass).html(content).show();
+			$message.empty().append($('<span />', {'class': messageClass}).html(content)).show();
+
+			//260819.0124 Release PayPal's failed/cancelled button focus without moving visible focus onto another control.
+			try
+			{
+				if(document.activeElement && typeof document.activeElement.blur === 'function')
+					document.activeElement.blur();
+			}
+			catch(error){}
+		};
 		var showError = function(message)
 		{
-			$error.text(message || cfg.messages.payment_failed).show();
+			showMessage(message, 'error');
 		};
-		var clearError = function()
+		var showInfo = function(message)
 		{
-			$error.hide().text('');
+			showMessage(message, 'info');
+		};
+		var clearMessage = function()
+		{
+			$response.hide().removeAttr('class').empty();
+			$message.hide().empty();
 		};
 		var currentSubmit = function()
 		{
@@ -273,7 +304,7 @@ jQuery(document).ready(function($)
 				style: {layout: 'vertical', tagline: false, height: 40},
 				onClick: function(data, actions)
 				{
-					clearError();
+					clearMessage();
 
 					//260818.2056 An unchanged purchase can safely reuse its prepared token even though its one-time CAPTCHA response was reset.
 					var fingerprint = formFingerprint();
@@ -296,7 +327,7 @@ jQuery(document).ready(function($)
 				},
 				onCancel: function()
 				{
-					showError(cfg.messages.cancelled);
+					showInfo(cfg.messages.cancelled);
 				},
 				onError: function()
 				{
@@ -389,7 +420,7 @@ jQuery(document).ready(function($)
 			else
 			{
 				$button.hide();
-				$error.hide();
+				clearMessage();
 				currentSubmit().show();
 			}
 		};
