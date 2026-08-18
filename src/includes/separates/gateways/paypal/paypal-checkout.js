@@ -9,9 +9,9 @@ jQuery(document).ready(function($)
 	if(typeof S2MEMBER_PRO_PAYPAL_CHECKOUT !== 'object' || !S2MEMBER_PRO_PAYPAL_CHECKOUT.enabled)
 		return;
 
-	var cfg = S2MEMBER_PRO_PAYPAL_CHECKOUT;
+	var cfg = S2MEMBER_PRO_PAYPAL_CHECKOUT, sdkLoads = {};
 
-	//260818.2010 Keep the browser layer generic so Specific Post/Page can reuse the same PayPal SDK flow next.
+	//260818.2056 Share one browser payment engine across membership and Specific Post/Page Pro-Forms.
 	var initForm = function(options)
 	{
 		var $form = $(options.form);
@@ -23,15 +23,19 @@ jQuery(document).ready(function($)
 		var $flow = $form.find(options.flow);
 		var $currency = $form.find(options.currency);
 		var $lc = $form.find(options.lc);
-		var $lang = $('input#s2member-pro-paypal-lang-attr');
+		var $lang = $form.find('input#s2member-pro-paypal-lang-attr');
 		var expectedFlow = $.trim($flow.val());
 		var currency = $.trim($currency.val()).toUpperCase();
 		var locale = $.trim($lang.val());
 		var lc = $.trim($lc.val()).toUpperCase();
-		var prepared = null, preparedFingerprint = '', planId = null, sdkLoading = false, sdkLoaded = false;
+		var prepared = null, preparedFingerprint = '', planId = null;
 
 		if(!expectedFlow || !currency || !cfg.client_id)
 			return;
+
+		//260818.2056 Different flow/currency/locale combinations need isolated SDK globals when multiple Pro-Forms share a page.
+		var sdkNamespace = ('s2m_pro_ppco_' + expectedFlow + '_' + currency + '_' + locale + '_' + lc).replace(/[^a-z0-9_]/gi, '_');
+		var sdkScriptId = 's2member-pro-paypal-checkout-sdk-' + sdkNamespace;
 
 		var buttonId = options.prefix + '-paypal-checkout-button';
 		var errorId = options.prefix + '-paypal-checkout-error';
@@ -76,6 +80,30 @@ jQuery(document).ready(function($)
 			});
 			return values.join('&');
 		};
+		var formFingerprint = function()
+		{
+			var values = [];
+			$.each($form.serializeArray(), function(index, field)
+			{
+				//260818.2056 CAPTCHA responses are one-time transport proof, not purchase data; exclude them from prepared-token reuse.
+				if(/(?:^|\[)(?:g-recaptcha-response|recaptcha_challenge_field|recaptcha_response_field)(?:\]|$)/.test(field.name))
+					return;
+				values.push(encodeURIComponent(field.name) + '=' + encodeURIComponent(field.value));
+			});
+			return values.join('&');
+		};
+		var resetCaptcha = function()
+		{
+			//260818.2056 Server preparation consumes the CAPTCHA token; reset its browser widget before any changed purchase can prepare again.
+			try
+			{
+				if(window.grecaptcha && typeof window.grecaptcha.reset === 'function')
+					window.grecaptcha.reset();
+				else if(window.Recaptcha && typeof window.Recaptcha.reload === 'function')
+					window.Recaptcha.reload();
+			}
+			catch(error){}
+		};
 		var fetchJson = function(url, request)
 		{
 			return fetch(url, request).then(function(response)
@@ -119,17 +147,18 @@ jQuery(document).ready(function($)
 			resetLegacySubmit();
 			return !event.isDefaultPrevented();
 		};
-		var submitFree = function()
+		var submitFree = function(freeHandoff)
 		{
-			//260818.2010 The server already proved payment is unnecessary; submit through legacy free fulfillment without PayPal.
+			//260818.2056 The opaque handoff proves preparation already validated this exact free purchase, including CAPTCHA.
 			$cardType.val(['Free']);
-			$form.find('input[name="' + options.postName + '[paypal_checkout_op]"]').remove();
+			$form.find('input[name="' + options.postName + '[paypal_checkout_op]"], input[name="' + options.postName + '[paypal_checkout_free_handoff]"]').remove();
 			$('<input />', {type: 'hidden', name: options.postName + '[paypal_checkout_op]', value: 'free'}).appendTo($form);
+			$('<input />', {type: 'hidden', name: options.postName + '[paypal_checkout_free_handoff]', value: freeHandoff}).appendTo($form);
 			HTMLFormElement.prototype.submit.call($form[0]);
 		};
-		var prepare = function(fingerprint)
+		var prepare = function(formData, fingerprint)
 		{
-			var body = fingerprint;
+			var body = formData;
 			body += (body ? '&' : '') + encodeURIComponent(options.postName + '[paypal_checkout_op]') + '=prepare';
 
 			return fetchJson($form.attr('action') || window.location.href, {
@@ -139,9 +168,9 @@ jQuery(document).ready(function($)
 				credentials: 'same-origin'
 			}).then(function(result)
 			{
-				if(result && result.error === 'pro_checkout_payment_not_required')
+				if(result && result.error === 'pro_checkout_payment_not_required' && result.free_handoff)
 				{
-					submitFree();
+					submitFree(result.free_handoff);
 					throw new Error('payment_not_required');
 				}
 				if(!result || !result.ok || !result.token || !result.endpoint || !result.invoice || result.flow !== expectedFlow)
@@ -152,6 +181,7 @@ jQuery(document).ready(function($)
 
 				prepared = result;
 				preparedFingerprint = fingerprint;
+				resetCaptcha();
 				return result;
 			});
 		};
@@ -168,41 +198,50 @@ jQuery(document).ready(function($)
 		};
 		var loadSdk = function(callback)
 		{
-			var namespace = 's2m_pro_ppco', PayPal = window[namespace];
+			var PayPal = window[sdkNamespace], load = sdkLoads[sdkNamespace];
 			if(PayPal && PayPal.Buttons)
 			{
-				sdkLoaded = true;
 				callback(PayPal);
 				return;
 			}
-			if(sdkLoading)
+
+			if(load)
 			{
-				setTimeout(function(){ loadSdk(callback); }, 50);
+				if(load.status === 'failed' || load.status === 'loaded')
+					showError(cfg.messages.sdk_failed);
+				else
+					load.callbacks.push({success: callback, failure: function(){ showError(cfg.messages.sdk_failed); }});
 				return;
 			}
 
-			sdkLoading = true;
+			//260818.2056 One SDK request is shared by forms with identical SDK configuration; each form keeps its own render callback.
+			load = sdkLoads[sdkNamespace] = {status: 'loading', callbacks: [{success: callback, failure: function(){ showError(cfg.messages.sdk_failed); }}]};
 			var script = document.createElement('script');
-			script.id = 's2member-pro-paypal-checkout-sdk';
-			script.setAttribute('data-namespace', namespace);
+			script.id = sdkScriptId;
+			script.setAttribute('data-namespace', sdkNamespace);
 			script.src = sdkSource();
 			script.async = true;
 			script.onload = function()
 			{
-				sdkLoading = false;
-				PayPal = window[namespace];
-				if(PayPal && PayPal.Buttons)
+				PayPal = window[sdkNamespace];
+				var callbacks = load.callbacks.slice(0);
+				load.callbacks = [];
+				load.status = (PayPal && PayPal.Buttons) ? 'loaded' : 'failed';
+
+				$.each(callbacks, function(index, queued)
 				{
-					sdkLoaded = true;
-					callback(PayPal);
-				}
-				else
-					showError(cfg.messages.sdk_failed);
+					if(load.status === 'loaded')
+						queued.success(PayPal);
+					else
+						queued.failure();
+				});
 			};
 			script.onerror = function()
 			{
-				sdkLoading = false;
-				showError(cfg.messages.sdk_failed);
+				var callbacks = load.callbacks.slice(0);
+				load.callbacks = [];
+				load.status = 'failed';
+				$.each(callbacks, function(index, queued){ queued.failure(); });
 			};
 			(document.head || document.body || document.documentElement).appendChild(script);
 		};
@@ -235,15 +274,19 @@ jQuery(document).ready(function($)
 				onClick: function(data, actions)
 				{
 					clearError();
+
+					//260818.2056 An unchanged purchase can safely reuse its prepared token even though its one-time CAPTCHA response was reset.
+					var fingerprint = formFingerprint();
+					if(prepared && preparedFingerprint === fingerprint)
+						return actions.resolve();
+
 					if(!validate())
 						return actions.reject();
 
-					var fingerprint = $form.serialize();
-					if(prepared && preparedFingerprint === fingerprint)
-						return actions.resolve(); //260818.2010 Reuse the same token so payment retries retain Framework idempotency.
-
+					var formData = $form.serialize();
+					fingerprint = formFingerprint();
 					prepared = null, preparedFingerprint = '', planId = null;
-					return prepare(fingerprint).then(function()
+					return prepare(formData, fingerprint).then(function()
 					{
 						return actions.resolve();
 					}).catch(function(error)
@@ -333,10 +376,7 @@ jQuery(document).ready(function($)
 		};
 		var ensureButton = function()
 		{
-			if(sdkLoaded)
-				renderButton(window.s2m_pro_ppco);
-			else
-				loadSdk(renderButton);
+			loadSdk(renderButton);
 		};
 		var syncBillingMethod = function()
 		{
@@ -387,5 +427,19 @@ jQuery(document).ready(function($)
 		flow: 'input#s2member-pro-paypal-checkout-ppco-flow',
 		currency: 'input#s2member-pro-paypal-checkout-ppco-currency',
 		lc: 'input#s2member-pro-paypal-checkout-ppco-lc'
+	});
+
+	initForm({
+		form: 'form#s2member-pro-paypal-sp-checkout-form',
+		prefix: 's2member-pro-paypal-sp-checkout',
+		postName: 's2member_pro_paypal_sp_checkout',
+		cardType: 'input[name="s2member_pro_paypal_sp_checkout[card_type]"]',
+		submitDiv: 'div#s2member-pro-paypal-sp-checkout-form-submit-div',
+		submit: '#s2member-pro-paypal-sp-checkout-submit',
+		couponApply: 'input#s2member-pro-paypal-sp-checkout-coupon-apply',
+		nonce: 'input#s2member-pro-paypal-sp-checkout-nonce',
+		flow: 'input#s2member-pro-paypal-sp-checkout-ppco-flow',
+		currency: 'input#s2member-pro-paypal-sp-checkout-ppco-currency',
+		lc: 'input#s2member-pro-paypal-sp-checkout-ppco-lc'
 	});
 });

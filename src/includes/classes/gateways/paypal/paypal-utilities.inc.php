@@ -44,6 +44,36 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 	 */
 	class c_ws_plugin__s2member_pro_paypal_utilities
 	{
+		//260818.2204 Keep modern Checkout free-fallback request state inside this class instead of loose globals.
+		protected static $paypal_checkout_free_fallback = FALSE;
+		protected static $paypal_checkout_free_handoff_verified = FALSE;
+
+		/**
+		 * Sets whether this request is processing a verified modern Checkout free fallback.
+		 *
+		 * @since 260818
+		 *
+		 * @param bool $active Whether the free-fallback path is active.
+		 *
+		 * @return void
+		 */
+		public static function paypal_checkout_free_fallback_set($active = FALSE)
+		{
+			self::$paypal_checkout_free_fallback = (bool)$active;
+		}
+
+		/**
+		 * Checks whether this request is processing a verified modern Checkout free fallback.
+		 *
+		 * @since 260818
+		 *
+		 * @return bool True when the free-fallback path is active.
+		 */
+		public static function paypal_checkout_free_fallback_is_active()
+		{
+			return self::$paypal_checkout_free_fallback;
+		}
+
 		/**
 		 * Calculates start date for a Recurring Payment Profile.
 		 *
@@ -441,6 +471,84 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Returns a fingerprint for a server-validated free-checkout handoff.
+		 *
+		 * @since 260818
+		 *
+		 * @param string $form_type Form type (`checkout` or `sp-checkout`).
+		 * @param array  $raw_post_vars Raw namespaced Pro-Form values.
+		 *
+		 * @return string Fingerprint, else an empty string.
+		 */
+		protected static function paypal_checkout_free_handoff_fingerprint($form_type = '', $raw_post_vars = array())
+		{
+			if(!in_array((string)$form_type, array('checkout', 'sp-checkout'), TRUE) || !is_array($raw_post_vars) || !$raw_post_vars)
+				return '';
+
+			$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($raw_post_vars));
+			unset($post_vars['card_type'], $post_vars['paypal_checkout_op'], $post_vars['paypal_checkout_free_handoff']);
+
+			return hash_hmac('sha256', (string)$form_type.'|'.serialize($post_vars), wp_salt('auth'));
+		}
+
+		/**
+		 * Creates a short-lived one-time handoff after Checkout preparation validates a purchase that became free.
+		 *
+		 * @since 260818
+		 *
+		 * @param string $form_type Form type (`checkout` or `sp-checkout`).
+		 * @param array  $raw_post_vars Raw namespaced Pro-Form values.
+		 *
+		 * @return string Opaque handoff key, else an empty string.
+		 */
+		public static function paypal_checkout_free_handoff_create($form_type = '', $raw_post_vars = array())
+		{
+			if(!($fingerprint = self::paypal_checkout_free_handoff_fingerprint($form_type, $raw_post_vars)))
+				return '';
+
+			$key = md5(uniqid('s2m_ppco_free_', TRUE).wp_rand());
+			$state = array(
+				'form_type'   => (string)$form_type,
+				'fingerprint' => $fingerprint,
+				'user_id'     => get_current_user_id(),
+				'ip'          => c_ws_plugin__s2member_utils_ip::current(),
+			);
+
+			set_transient('s2m_'.md5('s2member_pro_paypal_checkout_free_handoff_'.$key), $state, 10 * MINUTE_IN_SECONDS);
+
+			return $key;
+		}
+
+		/**
+		 * Verifies and consumes a free-checkout handoff so CAPTCHA validated during preparation is not submitted twice.
+		 *
+		 * @since 260818
+		 *
+		 * @param string $key Opaque handoff key.
+		 * @param string $form_type Form type (`checkout` or `sp-checkout`).
+		 * @param array  $raw_post_vars Raw namespaced Pro-Form values.
+		 *
+		 * @return bool True when valid and consumed, else false.
+		 */
+		public static function paypal_checkout_free_handoff_verify($key = '', $form_type = '', $raw_post_vars = array())
+		{
+			$key = preg_replace('/[^a-f0-9]/i', '', (string)$key);
+			$transient = $key ? 's2m_'.md5('s2member_pro_paypal_checkout_free_handoff_'.$key) : '';
+			$state = $transient ? get_transient($transient) : FALSE;
+			$fingerprint = self::paypal_checkout_free_handoff_fingerprint($form_type, $raw_post_vars);
+
+			if(!$key || !is_array($state) || !$fingerprint || empty($state['form_type']) || (string)$state['form_type'] !== (string)$form_type
+			|| empty($state['fingerprint']) || !hash_equals((string)$state['fingerprint'], $fingerprint)
+			|| (int)$state['user_id'] !== (int)get_current_user_id() || (string)$state['ip'] !== (string)c_ws_plugin__s2member_utils_ip::current())
+				return FALSE;
+
+			//260818.2204 Consume only after every binding check passes and keep duplicate-side-effect suppression class-scoped.
+			delete_transient($transient);
+			self::$paypal_checkout_free_handoff_verified = TRUE;
+			return TRUE;
+		}
+
+		/**
 		 * Prepares an authoritative membership Pro-Form purchase for Framework PayPal Checkout.
 		 *
 		 * @since 260818
@@ -500,9 +608,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$use_recurring_profile = ($post_vars['attr']['rr'] === 'BN' || (!$post_vars['attr']['tp'] && !$post_vars['attr']['rr'])) ? FALSE : TRUE;
 			$is_independent_ccaps_sale = ($post_vars['attr']['level'] === '*');
 
-			//260818.1920 A coupon can make a rendered paid form free; let the ordinary Pro-Form path handle that case without PayPal.
+			//260818.2056 A free result returns a one-time handoff so the already-validated CAPTCHA is not consumed again.
 			if($cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
-				return new WP_Error('pro_checkout_payment_not_required', _x('Payment is no longer required for this checkout.', 's2member-front', 's2member'));
+			{
+				if(!($free_handoff = self::paypal_checkout_free_handoff_create('checkout', $raw_post_vars)))
+					return new WP_Error('pro_checkout_free_handoff_failed', _x('Unable to prepare this checkout. Please try again.', 's2member-front', 's2member'));
+
+				return new WP_Error('pro_checkout_payment_not_required', _x('Payment is no longer required for this checkout.', 's2member-front', 's2member'), array('free_handoff' => $free_handoff));
+			}
 
 			$invoice = 's2mpf-'.md5(uniqid('s2mpf_', true).wp_rand());
 			$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
@@ -1203,6 +1316,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		 */
 		public static function paypal_apply_coupon($attr = array(), $coupon_code = '', $return = '', $process = array())
 		{
+			//260818.2204 Free fallback already ran affiliate silent-post processing during preparation; class state prevents sending it twice.
+			if(self::$paypal_checkout_free_handoff_verified && is_array($process))
+				$process = array_values(array_diff($process, array('affiliates-silent-post')));
+
 			$coupons = new c_ws_plugin__s2member_pro_coupons();
 			return $coupons->apply($attr, $coupon_code, $return, $process);
 		}

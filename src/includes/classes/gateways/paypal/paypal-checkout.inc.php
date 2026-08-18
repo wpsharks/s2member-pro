@@ -70,7 +70,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 										$result = c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_prepare($_POST["s2member_pro_paypal_checkout"]);
 
 										if(is_wp_error($result))
-											$result = array('error' => (string)$result->get_error_code(), 'message' => (string)$result->get_error_message());
+											{
+												$error_data = $result->get_error_data();
+												$result = array('error' => (string)$result->get_error_code(), 'message' => (string)$result->get_error_message());
+
+												//260818.2056 Free fallback needs only its opaque one-time handoff; never expose other internal error data.
+												if(is_array($error_data) && !empty($error_data['free_handoff']))
+													$result['free_handoff'] = (string)$error_data['free_handoff'];
+											}
 
 										if(!headers_sent())
 											{
@@ -82,11 +89,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 										exit();
 									}
 
-								//260818.2010 A PPCO free fallback needs no legacy gateway credentials, but still runs normal form validation.
-								$GLOBALS['ws_plugin__s2member_pro_paypal_checkout_free_fallback'] = (!empty($_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"])
-								&& $_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"] === "free"
-								&& !empty($_POST["s2member_pro_paypal_checkout"]["card_type"]) && $_POST["s2member_pro_paypal_checkout"]["card_type"] === "Free"
-								&& c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled());
+								//260818.2204 A PPCO free fallback needs no legacy credentials; keep that request state scoped to PayPal utilities.
+								c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_free_fallback_set(
+									!empty($_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"])
+									&& $_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"] === "free"
+									&& !empty($_POST["s2member_pro_paypal_checkout"]["card_type"]) && $_POST["s2member_pro_paypal_checkout"]["card_type"] === "Free"
+									&& c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled()
+								);
 
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 									return c_ws_plugin__s2member_pro_paypal_checkout_pf_in::paypal_checkout();

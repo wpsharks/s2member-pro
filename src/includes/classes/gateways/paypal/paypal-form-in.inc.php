@@ -637,6 +637,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-paypal-sp-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_sp_checkout[attr]" id="s2member-pro-paypal-sp-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
+
+								//260818.2056 SP is always one-time; server preparation remains authoritative for coupon/tax pricing.
+								if(c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
+									{
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-sp-checkout-ppco-flow" value="order" />';
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-sp-checkout-ppco-currency" value="'.esc_attr(strtoupper($attr["cc"])).'" />';
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-sp-checkout-ppco-lc" value="'.esc_attr(strtoupper($attr["lc"])).'" />';
+									}
 								/*
 								Get the form template.
 								*/

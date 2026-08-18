@@ -45,6 +45,27 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 		class c_ws_plugin__s2member_pro_paypal_sp_checkout_in
 			{
 				/**
+				 * Sends a JSON response for modern PayPal Checkout preparation.
+				 *
+				 * @since 260818
+				 *
+				 * @param array $result Response data.
+				 *
+				 * @return void Exits after sending JSON.
+				 */
+				protected static function sp_checkout_json_exit($result = array())
+					{
+						if(!headers_sent())
+							{
+								nocache_headers();
+								header('Content-Type: application/json; charset='.get_option('blog_charset'));
+							}
+
+						echo wp_json_encode(is_array($result) ? $result : array());
+						exit();
+					}
+
+				/**
 				* Handles processing of Pro-Forms for Specific Post/Page checkout.
 				*
 				* @package s2Member\PayPal
@@ -59,6 +80,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 						//260817.2318 Initialize REST state for PHP 8.x, then resolve any saved REST return.
 						$ppco_post_vars = $ppco_return_vars = $ppco_raw_return_vars = array();
 						$ppco_rest_state = $ppco_rest_invoice = "";
+						$ppco_prepare = (!empty($_POST["s2member_pro_paypal_sp_checkout"]["paypal_checkout_op"]) && $_POST["s2member_pro_paypal_sp_checkout"]["paypal_checkout_op"] === "prepare");
+						$ppco_free_fallback = (!empty($_POST["s2member_pro_paypal_sp_checkout"]["paypal_checkout_op"]) && $_POST["s2member_pro_paypal_sp_checkout"]["paypal_checkout_op"] === "free");
 						$ppco_rest_route = (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_rest_return");
 						$ppco_rest_return = ($ppco_rest_route
 						&& !empty($_GET["s2member_paypal_rest_state"]) && ($ppco_rest_state = preg_replace("/[^a-f0-9]/i", "", (string)$_GET["s2member_paypal_rest_state"]))
@@ -72,6 +95,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 							{
 								$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"] = array(); // This holds the global response details.
 								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"]; // This is a shorter reference.
+
+								//260818.2056 Preparation is a modern Checkout operation; never fall through to legacy Express when REST is unavailable.
+								if($ppco_prepare && !c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
+									self::sp_checkout_json_exit(array('error' => 'pro_checkout_not_enabled', 'message' => _x('PayPal Checkout is not enabled.', 's2member-front', 's2member')));
 
 								if(!empty($xco_post_vars)) // A customer is returning from Express Checkout @ PayPal?
 									$_POST = $xco_post_vars; // POST vars from submission prior to Express Checkout.
@@ -118,10 +145,26 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 								(!empty($_GET["token"])) ? delete_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])) : null;
 
-								if(!c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"])) // Attr errors?
+								//260818.2056 Modern SP wallet/return/free paths use REST or no gateway; keep all form checks but skip unrelated NVP credentials.
+								$skip_legacy_paypal_validation = (c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled()
+								&& ($ppco_prepare || $ppco_rest_return || $ppco_free_fallback || (!empty($post_vars["card_type"]) && $post_vars["card_type"] === "PayPal")));
+
+								$attr_error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars["attr"], $skip_legacy_paypal_validation);
+								if($ppco_prepare && $attr_error)
+									self::sp_checkout_json_exit(array('error' => 'pro_checkout_attr_invalid', 'message' => !empty($attr_error['response']) ? (string)$attr_error['response'] : _x('Invalid checkout form configuration.', 's2member-front', 's2member')));
+
+								if(!$attr_error) // Attr errors?
 									{
-										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("sp-checkout", $post_vars)))
+										$error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("sp-checkout", $post_vars, $skip_legacy_paypal_validation);
+										if($ppco_prepare && $error)
+											self::sp_checkout_json_exit(array('error' => 'pro_checkout_validation_failed', 'message' => !empty($error['response']) ? (string)$error['response'] : _x('Unable to validate this checkout request.', 's2member-front', 's2member')));
+
+										if(!$error)
 											{
+												//260818.2056 The preparation endpoint is wallet-only; never let a crafted prepare request enter a legacy card path.
+												if($ppco_prepare && $post_vars["card_type"] !== "PayPal")
+													self::sp_checkout_json_exit(array('error' => 'pro_checkout_not_paypal', 'message' => _x('PayPal was not selected as the billing method.', 's2member-front', 's2member')));
+
 												//260817 REST returns reuse the server-side coupon/pricing snapshot created before PayPal fulfillment, so coupons are not applied a second time.
 												if($ppco_rest_return && !empty($ppco_post_vars["cp_attr"]) && is_array($ppco_post_vars["cp_attr"])
 												&& !empty($ppco_post_vars["cost_calculations"]) && is_array($ppco_post_vars["cost_calculations"]))
@@ -134,6 +177,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 														$cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($post_vars["attr"], $post_vars["coupon"], "attr", array("affiliates-silent-post"));
 														$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
 														$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost(null, $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
+													}
+
+												//260818.2056 Tell shared JS to use the ordinary free path without submitting an already-validated CAPTCHA twice.
+												if($ppco_prepare && $cost_calculations["total"] <= 0)
+													{
+														$free_handoff = c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_free_handoff_create('sp-checkout', $_POST['s2member_pro_paypal_sp_checkout']);
+														if(!$free_handoff)
+															self::sp_checkout_json_exit(array('error' => 'pro_checkout_free_handoff_failed', 'message' => _x('Unable to prepare this checkout. Please try again.', 's2member-front', 's2member')));
+
+														self::sp_checkout_json_exit(array('error' => 'pro_checkout_payment_not_required', 'message' => _x('Payment is no longer required for this checkout.', 's2member-front', 's2member'), 'free_handoff' => $free_handoff));
 													}
 
 												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && $cost_calculations["total"] > 0)
@@ -199,6 +252,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 																$ppco_token = urlencode(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($ppco_token)));
 																$ppco_endpoint = home_url("/?s2member_paypal_checkout=1");
+
+																//260818.2056 Shared JS consumes the same validated SP token; no second SP-specific PayPal payment engine is needed.
+																if($ppco_prepare)
+																	self::sp_checkout_json_exit(array(
+																		'ok'       => TRUE,
+																		'flow'     => 'order',
+																		'invoice'  => (string)$post_vars["attr"]["invoice"],
+																		'token'    => $ppco_token,
+																		'endpoint' => $ppco_endpoint,
+																		'amount'   => (string)$cost_calculations["total"],
+																		'cc'       => strtoupper((string)$cost_calculations["cur"]),
+																	));
+
 																$ppco_redirect_url = $ppco_endpoint."&s2member_paypal_checkout_op=redirect&s2member_paypal_checkout_t=".$ppco_token;
 
 																wp_redirect($ppco_redirect_url);
