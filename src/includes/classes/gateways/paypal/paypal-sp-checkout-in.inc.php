@@ -56,22 +56,57 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 				*/
 				public static function sp_checkout()
 					{
+						//260817.2318 Initialize REST state for PHP 8.x, then resolve any saved REST return.
+						$ppco_post_vars = $ppco_return_vars = $ppco_raw_return_vars = array();
+						$ppco_rest_state = $ppco_rest_invoice = "";
+						$ppco_rest_route = (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_rest_return");
+						$ppco_rest_return = ($ppco_rest_route
+						&& !empty($_GET["s2member_paypal_rest_state"]) && ($ppco_rest_state = preg_replace("/[^a-f0-9]/i", "", (string)$_GET["s2member_paypal_rest_state"]))
+						&& ($ppco_post_vars = get_transient("s2m_".md5("s2member_transient_paypal_checkout_".$ppco_rest_state))) && is_array($ppco_post_vars));
+
 						if((!empty($_POST["s2member_pro_paypal_sp_checkout"]["nonce"]) && ($nonce = $_POST["s2member_pro_paypal_sp_checkout"]["nonce"]) && wp_verify_nonce($nonce, "s2member-pro-paypal-sp-checkout"))
-						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" //  PayPal Express Checkout with $_GET["token"] & $_GET["PayerID"].
+						|| (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" // PayPal Express Checkout with $_GET["token"] & $_GET["PayerID"].
 						&& !empty($_GET["token"]) && ($_GET["token"] = esc_html($_GET["token"])) && (empty($_GET["PayerID"]) || ($_GET["PayerID"] = esc_html($_GET["PayerID"]))) // PayerID is not required.
-						&& ($xco_post_vars = get_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"])))))
+						&& ($xco_post_vars = get_transient("s2m_".md5("s2member_transient_express_checkout_".$_GET["token"]))))
+						|| $ppco_rest_route)
 							{
 								$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"] = array(); // This holds the global response details.
 								$global_response = &$GLOBALS["ws_plugin__s2member_pro_paypal_sp_checkout_response"]; // This is a shorter reference.
 
 								if(!empty($xco_post_vars)) // A customer is returning from Express Checkout @ PayPal?
 									$_POST = $xco_post_vars; // POST vars from submission prior to Express Checkout.
+								else if($ppco_rest_route)
+									{
+										$ppco_raw_return_vars = is_array($_POST) ? stripslashes_deep($_POST) : array();
+
+										//260817.2318 Verify saved REST state and the signed browser return before restoring the Pro-Form submission.
+										if(!$ppco_rest_return || !is_array($ppco_return_vars = c_ws_plugin__s2member_paypal_utilities::paypal_postvars()) || !$ppco_return_vars
+										|| empty($ppco_return_vars["proxy_verified"]) || $ppco_return_vars["proxy_verified"] !== "paypal"
+										|| empty($ppco_raw_return_vars["s2member_paypal_proxy_use"]) || $ppco_raw_return_vars["s2member_paypal_proxy_use"] !== "pro-emails"
+										|| empty($ppco_post_vars["post"]) || !is_array($ppco_post_vars["post"]))
+											{
+												c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+													'ppco'        => 'pro-sp',
+													'event'       => 'sp_rest_return_verification_failed',
+													'invoice'     => !empty($ppco_post_vars["invoice"]) ? (string)$ppco_post_vars["invoice"] : '',
+													'state_found' => $ppco_rest_return ? '1' : '0',
+													'proxy_use'   => !empty($ppco_raw_return_vars["s2member_paypal_proxy_use"]) ? (string)$ppco_raw_return_vars["s2member_paypal_proxy_use"] : '',
+												));
+
+												$global_response = array("response" => _x("<strong>Oops.</strong> Unable to verify the completed PayPal Checkout transaction. Please contact Support for assistance.", "s2member-front", "s2member"), "error" => true);
+												return;
+											}
+
+										$ppco_rest_invoice = !empty($ppco_post_vars["invoice"]) ? (string)$ppco_post_vars["invoice"] : "";
+										$_POST = $ppco_post_vars["post"]; // Restore the validated Pro-Form submission after the Framework REST handler captures the order.
+									}
 
 								$post_vars           = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST["s2member_pro_paypal_sp_checkout"]));
 								//260808 Safely unserialize the form attributes.
 								$post_vars["attr"]   = (!empty($post_vars["attr"])) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])) : array();
 								$post_vars["attr"]   = apply_filters("ws_plugin__s2member_pro_paypal_sp_checkout_post_attr", $post_vars["attr"], get_defined_vars());
-								if(!empty($xco_post_vars)) $post_vars["attr"]["captcha"] = "0"; // No need to revalidate captcha in this case.
+								if(!empty($xco_post_vars) || !empty($ppco_post_vars)) $post_vars["attr"]["captcha"] = "0"; //260816 PayPal returns reuse the form submission that already passed CAPTCHA validation.
+								if(!empty($ppco_rest_invoice)) $post_vars["attr"]["invoice"] = $ppco_rest_invoice; //260816 Keep the server-side invoice that was placed in the REST order.
 
 								$post_vars["name"] = trim($post_vars["first_name"]." ".$post_vars["last_name"]);
 								$post_vars["email"] = apply_filters("user_registration_email", sanitize_email($post_vars["email"]), get_defined_vars());
@@ -87,9 +122,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 									{
 										if(!($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors("sp-checkout", $post_vars)))
 											{
-												$cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($post_vars["attr"], $post_vars["coupon"], "attr", array("affiliates-silent-post"));
-												$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
-												$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost(null, $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
+												//260817 REST returns reuse the server-side coupon/pricing snapshot created before PayPal fulfillment, so coupons are not applied a second time.
+												if($ppco_rest_return && !empty($ppco_post_vars["cp_attr"]) && is_array($ppco_post_vars["cp_attr"])
+												&& !empty($ppco_post_vars["cost_calculations"]) && is_array($ppco_post_vars["cost_calculations"]))
+													{
+														$cp_attr = $ppco_post_vars["cp_attr"];
+														$cost_calculations = $ppco_post_vars["cost_calculations"];
+													}
+												else
+													{
+														$cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($post_vars["attr"], $post_vars["coupon"], "attr", array("affiliates-silent-post"));
+														$cp_2gbp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_maestro_solo_2gbp( /* Now we use the new array of ``$cp_attr``. */$cp_attr, $post_vars["card_type"]);
+														$cost_calculations = c_ws_plugin__s2member_pro_paypal_utilities::paypal_cost(null, $cp_2gbp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_2gbp_attr["cc"], $cp_2gbp_attr["desc"]);
+													}
 
 												if(empty($_GET["s2member_paypal_xco"]) && $post_vars["card_type"] === "PayPal" && $cost_calculations["total"] > 0)
 													{
@@ -102,6 +147,63 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 														$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = $user->ID)) ? $user : false;
 
 														$post_vars["attr"]["invoice"] = uniqid()."~".c_ws_plugin__s2member_utils_ip::current(); // Unique invoice w/ IP address too.
+
+														//260816 Use the shared Framework PayPal Checkout REST redirect/capture flow when configured; legacy Express Checkout remains the fallback.
+														if(c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
+															{
+																$ppco_rest_state = md5(uniqid("s2m_ppco_", true).wp_rand());
+
+																$return_url = add_query_arg("s2member_paypal_xco", urlencode("s2member_pro_paypal_sp_checkout_rest_return"), $return_url);
+																$return_url = add_query_arg("s2member_paypal_rest_state", urlencode($ppco_rest_state), $return_url);
+
+																$paypal_on0_input_value = ($referencing = c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id()) ? "Referencing Customer ID" : "Originating Domain";
+																$paypal_os0_input_value = ($referencing) ? $referencing : $_SERVER["HTTP_HOST"];
+
+																//260817.2119 Package the server-validated SP purchase, pricing, contact, and fulfillment context into the encrypted Framework Checkout token.
+																$ppco_token = array(
+																	"exp"         => time() + 10800,
+																	"invoice"     => $post_vars["attr"]["invoice"],
+																	"ip"          => c_ws_plugin__s2member_utils_ip::current(),
+																	"item_name"   => $cost_calculations["desc"],
+																	"item_number" => $post_vars["attr"]["sp_ids_exp"],
+																	"custom"      => $post_vars["attr"]["custom"],
+																	"sub_total"   => $cost_calculations["sub_total"],
+																	"amount"      => $cost_calculations["total"],
+																	"cc"          => strtoupper($cost_calculations["cur"]),
+																	"ns"          => $post_vars["attr"]["ns"],
+																	"rr"          => "BN",
+																	"tax"         => $cost_calculations["tax"],
+																	"payer_email" => $post_vars["email"],
+																	"first_name"  => $post_vars["first_name"],
+																	"last_name"   => $post_vars["last_name"],
+																	"on0"         => $paypal_on0_input_value,
+																	"os0"         => $paypal_os0_input_value,
+																	"on1"         => "Customer IP Address",
+																	"os1"         => c_ws_plugin__s2member_utils_ip::current(),
+																	"return"      => $return_url,
+																	"cancel"      => $cancel_url,
+																	"s2member_paypal_proxy_use" => "pro-emails",
+																	"s2member_paypal_proxy_coupon" => array("coupon_code" => $cp_attr["_coupon_code"], "full_coupon_code" => $cp_attr["_full_coupon_code"], "affiliate_id" => $cp_attr["_coupon_affiliate_id"]),
+																	"s2member_paypal_proxy_return_url" => $post_vars["attr"]["success"],
+																	"checksum"    => md5($post_vars["attr"]["invoice"].c_ws_plugin__s2member_utils_ip::current().$post_vars["attr"]["sp_ids_exp"]),
+																);
+
+																//260817 Keep the validated form, invoice, coupon data, and calculated price server-side for the REST return.
+																$ppco_post_vars = array(
+																	"post"              => $_POST,
+																	"invoice"           => $post_vars["attr"]["invoice"],
+																	"cp_attr"           => $cp_attr,
+																	"cost_calculations" => $cost_calculations,
+																);
+																set_transient("s2m_".md5("s2member_transient_paypal_checkout_".$ppco_rest_state), $ppco_post_vars, 10800);
+
+																$ppco_token = urlencode(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($ppco_token)));
+																$ppco_endpoint = home_url("/?s2member_paypal_checkout=1");
+																$ppco_redirect_url = $ppco_endpoint."&s2member_paypal_checkout_op=redirect&s2member_paypal_checkout_t=".$ppco_token;
+
+																wp_redirect($ppco_redirect_url);
+																exit(); // Clean exit.
+															}
 
 														if(!($paypal_set_xco = array())) // PayPal Express Checkout.
 															{
@@ -167,7 +269,51 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 
 														if(!($paypal = array())) // Build a simple "Buy Now" request.
 															{
-																if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" && !empty($_GET["token"]) && ($paypal_xco_details = array("METHOD" => "GetExpressCheckoutDetails", "TOKEN" => $_GET["token"])) && ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_xco_details)) && empty($paypal_xco_details["__error"]))
+																//260817.2318 Accept REST only when the signed transaction matches the saved SP purchase.
+																if(!empty($ppco_return_vars))
+																	{
+																		if(empty($ppco_return_vars["txn_id"])
+																		|| empty($ppco_return_vars["invoice"]) || (string)$ppco_return_vars["invoice"] !== (string)$post_vars["attr"]["invoice"]
+																		|| empty($ppco_return_vars["item_number"]) || (string)$ppco_return_vars["item_number"] !== (string)$post_vars["attr"]["sp_ids_exp"]
+																		|| empty($ppco_return_vars["payment_status"]) || strcasecmp((string)$ppco_return_vars["payment_status"], "Completed") !== 0
+																		|| empty($ppco_return_vars["mc_currency"]) || strcasecmp((string)$ppco_return_vars["mc_currency"], (string)$cost_calculations["cur"]) !== 0
+																		|| !isset($ppco_return_vars["mc_gross"]) || number_format((float)$ppco_return_vars["mc_gross"], 2, ".", "") !== number_format((float)$cost_calculations["total"], 2, ".", "")
+																		|| (isset($ppco_return_vars["tax"]) && number_format((float)$ppco_return_vars["tax"], 2, ".", "") !== number_format((float)$cost_calculations["tax"], 2, ".", "")))
+																			{
+																				c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+																					'ppco'             => 'pro-sp',
+																					'event'            => 'sp_rest_transaction_mismatch',
+																					'txn_id'           => !empty($ppco_return_vars["txn_id"]) ? (string)$ppco_return_vars["txn_id"] : '',
+																					'invoice'          => !empty($ppco_return_vars["invoice"]) ? (string)$ppco_return_vars["invoice"] : '',
+																					'invoice_expected' => (string)$post_vars["attr"]["invoice"],
+																					'item_number'      => !empty($ppco_return_vars["item_number"]) ? (string)$ppco_return_vars["item_number"] : '',
+																					'item_expected'    => (string)$post_vars["attr"]["sp_ids_exp"],
+																					'amount'           => isset($ppco_return_vars["mc_gross"]) ? (string)$ppco_return_vars["mc_gross"] : '',
+																					'amount_expected'  => (string)$cost_calculations["total"],
+																					'cc'               => !empty($ppco_return_vars["mc_currency"]) ? (string)$ppco_return_vars["mc_currency"] : '',
+																					'cc_expected'      => (string)$cost_calculations["cur"],
+																					'tax'              => isset($ppco_return_vars["tax"]) ? (string)$ppco_return_vars["tax"] : '',
+																					'tax_expected'     => (string)$cost_calculations["tax"],
+																				));
+
+																				$paypal["__error"] = _x("<strong>Oops.</strong> Unable to verify the completed PayPal Checkout transaction. Please contact Support for assistance.", "s2member-front", "s2member");
+																			}
+																		else
+																			{
+																				$paypal["TRANSACTIONID"] = (string)$ppco_return_vars["txn_id"];
+
+																				c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+																					'ppco'    => 'pro-sp',
+																					'event'   => 'sp_rest_return_verified',
+																					'txn_id'  => (string)$ppco_return_vars["txn_id"],
+																					'invoice' => (string)$post_vars["attr"]["invoice"],
+																				));
+
+																				//260817.2318 Consume REST state after the verified transaction matches the saved SP purchase.
+																				delete_transient("s2m_".md5("s2member_transient_paypal_checkout_".$ppco_rest_state));
+																			}
+																	}
+																else if(!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return" && !empty($_GET["token"]) && ($paypal_xco_details = array("METHOD" => "GetExpressCheckoutDetails", "TOKEN" => $_GET["token"])) && ($paypal_xco_details = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal_xco_details)) && empty($paypal_xco_details["__error"]))
 																	{
 																		$paypal["METHOD"] = "DoExpressCheckoutPayment";
 
@@ -232,7 +378,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$paypal["ZIP"] = $post_vars["zip"];
 																	}
 															}
-														if($cost_calculations["total"] <= 0 || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
+														//260817.2119 A REST return already represents the Framework-captured payment, so only free purchases and legacy payment paths should call the old PayPal API here.
+														if($cost_calculations["total"] <= 0 || (!empty($ppco_return_vars) && empty($paypal["__error"])) || (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) && empty($paypal["__error"])))
 															{
 																if($cost_calculations["total"] <= 0) $new__txn_id = strtoupper('free-'.uniqid()); // Auto-generated value in this case.
 
@@ -280,7 +427,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																		$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 
-																		$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																		//260817.2119 Framework already sent the REST simulated IPN; reuse the success URL from its verified signed browser package instead of fulfilling the sale a second time.
+																		if(!empty($ppco_return_vars))
+																			$ipn["s2member_paypal_proxy_return_url"] = isset($ppco_raw_return_vars["s2member_paypal_proxy_return_url"]) ? trim((string)$ppco_raw_return_vars["s2member_paypal_proxy_return_url"]) : "";
+																		else
+																			$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
 																	}
 																if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars["attr"]["ids"], $post_vars["attr"]["exp"])))
 																	{

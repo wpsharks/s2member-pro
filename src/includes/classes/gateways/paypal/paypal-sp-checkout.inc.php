@@ -56,7 +56,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_sp_checkout"))
 				*/
 				public static function paypal_sp_checkout ()
 					{
-						if (!empty($_POST["s2member_pro_paypal_sp_checkout"]) || (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_sp_checkout_return"))
+						//260817.2119 Route both the legacy Express Checkout return and the new REST return through the existing Specific Post/Page Pro-Form processor.
+						if (!empty($_POST["s2member_pro_paypal_sp_checkout"]) || (!empty($_GET["s2member_paypal_xco"]) && in_array($_GET["s2member_paypal_xco"], array("s2member_pro_paypal_sp_checkout_return", "s2member_pro_paypal_sp_checkout_rest_return"), true)))
 							{
 								return c_ws_plugin__s2member_pro_paypal_sp_checkout_in::sp_checkout ();
 							}
