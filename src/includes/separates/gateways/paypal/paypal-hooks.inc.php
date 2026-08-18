@@ -49,6 +49,10 @@ add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_p
 add_action('wp_ajax_ws_plugin__s2member_pro_paypal_ajax_tax', 'c_ws_plugin__s2member_pro_paypal_utilities::paypal_ajax_tax');
 add_action('wp_ajax_nopriv_ws_plugin__s2member_pro_paypal_ajax_tax', 'c_ws_plugin__s2member_pro_paypal_utilities::paypal_ajax_tax');
 
+//260818.1752 Keep PayPal Checkout account preparation and post-Notify work shared between browser and webhook fulfillment.
+add_filter('ws_plugin__s2member_paypal_checkout_notify_context', 'c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_notify_context', 10, 2);
+add_action('ws_plugin__s2member_paypal_checkout_notify_processed', 'c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_notify_processed', 10, 3);
+
 add_action('ws_plugin__s2member_during_css', 'c_ws_plugin__s2member_pro_paypal_css_js::paypal_css');
 add_action('ws_plugin__s2member_during_js_w_globals', 'c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_w_globals');
 add_action('ws_plugin__s2member_during_menu_pages_js', 'c_ws_plugin__s2member_pro_paypal_admin_css_js::paypal_menu_pages_js');
