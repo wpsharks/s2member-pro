@@ -85,6 +85,28 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 				public static function paypal_js_w_globals ($vars = FALSE)
 					{
 						$g = "var S2MEMBER_PRO_PAYPAL_GATEWAY = true,";
+						$ppco_enabled = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled();
+
+						if($ppco_enabled)
+							{
+								$ppco_sandbox = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_sandbox();
+								$ppco_client_id = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"][($ppco_sandbox) ? "paypal_checkout_sandbox_client_id" : "paypal_checkout_client_id"];
+								$ppco_config = array(
+									'enabled'   => TRUE,
+									'sandbox'   => $ppco_sandbox,
+									'client_id' => $ppco_client_id,
+									'messages'  => array(
+										'prepare_failed'      => _x('Unable to prepare PayPal Checkout. Please try again.', 's2member-front', 's2member'),
+										'payment_failed'      => _x('PayPal Checkout could not be completed. Please try again.', 's2member-front', 's2member'),
+										'subscription_failed' => _x('PayPal subscription could not be completed. Please try again.', 's2member-front', 's2member'),
+										'sdk_failed'          => _x('PayPal Checkout could not be loaded. Please refresh the page and try again.', 's2member-front', 's2member'),
+										'cancelled'           => _x('PayPal Checkout was cancelled.', 's2member-front', 's2member'),
+									),
+								);
+
+								//260818.2010 Expose only public Checkout browser configuration; REST client secrets remain server-side.
+								$g .= "S2MEMBER_PRO_PAYPAL_CHECKOUT = ".wp_json_encode($ppco_config).",";
+							}
 
 						$g = trim ($g, " ,") . ";"; // Trim & add semicolon.
 
@@ -94,6 +116,10 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 						echo "\n" . $g . "\n"; // Add a line break before inclusion.
 
 						include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/paypal/paypal.min.js";
+
+						//260818.2010 Load modern Checkout UI after legacy form handlers so its PayPal/card switching runs last.
+						if($ppco_enabled)
+							include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/paypal/paypal-checkout.js";
 
 						return /* Return for uniformity. */;
 					}

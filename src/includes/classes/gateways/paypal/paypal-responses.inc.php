@@ -172,7 +172,14 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				public static function paypal_checkout_response($attr = FALSE)
 					{
 						$_response = @$GLOBALS["ws_plugin__s2member_pro_paypal_checkout_response"];
-						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr) : $_response;
+
+						//260818.2010 PayPal-only modern Checkout forms do not need legacy NVP credentials merely to render without an error.
+						$accept = (!empty($attr["accept"]) && is_array($attr["accept"])) ? $attr["accept"] : array();
+						$accept_via_paypal = (!empty($attr["accept_via_paypal"]) && is_array($attr["accept_via_paypal"])) ? $attr["accept_via_paypal"] : array();
+						$legacy_payment_methods = array_diff($accept, array_merge(array("paypal"), $accept_via_paypal));
+						$skip_legacy_paypal_validation = (c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled() && !$legacy_payment_methods);
+
+						$_response = (!$_response) ? c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($attr, $skip_legacy_paypal_validation) : $_response;
 						$response = $error = NULL; // Initialize.
 
 						if($_response && !empty($_response["error"]) && !empty($_response["response"]) && ($error = $_response["error"]))
@@ -230,6 +237,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_form_attr_validation_errors($attr = FALSE, $skip_legacy_paypal_validation = FALSE)
 					{
+						//260818.2010 Prepared purchases that became free use normal Pro-Form validation without unrelated legacy API credentials.
+						$skip_legacy_paypal_validation = ($skip_legacy_paypal_validation || !empty($GLOBALS['ws_plugin__s2member_pro_paypal_checkout_free_fallback']));
+
 						//260818.1920 Modern Checkout uses REST credentials; legacy PayPal business/API settings are unrelated.
 						if($skip_legacy_paypal_validation || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors($attr)) || !empty($attr["register"]))
 							{
@@ -591,6 +601,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*/
 				public static function paypal_form_submission_validation_errors($form = FALSE, $s = FALSE, $skip_legacy_paypal_validation = FALSE)
 					{
+						//260818.2010 Prepared purchases that became free use normal Pro-Form validation without unrelated legacy API credentials.
+						$skip_legacy_paypal_validation = ($skip_legacy_paypal_validation || !empty($GLOBALS['ws_plugin__s2member_pro_paypal_checkout_free_fallback']));
+
 						//260818.1920 Keep normal submission checks while modern Checkout uses its independent REST configuration.
 						if($skip_legacy_paypal_validation || $form === "registration" || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors()))
 							{

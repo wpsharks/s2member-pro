@@ -850,6 +850,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								$hidden_inputs .= (($cp_attr = c_ws_plugin__s2member_pro_paypal_utilities::paypal_apply_coupon($attr, $attr["coupon"])) && $cp_attr["ta"] <= 0.00 && $cp_attr["ra"] <= 0.00) ? '<input type="hidden" id="s2member-pro-paypal-checkout-payment-not-required-or-not-possible" value="1" />' : '';
 								$hidden_inputs .= '<input type="hidden" name="s2member_pro_paypal_checkout[attr]" id="s2member-pro-paypal-checkout-attr" value="'.esc_attr(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($attr))).'" />';
 								$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-lang-attr" value="'.esc_attr($attr["lang"]).'" />';
+
+								//260818.2010 Terms are stable for the rendered form; price remains authoritative only after server preparation.
+								if(c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
+									{
+										$ppco_flow = ($attr["rr"] === "BN" || (!$attr["tp"] && !$attr["rr"])) ? "order" : "subscription";
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-checkout-ppco-flow" value="'.esc_attr($ppco_flow).'" />';
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-checkout-ppco-currency" value="'.esc_attr(strtoupper($attr["cc"])).'" />';
+										$hidden_inputs .= '<input type="hidden" id="s2member-pro-paypal-checkout-ppco-lc" value="'.esc_attr(strtoupper($attr["lc"])).'" />';
+									}
 								/*
 								Get the form template.
 								*/

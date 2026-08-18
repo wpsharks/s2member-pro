@@ -82,6 +82,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 										exit();
 									}
 
+								//260818.2010 A PPCO free fallback needs no legacy gateway credentials, but still runs normal form validation.
+								$GLOBALS['ws_plugin__s2member_pro_paypal_checkout_free_fallback'] = (!empty($_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"])
+								&& $_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"] === "free"
+								&& !empty($_POST["s2member_pro_paypal_checkout"]["card_type"]) && $_POST["s2member_pro_paypal_checkout"]["card_type"] === "Free"
+								&& c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled());
+
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 									return c_ws_plugin__s2member_pro_paypal_checkout_pf_in::paypal_checkout();
 
