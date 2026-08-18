@@ -225,11 +225,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				* @since 1.5
 				*
 				* @param array $attr An array of Pro-Form Attributes.
+				* @param bool $skip_legacy_paypal_validation Optional. Skip legacy PayPal business/API configuration validation.
 				* @return null|array Null if there are no errors, else a response array.
 				*/
-				public static function paypal_form_attr_validation_errors($attr = FALSE)
+				public static function paypal_form_attr_validation_errors($attr = FALSE, $skip_legacy_paypal_validation = FALSE)
 					{
-						if(!($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors($attr)) || !empty($attr["register"]))
+						//260818.1920 Modern Checkout uses REST credentials; legacy PayPal business/API settings are unrelated.
+						if($skip_legacy_paypal_validation || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors($attr)) || !empty($attr["register"]))
 							{
 								if /* Special form for Cancellations. User/Member must be logged in. */($attr["cancel"])
 									{
@@ -584,11 +586,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 				*
 				* @param string $form The type of Pro-Form being submitted.
 				* @param array $s An array of data submitted through the Pro-Form.
+				* @param bool $skip_legacy_paypal_validation Optional. Skip legacy PayPal business/API configuration validation.
 				* @return null|array Null if there are no errors, else a response array.
 				*/
-				public static function paypal_form_submission_validation_errors($form = FALSE, $s = FALSE)
+				public static function paypal_form_submission_validation_errors($form = FALSE, $s = FALSE, $skip_legacy_paypal_validation = FALSE)
 					{
-						if($form === "registration" || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors()))
+						//260818.1920 Keep normal submission checks while modern Checkout uses its independent REST configuration.
+						if($skip_legacy_paypal_validation || $form === "registration" || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors()))
 							{
 								if /* Special form for Cancellations. User/Member must be logged in. */($form === "cancellation")
 									{

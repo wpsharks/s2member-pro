@@ -441,6 +441,293 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Prepares an authoritative membership Pro-Form purchase for Framework PayPal Checkout.
+		 *
+		 * @since 260818
+		 *
+		 * @param array $raw_post_vars Raw s2member_pro_paypal_checkout form values.
+		 *
+		 * @return array|WP_Error Prepared Framework token data, else WP_Error.
+		 */
+		public static function paypal_checkout_prepare($raw_post_vars = array())
+		{
+			if(!c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
+				return new WP_Error('pro_checkout_not_enabled', _x('PayPal Checkout is not enabled.', 's2member-front', 's2member'));
+			if(!is_array($raw_post_vars) || !$raw_post_vars)
+				return new WP_Error('pro_checkout_missing_form', _x('Missing checkout form data. Please try again.', 's2member-front', 's2member'));
+
+			$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($raw_post_vars));
+			if(empty($post_vars['nonce']) || !wp_verify_nonce((string)$post_vars['nonce'], 's2member-pro-paypal-checkout'))
+				return new WP_Error('pro_checkout_bad_nonce', _x('Unable to verify this checkout request. Please refresh the page and try again.', 's2member-front', 's2member'));
+
+			$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
+			$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_paypal_checkout_post_attr', $post_vars['attr'], get_defined_vars());
+			$post_vars['name'] = trim((string)@$post_vars['first_name'].' '.(string)@$post_vars['last_name']);
+			$post_vars['email'] = apply_filters('user_registration_email', sanitize_email((string)@$post_vars['email']), get_defined_vars());
+			$post_vars['username'] = (is_multisite()) ? strtolower((string)@$post_vars['username']) : (string)@$post_vars['username'];
+			$post_vars['username'] = sanitize_user(($post_vars['_o_username'] = $post_vars['username']), is_multisite());
+
+			if(empty($post_vars['card_expiration']) && isset($post_vars['card_expiration_month'], $post_vars['card_expiration_year']))
+				$post_vars['card_expiration'] = $post_vars['card_expiration_month'].'/'.$post_vars['card_expiration_year'];
+
+			$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars);
+
+			if(($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_attr_validation_errors($post_vars['attr'], TRUE)))
+				return new WP_Error('pro_checkout_attr_invalid', !empty($error['response']) ? (string)$error['response'] : _x('Invalid checkout form configuration.', 's2member-front', 's2member'));
+			if(($error = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_submission_validation_errors('checkout', $post_vars, TRUE)))
+				return new WP_Error('pro_checkout_validation_failed', !empty($error['response']) ? (string)$error['response'] : _x('Unable to validate this checkout request.', 's2member-front', 's2member'));
+			if(empty($post_vars['card_type']) || (string)$post_vars['card_type'] !== 'PayPal')
+				return new WP_Error('pro_checkout_not_paypal', _x('PayPal was not selected as the billing method.', 's2member-front', 's2member'));
+
+			//260818.1920 Coupon, tax, and terms are finalized here; browser-displayed amounts are never authoritative.
+			$cp_attr = self::paypal_apply_coupon($post_vars['attr'], !empty($post_vars['coupon']) ? $post_vars['coupon'] : '', 'attr', array('affiliates-silent-post'));
+			$cp_2gbp_attr = self::paypal_maestro_solo_2gbp($cp_attr, $post_vars['card_type']);
+			$cost_calculations = self::paypal_cost($cp_2gbp_attr['ta'], $cp_2gbp_attr['ra'], !empty($post_vars['state']) ? $post_vars['state'] : '', !empty($post_vars['country']) ? $post_vars['country'] : '', !empty($post_vars['zip']) ? $post_vars['zip'] : '', $cp_2gbp_attr['cc'], $cp_2gbp_attr['desc']);
+
+			if($cost_calculations['total'] <= 0 && $post_vars['attr']['tp'] && $cost_calculations['trial_total'] > 0)
+			{
+				$post_vars['attr']['tp'] = '0';
+				$cost_calculations['sub_total'] = $cost_calculations['trial_sub_total'];
+				$cost_calculations['tax'] = $cost_calculations['trial_tax'];
+				$cost_calculations['tax_per'] = $cost_calculations['trial_tax_per'];
+				$cost_calculations['total'] = $cost_calculations['trial_total'];
+				$cost_calculations['trial_sub_total'] = '0.00';
+				$cost_calculations['trial_tax'] = '0.00';
+				$cost_calculations['trial_tax_per'] = '';
+				$cost_calculations['trial_total'] = '0.00';
+			}
+
+			$use_recurring_profile = ($post_vars['attr']['rr'] === 'BN' || (!$post_vars['attr']['tp'] && !$post_vars['attr']['rr'])) ? FALSE : TRUE;
+			$is_independent_ccaps_sale = ($post_vars['attr']['level'] === '*');
+
+			//260818.1920 A coupon can make a rendered paid form free; let the ordinary Pro-Form path handle that case without PayPal.
+			if($cost_calculations['trial_total'] <= 0 && $cost_calculations['total'] <= 0)
+				return new WP_Error('pro_checkout_payment_not_required', _x('Payment is no longer required for this checkout.', 's2member-front', 's2member'));
+
+			$invoice = 's2mpf-'.md5(uniqid('s2mpf_', true).wp_rand());
+			$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
+			$period3 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars['attr']['rp'].' '.$post_vars['attr']['rt']);
+			$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = (int)$user->ID)) ? $user : FALSE;
+			$referencing = $user ? c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id() : FALSE;
+			$payer_email = $user ? (string)$user->user_email : (string)$post_vars['email'];
+			$host = (string)wp_parse_url(home_url('/'), PHP_URL_HOST);
+			$host = $host ? $host : (!empty($_SERVER['HTTP_HOST']) ? preg_replace('/[^a-z0-9.\-]/i', '', (string)$_SERVER['HTTP_HOST']) : '');
+			$port = (int)wp_parse_url(home_url('/'), PHP_URL_PORT);
+			$url_host = $host.($port ? ':'.$port : '');
+
+			$account = array(
+				'mode'          => $user ? 'existing' : 'new',
+				'user_id'       => $user ? (int)$user->ID : 0,
+				'username'      => $user ? (string)$user->user_login : (string)$post_vars['username'],
+				'email'         => $payer_email,
+				'password1'     => $user ? '' : (string)@$post_vars['password1'],
+				'first_name'    => (string)$post_vars['first_name'],
+				'last_name'     => (string)$post_vars['last_name'],
+				'custom_fields' => !empty($post_vars['custom_fields']) && is_array($post_vars['custom_fields']) ? $post_vars['custom_fields'] : array(),
+			);
+
+			$old_subscription = array();
+			if($user)
+			{
+				$old_subscription = array(
+					'gateway'         => (string)get_user_option('s2member_subscr_gateway', $user->ID),
+					'id'              => (string)get_user_option('s2member_subscr_id', $user->ID),
+					'baid'            => (string)get_user_option('s2member_subscr_baid', $user->ID),
+					'cid'             => (string)get_user_option('s2member_subscr_cid', $user->ID),
+					'ipn_signup_vars' => c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(),
+				);
+			}
+
+			$notify_paypal = array(
+				'custom'            => (string)$post_vars['attr']['custom'],
+				'mc_currency'       => (string)$cost_calculations['cur'],
+				'tax'               => (string)$cost_calculations['tax'],
+				'payer_email'       => $payer_email,
+				'first_name'        => (string)$post_vars['first_name'],
+				'last_name'         => (string)$post_vars['last_name'],
+				'option_name1'      => $user ? 'Referencing Customer ID' : 'Originating Domain',
+				'option_selection1' => $user ? (string)$referencing : $host,
+				'option_name2'      => 'Customer IP Address',
+				'option_selection2' => c_ws_plugin__s2member_utils_ip::current(),
+				'item_name'         => (string)$cost_calculations['desc'],
+				'item_number'       => (string)$post_vars['attr']['level_ccaps_eotper'],
+			);
+
+			if($use_recurring_profile)
+			{
+				$notify_paypal['period1'] = $period1;
+				$notify_paypal['period3'] = $period3;
+				$notify_paypal['mc_amount1'] = (string)$cost_calculations['trial_total'];
+				$notify_paypal['mc_amount3'] = (string)$cost_calculations['total'];
+				$notify_paypal['mc_gross'] = preg_match('/^[1-9]/', $period1) ? (string)$cost_calculations['trial_total'] : (string)$cost_calculations['total'];
+				$notify_paypal['recurring'] = !empty($post_vars['attr']['rr']) ? '1' : '';
+				$proxy_use = 'pro-emails'.(((float)$notify_paypal['mc_gross'] > 0) ? ',subscr-signup-as-subscr-payment' : '');
+			}
+			else
+			{
+				$notify_paypal['mc_gross'] = (string)$cost_calculations['total'];
+				$proxy_use = 'pro-emails';
+			}
+
+			$coupon = array(
+				'coupon_code'      => !empty($cp_attr['_coupon_code']) ? (string)$cp_attr['_coupon_code'] : '',
+				'full_coupon_code' => !empty($cp_attr['_full_coupon_code']) ? (string)$cp_attr['_full_coupon_code'] : '',
+				'affiliate_id'     => !empty($cp_attr['_coupon_affiliate_id']) ? (string)$cp_attr['_coupon_affiliate_id'] : '',
+			);
+			$notify_extra = array(
+				's2member_paypal_proxy_coupon'     => $coupon,
+				's2member_paypal_proxy_return_url' => !empty($post_vars['attr']['success']) ? (string)$post_vars['attr']['success'] : '',
+			);
+
+			$state = array(
+				'recurring'        => $use_recurring_profile,
+				'independent_ccaps'=> $is_independent_ccaps_sale,
+				'account'          => $account,
+				'old_subscription' => $old_subscription,
+				'notify_paypal'    => $notify_paypal,
+				'notify_extra'     => $notify_extra,
+				'proxy_use'        => $proxy_use,
+				'success'          => !empty($post_vars['attr']['success']) ? (string)$post_vars['attr']['success'] : '',
+			);
+			if(!self::paypal_checkout_prepared_state_set($invoice, $state))
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+					'ppco'    => 'pro-form',
+					'event'   => 'pro_purchase_prepare_save_failed',
+					'invoice' => $invoice,
+				));
+
+				return new WP_Error('pro_checkout_state_save_failed', _x('Unable to prepare this checkout. Please try again.', 's2member-front', 's2member'));
+			}
+
+			$request_uri = !empty($_SERVER['REQUEST_URI']) ? (string)$_SERVER['REQUEST_URI'] : '/';
+			$return_url = $cancel_url = ((is_ssl()) ? 'https://' : 'http://').$url_host.$request_uri;
+			$return_url = $cancel_url = remove_query_arg(array('token', 'PayerID', 's2member_paypal_xco', 's2member_paypal_proxy'), ($return_url = $cancel_url));
+			$return_url = add_query_arg('s2member_paypal_xco', 's2member_pro_paypal_checkout_rest_return', $return_url);
+
+			$token = array(
+				'exp'         => time() + 10800,
+				'invoice'     => $invoice,
+				'ip'          => c_ws_plugin__s2member_utils_ip::current(),
+				'item_name'   => (string)$cost_calculations['desc'],
+				'item_number' => (string)$post_vars['attr']['level_ccaps_eotper'],
+				'custom'      => (string)$post_vars['attr']['custom'],
+				'amount'      => (string)$cost_calculations['total'],
+				'cc'          => strtoupper((string)$cost_calculations['cur']),
+				'ns'          => (string)$post_vars['attr']['ns'],
+				'rr'          => $use_recurring_profile ? (string)$post_vars['attr']['rr'] : 'BN',
+				'rp'          => $use_recurring_profile ? (string)$post_vars['attr']['rp'] : '',
+				'rt'          => $use_recurring_profile ? (string)$post_vars['attr']['rt'] : '',
+				'rrt'         => $use_recurring_profile ? (string)$post_vars['attr']['rrt'] : '',
+				'rra'         => $use_recurring_profile ? (string)$post_vars['attr']['rra'] : '',
+				'ta'          => $use_recurring_profile ? (string)$cost_calculations['trial_total'] : '',
+				'tp'          => $use_recurring_profile ? (string)$post_vars['attr']['tp'] : '',
+				'tt'          => $use_recurring_profile ? (string)$post_vars['attr']['tt'] : '',
+				'on0'         => $notify_paypal['option_name1'],
+				'os0'         => $notify_paypal['option_selection1'],
+				'on1'         => $notify_paypal['option_name2'],
+				'os1'         => $notify_paypal['option_selection2'],
+				'return'      => $return_url,
+				'cancel'      => $cancel_url,
+				's2member_paypal_proxy_use'        => 'pro-emails',
+				's2member_paypal_proxy_coupon'     => $coupon,
+				's2member_paypal_proxy_return_url' => !empty($post_vars['attr']['success']) ? (string)$post_vars['attr']['success'] : '',
+				'checksum'    => md5($invoice.c_ws_plugin__s2member_utils_ip::current().$post_vars['attr']['level_ccaps_eotper']),
+			);
+			if(!$use_recurring_profile)
+			{
+				$token['sub_total'] = (string)$cost_calculations['sub_total'];
+				$token['tax'] = (string)$cost_calculations['tax'];
+				$token['payer_email'] = $payer_email;
+				$token['first_name'] = (string)$post_vars['first_name'];
+				$token['last_name'] = (string)$post_vars['last_name'];
+			}
+
+			$encrypted_token = urlencode(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($token)));
+
+			c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+				'ppco'      => 'pro-form',
+				'event'     => 'pro_purchase_prepared',
+				'invoice'   => $invoice,
+				'mode'      => $account['mode'],
+				'recurring' => $use_recurring_profile,
+				'amount'    => (string)$cost_calculations['total'],
+				'cc'        => strtoupper((string)$cost_calculations['cur']),
+			));
+
+			return array(
+				'ok'       => TRUE,
+				'flow'     => $use_recurring_profile ? 'subscription' : 'order',
+				'invoice'  => $invoice,
+				'token'    => $encrypted_token,
+				'endpoint' => home_url('/?s2member_paypal_checkout=1'),
+				'amount'   => (string)$cost_calculations['total'],
+				'cc'       => strtoupper((string)$cost_calculations['cur']),
+			);
+		}
+
+		/**
+		 * Handles the signed browser return after Framework PayPal Checkout fulfillment.
+		 *
+		 * @since 260818
+		 *
+		 * @return void
+		 */
+		public static function paypal_checkout_browser_return()
+		{
+			$GLOBALS['ws_plugin__s2member_pro_paypal_checkout_response'] = array();
+			$global_response = &$GLOBALS['ws_plugin__s2member_pro_paypal_checkout_response'];
+			$paypal = c_ws_plugin__s2member_paypal_utilities::paypal_postvars();
+			$invoice = (is_array($paypal) && !empty($paypal['invoice'])) ? (string)$paypal['invoice'] : '';
+
+			if(!is_array($paypal) || empty($paypal['proxy_verified']) || $paypal['proxy_verified'] !== 'paypal'
+			|| !self::paypal_checkout_prepared_invoice($invoice) || empty($paypal['txn_id'])
+			|| empty($paypal['payment_status']) || strcasecmp((string)$paypal['payment_status'], 'Completed') !== 0
+			|| !($completion = self::paypal_checkout_completion_state_get($invoice))
+			|| empty($completion['payment_id']) || (string)$completion['payment_id'] !== (string)$paypal['txn_id'])
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+					'ppco'    => 'pro-form',
+					'event'   => 'pro_return_verification_failed',
+					'invoice' => $invoice,
+					'txn_id'  => is_array($paypal) && !empty($paypal['txn_id']) ? (string)$paypal['txn_id'] : '',
+				));
+
+				$global_response = array('response' => _x('<strong>Oops.</strong> Unable to verify the completed PayPal Checkout transaction. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+				return;
+			}
+
+			//260818.1920 Tracking is browser-only; account/payment fulfillment already succeeded before this signed return.
+			setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt((string)$completion['payment_id'])), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN);
+			setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN);
+			$_COOKIE['s2member_tracking'] = $s2member_tracking;
+
+			if(!empty($completion['account_mode']) && $completion['account_mode'] === 'existing')
+				$response = _x('<strong>Thank you.</strong> Your account has been updated.', 's2member-front', 's2member');
+			else if(!empty($completion['password_generated']))
+				$response = _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member');
+			else
+				$response = sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url()));
+
+			$global_response = array('response' => $response);
+			$success = !empty($completion['success']) ? (string)$completion['success'] : '';
+			$notify_return_url = !empty($completion['notify_body']) ? trim((string)$completion['notify_body']) : '';
+
+			c_ws_plugin__s2member_utils_logs::log_entry('paypal-checkout', array(
+				'ppco'       => 'pro-form',
+				'event'      => 'pro_return_verified',
+				'invoice'    => $invoice,
+				'payment_id' => (string)$completion['payment_id'],
+				'recurring'  => !empty($completion['recurring']),
+			));
+
+			if($success && substr($notify_return_url, 0, 2) === substr($success, 0, 2)
+			&& ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($response)), urlencode($response)), $notify_return_url))
+			&& ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
+				wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit();
+		}
+
+		/**
 		 * Returns the transient key for a prepared PayPal Checkout membership purchase.
 		 *
 		 * @since 260818
@@ -879,6 +1166,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				'password_generated' => !empty($state['account']['password_generated']),
 				'payment_id'         => $new__subscr_id,
 				'recurring'          => !empty($state['recurring']),
+				'success'            => !empty($state['success']) ? (string)$state['success'] : '', //260818.1920 Preserve only the configured browser destination, never account details.
 				'notify_body'        => !empty($result['body']) ? (string)$result['body'] : '',
 			);
 			if(!self::paypal_checkout_completion_state_set($invoice, $completion_state))

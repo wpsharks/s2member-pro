@@ -56,8 +56,32 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout"))
 				*/
 				public static function paypal_checkout()
 					{
-						if(!empty($_POST["s2member_pro_paypal_checkout"]) || (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return"))
+						$ppco_rest_return = (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_rest_return");
+
+						if(!empty($_POST["s2member_pro_paypal_checkout"]) || (!empty($_GET["s2member_paypal_xco"]) && $_GET["s2member_paypal_xco"] === "s2member_pro_paypal_checkout_return") || $ppco_rest_return)
 							{
+								//260818.1920 Modern Checkout returns after Framework fulfillment; do not re-enter any legacy payment handler.
+								if($ppco_rest_return)
+									return c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_browser_return();
+
+								//260818.1920 Prepare PayPal wallet purchases before the browser asks Framework to create an Order or Subscription.
+								if(!empty($_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"]) && $_POST["s2member_pro_paypal_checkout"]["paypal_checkout_op"] === "prepare")
+									{
+										$result = c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_prepare($_POST["s2member_pro_paypal_checkout"]);
+
+										if(is_wp_error($result))
+											$result = array('error' => (string)$result->get_error_code(), 'message' => (string)$result->get_error_message());
+
+										if(!headers_sent())
+											{
+												nocache_headers();
+												header('Content-Type: application/json; charset='.get_option('blog_charset'));
+											}
+
+										echo wp_json_encode($result);
+										exit();
+									}
+
 								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
 									return c_ws_plugin__s2member_pro_paypal_checkout_pf_in::paypal_checkout();
 
