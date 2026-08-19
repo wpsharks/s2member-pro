@@ -247,6 +247,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 						//260818.2204 Prepared free purchases use normal validation; the scoped request flag bypasses only unrelated legacy credentials.
 						$skip_legacy_paypal_validation = ($skip_legacy_paypal_validation || c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_free_fallback_is_active());
 
+						//260819.0543 Existing-subscription forms resolve the member's stored profile without requiring unrelated legacy credentials up front.
+						if(!empty($attr["cancel"]) || !empty($attr["update"]))
+							$skip_legacy_paypal_validation = TRUE;
+
 						//260818.1920 Modern Checkout uses REST credentials; legacy PayPal business/API settings are unrelated.
 						if($skip_legacy_paypal_validation || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors($attr)) || !empty($attr["register"]))
 							{
@@ -257,33 +261,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 										else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option("s2member_subscr_id", $user_id)))
 											$response = array("response" => _x('Nothing to cancel. You\'re NOT a paid Member.', "s2member-front", "s2member"), "error" => true);
-
-										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
-											{
-												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
-													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
-
-												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
-													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-
-												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
-													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
-											}
-										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
-											{
-												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]))
-													{
-														if($paypal && !empty($paypal["__error"]) && !empty($paypal["L_ERRORCODE0"]) && $paypal["L_ERRORCODE0"] === "11592")
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to cancel your Subscription.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/cgi-bin/webscr?cmd=_subscr-find&amp;alias=".urlencode($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_merchant_id"]))), "error" => true);
-
-														else $response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
-													}
-												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
-													$response = array("response" => _x('<strong>Unable to cancel at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
-
-												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
-													$response = array("response" => _x('Nothing to cancel. You have NO recurring fees.', "s2member-front", "s2member"), "error" => true);
-											}
 									}
 								else if /* Special form for Updates. User/Member must be logged in. */($attr["update"])
 									{
@@ -293,13 +270,22 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 										else if(!is_object($user = wp_get_current_user()) || !($user_id = $user->ID) || !($subscr_id = get_user_option("s2member_subscr_id", $user_id)))
 											$response = array("response" => _x('Nothing to update. You\'re NOT a paid Member.', "s2member-front", "s2member"), "error" => true);
 
-										else if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
+										else if(c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_subscription_is_for_user($user_id, $subscr_id))
 											{
-												if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
-													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
+												//260819.0417 Checkout wallet funding is managed in PayPal; do not expose legacy on-site card-profile updates.
+												$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
+											}
+										else if(preg_match('/^R[PT]/i', $subscr_id))
+											{
+												//260819.0543 Payflow profile IDs are distinguishable from I-* profiles, so do not let current site-wide gateway settings reroute an old profile.
+												if(empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"]))
+													$response = array("response" => _x('Unable to update this Payflow billing profile because the required legacy Payflow API credentials are not configured. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
+
+												else if(!($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
+													$response = array("response" => _x('Unable to update this Payflow billing profile at this time. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 
 												else if(!empty($paypal["TENDER"]) && strtoupper($paypal["TENDER"]) === "P")
-													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
 
 												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
@@ -307,23 +293,43 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
 											}
-										else if(is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
+										else if(!empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_username"])
+										&& !empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_password"])
+										&& !empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_api_signature"])
+										&& is_array($paypal = array("PROFILEID" => $subscr_id, "METHOD" => "GetRecurringPaymentsProfileDetails")))
 											{
 												if(!($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response($paypal)) || !empty($paypal["__error"]) || empty($paypal["ACCT"]) || strlen($paypal["ACCT"]) !== 4)
 													{
 														if($paypal && empty($paypal["__error"]) && (empty($paypal["ACCT"]) || strlen($paypal["ACCT"]) !== 4))
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
 
 														else if($paypal && !empty($paypal["__error"]) && !empty($paypal["L_ERRORCODE0"]) && $paypal["L_ERRORCODE0"] === "11592")
-															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+															$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
 
-														else $response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
+														else
+															{
+																$ppco_creds = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_creds();
+																$subscription = (!empty($ppco_creds["client_id"]) && !empty($ppco_creds["secret"])) ? c_ws_plugin__s2member_paypal_utilities::paypal_checkout_subscription_details($subscr_id) : array();
+																if(!empty($subscription["id"]) && empty($subscription["__error"]) && (string)$subscription["id"] === (string)$subscr_id)
+																	$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
+																else
+																	$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
+															}
 													}
 												else if(!empty($paypal["STATUS"]) && preg_match("/^(Pending|PendingProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('<strong>Unable to update at this time.</strong> Your account is pending other changes. Please try again in 15 minutes.', "s2member-front", "s2member"), "error" => true);
 
 												else if(empty($paypal["STATUS"]) || !preg_match("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 													$response = array("response" => _x('Nothing to update. You have NO recurring fees. Or, your billing profile is no longer active. Please contact Support if you need assistance.', "s2member-front", "s2member"), "error" => true);
+											}
+										else
+											{
+												$ppco_creds = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_creds();
+												$subscription = (!empty($ppco_creds["client_id"]) && !empty($ppco_creds["secret"])) ? c_ws_plugin__s2member_paypal_utilities::paypal_checkout_subscription_details($subscr_id) : array();
+												if(!empty($subscription["id"]) && empty($subscription["__error"]) && (string)$subscription["id"] === (string)$subscr_id)
+													$response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
+												else
+													$response = array("response" => _x('Unable to update billing information because no compatible PayPal subscription API credentials could resolve this profile. Older billing profiles may still require their legacy PayPal API credentials. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 											}
 									}
 								else if /* Free Registration does not require attr validation. */($attr["register"])
@@ -625,6 +631,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 						//260818.2204 Prepared free purchases use normal validation; the scoped request flag bypasses only unrelated legacy credentials.
 						$skip_legacy_paypal_validation = ($skip_legacy_paypal_validation || c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_free_fallback_is_active());
+
+						//260819.0417 Existing-subscription forms do not require legacy NVP credentials before their own lifecycle routing runs.
+						if(in_array($form, array("cancellation", "update"), TRUE))
+							$skip_legacy_paypal_validation = TRUE;
 
 						//260818.1920 Keep normal submission checks while modern Checkout uses its independent REST configuration.
 						if($skip_legacy_paypal_validation || $form === "registration" || !($response = c_ws_plugin__s2member_pro_paypal_responses::paypal_form_api_validation_errors()))

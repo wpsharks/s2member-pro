@@ -77,13 +77,18 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 											{
 												if($post_vars["card_type"] === "PayPal") // A Customer must log into their PayPal account to update billing info.
 													{
-														$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+														$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url(get_current_user_id()))), "error" => true);
 													}
 												else if(is_user_logged_in() && ($user = wp_get_current_user()) && ($user_id = $user->ID)) // Logged in?
 													{
 														if(($cur__subscr_id = get_user_option("s2member_subscr_id"))) // Does the customer have a Billing Profile?
 															{
-																if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P" && preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
+																if(c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_subscription_is_for_user($user_id, $cur__subscr_id))
+																	{
+																		//260819.0417 Checkout subscriptions use PayPal-managed funding; legacy Payflow card-profile updates do not apply.
+																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
+																	}
+																else if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($cur__subscr_id)) && $paypal["TENDER"] !== "P" && preg_match("/^(Active|ActiveProfile)$/i", $paypal["STATUS"]))
 																	{
 																		$paypal = array(); // Reset the PayPal array.
 
@@ -132,7 +137,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_update_pf_in"))
 																	}
 																else if($paypal && $paypal["TENDER"] === "P") // They used a PayPal account?
 																	{
-																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr("https://".(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com")."/")), "error" => true);
+																		$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url(get_current_user_id()))), "error" => true);
 																	}
 																else $global_response = array("response" => _x('<strong>Unknown error.</strong> Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 															}

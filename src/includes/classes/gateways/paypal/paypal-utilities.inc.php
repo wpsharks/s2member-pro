@@ -1300,6 +1300,121 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Tests whether a user's current PayPal subscription was created through PayPal Checkout.
+		 *
+		 * @since 260819
+		 *
+		 * @param int    $user_id WordPress user ID.
+		 * @param string $subscr_id Optional subscription ID to bind stored signup vars.
+		 *
+		 * @return bool True when stored purchase provenance identifies PayPal Checkout.
+		 */
+		public static function paypal_checkout_subscription_is_for_user($user_id = 0, $subscr_id = '')
+		{
+			$user_id = (int)$user_id;
+			$subscr_id = (string)$subscr_id;
+			if(!$user_id)
+				return FALSE;
+
+			$ipn_signup_vars = get_user_option('s2member_ipn_signup_vars', $user_id);
+			if(!is_array($ipn_signup_vars) || !$ipn_signup_vars)
+				return FALSE;
+
+			if($subscr_id && !empty($ipn_signup_vars['subscr_id']) && (string)$ipn_signup_vars['subscr_id'] !== $subscr_id)
+				return FALSE;
+
+			return ((!empty($ipn_signup_vars['s2member_paypal_proxy_use']) && (string)$ipn_signup_vars['s2member_paypal_proxy_use'] === 'paypal_checkout')
+				|| (!empty($ipn_signup_vars['invoice']) && self::paypal_checkout_prepared_invoice((string)$ipn_signup_vars['invoice'])));
+		}
+
+		/**
+		 * Returns the PayPal account URL customers can use to manage recurring payments.
+		 *
+		 * @since 260819
+		 *
+		 * @param int $user_id Optional user ID for Checkout-vs-legacy sandbox provenance.
+		 *
+		 * @return string PayPal recurring-payment management URL.
+		 */
+		public static function paypal_subscription_manage_url($user_id = 0)
+		{
+			$user_id = (int)$user_id;
+			$subscr_id = $user_id ? (string)get_user_option('s2member_subscr_id', $user_id) : '';
+			$is_checkout = ($user_id && self::paypal_checkout_subscription_is_for_user($user_id, $subscr_id));
+			$is_sandbox = $is_checkout ? c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_sandbox() : !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['paypal_sandbox']);
+
+			return $is_sandbox ? 'https://www.sandbox.paypal.com/myaccount/autopay/connect/' : 'https://www.paypal.com/myaccount/autopay/';
+		}
+
+		/**
+		 * Cancels the current user's PayPal subscription through the owning configured API family.
+		 *
+		 * Falls back across configured PayPal APIs in Framework, then sends the existing simulated
+		 * cancellation Notify only after a remote cancellation request is accepted. //260819.0417
+		 *
+		 * @since 260819
+		 *
+		 * @param int    $user_id WordPress user ID.
+		 * @param string $reason Human-readable cancellation reason where supported.
+		 *
+		 * @return array Result with `ok` and `manage_url`.
+		 */
+		public static function paypal_subscription_cancel_for_user($user_id = 0, $reason = '')
+		{
+			$user_id = (int)$user_id;
+			$manage_url = self::paypal_subscription_manage_url($user_id);
+
+			if(!$user_id || !is_object($user = new WP_User($user_id)) || empty($user->ID))
+				return array('ok' => FALSE, 'manage_url' => $manage_url);
+
+			$subscr_gateway = (string)get_user_option('s2member_subscr_gateway', $user_id);
+			$subscr_id = (string)get_user_option('s2member_subscr_id', $user_id);
+			$subscr_baid = (string)get_user_option('s2member_subscr_baid', $user_id);
+			$subscr_cid = (string)get_user_option('s2member_subscr_cid', $user_id);
+			if(($subscr_gateway && $subscr_gateway !== 'paypal') || !$subscr_id)
+				return array('ok' => FALSE, 'manage_url' => $manage_url);
+			$subscr_gateway = 'paypal'; //260819.0417 Older PayPal members may predate explicit gateway provenance.
+
+			$ipn_signup_vars = get_user_option('s2member_ipn_signup_vars', $user_id);
+			$ipn_signup_vars = (is_array($ipn_signup_vars) && !empty($ipn_signup_vars['subscr_id']) && (string)$ipn_signup_vars['subscr_id'] === $subscr_id) ? $ipn_signup_vars : array();
+
+			$next_billing_time = '';
+			$eot = c_ws_plugin__s2member_utils_users::get_user_eot($user_id, TRUE, 'next');
+			if(is_array($eot) && !empty($eot['type']) && $eot['type'] === 'next' && !empty($eot['time']) && (int)$eot['time'] > time())
+				$next_billing_time = gmdate('Y-m-d\TH:i:s\Z', (int)$eot['time']);
+
+			if(!c_ws_plugin__s2member_utilities::cancel_gateway_subscription($subscr_gateway, $subscr_id, $subscr_baid, $subscr_cid, $ipn_signup_vars, TRUE, $reason))
+				return array('ok' => FALSE, 'manage_url' => $manage_url);
+
+			$ipn = array(
+				'txn_type'          => 'subscr_cancel',
+				'subscr_id'         => $subscr_id,
+				'subscr_baid'       => $subscr_baid,
+				'subscr_cid'        => $subscr_cid,
+				'custom'            => (string)get_user_option('s2member_custom', $user_id),
+				'period1'           => !empty($ipn_signup_vars['period1']) ? (string)$ipn_signup_vars['period1'] : '0 D',
+				'period3'           => !empty($ipn_signup_vars['period3']) ? (string)$ipn_signup_vars['period3'] : '1 D',
+				'payer_email'       => (string)$user->user_email,
+				'first_name'        => (string)$user->first_name,
+				'last_name'         => (string)$user->last_name,
+				'item_name'         => !empty($ipn_signup_vars['item_name']) ? (string)$ipn_signup_vars['item_name'] : 'PayPal Subscription',
+				'item_number'       => !empty($ipn_signup_vars['item_number']) ? (string)$ipn_signup_vars['item_number'] : (string)c_ws_plugin__s2member_user_access::user_access_level($user),
+				'option_name2'      => 'Customer IP Address',
+				'option_selection2' => (string)get_user_option('s2member_registration_ip', $user_id),
+
+				'proxy_user_id'           => $user_id,
+				'proxy_next_billing_time' => $next_billing_time,
+
+				's2member_paypal_proxy'              => 'paypal',
+				's2member_paypal_proxy_use'          => 'pro-emails',
+				's2member_paypal_proxy_verification' => c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen(),
+			);
+			c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+			return array('ok' => TRUE, 'manage_url' => $manage_url);
+		}
+
+		/**
 		 * Checks to see if a Coupon Code was supplied, and if so; what does it provide?
 		 *
 		 * @package s2Member\PayPal

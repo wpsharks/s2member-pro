@@ -77,11 +77,16 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 											{
 												if ($post_vars["card_type"] === "PayPal") // A Customer must log into their PayPal account to update billing info.
 													{
-														$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+														$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url(get_current_user_id()))), "error" => true);
 													}
 												else if (is_user_logged_in () && ($user = wp_get_current_user ()) && ($user_id = $user->ID)) // Logged in?
 													{
-														if (($paypal = array("METHOD" => "GetRecurringPaymentsProfileDetails")) && ($paypal["PROFILEID"] = $cur__subscr_id = get_user_option ("s2member_subscr_id")))
+														if(($cur__subscr_id = get_user_option("s2member_subscr_id")) && c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_subscription_is_for_user($user_id, $cur__subscr_id))
+															{
+																//260819.0417 Checkout subscriptions use PayPal-managed funding; legacy on-site card-profile updates do not apply.
+																$global_response = array("response" => sprintf(_x('Please <a href="%s" rel="nofollow noopener" target="_blank">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url($user_id))), "error" => true);
+															}
+														else if (($paypal = array("METHOD" => "GetRecurringPaymentsProfileDetails")) && ($paypal["PROFILEID"] = $cur__subscr_id = get_user_option ("s2member_subscr_id")))
 															{
 																if (($paypal = c_ws_plugin__s2member_paypal_utilities::paypal_api_response ($paypal)) && empty($paypal["__error"]) && strlen ($paypal["ACCT"]) === 4 && preg_match ("/^(Active|ActiveProfile|Suspended|SuspendedProfile)$/i", $paypal["STATUS"]))
 																	{
@@ -133,11 +138,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update_in"))
 																	}
 																else if ($paypal && empty($paypal["__error"]) && strlen ($paypal["ACCT"]) !== 4) // They used a PayPal account?
 																	{
-																		$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+																		$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url(get_current_user_id()))), "error" => true);
 																	}
 																else if ($paypal && !empty($paypal["__error"]) && $paypal["L_ERRORCODE0"] === "11592") // Subscription?
 																	{
-																		$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr ("https://" . (($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_sandbox"]) ? "www.sandbox.paypal.com" : "www.paypal.com") . "/")), "error" => true);
+																		$global_response = array("response" => sprintf (_x ('Please <a href="%s" rel="nofollow">log in at PayPal</a> to update your billing information.', "s2member-front", "s2member"), esc_attr(c_ws_plugin__s2member_pro_paypal_utilities::paypal_subscription_manage_url(get_current_user_id()))), "error" => true);
 																	}
 																else // Else, an error.
 																	{

@@ -82,7 +82,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 							$processed = FALSE; // Initialize and/or reset all of these variables.
 							unset($paypal, $subscr_id, $processing, $ipn, $log4, $_log4, $log2, $logs_dir);
 
-							if(($subscr_id = get_user_option('s2member_subscr_id', $user_id)) && !get_user_option('s2member_auto_eot_time', $user_id))
+							//260819.0543 Payflow polling applies only to Payflow recurring profiles (RP live / RT test), not every PayPal subscription.
+							if(($subscr_id = get_user_option('s2member_subscr_id', $user_id)) && preg_match('/^R[PT]/i', $subscr_id) && !get_user_option('s2member_auto_eot_time', $user_id))
 							{
 								if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 								{

@@ -58,7 +58,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_update"))
 					{
 						if (!empty($_POST["s2member_pro_paypal_update"]))
 							{
-								if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"])
+								//260819.0543 Route existing Payflow profiles by their RP/RT profile IDs, not by the site's current gateway preference.
+								$subscr_id = (is_user_logged_in() && is_object($user = wp_get_current_user()) && !empty($user->ID)) ? (string)get_user_option("s2member_subscr_id", $user->ID) : '';
+								if($subscr_id && preg_match('/^R[PT]/i', $subscr_id) && !empty($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["paypal_payflow_api_username"]))
 									return c_ws_plugin__s2member_pro_paypal_update_pf_in::paypal_update();
 
 								return c_ws_plugin__s2member_pro_paypal_update_in::paypal_update ();
