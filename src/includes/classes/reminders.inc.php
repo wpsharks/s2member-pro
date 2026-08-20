@@ -2,7 +2,7 @@
 // @codingStandardsIgnoreFile
 /**
  * Reminders.
- *
+ * 
  * Copyright: © 2009-2011
  * {@link http://websharks-inc.com/ WebSharks, Inc.}
  * (coded in the USA)
@@ -47,45 +47,577 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
         protected static $message;
 
         /**
-         * Remind.
+         * Ensures that reminders based on stored End-of-Term dates have their own recurring WP-Cron event.
          *
-         * @since 151202 Reminders.
+         * These reminders no longer depend on the Auto-EOT processor completing first. This keeps reminder
+         * delivery independent from demotion/backlog processing and lets a missing reminder event repair itself.
          *
-         * @attaches-to ``add_action('ws_plugin__s2member_after_auto_eot_system');``
+         * @since 260820.1924
          *
-         * @param array $vars Expects an array of defined variables.
+         * @return bool True when the reminder schedule is healthy/disabled as configured, otherwise false.
          */
-        public static function remind($vars = array())
+        public static function ensure_fixed_eot_reminder_schedule()
         {
-            global $wpdb; // WP database class.
+            $hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__schedule';
+            $continuation_hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__continuation';
+            $enabled = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_enable']);
 
+            if (!$enabled) {
+                wp_clear_scheduled_hook($hook);
+                wp_clear_scheduled_hook($continuation_hook);
+                return true;
+            }
+            if (wp_next_scheduled($hook) && wp_get_schedule($hook) === 'every10m') {
+                return true;
+            }
+            if (wp_next_scheduled($hook)) {
+                wp_clear_scheduled_hook($hook); //260820.1924 Repair an inherited/wrong recurrence instead of leaving a slower reminder heartbeat in place indefinitely.
+            }
+
+            //260820.1924 A 10-minute heartbeat makes date-sensitive reminders prompt without coupling them back to Auto-EOT; one-off continuations drain unusually large due queues sooner.
+            return (bool) wp_schedule_event(time() + MINUTE_IN_SECONDS, 'every10m', $hook);
+        }
+
+        /**
+         * Returns a conservative wall-clock budget for EOT reminder processing.
+         *
+         * @since 260820.1924
+         *
+         * @return float Runtime budget in seconds.
+         */
+        protected static function fixed_eot_runtime_budget()
+        {
+            $php_max_execution_time = (int) ini_get('max_execution_time');
+
+            //260820.1924 Mail transports can block unpredictably; use only half of a finite PHP limit (or a bounded 20 seconds when unlimited) so one reminder pass leaves substantial request headroom.
+            $runtime_budget = $php_max_execution_time > 0 ? floor($php_max_execution_time * 0.50) : 20;
+
+            return max(1, (float) apply_filters('ws_plugin__s2member_pro_fixed_eot_reminders_runtime', max(1, $runtime_budget), get_defined_vars()));
+        }
+
+        /**
+         * Returns the retry delay after a failed recipient handoff.
+         *
+         * Early retries are intentionally aggressive for transient mail failures; longer spacing after repeated
+         * failures avoids hammering a persistently broken transport while the reminder remains eligible.
+         *
+         * @since 260820.1924
+         *
+         * @param int $attempts Number of attempts already made for this recipient/offset.
+         *
+         * @return int Delay in seconds before another attempt.
+         */
+        protected static function fixed_eot_retry_delay($attempts)
+        {
+            $attempts = max(0, (int) $attempts);
+
+            if ($attempts <= 0) {
+                return 0;
+            } elseif ($attempts === 1) {
+                return 10 * MINUTE_IN_SECONDS;
+            } elseif ($attempts === 2) {
+                return 30 * MINUTE_IN_SECONDS;
+            } elseif ($attempts === 3) {
+                return HOUR_IN_SECONDS;
+            }
+            return 3 * HOUR_IN_SECONDS;
+        }
+
+        /**
+         * Loads and validates the configured reminder templates.
+         *
+         * @since 260820.1924
+         *
+         * @return array|false Parsed reminder offsets, or false when reminders cannot run.
+         */
+        protected static function load_reminder_config()
+        {
             $options = &$GLOBALS['WS_PLUGIN__']['s2member']['o'];
 
-            if (!$options['pro_eot_reminder_email_enable']) {
-                return; // Nothing to do here.
+            if (empty($options['pro_eot_reminder_email_enable']) || !isset($options['pro_eot_reminder_email_days'][0])) {
+                return false;
             }
-            if (!isset($options['pro_eot_reminder_email_days'][0])) {
-                return; // Nothing to do here.
-            }
-            self::$now        = time(); // Current UTC timestamp.
+            self::$now        = time();
             self::$recipients = json_decode($options['pro_eot_reminder_email_recipients']);
             self::$subject    = json_decode($options['pro_eot_reminder_email_subject']);
             self::$message    = json_decode($options['pro_eot_reminder_email_message']);
 
-            if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)) {
-                return; // Not possible. Possible corruption in the DB.
+            if (!is_object(self::$recipients) || !is_object(self::$subject) || !is_object(self::$message)
+                || !$options['reg_email_from_name'] || !$options['reg_email_from_email']) {
+                return false;
             }
-            if (!$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_name']
-                || !$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email']) {
-                return; // Not possible. Email configuration is incomplete.
+
+            $days = preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY);
+            $days = array_values(array_unique(array_map('intval', $days)));
+            //260820.1924 Process the latest target first. If several sequence messages became due during an outage, one current message can safely supersede an older missed one for the same recipient.
+            rsort($days, SORT_NUMERIC);
+
+            return $days;
+        }
+
+        /**
+         * Returns the site's timezone for calendar-day reminder calculations.
+         *
+         * @since 260820.1924
+         *
+         * @return DateTimeZone Site timezone.
+         */
+        protected static function site_timezone()
+        {
+            if (function_exists('wp_timezone')) {
+                return wp_timezone();
             }
-            $days                 = preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY);
-            $scan_time            = apply_filters('ws_plugin__s2member_pro_eot_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
-            $per_process          = apply_filters('ws_plugin__s2member_pro_eot_reminders_per_process', $vars['per_process'], get_defined_vars());
-            $message_bytes_in_log = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message_bytes_in_log', 100);
+            if (($timezone_string = get_option('timezone_string'))) {
+                return new DateTimeZone($timezone_string);
+            }
+
+            $offset = (float) get_option('gmt_offset');
+            $hours = (int) $offset;
+            $minutes = (int) round(abs($offset - $hours) * 60);
+            return new DateTimeZone(sprintf('%+03d:%02d', $hours, $minutes));
+        }
+
+        /**
+         * Sends one reminder and captures WordPress/PHPMailer failure details for diagnostics.
+         *
+         * @since 260820.1924
+         *
+         * @param string $recipient Recipient email address.
+         * @param string $subject   Reminder subject.
+         * @param string $message   Reminder body.
+         * @param string $mail_from Formatted From identity.
+         *
+         * @return array Mail result and diagnostic details.
+         */
+        protected static function send_reminder_mail($recipient, $subject, $message, $mail_from)
+        {
+            global $phpmailer;
+
+            $wp_error = null;
+            $success = false;
+
+            //260820.1924 Scope wp_mail_failed capture to this handoff; it exposes PHPMailer details that wp_mail()'s boolean return cannot explain on its own.
+            $failed = static function ($error) use (&$wp_error) {
+                if ($error instanceof WP_Error) {
+                    $wp_error = $error;
+                }
+            };
+            add_action('wp_mail_failed', $failed, PHP_INT_MAX, 1);
+
+            $started = microtime(true);
+            try {
+                if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
+                    $success = wp_mail($recipient, $subject, $message,
+                        'From: '.$mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
+                } else {
+                    $success = c_ws_plugin__s2member_utilities::mail($recipient, $subject, $message);
+                }
+            } finally {
+                $duration = max(0, microtime(true) - $started);
+                remove_action('wp_mail_failed', $failed, PHP_INT_MAX);
+            }
+
+            $error_data = ($wp_error instanceof WP_Error) ? $wp_error->get_error_data() : array();
+            $error_data = is_array($error_data) ? $error_data : array();
+
+            return array(
+                'success'                    => !empty($success),
+                'duration'                   => $duration,
+                'error_code'                 => ($wp_error instanceof WP_Error) ? $wp_error->get_error_code() : '',
+                'error_message'              => ($wp_error instanceof WP_Error) ? $wp_error->get_error_message() : '',
+                'phpmailer_exception_code'   => isset($error_data['phpmailer_exception_code']) ? $error_data['phpmailer_exception_code'] : '',
+                'phpmailer_error_info'       => is_object($phpmailer) && isset($phpmailer->ErrorInfo) ? (string) $phpmailer->ErrorInfo : '',
+                'phpmailer_mailer'           => is_object($phpmailer) && isset($phpmailer->Mailer) ? (string) $phpmailer->Mailer : '',
+                'phpmailer_from'             => is_object($phpmailer) && isset($phpmailer->From) ? (string) $phpmailer->From : '',
+                'phpmailer_from_name'        => is_object($phpmailer) && isset($phpmailer->FromName) ? (string) $phpmailer->FromName : '',
+                'phpmailer_sender'           => is_object($phpmailer) && isset($phpmailer->Sender) ? (string) $phpmailer->Sender : '',
+                'phpmailer_content_type'     => is_object($phpmailer) && isset($phpmailer->ContentType) ? (string) $phpmailer->ContentType : '',
+            );
+        }
+
+        /**
+         * Runs the dedicated reminder processor for stored End-of-Term dates.
+         *
+         * Reminder candidates come directly from users' stored EOT metadata. The normal eligibility window is the
+         * configured calendar day plus the following site-local calendar day, so a rare scheduler outage can
+         * recover a message without turning old reminder sequences into a burst. Recipient-specific delivery
+         * state prevents successful recipients from receiving duplicates while failed recipients retry with backoff.
+         *
+         * @since 260820.1924
+         *
+         * @param bool $is_continuation Internal one-off continuation of a runtime-limited pass.
+         */
+        public static function fixed_eot_remind($is_continuation = false)
+        {
+            global $wpdb;
+
+            if (!($days = self::load_reminder_config())) {
+                self::ensure_fixed_eot_reminder_schedule();
+                return;
+            }
+
+            $runtime_budget = self::fixed_eot_runtime_budget();
+            $request_started = isset($_SERVER['REQUEST_TIME_FLOAT']) && is_numeric($_SERVER['REQUEST_TIME_FLOAT']) ? (float) $_SERVER['REQUEST_TIME_FLOAT'] : microtime(true);
+            $deadline = $request_started + $runtime_budget;
+            $safety_buffer = min($runtime_budget * 0.25, max(0.25, (float) apply_filters('ws_plugin__s2member_pro_fixed_eot_reminders_runtime_safety_buffer', 1.0, get_defined_vars())));
+            //260820.1924 This is additional calendar days after the configured target day; default 1 means target day + the following day.
+            $late_days = max(0, (int) apply_filters('ws_plugin__s2member_pro_fixed_eot_reminders_late_days', 1, get_defined_vars()));
+            $lock_option = 'ws_plugin__s2member_pro_fixed_eot_reminders_lock';
+            $state_option = 'ws_plugin__s2member_pro_fixed_eot_reminders_state';
+            $continuation_hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__continuation';
+            $delivery_option = 's2member_fixed_eot_reminder_delivery';
+            $meta_key = $wpdb->prefix.'s2member_auto_eot_time';
+            $last_meta_key = $wpdb->prefix.'s2member_last_auto_eot_time';
+            $timezone = self::site_timezone();
+            $today = new DateTimeImmutable('today', $timezone);
+            $lock_stale_after = max(120, (int) ceil(($runtime_budget * 2) + 30));
+            $lock = get_option($lock_option);
+
+            //260820.1924 A malformed/stale lock must not suppress reminders forever after an interrupted request; a fresh lock still prevents overlapping workers.
+            if ($lock !== false && (!is_array($lock) || empty($lock['heartbeat_at']))) {
+                delete_option($lock_option);
+                $lock = false;
+            }
+            if (is_array($lock) && time() - (int) $lock['heartbeat_at'] > $lock_stale_after) {
+                delete_option($lock_option);
+                $lock = false;
+            }
+            if (is_array($lock)) {
+                return;
+            }
+
+            $run_token = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : uniqid('s2-reminder-', true);
+            $lock = array('token' => $run_token, 'heartbeat_at' => time(), 'processed' => 0);
+
+            //260820.1924 add_option() is the atomic acquisition step; only one reminder worker may own this lock.
+            if (!add_option($lock_option, $lock, '', false)) {
+                return;
+            }
+
+            $state = get_option($state_option);
+            $state = is_array($state) ? $state : array();
+            $state['last_started_at'] = time();
+            $state['active_run_token'] = $run_token;
+            update_option($state_option, $state, false);
 
             $mail_from = '"'.str_replace('"', "'", $GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_name']).'"'.
-                               ' <'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email'].'>';
+                         ' <'.$GLOBALS['WS_PLUGIN__']['s2member']['o']['reg_email_from_email'].'>';
+            $message_bytes_in_log = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message_bytes_in_log', 100);
+            $additional_user_ids_to_exclude = array_map('intval', (array) apply_filters('ws_plugin__s2member_pro_eot_reminders_exclude_user_ids', array(), get_defined_vars()));
+            $mail_count = 0;
+            $processed_count = 0;
+            $mail_total_duration = 0.0;
+            $last_mail_duration = 0.0;
+            $runtime_exhausted = false;
+            $last_heartbeat = microtime(true);
+
+            $email_configs_were_on = c_ws_plugin__s2member_email_configs::email_config_status();
+            c_ws_plugin__s2member_email_configs::email_config();
+
+            try {
+                //260820.1924 Offsets are newest-first, implementing coalescing: after downtime, a newer sequence message can suppress an older missed one instead of sending both.
+                foreach ($days as $_day) {
+                    $offset = (int) $_day;
+                    //260820.1924 Build eligibility from site-local calendar boundaries, not 86,400-second arithmetic, so DST changes cannot move a reminder to the wrong local day.
+                    $eot_start_day = $today->modify('-'.$late_days.' days')->modify(($offset > 0 ? '-' : '+').abs($offset).' days');
+                    $eot_end_day = $today->modify('+1 day')->modify(($offset > 0 ? '-' : '+').abs($offset).' days');
+                    $range_start = $eot_start_day->getTimestamp();
+                    $range_end = $eot_end_day->getTimestamp();
+                    $cursor_time = 0;
+                    $cursor_umeta_id = 0;
+
+                    while (true) {
+                        //260820.1924 Predict from this run only. A slow recent/average mail handoff must fit alongside the safety buffer before another candidate begins.
+                        $remaining_runtime = $deadline - microtime(true);
+                        $average_mail_duration = $mail_count ? $mail_total_duration / $mail_count : 0.0;
+                        $estimated_next_duration = max($last_mail_duration, $average_mail_duration);
+                        if ($remaining_runtime <= $safety_buffer + $estimated_next_duration) {
+                            $runtime_exhausted = true;
+                            break 2;
+                        }
+
+                        //260820.1924 Include archived EOTs only when this reminder's late-delivery window can reach the EOT date or later; Auto-EOT may already have moved the current timestamp to history before this worker runs.
+                        if ($offset + $late_days >= 0) {
+                            $sql = "SELECT `umeta_id`, `user_id` AS `ID`, `meta_key`, CAST(`meta_value` AS UNSIGNED) AS `eot_time` FROM `".$wpdb->usermeta."` WHERE `meta_key` IN (%s, %s) AND CAST(`meta_value` AS UNSIGNED) >= %d AND CAST(`meta_value` AS UNSIGNED) < %d";
+                            $sql_args = array($meta_key, $last_meta_key, $range_start, $range_end);
+                        } else {
+                            $sql = "SELECT `umeta_id`, `user_id` AS `ID`, `meta_key`, CAST(`meta_value` AS UNSIGNED) AS `eot_time` FROM `".$wpdb->usermeta."` WHERE `meta_key` = %s AND CAST(`meta_value` AS UNSIGNED) >= %d AND CAST(`meta_value` AS UNSIGNED) < %d";
+                            $sql_args = array($meta_key, $range_start, $range_end);
+                        }
+                        if ($cursor_time || $cursor_umeta_id) {
+                            $sql .= " AND (CAST(`meta_value` AS UNSIGNED) > %d OR (CAST(`meta_value` AS UNSIGNED) = %d AND `umeta_id` > %d))";
+                            $sql_args[] = $cursor_time;
+                            $sql_args[] = $cursor_time;
+                            $sql_args[] = $cursor_umeta_id;
+                        }
+                        //260820.1924 LIMIT 100 is only a DB cursor buffer, not a users-per-run cap; runtime and mail cost decide how much work this pass safely completes.
+                        $sql .= " ORDER BY CAST(`meta_value` AS UNSIGNED) ASC, `umeta_id` ASC LIMIT 100";
+                        $eots = $wpdb->get_results($wpdb->prepare($sql, $sql_args));
+                        if (!is_array($eots) || !$eots) {
+                            break;
+                        }
+
+                        foreach ($eots as $_eot_row) {
+                            $cursor_time = (int) $_eot_row->eot_time;
+                            $cursor_umeta_id = (int) $_eot_row->umeta_id;
+
+                            if (in_array((int) $_eot_row->ID, $additional_user_ids_to_exclude, true)
+                                || (string) get_user_option('s2member_reminders_enable', (int) $_eot_row->ID) === '0') {
+                                continue;
+                            }
+
+                            //260820.1924 Re-read the exact usermeta row immediately before acting; a renewal/admin EOT edit selected after the query must win over this stale candidate.
+                            $current_eot = $wpdb->get_row($wpdb->prepare("SELECT `user_id`, `meta_key`, `meta_value` FROM `".$wpdb->usermeta."` WHERE `umeta_id` = %d LIMIT 1", $cursor_umeta_id));
+                            if (!$current_eot || (int) $current_eot->user_id !== (int) $_eot_row->ID || (string) $current_eot->meta_key !== (string) $_eot_row->meta_key || (int) $current_eot->meta_value !== $cursor_time) {
+                                continue;
+                            }
+
+                            $_user = new WP_User((int) $_eot_row->ID);
+                            if (!$_user->ID) {
+                                continue;
+                            }
+
+                            //260820.1924 Resolve locally (no gateway API call) before mailing. Archived EOT history is valid only while the account still represents that expiration; renewed/reactivated users must not receive it.
+                            $_resolved_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID, false);
+                            if (empty($_resolved_eot['type']) || $_resolved_eot['type'] !== 'fixed' || (int) $_resolved_eot['time'] !== (int) $current_eot->meta_value) {
+                                continue;
+                            }
+
+                            $_eot_time = (int) $current_eot->meta_value;
+
+                            //260820.1924 Reconstruct the configured target from the authoritative EOT in site time, then measure lateness in whole calendar days.
+                            $_eot_local = (new DateTimeImmutable('@'.$_eot_time))->setTimezone($timezone);
+                            $_target_day = $_eot_local->setTime(0, 0, 0)->modify(($offset >= 0 ? '+' : '').$offset.' days');
+                            $_target_timestamp = $_target_day->getTimestamp();
+                            $_lateness = (int) $_target_day->diff($today)->format('%r%a');
+                            if ($_lateness < 0 || $_lateness > $late_days) {
+                                continue;
+                            }
+
+                            $_recipients = self::get_recipients_for_day((string) $offset);
+                            $_subject = self::get_subject_for_day((string) $offset);
+                            $_message = self::get_message_for_day((string) $offset);
+                            if (!$_recipients || !$_subject || !$_message) {
+                                continue;
+                            }
+
+                            $_eot = array('type' => 'fixed', 'time' => $_eot_time, 'tense' => $_eot_time <= self::$now ? 'past' : 'future', 'debug' => 'Fixed EOT reminder candidate.');
+                            self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
+                            $_mail_from = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
+                            $_recipients = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
+                            $_subject = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
+                            $_message = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
+                            if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
+                                continue;
+                            }
+
+                            $_delivery = get_user_option($delivery_option, $_user->ID);
+
+                            //260820.1924 Delivery state belongs to one exact EOT. A renewed/edited EOT starts a fresh reminder sequence instead of inheriting suppression from the old term.
+                            if (!is_array($_delivery) || empty($_delivery['eot_time']) || (int) $_delivery['eot_time'] !== $_eot_time) {
+                                $_delivery = array('eot_time' => $_eot_time, 'recipients' => array());
+                            }
+
+                            //260820.1924 Each recipient is independent. One failed committee/admin copy must not block the member or other recipients, and successful recipients must never be retried.
+                            foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
+                                $remaining_runtime = $deadline - microtime(true);
+                                $average_mail_duration = $mail_count ? $mail_total_duration / $mail_count : 0.0;
+                                $estimated_next_duration = max($last_mail_duration, $average_mail_duration);
+                                if ($remaining_runtime <= $safety_buffer + $estimated_next_duration) {
+                                    $runtime_exhausted = true;
+                                    break 4;
+                                }
+
+                                $_recipient_key = md5(strtolower(trim($_recipient)));
+                                $_recipient_state = !empty($_delivery['recipients'][$_recipient_key]) && is_array($_delivery['recipients'][$_recipient_key]) ? $_delivery['recipients'][$_recipient_key] : array();
+
+                                //260820.1924 A newer successful reminder supersedes an older missed offset for the same recipient; never send stale reminders back-to-back after an outage.
+                                if (!empty($_recipient_state['latest_sent_target_at']) && (int) $_recipient_state['latest_sent_target_at'] >= $_target_timestamp) {
+                                    continue;
+                                }
+
+                                $_offset_state = !empty($_recipient_state['offsets'][(string) $offset]) && is_array($_recipient_state['offsets'][(string) $offset]) ? $_recipient_state['offsets'][(string) $offset] : array();
+                                if (!empty($_offset_state['sent_at'])) {
+                                    continue;
+                                }
+
+                                $_attempts = !empty($_offset_state['attempts']) ? (int) $_offset_state['attempts'] : 0;
+                                $_retry_delay = self::fixed_eot_retry_delay($_attempts);
+                                if (!empty($_offset_state['last_attempt_at']) && self::$now < (int) $_offset_state['last_attempt_at'] + $_retry_delay) {
+                                    continue;
+                                }
+
+                                $mail_count++;
+                                $_mail_result = self::send_reminder_mail($_recipient, $_subject, $_message, $_mail_from);
+                                $last_mail_duration = (float) $_mail_result['duration'];
+                                $mail_total_duration += $last_mail_duration;
+
+                                $_attempts++;
+                                $_offset_state['attempts'] = $_attempts;
+                                $_offset_state['last_attempt_at'] = time();
+                                $_offset_state['last_error_code'] = (string) $_mail_result['error_code'];
+                                $_offset_state['last_error_message'] = (string) $_mail_result['error_message'];
+                                if ($_mail_result['success']) {
+                                    $_offset_state['sent_at'] = time();
+                                    $_recipient_state['latest_sent_target_at'] = $_target_timestamp;
+                                    $_recipient_state['latest_sent_offset'] = $offset;
+                                }
+                                if (empty($_recipient_state['offsets']) || !is_array($_recipient_state['offsets'])) {
+                                    $_recipient_state['offsets'] = array();
+                                }
+                                $_recipient_state['address'] = $_recipient;
+                                $_recipient_state['offsets'][(string) $offset] = $_offset_state;
+                                $_delivery['recipients'][$_recipient_key] = $_recipient_state;
+
+                                //260820.1924 Persist after each recipient so a later timeout/fatal cannot resend recipients whose handoff already succeeded.
+                                update_user_option($_user->ID, $delivery_option, $_delivery);
+
+                                $_log_entry = array(
+                                    'eot'                       => $_eot,
+                                    'eot_rfc822'                => date(DATE_RFC822, $_eot_time),
+                                    'day'                       => (string) $offset,
+                                    'reminder_target_rfc822'    => date(DATE_RFC822, $_target_timestamp),
+                                    'reminder_late_days'        => $_lateness,
+                                    'now'                       => self::$now,
+                                    'user_id'                   => $_user->ID,
+                                    'user_login'                => $_user->user_login,
+                                    'user_email'                => $_user->user_email,
+                                    'user_first_name'           => $_user->first_name,
+                                    'user_last_name'            => $_user->last_name,
+                                    'mail_from'                 => $_mail_from,
+                                    'recipient'                 => $_recipient,
+                                    'subject'                   => $_subject,
+                                    'mail_number_in_run'        => $mail_count,
+                                    'mail_duration'             => $_mail_result['duration'],
+                                    'retry_count'               => max(0, $_attempts - 1),
+                                    'run_token'                 => $run_token,
+                                    'wp_mail_success'           => $_mail_result['success'] ? 'yes' : 'no',
+                                    'wp_mail_error_code'        => $_mail_result['error_code'],
+                                    'wp_mail_error_message'     => $_mail_result['error_message'],
+                                    'phpmailer_exception_code'  => $_mail_result['phpmailer_exception_code'],
+                                    'phpmailer_error_info'      => $_mail_result['phpmailer_error_info'],
+                                    'phpmailer_mailer'          => $_mail_result['phpmailer_mailer'],
+                                    'phpmailer_from'            => $_mail_result['phpmailer_from'],
+                                    'phpmailer_from_name'       => $_mail_result['phpmailer_from_name'],
+                                    'phpmailer_sender'          => $_mail_result['phpmailer_sender'],
+                                    'phpmailer_content_type'    => $_mail_result['phpmailer_content_type'],
+                                );
+                                if (strlen($_message) > $message_bytes_in_log) {
+                                    $_log_entry['message_clip'] = substr($_message, 0, $message_bytes_in_log).'...';
+                                } else {
+                                    $_log_entry['message'] = $_message;
+                                }
+                                c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
+
+                                //260820.1924 Keep the latest transport evidence outside debug logging too, so the admin-health layer can diagnose persistent failures even when gateway logs are disabled.
+                                $state = get_option($state_option);
+                                $state = is_array($state) ? $state : array();
+                                if ($_mail_result['success']) {
+                                    $state['last_success_at'] = time();
+                                    $state['consecutive_mail_failures'] = 0;
+                                } else {
+                                    $state['last_failure_at'] = time();
+                                    $state['last_failure_user_id'] = $_user->ID;
+                                    $state['last_failure_recipient'] = $_recipient;
+                                    $state['last_failure_error_code'] = $_mail_result['error_code'];
+                                    $state['last_failure_error_message'] = $_mail_result['error_message'];
+                                    $state['last_failure_phpmailer_exception_code'] = $_mail_result['phpmailer_exception_code'];
+                                    $state['last_failure_phpmailer_error_info'] = $_mail_result['phpmailer_error_info'];
+                                    $state['last_failure_phpmailer_mailer'] = $_mail_result['phpmailer_mailer'];
+                                    $state['last_failure_phpmailer_from'] = $_mail_result['phpmailer_from'];
+                                    $state['last_failure_phpmailer_from_name'] = $_mail_result['phpmailer_from_name'];
+                                    $state['last_failure_phpmailer_sender'] = $_mail_result['phpmailer_sender'];
+                                    $state['last_failure_phpmailer_content_type'] = $_mail_result['phpmailer_content_type'];
+                                    $state['last_failure_mail_number_in_run'] = $mail_count;
+                                    $state['last_failure_mail_duration'] = $_mail_result['duration'];
+                                    $state['last_failure_run_token'] = $run_token;
+                                    $state['consecutive_mail_failures'] = !empty($state['consecutive_mail_failures']) ? (int) $state['consecutive_mail_failures'] + 1 : 1;
+                                }
+                                update_option($state_option, $state, false);
+                            }
+
+                            $processed_count++;
+
+                            //260820.1924 Heartbeat long passes so a second request cannot mistake an active worker for an abandoned stale lock.
+                            if ($processed_count % 5 === 0 || microtime(true) - $last_heartbeat >= 5) {
+                                $lock['heartbeat_at'] = time();
+                                $lock['processed'] = $processed_count;
+                                update_option($lock_option, $lock, false);
+                                $last_heartbeat = microtime(true);
+                            }
+                        }
+
+                        if (count($eots) < 100) {
+                            break;
+                        }
+                    }
+                }
+            } finally {
+                if (!$email_configs_were_on) {
+                    c_ws_plugin__s2member_email_configs::email_config_release();
+                }
+            }
+
+            $state = get_option($state_option);
+            $state = is_array($state) ? $state : array();
+            $state['last_completed_at'] = time();
+            $state['last_processed'] = $processed_count;
+            $state['last_mail_count'] = $mail_count;
+            $state['last_stop_reason'] = $runtime_exhausted ? 'runtime_budget' : 'complete';
+            $state['active_run_token'] = '';
+            update_option($state_option, $state, false);
+            delete_option($lock_option);
+
+            if ($runtime_exhausted) {
+                //260820.1924 Do not wait for the next 10-minute heartbeat when due work remains; continue soon, while the recipient/EOT state keeps the continuation idempotent.
+                if (!wp_next_scheduled($continuation_hook)) {
+                    wp_schedule_single_event(time() + MINUTE_IN_SECONDS, $continuation_hook);
+                }
+            } else {
+                wp_clear_scheduled_hook($continuation_hook);
+            }
+        }
+
+        /**
+         * Runs a one-off continuation for a runtime-limited fixed EOT reminder pass.
+         *
+         * @since 260820.1924
+         */
+        public static function fixed_eot_remind_continuation()
+        {
+            self::fixed_eot_remind(true);
+        }
+
+        /**
+         * Handles the legacy optional Next Payment Time (NPT) reminder path.
+         *
+         * Since 260820.1924, reminders based on a user's stored End-of-Term (EOT) date run independently in
+         * `fixed_eot_remind()`. This method stays on the older Auto-EOT completion hook only for sites that
+         * explicitly enabled reminders based on gateway-derived NPTs; that gateway-dependent path will be
+         * redesigned separately.
+         *
+         * @since 151202 Reminders.
+         * @since 260820.1924 Stored-EOT reminders moved to their own scheduler; this callback remains for optional NPT reminders and now records shared mail-transport diagnostics.
+         *
+         * @param array $vars Defined variables from the Auto-EOT pass.
+         */
+        public static function remind($vars = array())
+        {
+            global $wpdb;
+
+            $options = &$GLOBALS['WS_PLUGIN__']['s2member']['o'];
+            if (empty($options['pro_eot_reminder_email_enable']) || empty($options['pro_eot_reminder_email_on_npt_also'])) {
+                return;
+            }
+            if (!($days = self::load_reminder_config())) {
+                return;
+            }
+
+            //260820.1952 Keep the old daily scan throttle only on NPT lookups; stored-EOT reminders use per-EOT/per-recipient delivery state instead.
+            $scan_time = apply_filters('ws_plugin__s2member_pro_eot_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
+            $per_process = apply_filters('ws_plugin__s2member_pro_eot_reminders_per_process', !empty($vars['per_process']) ? (int) $vars['per_process'] : 10, get_defined_vars());
+            $message_bytes_in_log = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message_bytes_in_log', 100);
+            $mail_from = '"'.str_replace('"', "'", $options['reg_email_from_name']).'" <'.$options['reg_email_from_email'].'>';
 
             $user_ids_to_exclude = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
@@ -95,109 +627,102 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             ';
             $additional_user_ids_to_exclude = apply_filters('ws_plugin__s2member_pro_eot_reminders_exclude_user_ids', array(), get_defined_vars());
 
+            //260820.1952 NPT candidates require subscription gateway metadata because this legacy path may query the gateway for a next-payment date; stored EOT dates are handled elsewhere.
             $sql = '
                 SELECT DISTINCT `user_id` AS `ID` FROM `'.$wpdb->usermeta.'`
                     WHERE `user_id` NOT IN('.$user_ids_to_exclude.')
-
-                        '.($additional_user_ids_to_exclude // See filter above.
-                            ? 'AND `user_id` NOT IN(\''.implode("','", $additional_user_ids_to_exclude).'\')'
-                            : '').'
-                        AND (
-                              (`meta_key` = \''.$wpdb->prefix.'s2member_subscr_gateway\' AND `meta_value` != \'\')
-                              OR (`meta_key` = \''.$wpdb->prefix.'s2member_auto_eot_time\' AND `meta_value` != \'\')
-                              OR (`meta_key` = \''.$wpdb->prefix.'s2member_last_auto_eot_time\' AND `meta_value` != \'\')
-                            )
+                        '.($additional_user_ids_to_exclude ? 'AND `user_id` NOT IN(\''.implode("','", $additional_user_ids_to_exclude).'\')' : '').'
+                        AND (`meta_key` = \''.$wpdb->prefix.'s2member_subscr_gateway\' AND `meta_value` != \'\')
                     LIMIT '.esc_sql($per_process).'
             ';
             if (!($user_ids = $wpdb->get_col($sql))) {
-                return; // Nothing to do here.
+                return;
             }
-            $email_configs_were_on = // Was enabled already?
-                c_ws_plugin__s2member_email_configs::email_config_status();
+
+            $email_configs_were_on = c_ws_plugin__s2member_email_configs::email_config_status();
             c_ws_plugin__s2member_email_configs::email_config();
 
             foreach ($user_ids as $_user_id) {
                 $_eot = $_day = $_recipients = $_subject = $_message = null;
-
                 if (!($_user = new WP_User($_user_id)) || !$_user->ID) {
-                    continue; // Possible DB corruption.
+                    continue;
                 }
+
+                //260820.1952 NPT keeps its legacy scan marker for now; the dedicated stored-EOT worker no longer relies on this coarse daily marker.
                 update_user_option($_user->ID, 's2member_last_reminder_scan', self::$now);
 
-                $_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID);
-
-                if (!$_eot || !$_eot['type'] || !$_eot['time'] || !$_eot['tense']) {
-                    continue; // Nothing to do; i.e., no EOT or NPT time.
-                } elseif ($_eot['type'] === 'next' // Disabled by default!
-                        && !$options['pro_eot_reminder_email_on_npt_also']) {
-                    continue; // Nothing to do; i.e., not an EOT time and no NPTs.
+                //260820.1952 Explicitly favor the gateway-derived NPT. This is the reminder path that may perform gateway API lookups; stored-EOT reminders never need them.
+                $_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID, true, 'next');
+                if (!$_eot || $_eot['type'] !== 'next' || !$_eot['time'] || !$_eot['tense']) {
+                    continue;
                 } elseif (!($_day = self::calculate_day($_eot['time'])) && $_day !== '0') {
-                    continue; // Unable to calculate day.
-                } elseif (!in_array($_day, $days, true)) {
-                    continue; // Nothing on this day.
-                } elseif (!($_recipients = self::get_recipients_for_day($_day))) {
-                    continue; // No recipients.
-                } elseif (!($_subject = self::get_subject_for_day($_day))) {
-                    continue; // No subject.
-                } elseif (!($_message = self::get_message_for_day($_day))) {
-                    continue; // No message.
-                } //
-                self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
-
-                $_mail_from  = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
-                $_recipients = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
-                $_subject    = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
-                $_message    = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
-
-                if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
-                    continue; // Final validation must not fail.
+                    continue;
+                } elseif (!in_array((int) $_day, $days, true)) {
+                    continue;
+                } elseif (!($_recipients = self::get_recipients_for_day($_day))
+                    || !($_subject = self::get_subject_for_day($_day))
+                    || !($_message = self::get_message_for_day($_day))) {
+                    continue;
                 }
-                //260819.0708 Retry this reminder on the next EOT pass only when mail was attempted and every recipient handoff failed.
+
+                self::fill_replacement_codes($_user, $_eot, $_recipients, $_subject, $_message);
+                $_mail_from = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_from', $mail_from, get_defined_vars());
+                $_recipients = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_recipients', $_recipients, get_defined_vars());
+                $_subject = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_subject', $_subject, get_defined_vars());
+                $_message = apply_filters('ws_plugin__s2member_pro_eot_reminder_email_message', $_message, get_defined_vars());
+                if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
+                    continue;
+                }
+
+                //260820.1952 Reuse the shared mail wrapper so NPT reminders get the same PHPMailer failure evidence as the independent stored-EOT worker.
                 $_mail_attempted = $_mail_succeeded = false;
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
                     $_mail_attempted = true;
-
-					//250617 HTML email support.
-					if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
-						$_mail_success = wp_mail($_recipient, $_subject, $_message, // text/plain emails.
-							'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
-					} else {
-						$_mail_success = c_ws_plugin__s2member_utilities::mail($_recipient, $_subject, $_message);
-					}
+                    $_mail_result = self::send_reminder_mail($_recipient, $_subject, $_message, $_mail_from);
+                    $_mail_success = $_mail_result['success'];
                     if ($_mail_success) {
-                        $_mail_succeeded = true; //260819.0708 Avoid duplicate retries when at least one configured recipient already accepted the reminder.
+                        $_mail_succeeded = true;
                     }
 
+                    //260820.1952 Record the actual handoff and transport details; older reminder logs recorded attempts without proving whether wp_mail() succeeded.
                     $_log_entry = array(
-                        'eot'        => $_eot,
-                        'eot_rfc822' => date(DATE_RFC822, $_eot['time']),
-                        'day'        => $_day, // Reminder day.
-                        'now'        => self::$now,
-
-                        'user_id'         => $_user->ID,
-                        'user_login'      => $_user->user_login,
-                        'user_email'      => $_user->user_email,
-                        'user_first_name' => $_user->first_name,
-                        'user_last_name'  => $_user->last_name,
-
-                        'mail_from'       => $_mail_from,
-                        'recipient'       => $_recipient,
-                        'subject'         => $_subject,
-                        'wp_mail_success' => $_mail_success ? 'yes' : 'no', //260819.0613 Record the actual delivery handoff result instead of logging every attempt as if it succeeded.
+                        'eot'                       => $_eot,
+                        'eot_rfc822'                => date(DATE_RFC822, $_eot['time']),
+                        'day'                       => $_day,
+                        'now'                       => self::$now,
+                        'user_id'                   => $_user->ID,
+                        'user_login'                => $_user->user_login,
+                        'user_email'                => $_user->user_email,
+                        'user_first_name'           => $_user->first_name,
+                        'user_last_name'            => $_user->last_name,
+                        'mail_from'                 => $_mail_from,
+                        'recipient'                 => $_recipient,
+                        'subject'                   => $_subject,
+                        'wp_mail_success'           => $_mail_success ? 'yes' : 'no',
+                        'wp_mail_error_code'        => $_mail_result['error_code'],
+                        'wp_mail_error_message'     => $_mail_result['error_message'],
+                        'phpmailer_exception_code'  => $_mail_result['phpmailer_exception_code'],
+                        'phpmailer_error_info'      => $_mail_result['phpmailer_error_info'],
+                        'phpmailer_mailer'           => $_mail_result['phpmailer_mailer'],
+                        'phpmailer_from'             => $_mail_result['phpmailer_from'],
+                        'phpmailer_from_name'        => $_mail_result['phpmailer_from_name'],
+                        'phpmailer_sender'           => $_mail_result['phpmailer_sender'],
+                        'phpmailer_content_type'     => $_mail_result['phpmailer_content_type'],
+                        'mail_duration'             => $_mail_result['duration'],
                     );
                     if (strlen($_message) > $message_bytes_in_log) {
                         $_log_entry['message_clip'] = substr($_message, 0, $message_bytes_in_log).'...';
                     } else {
-                        $_log_entry['message'] = $_message; // Full message.
+                        $_log_entry['message'] = $_message;
                     }
                     c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
                 }
                 if ($_mail_attempted && !$_mail_succeeded) {
-                    //260819.0708 A complete mail handoff failure must not consume the reminder's only matching day; allow the next EOT pass to retry it.
+                    //260820.1952 Preserve legacy duplicate safety: retry the NPT reminder only when every recipient failed; any successful handoff keeps the scan marker to avoid resending that successful copy.
                     delete_user_option($_user->ID, 's2member_last_reminder_scan');
                 }
             }
-            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_mail_success, $_mail_attempted, $_mail_succeeded, $_log_entry);
+            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_mail_success, $_mail_attempted, $_mail_succeeded, $_mail_result, $_log_entry);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();
