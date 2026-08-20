@@ -377,6 +377,14 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                 continue;
                             }
 
+                            //260821.0057 Refund/reversal EOTs terminate access for a payment exception, not a normal renewal opportunity. Match details to this exact EOT so stale provenance cannot suppress a later legitimate reminder sequence.
+                            $_eot_details_option = (string) $current_eot->meta_key === $last_meta_key ? 's2member_last_auto_eot_details' : 's2member_auto_eot_details';
+                            $_eot_details = get_user_option($_eot_details_option, $_user->ID);
+                            if (is_array($_eot_details) && !empty($_eot_details['time']) && (int) $_eot_details['time'] === (int) $current_eot->meta_value
+                                && !empty($_eot_details['source']) && (string) $_eot_details['source'] === 'refund_reversal') {
+                                continue;
+                            }
+
                             //260820.1924 Resolve locally (no gateway API call) before mailing. Archived EOT history is valid only while the account still represents that expiration; renewed/reactivated users must not receive it.
                             $_resolved_eot = c_ws_plugin__s2member_utils_users::get_user_eot($_user->ID, false);
                             if (empty($_resolved_eot['type']) || $_resolved_eot['type'] !== 'fixed' || (int) $_resolved_eot['time'] !== (int) $current_eot->meta_value) {
