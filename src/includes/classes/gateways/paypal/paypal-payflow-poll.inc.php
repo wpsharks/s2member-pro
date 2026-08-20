@@ -77,7 +77,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 				{
 					foreach($objs as $obj /* Run through all of the Paid Member IDs that originated their Subscription through the PayPal gateway. */)
 					{
-						if(($user_id = $obj->ID) && ($counter = (int)$counter + 1)) // Update counter. Only run through X records; given by $per_process.
+						if(($user_id = $obj->ID))
 						{
 							$processed = FALSE; // Initialize and/or reset all of these variables.
 							unset($paypal, $subscr_id, $processing, $ipn, $log4, $_log4, $log2, $logs_dir);
@@ -85,6 +85,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 							//260819.0543 Payflow polling applies only to Payflow recurring profiles (RP live / RT test), not every PayPal subscription.
 							if(($subscr_id = get_user_option('s2member_subscr_id', $user_id)) && preg_match('/^R[PT]/i', $subscr_id) && !get_user_option('s2member_auto_eot_time', $user_id))
 							{
+								//260820.0218 Count only actual Payflow profile checks against the remote polling limit; other PayPal subscriptions are skipped locally.
+								$counter = (int)$counter + 1;
+
 								if(($paypal = c_ws_plugin__s2member_pro_paypal_utilities::payflow_get_profile($subscr_id)))
 								{
 									$paypal['ipn_signup_vars'] = c_ws_plugin__s2member_utils_users::get_user_ipn_signup_vars(FALSE, $subscr_id);
