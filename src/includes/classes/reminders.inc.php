@@ -152,14 +152,21 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 if (!$_recipients || !$_subject || !$_message || !$_mail_from) {
                     continue; // Final validation must not fail.
                 }
+                //260819.0708 Retry this reminder on the next EOT pass only when mail was attempted and every recipient handoff failed.
+                $_mail_attempted = $_mail_succeeded = false;
                 foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
+                    $_mail_attempted = true;
+
 					//250617 HTML email support.
 					if (empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['html_emails_enabled'])) {
-						wp_mail($_recipient, $_subject, $_message, // text/plain emails.
+						$_mail_success = wp_mail($_recipient, $_subject, $_message, // text/plain emails.
 							'From: '.$_mail_from."\r\n".'Content-Type: text/plain; charset=utf-8');
 					} else {
-						c_ws_plugin__s2member_utilities::mail($_recipient, $_subject, $_message);
+						$_mail_success = c_ws_plugin__s2member_utilities::mail($_recipient, $_subject, $_message);
 					}
+                    if ($_mail_success) {
+                        $_mail_succeeded = true; //260819.0708 Avoid duplicate retries when at least one configured recipient already accepted the reminder.
+                    }
 
                     $_log_entry = array(
                         'eot'        => $_eot,
@@ -173,9 +180,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                         'user_first_name' => $_user->first_name,
                         'user_last_name'  => $_user->last_name,
 
-                        'mail_from' => $_mail_from,
-                        'recipient' => $_recipient,
-                        'subject'   => $_subject,
+                        'mail_from'       => $_mail_from,
+                        'recipient'       => $_recipient,
+                        'subject'         => $_subject,
+                        'wp_mail_success' => $_mail_success ? 'yes' : 'no', //260819.0613 Record the actual delivery handoff result instead of logging every attempt as if it succeeded.
                     );
                     if (strlen($_message) > $message_bytes_in_log) {
                         $_log_entry['message_clip'] = substr($_message, 0, $message_bytes_in_log).'...';
@@ -184,8 +192,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                     }
                     c_ws_plugin__s2member_utils_logs::log_entry('eot-reminders', $_log_entry);
                 }
+                if ($_mail_attempted && !$_mail_succeeded) {
+                    //260819.0708 A complete mail handoff failure must not consume the reminder's only matching day; allow the next EOT pass to retry it.
+                    delete_user_option($_user->ID, 's2member_last_reminder_scan');
+                }
             }
-            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_log_entry);
+            unset($_user_id, $_user, $_eot, $_day, $_mail_from, $_recipients, $_recipient, $_subject, $_message, $_mail_success, $_mail_attempted, $_mail_succeeded, $_log_entry);
 
             if (!$email_configs_were_on) {
                 c_ws_plugin__s2member_email_configs::email_config_release();

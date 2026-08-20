@@ -71,7 +71,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 			if($GLOBALS['WS_PLUGIN__']['s2member']['o']['paypal_payflow_api_username'])
 			{
 				$scan_time   = apply_filters('ws_plugin__s2member_pro_payflow_status_scan_time', strtotime('-1 day'), get_defined_vars());
-				$per_process = apply_filters('ws_plugin__s2member_pro_payflow_ipns_per_process', $vars['per_process'], get_defined_vars());
+				//260819.0708 Keep remote gateway polling conservative even though the local Auto-EOT batch is larger; the dedicated filter can still override this.
+				$per_process = apply_filters('ws_plugin__s2member_pro_payflow_ipns_per_process', min(6, (int)$vars['per_process']), get_defined_vars());
 
 				if(is_array($objs = $wpdb->get_results("SELECT `user_id` AS `ID` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_subscr_gateway' AND `meta_value` = 'paypal' AND `user_id` NOT IN(SELECT `user_id` FROM `".$wpdb->usermeta."` WHERE `meta_key` = '".$wpdb->prefix."s2member_last_status_scan' AND `meta_value` > '".esc_sql($scan_time)."')")))
 				{
