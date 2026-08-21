@@ -265,7 +265,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $lock_option = 'ws_plugin__s2member_pro_fixed_eot_reminders_lock';
             $state_option = 'ws_plugin__s2member_pro_fixed_eot_reminders_state';
             $continuation_hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__continuation';
-            $delivery_option = 's2member_fixed_eot_reminder_delivery';
+            $reminder_state_option = 's2member_eot_reminder_state';
             $meta_key = $wpdb->prefix.'s2member_auto_eot_time';
             $last_meta_key = $wpdb->prefix.'s2member_last_auto_eot_time';
             $timezone = self::site_timezone();
@@ -419,11 +419,11 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                 continue;
                             }
 
-                            $_delivery = get_user_option($delivery_option, $_user->ID);
+                            $_reminder_state = get_user_option($reminder_state_option, $_user->ID);
 
-                            //260820.1924 Delivery state belongs to one exact EOT. A renewed/edited EOT starts a fresh reminder sequence instead of inheriting suppression from the old term.
-                            if (!is_array($_delivery) || empty($_delivery['eot_time']) || (int) $_delivery['eot_time'] !== $_eot_time) {
-                                $_delivery = array('eot_time' => $_eot_time, 'recipients' => array());
+                            //260821.0458 Keep only the state for this exact EOT. The EOT timestamp is the sequence identity, so a renewal/admin edit cannot inherit delivery suppression or retries from the previous term.
+                            if (!is_array($_reminder_state) || count($_reminder_state) !== 1 || !isset($_reminder_state[$_eot_time]) || !is_array($_reminder_state[$_eot_time])) {
+                                $_reminder_state = array($_eot_time => array());
                             }
 
                             //260820.1924 Each recipient is independent. One failed committee/admin copy must not block the member or other recipients, and successful recipients must never be retried.
@@ -436,22 +436,36 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                     break 4;
                                 }
 
-                                $_recipient_key = md5(strtolower(trim($_recipient)));
-                                $_recipient_state = !empty($_delivery['recipients'][$_recipient_key]) && is_array($_delivery['recipients'][$_recipient_key]) ? $_delivery['recipients'][$_recipient_key] : array();
+                                //260821.0535 Normalize only the delivery-state identity; wp_mail() still receives the parsed address unchanged. Case-only recipient changes must not create a second reminder sequence.
+                                $_recipient_key = strtolower(trim($_recipient));
+                                $_recipient_state = !empty($_reminder_state[$_eot_time][$_recipient_key]) && is_array($_reminder_state[$_eot_time][$_recipient_key]) ? $_reminder_state[$_eot_time][$_recipient_key] : array();
+                                $_already_sent = false;
 
-                                //260820.1924 A newer successful reminder supersedes an older missed offset for the same recipient; never send stale reminders back-to-back after an outage.
-                                if (!empty($_recipient_state['latest_sent_target_at']) && (int) $_recipient_state['latest_sent_target_at'] >= $_target_timestamp) {
+                                //260821.0458 Offset branches are chronological relative to the same EOT. A successful equal/newer offset therefore proves this message was delivered already or was superseded by a later sequence message.
+                                foreach ($_recipient_state as $_sent_offset => $_sent_attempts) {
+                                    if (!is_numeric($_sent_offset) || (int) $_sent_offset < $offset || !is_array($_sent_attempts) || !$_sent_attempts) {
+                                        continue;
+                                    }
+                                    $_last_sent_attempt = end($_sent_attempts);
+                                    if (is_array($_last_sent_attempt) && array_key_exists('success', $_last_sent_attempt)) {
+                                        $_already_sent = true;
+                                        break;
+                                    }
+                                }
+                                unset($_sent_offset, $_sent_attempts, $_last_sent_attempt);
+                                if ($_already_sent) {
                                     continue;
                                 }
 
-                                $_offset_state = !empty($_recipient_state['offsets'][(string) $offset]) && is_array($_recipient_state['offsets'][(string) $offset]) ? $_recipient_state['offsets'][(string) $offset] : array();
-                                if (!empty($_offset_state['sent_at'])) {
-                                    continue;
-                                }
-
-                                $_attempts = !empty($_offset_state['attempts']) ? (int) $_offset_state['attempts'] : 0;
+                                $_offset_attempts = !empty($_recipient_state[(string) $offset]) && is_array($_recipient_state[(string) $offset]) ? $_recipient_state[(string) $offset] : array();
+                                $_attempts = count($_offset_attempts);
                                 $_retry_delay = self::fixed_eot_retry_delay($_attempts);
-                                if (!empty($_offset_state['last_attempt_at']) && self::$now < (int) $_offset_state['last_attempt_at'] + $_retry_delay) {
+                                $_last_attempt_at = 0;
+                                if ($_offset_attempts) {
+                                    end($_offset_attempts);
+                                    $_last_attempt_at = (int) key($_offset_attempts);
+                                }
+                                if ($_last_attempt_at && self::$now < $_last_attempt_at + $_retry_delay) {
                                     continue;
                                 }
 
@@ -461,24 +475,16 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                 $mail_total_duration += $last_mail_duration;
 
                                 $_attempts++;
-                                $_offset_state['attempts'] = $_attempts;
-                                $_offset_state['last_attempt_at'] = time();
-                                $_offset_state['last_error_code'] = (string) $_mail_result['error_code'];
-                                $_offset_state['last_error_message'] = (string) $_mail_result['error_message'];
-                                if ($_mail_result['success']) {
-                                    $_offset_state['sent_at'] = time();
-                                    $_recipient_state['latest_sent_target_at'] = $_target_timestamp;
-                                    $_recipient_state['latest_sent_offset'] = $offset;
-                                }
-                                if (empty($_recipient_state['offsets']) || !is_array($_recipient_state['offsets'])) {
-                                    $_recipient_state['offsets'] = array();
-                                }
-                                $_recipient_state['address'] = $_recipient;
-                                $_recipient_state['offsets'][(string) $offset] = $_offset_state;
-                                $_delivery['recipients'][$_recipient_key] = $_recipient_state;
+                                $_attempt_time = time();
+                                $_attempt_result = $_mail_result['success']
+                                    ? array('success' => '')
+                                    : array((string) ($_mail_result['error_code'] ?: 'failure') => (string) ($_mail_result['error_message'] ?: 'wp_mail() returned false.'));
+                                $_offset_attempts[$_attempt_time] = $_attempt_result;
+                                $_recipient_state[(string) $offset] = $_offset_attempts;
+                                $_reminder_state[$_eot_time][$_recipient_key] = $_recipient_state;
 
-                                //260820.1924 Persist after each recipient so a later timeout/fatal cannot resend recipients whose handoff already succeeded.
-                                update_user_option($_user->ID, $delivery_option, $_delivery);
+                                //260821.0458 Persist each compact attempt immediately so a later timeout/fatal cannot duplicate a successful handoff and a failed handoff retains its retry history.
+                                update_user_option($_user->ID, $reminder_state_option, $_reminder_state);
 
                                 $_log_entry = array(
                                     'eot'                       => $_eot,
