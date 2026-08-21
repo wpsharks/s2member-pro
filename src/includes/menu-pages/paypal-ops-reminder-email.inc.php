@@ -89,9 +89,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 			echo '<div class="ws-menu-page-notice ws-menu-page-notice-info">'."\n";
 			echo '<p><strong>EOT Reminder Status: '.esc_html($eot_reminder_status_label).'</strong></p>'."\n";
 			echo '<ul style="margin-bottom:0;">'."\n";
-			echo '<li><strong>Stored EOTs in current reminder window:</strong> '.number_format_i18n((int)$eot_reminder_health['window_eot_count']).'</li>'."\n";
-			echo '<li><strong>Last completed worker:</strong> '.($eot_reminder_health['last_completed_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_completed_at'], time()).' ago') : 'Not recorded yet').'</li>'."\n";
-			echo '<li><strong>Next worker:</strong> '.(!$eot_reminder_health['enabled'] ? 'Disabled' : ($eot_reminder_next_run ? esc_html(($eot_reminder_next_run <= time() ? human_time_diff($eot_reminder_next_run, time()).' overdue' : 'in '.human_time_diff(time(), $eot_reminder_next_run))) : 'Not scheduled')).'</li>'."\n";
+			echo '<li><strong>Users with EOTs in current reminder windows:</strong> '.number_format_i18n((int)$eot_reminder_health['window_eot_count']).'</li>'."\n";
+			echo '<li><strong>Last completed run:</strong> '.($eot_reminder_health['last_completed_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_completed_at'], time()).' ago') : 'Not recorded yet').'</li>'."\n";
+			echo '<li><strong>Next run:</strong> '.(!$eot_reminder_health['enabled'] ? 'Disabled' : ($eot_reminder_next_run ? esc_html(($eot_reminder_next_run <= time() ? human_time_diff($eot_reminder_next_run, time()).' overdue' : 'in '.human_time_diff(time(), $eot_reminder_next_run))) : 'Not scheduled')).'</li>'."\n";
 			echo '<li><strong>Last successful email:</strong> '.($eot_reminder_health['last_success_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_success_at'], time()).' ago') : 'Not recorded yet').'</li>'."\n";
 			echo '<li><strong>Recipients retrying:</strong> '.(!empty($eot_reminder_health['mail_health_dirty']) && empty($eot_reminder_health['active_mail_failures_exact']) ? 'At least ' : '').number_format_i18n((int)$eot_reminder_health['active_mail_failures']).'</li>'."\n";
 
@@ -99,7 +99,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 				{
 					echo '<li><strong>Oldest unresolved failure:</strong> '.($eot_reminder_health['oldest_active_mail_failure_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['oldest_active_mail_failure_at'], time()).' ago') : 'Unknown').'</li>'."\n";
 					echo '<li><strong>Next retry:</strong> '.($eot_reminder_health['next_mail_retry_at'] ? esc_html(((int)$eot_reminder_health['next_mail_retry_at'] <= time() ? 'Due now' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['next_mail_retry_at']))) : 'Pending worker scan').'</li>'."\n";
-					echo '<li><strong>Earliest recovery-window end:</strong> '.($eot_reminder_health['earliest_mail_failure_deadline_at'] ? esc_html(((int)$eot_reminder_health['earliest_mail_failure_deadline_at'] <= time() ? human_time_diff((int)$eot_reminder_health['earliest_mail_failure_deadline_at'], time()).' ago' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['earliest_mail_failure_deadline_at']))) : 'Unknown').'</li>'."\n";
+					echo '<li><strong>Earliest recovery deadline:</strong> '.($eot_reminder_health['earliest_mail_failure_deadline_at'] ? esc_html(((int)$eot_reminder_health['earliest_mail_failure_deadline_at'] <= time() ? human_time_diff((int)$eot_reminder_health['earliest_mail_failure_deadline_at'], time()).' ago' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['earliest_mail_failure_deadline_at']))) : 'Unknown').'</li>'."\n";
 					if(!empty($eot_reminder_health['last_failure_error_code']) || !empty($eot_reminder_health['last_failure_error_message']))
 						echo '<li><strong>Last mail error:</strong> '.esc_html(trim($eot_reminder_health['last_failure_error_code'].($eot_reminder_health['last_failure_error_code'] && $eot_reminder_health['last_failure_error_message'] ? ': ' : '').$eot_reminder_health['last_failure_error_message'])).'</li>'."\n";
 				}
