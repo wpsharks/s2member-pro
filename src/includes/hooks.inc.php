@@ -104,5 +104,10 @@ add_action('ws_plugin__s2member_pro_fixed_eot_reminders__schedule', 'c_ws_plugin
 add_action('ws_plugin__s2member_pro_fixed_eot_reminders__continuation', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_remind_continuation');
 add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_reminders::remind');
 
+//260821.0555 Keep site-wide EOT reminder warnings quiet until automatic recovery is materially at risk; detailed status remains available on the reminder settings panel.
+add_action('admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
+add_action('user_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
+add_action('network_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
+
 add_filter('update_feedback', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches');
 add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro_menu_pages::before_mms_ops_page_hook');

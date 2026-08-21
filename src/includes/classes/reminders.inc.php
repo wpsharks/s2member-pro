@@ -65,6 +65,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             if (!$enabled) {
                 wp_clear_scheduled_hook($hook);
                 wp_clear_scheduled_hook($continuation_hook);
+                if (doing_action('ws_plugin__s2member_after_update_all_options')) {
+                    self::fixed_eot_record_schedule_result(true, true);
+                }
+                delete_transient('ws_plugin__s2member_pro_fixed_eot_reminders_health');
                 return true;
             }
             if (wp_next_scheduled($hook) && wp_get_schedule($hook) === 'every10m') {
@@ -75,7 +79,85 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             }
 
             //260820.1924 A 10-minute heartbeat makes date-sensitive reminders prompt without coupling them back to Auto-EOT; one-off continuations drain unusually large due queues sooner.
-            return (bool) wp_schedule_event(time() + MINUTE_IN_SECONDS, 'every10m', $hook);
+            $scheduled = (bool) wp_schedule_event(time() + MINUTE_IN_SECONDS, 'every10m', $hook);
+            self::fixed_eot_record_schedule_result($scheduled);
+            delete_transient('ws_plugin__s2member_pro_fixed_eot_reminders_health'); //260821.0555 Schedule repair changes the admin-facing health snapshot immediately.
+            return $scheduled;
+        }
+
+        /**
+         * Records only active schedule-repair trouble; healthy requests do not write operational state.
+         *
+         * 260821.0626 `ws_plugin__s2member_pro_fixed_eot_reminders_state` is the non-autoloaded operational
+         * state shared by the worker, scheduler self-healing, mail diagnostics, and admin health reporting.
+         * Fields are added only when relevant and may therefore be absent.
+         *
+         * Run state:
+         * - `last_started_at`, `last_completed_at`, `last_success_at`: Unix timestamps.
+         * - `last_processed`, `last_mail_count`: integer counts from the most recent pass.
+         * - `last_stop_reason`: `complete` or `runtime_budget`.
+         * - `active_run_token`: current worker token; empty after normal cleanup.
+         *
+         * Scheduler health:
+         * - `schedule_failure_started_at`, `last_schedule_failure_at`, `last_schedule_repaired_at`: Unix timestamps.
+         * - `schedule_failure_count`: throttled integer repair-failure count for the current failure period.
+         *
+         * Unresolved-delivery health:
+         * - `mail_health_scanned_at`: Unix timestamp of the last complete aggregate rebuild.
+         * - `mail_health_dirty`: 1 when a newer failure exists than that complete rebuild, otherwise 0.
+         * - `active_mail_failures`: exact unresolved recipient/offset count after a complete pass.
+         * - `oldest_active_mail_failure_at`, `next_mail_retry_at`, `earliest_mail_failure_deadline_at`: Unix timestamps.
+         *
+         * Latest failure diagnostics:
+         * - `last_failure_at`, `last_failure_user_id`, `last_failure_recipient`, `last_failure_offset`.
+         * - `last_failure_target_at`, `last_failure_deadline_at`, `last_failure_error_code`, `last_failure_error_message`.
+         * - `last_failure_phpmailer_exception_code`, `last_failure_phpmailer_error_info`, `last_failure_phpmailer_mailer`.
+         * - `last_failure_phpmailer_from`, `last_failure_phpmailer_from_name`, `last_failure_phpmailer_sender`.
+         * - `last_failure_phpmailer_content_type`, `last_failure_mail_number_in_run`, `last_failure_mail_duration`.
+         * - `last_failure_run_token`.
+         *
+         * @since 260821.0555
+         *
+         * @param bool $success  Whether a repair attempt succeeded.
+         * @param bool $disabled Clear active repair trouble because reminders were explicitly disabled.
+         */
+        protected static function fixed_eot_record_schedule_result($success, $disabled = false)
+        {
+            $state_option = 'ws_plugin__s2member_pro_fixed_eot_reminders_state';
+            $state = get_option($state_option);
+            $state = is_array($state) ? $state : array();
+            $now = time();
+            $changed = false;
+
+            if ($disabled) {
+                foreach (array('schedule_failure_started_at', 'last_schedule_failure_at', 'schedule_failure_count') as $_key) {
+                    if (isset($state[$_key])) {
+                        unset($state[$_key]);
+                        $changed = true;
+                    }
+                }
+            } elseif ($success) {
+                if (!empty($state['schedule_failure_started_at'])) {
+                    $state['last_schedule_repaired_at'] = $now;
+                    unset($state['schedule_failure_started_at'], $state['last_schedule_failure_at'], $state['schedule_failure_count']);
+                    $changed = true;
+                }
+            } else {
+                if (empty($state['schedule_failure_started_at'])) {
+                    $state['schedule_failure_started_at'] = $now;
+                    $changed = true;
+                }
+                //260821.0555 Throttle repeated repair-failure writes on busy sites; the first-failure timestamp remains stable for escalation while the latest evidence is refreshed periodically.
+                if (empty($state['last_schedule_failure_at']) || $now - (int) $state['last_schedule_failure_at'] >= 5 * MINUTE_IN_SECONDS) {
+                    $state['last_schedule_failure_at'] = $now;
+                    $state['schedule_failure_count'] = !empty($state['schedule_failure_count']) ? (int) $state['schedule_failure_count'] + 1 : 1;
+                    $changed = true;
+                }
+            }
+
+            if ($changed) {
+                update_option($state_option, $state, false);
+            }
         }
 
         /**
@@ -121,6 +203,321 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 return HOUR_IN_SECONDS;
             }
             return 3 * HOUR_IN_SECONDS;
+        }
+
+        /**
+         * Adds one unresolved recipient/offset to the current pass' mail-health summary.
+         *
+         * The compact user state remains authoritative for individual attempts. This aggregate is intentionally
+         * rebuilt only by a complete reminder pass, so a runtime-limited pass cannot falsely declare an unseen
+         * failed recipient recovered.
+         *
+         * @since 260821.0555
+         *
+         * @param array             $summary    Current pass summary (by reference).
+         * @param array             $attempts   Compact attempts for one recipient/offset.
+         * @param DateTimeImmutable $target_day Reminder target day in the site timezone.
+         * @param int               $late_days  Additional eligible calendar days after the target day.
+         */
+        protected static function fixed_eot_add_pending_failure(&$summary, $attempts, $target_day, $late_days)
+        {
+            if (!is_array($attempts) || !$attempts) {
+                return;
+            }
+
+            reset($attempts);
+            $first_attempt_at = (int) key($attempts);
+            end($attempts);
+            $last_attempt_at = (int) key($attempts);
+            $retry_at = $last_attempt_at + self::fixed_eot_retry_delay(count($attempts));
+            $deadline_at = $target_day->modify('+'.(max(0, (int) $late_days) + 1).' days')->getTimestamp();
+
+            $summary['count']++;
+            if (empty($summary['oldest_at']) || $first_attempt_at < $summary['oldest_at']) {
+                $summary['oldest_at'] = $first_attempt_at;
+            }
+            if (empty($summary['next_retry_at']) || $retry_at < $summary['next_retry_at']) {
+                $summary['next_retry_at'] = $retry_at;
+            }
+            if (empty($summary['earliest_deadline_at']) || $deadline_at < $summary['earliest_deadline_at']) {
+                $summary['earliest_deadline_at'] = $deadline_at;
+            }
+        }
+
+        /**
+         * Counts stored EOT owners whose timestamps fall inside any currently configured reminder window.
+         *
+         * This is a lightweight health/risk signal, not a delivery queue count: recipient filters, refund provenance,
+         * and final per-user validation still happen in the worker before any email can be sent.
+         *
+         * @since 260821.0555
+         *
+         * @param array $days      Configured reminder offsets.
+         * @param int   $late_days Additional eligible calendar days after each target day.
+         *
+         * @return int Distinct users with a stored EOT in at least one current reminder window.
+         */
+        protected static function fixed_eot_reminder_window_count($days, $late_days)
+        {
+            global $wpdb;
+
+            if (!$days) {
+                return 0;
+            }
+
+            $timezone = self::site_timezone();
+            $today = new DateTimeImmutable('today', $timezone);
+            $meta_key = $wpdb->prefix.'s2member_auto_eot_time';
+            $last_meta_key = $wpdb->prefix.'s2member_last_auto_eot_time';
+            $conditions = array();
+            $args = array();
+
+            foreach ($days as $_day) {
+                $offset = (int) $_day;
+                $eot_start_day = $today->modify('-'.$late_days.' days')->modify(($offset > 0 ? '-' : '+').abs($offset).' days');
+                $eot_end_day = $today->modify('+1 day')->modify(($offset > 0 ? '-' : '+').abs($offset).' days');
+
+                if ($offset + $late_days >= 0) {
+                    $conditions[] = "(`meta_key` IN (%s, %s) AND CAST(`meta_value` AS UNSIGNED) >= %d AND CAST(`meta_value` AS UNSIGNED) < %d)";
+                    array_push($args, $meta_key, $last_meta_key, $eot_start_day->getTimestamp(), $eot_end_day->getTimestamp());
+                } else {
+                    $conditions[] = "(`meta_key` = %s AND CAST(`meta_value` AS UNSIGNED) >= %d AND CAST(`meta_value` AS UNSIGNED) < %d)";
+                    array_push($args, $meta_key, $eot_start_day->getTimestamp(), $eot_end_day->getTimestamp());
+                }
+            }
+
+            if (!$conditions) {
+                return 0;
+            }
+
+            return (int) $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(DISTINCT `user_id`) FROM `".$wpdb->usermeta."` WHERE ".implode(' OR ', $conditions),
+                $args
+            ));
+        }
+
+        /**
+         * Returns a cached operational-health snapshot for stored-EOT reminders.
+         *
+         * Scheduler warnings are deliberately patient because WP-Cron is traffic-driven. A transient mail failure
+         * is reported as Retrying first; site-wide warnings are reserved for prolonged scheduler failures or
+         * unresolved deliveries that are becoming materially unsafe.
+         *
+         * @since 260821.0555
+         *
+         * @param bool $force_refresh Force a fresh schedule/window check.
+         *
+         * @return array Reminder health information for diagnostics and admin UI.
+         */
+        public static function fixed_eot_reminder_health($force_refresh = false)
+        {
+            $cache_key = 'ws_plugin__s2member_pro_fixed_eot_reminders_health';
+            if (!$force_refresh && is_array($health = get_transient($cache_key))) {
+                return $health;
+            }
+
+            $options = &$GLOBALS['WS_PLUGIN__']['s2member']['o'];
+            $now = time();
+            $enabled = !empty($options['pro_eot_reminder_email_enable']);
+            $days = isset($options['pro_eot_reminder_email_days'][0])
+                ? array_values(array_unique(array_map('intval', preg_split('/[;,\s]+/', trim($options['pro_eot_reminder_email_days']), -1, PREG_SPLIT_NO_EMPTY))))
+                : array();
+            rsort($days, SORT_NUMERIC);
+            $late_days = max(0, (int) apply_filters('ws_plugin__s2member_pro_fixed_eot_reminders_late_days', 1, get_defined_vars()));
+            $config_valid = !$enabled || ($days
+                && is_object(json_decode($options['pro_eot_reminder_email_recipients']))
+                && is_object(json_decode($options['pro_eot_reminder_email_subject']))
+                && is_object(json_decode($options['pro_eot_reminder_email_message']))
+                && !empty($options['reg_email_from_name']) && !empty($options['reg_email_from_email']));
+
+            $state = get_option('ws_plugin__s2member_pro_fixed_eot_reminders_state');
+            $state = is_array($state) ? $state : array();
+            $lock = get_option('ws_plugin__s2member_pro_fixed_eot_reminders_lock');
+            $lock = is_array($lock) ? $lock : array();
+            $hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__schedule';
+            $continuation_hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__continuation';
+            $recurring_at = $enabled ? wp_next_scheduled($hook) : false;
+            $continuation_at = $enabled ? wp_next_scheduled($continuation_hook) : false;
+            $recurrence = $recurring_at ? wp_get_schedule($hook) : '';
+            $window_eot_count = ($enabled && $days) ? self::fixed_eot_reminder_window_count($days, $late_days) : 0;
+
+            //260821.0555 Thresholds favor automatic recovery over alarming the owner; one filter keeps site-specific policies possible without scattering timing hooks through the health logic.
+            $thresholds = apply_filters('ws_plugin__s2member_pro_eot_reminder_health_thresholds', array(
+                'scheduler_attention_after'   => HOUR_IN_SECONDS,
+                'scheduler_due_notice_after'  => 12 * HOUR_IN_SECONDS,
+                'scheduler_idle_notice_after' => DAY_IN_SECONDS,
+                'mail_attention_after'        => HOUR_IN_SECONDS,
+                'mail_notice_after'           => 12 * HOUR_IN_SECONDS,
+                'mail_deadline_notice_before' => 6 * HOUR_IN_SECONDS,
+            ), get_defined_vars());
+            $thresholds = is_array($thresholds) ? $thresholds : array();
+            foreach (array('scheduler_attention_after', 'scheduler_due_notice_after', 'scheduler_idle_notice_after', 'mail_attention_after', 'mail_notice_after', 'mail_deadline_notice_before') as $_threshold) {
+                $thresholds[$_threshold] = isset($thresholds[$_threshold]) ? max(0, (int) $thresholds[$_threshold]) : 0;
+            }
+            unset($_threshold);
+
+            $issues = array();
+            $critical = false;
+            $attention = false;
+            $delayed = false;
+            $retrying = false;
+            $scheduler_issue_since = 0;
+            $scheduler_issue_age = 0;
+
+            if ($enabled && !$config_valid) {
+                $issues['configuration_incomplete'] = true;
+                $attention = true;
+            }
+
+            if ($enabled) {
+                if (!$recurring_at || $recurrence !== 'every10m') {
+                    $issues['scheduler_missing'] = true;
+                    $delayed = true;
+                    $scheduler_issue_since = !empty($state['schedule_failure_started_at'])
+                        ? (int) $state['schedule_failure_started_at']
+                        : (!empty($state['last_completed_at']) ? (int) $state['last_completed_at'] : (!empty($state['last_started_at']) ? (int) $state['last_started_at'] : $now));
+                } elseif ((int) $recurring_at < $now) {
+                    $scheduler_issue_since = (int) $recurring_at;
+                    $scheduler_issue_age = max(0, $now - $scheduler_issue_since);
+                    if ($scheduler_issue_age >= $thresholds['scheduler_attention_after']) {
+                        $issues['scheduler_overdue'] = true;
+                        $attention = true;
+                    }
+                }
+
+                if ($scheduler_issue_since && !$scheduler_issue_age) {
+                    $scheduler_issue_age = max(0, $now - $scheduler_issue_since);
+                }
+                if ($scheduler_issue_since && $scheduler_issue_age >= $thresholds['scheduler_attention_after']) {
+                    $attention = true;
+                }
+                if ($scheduler_issue_since) {
+                    $critical_after = $window_eot_count ? $thresholds['scheduler_due_notice_after'] : $thresholds['scheduler_idle_notice_after'];
+                    if ($critical_after && $scheduler_issue_age >= $critical_after) {
+                        $issues['scheduler_persistent'] = true;
+                        $critical = true;
+                    }
+                }
+            }
+
+            $active_mail_failures = !empty($state['active_mail_failures']) ? (int) $state['active_mail_failures'] : 0;
+            $mail_health_dirty = !empty($state['mail_health_dirty']);
+            $oldest_mail_failure_at = !empty($state['oldest_active_mail_failure_at']) ? (int) $state['oldest_active_mail_failure_at'] : 0;
+            $next_mail_retry_at = !empty($state['next_mail_retry_at']) ? (int) $state['next_mail_retry_at'] : 0;
+            $earliest_mail_deadline_at = !empty($state['earliest_mail_failure_deadline_at']) ? (int) $state['earliest_mail_failure_deadline_at'] : 0;
+            $display_mail_failures = $active_mail_failures;
+
+            //260821.0555 A runtime-limited pass may discover a new failure before it can rebuild the complete aggregate. Show that as retrying, but do not raise a global warning from an incomplete count.
+            if ($mail_health_dirty && !empty($state['last_failure_at'])) {
+                $display_mail_failures = max(1, $display_mail_failures);
+                if (!$oldest_mail_failure_at || (int) $state['last_failure_at'] < $oldest_mail_failure_at) {
+                    $oldest_mail_failure_at = (int) $state['last_failure_at'];
+                }
+                if (!empty($state['last_failure_deadline_at']) && (!$earliest_mail_deadline_at || (int) $state['last_failure_deadline_at'] < $earliest_mail_deadline_at)) {
+                    $earliest_mail_deadline_at = (int) $state['last_failure_deadline_at'];
+                }
+            }
+
+            $mail_failure_age = $oldest_mail_failure_at ? max(0, $now - $oldest_mail_failure_at) : 0;
+            $mail_deadline_remaining = $earliest_mail_deadline_at ? $earliest_mail_deadline_at - $now : 0;
+            if ($enabled && $display_mail_failures) {
+                $retrying = true;
+                if ($mail_failure_age >= $thresholds['mail_attention_after']) {
+                    $issues['mail_failure_delayed'] = true;
+                    $attention = true;
+                }
+
+                //260821.0555 Only a complete pass can make an unresolved-delivery warning global; this prevents an interrupted scan from overstating one newly observed failure.
+                if ($active_mail_failures && !$mail_health_dirty) {
+                    if ($mail_failure_age >= $thresholds['mail_notice_after']) {
+                        $issues['mail_failure_persistent'] = true;
+                        $critical = true;
+                    }
+                    //260821.0555 Even near the recovery deadline, one fresh wp_mail() failure is not enough for a global warning; allow the early retry sequence to prove the problem is persistent first.
+                    if ($earliest_mail_deadline_at && $mail_failure_age >= $thresholds['mail_attention_after']
+                        && $mail_deadline_remaining <= $thresholds['mail_deadline_notice_before']) {
+                        $issues['mail_recovery_window'] = true;
+                        $critical = true;
+                    }
+                }
+            }
+
+            $status = !$enabled ? 'disabled' : ($critical ? 'error' : ($attention ? 'attention' : ($retrying ? 'retrying' : ($delayed ? 'delayed' : 'healthy'))));
+            $health = array(
+                'generated_at'                      => $now,
+                'enabled'                           => $enabled ? 1 : 0,
+                'config_valid'                      => $config_valid ? 1 : 0,
+                'status'                            => $status,
+                'needs_admin_notice'                => $critical ? 1 : 0,
+                'issues'                            => array_keys($issues),
+                'window_eot_count'                  => $window_eot_count,
+                'recurring_at'                      => $recurring_at ? (int) $recurring_at : 0,
+                'continuation_at'                   => $continuation_at ? (int) $continuation_at : 0,
+                'is_running'                        => !empty($lock['heartbeat_at']) ? 1 : 0,
+                'scheduler_issue_since'             => $scheduler_issue_since,
+                'scheduler_issue_age'               => $scheduler_issue_age,
+                'schedule_failure_started_at'       => !empty($state['schedule_failure_started_at']) ? (int) $state['schedule_failure_started_at'] : 0,
+                'last_schedule_failure_at'          => !empty($state['last_schedule_failure_at']) ? (int) $state['last_schedule_failure_at'] : 0,
+                'schedule_failure_count'            => !empty($state['schedule_failure_count']) ? (int) $state['schedule_failure_count'] : 0,
+                'last_schedule_repaired_at'         => !empty($state['last_schedule_repaired_at']) ? (int) $state['last_schedule_repaired_at'] : 0,
+                'last_started_at'                   => !empty($state['last_started_at']) ? (int) $state['last_started_at'] : 0,
+                'last_completed_at'                 => !empty($state['last_completed_at']) ? (int) $state['last_completed_at'] : 0,
+                'last_success_at'                   => !empty($state['last_success_at']) ? (int) $state['last_success_at'] : 0,
+                'last_processed'                    => isset($state['last_processed']) ? (int) $state['last_processed'] : 0,
+                'last_mail_count'                   => isset($state['last_mail_count']) ? (int) $state['last_mail_count'] : 0,
+                'last_stop_reason'                  => !empty($state['last_stop_reason']) ? (string) $state['last_stop_reason'] : '',
+                'mail_health_scanned_at'            => !empty($state['mail_health_scanned_at']) ? (int) $state['mail_health_scanned_at'] : 0,
+                'mail_health_dirty'                 => $mail_health_dirty ? 1 : 0,
+                'active_mail_failures'              => $display_mail_failures,
+                'active_mail_failures_exact'        => $mail_health_dirty ? 0 : 1,
+                'oldest_active_mail_failure_at'     => $oldest_mail_failure_at,
+                'next_mail_retry_at'                => $next_mail_retry_at,
+                'earliest_mail_failure_deadline_at' => $earliest_mail_deadline_at,
+                'mail_failure_age'                  => $mail_failure_age,
+                'mail_deadline_remaining'           => $mail_deadline_remaining,
+                'last_failure_at'                   => !empty($state['last_failure_at']) ? (int) $state['last_failure_at'] : 0,
+                'last_failure_user_id'              => !empty($state['last_failure_user_id']) ? (int) $state['last_failure_user_id'] : 0,
+                'last_failure_recipient'            => !empty($state['last_failure_recipient']) ? (string) $state['last_failure_recipient'] : '',
+                'last_failure_error_code'           => !empty($state['last_failure_error_code']) ? (string) $state['last_failure_error_code'] : '',
+                'last_failure_error_message'        => !empty($state['last_failure_error_message']) ? (string) $state['last_failure_error_message'] : '',
+                'thresholds'                        => $thresholds,
+            );
+            $health = apply_filters('ws_plugin__s2member_pro_fixed_eot_reminder_health', $health, get_defined_vars());
+
+            set_transient($cache_key, $health, 5 * MINUTE_IN_SECONDS);
+            return $health;
+        }
+
+        /**
+         * Displays a site-wide warning only when EOT reminder recovery has become materially unsafe.
+         *
+         * @since 260821.0555
+         */
+        public static function fixed_eot_reminder_admin_notice()
+        {
+            if (!is_admin() || !current_user_can('manage_options')) {
+                return;
+            }
+
+            $health = self::fixed_eot_reminder_health();
+            if (empty($health['needs_admin_notice'])) {
+                return;
+            }
+
+            $reasons = array();
+            if (in_array('scheduler_persistent', $health['issues'], true)) {
+                $reasons[] = 'The EOT reminder scheduler has been unhealthy for '.human_time_diff($health['scheduler_issue_since'], time()).'.';
+                if (!empty($health['window_eot_count'])) {
+                    $reasons[] = number_format_i18n($health['window_eot_count']).' user'.($health['window_eot_count'] === 1 ? ' has' : 's have').' an EOT in a current reminder window.';
+                }
+            }
+            if (in_array('mail_failure_persistent', $health['issues'], true) || in_array('mail_recovery_window', $health['issues'], true)) {
+                $reasons[] = number_format_i18n($health['active_mail_failures']).' reminder recipient'.($health['active_mail_failures'] === 1 ? ' is' : 's are').' still failing after automatic retries.';
+            }
+
+            $settings_url = admin_url('/admin.php?page=ws-plugin--s2member-paypal-ops').'#ws-plugin--s2member-pro-eot-reminder-email-enable';
+            $notice = '<strong>s2Member EOT reminders need attention.</strong> '.esc_html(implode(' ', $reasons)).' <a href="'.esc_url($settings_url).'">Review EOT reminder status</a>.';
+            c_ws_plugin__s2member_admin_notices::display_admin_notice($notice, true);
         }
 
         /**
@@ -243,6 +640,37 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          * recover a message without turning old reminder sequences into a burst. Recipient-specific delivery
          * state prevents successful recipients from receiving duplicates while failed recipients retry with backoff.
          *
+         * 260821.0626 `ws_plugin__s2member_pro_fixed_eot_reminders_lock` is a short-lived non-autoloaded option:
+         * `array('token' => string, 'heartbeat_at' => Unix timestamp, 'processed' => int)`. It exists only while a
+         * worker owns the lock and is deleted after normal cleanup; a stale heartbeat identifies an abandoned pass.
+         *
+         * `s2member_eot_reminder_state` is per-user delivery-control state, not lifetime mail history. The outer array
+         * intentionally contains exactly one EOT branch; the EOT timestamp is the sequence identity, not a history
+         * of multiple membership terms. A changed EOT replaces that branch completely.
+         *
+         * Recipient keys are lowercase identities used only for deduplication; wp_mail() receives the parsed address
+         * unchanged. Offset keys are integer calendar-day offsets from EOT (e.g., -10, 0, 5). Attempt keys are Unix
+         * timestamps, and every attempt contains exactly one result-code/message pair:
+         *
+         * The stored usermeta value is a one-element associative array. Its single top-level key is the EOT Unix
+         * timestamp that identifies the reminder sequence:
+         *
+         *     array(
+         *         $eot_time => array( // Exactly one top-level EOT key.
+         *             $normalized_recipient_email => array(
+         *                 $offset_days => array(
+         *                     $attempt_time => array(
+         *                         $result_code => $result_message,
+         *                     ),
+         *                 ),
+         *             ),
+         *         ),
+         *     )
+         *
+         * A successful attempt uses `array('success' => '')`; a failed attempt uses the mail error code as the key
+         * and its error message as the value. Successful offsets remain recorded so later worker passes cannot resend
+         * them, while failed attempts remain available for retry timing and health diagnostics.
+         *
          * @since 260820.1924
          *
          * @param bool $is_continuation Internal one-off continuation of a runtime-limited pass.
@@ -310,6 +738,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $last_mail_duration = 0.0;
             $runtime_exhausted = false;
             $last_heartbeat = microtime(true);
+            $pending_failure_summary = array('count' => 0, 'oldest_at' => 0, 'next_retry_at' => 0, 'earliest_deadline_at' => 0);
 
             $email_configs_were_on = c_ws_plugin__s2member_email_configs::email_config_status();
             c_ws_plugin__s2member_email_configs::email_config();
@@ -427,6 +856,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                             }
 
                             //260820.1924 Each recipient is independent. One failed committee/admin copy must not block the member or other recipients, and successful recipients must never be retried.
+                            $_recipient_keys_seen = array();
                             foreach (c_ws_plugin__s2member_utils_strings::parse_emails($_recipients) as $_recipient) {
                                 $remaining_runtime = $deadline - microtime(true);
                                 $average_mail_duration = $mail_count ? $mail_total_duration / $mail_count : 0.0;
@@ -438,22 +868,31 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
                                 //260821.0535 Normalize only the delivery-state identity; wp_mail() still receives the parsed address unchanged. Case-only recipient changes must not create a second reminder sequence.
                                 $_recipient_key = strtolower(trim($_recipient));
+                                if (isset($_recipient_keys_seen[$_recipient_key])) {
+                                    continue;
+                                }
+                                $_recipient_keys_seen[$_recipient_key] = true; //260821.0555 Keep both delivery and retry-health counts recipient-unique if the same address is configured twice with case differences.
                                 $_recipient_state = !empty($_reminder_state[$_eot_time][$_recipient_key]) && is_array($_reminder_state[$_eot_time][$_recipient_key]) ? $_reminder_state[$_eot_time][$_recipient_key] : array();
-                                $_already_sent = false;
+                                $_already_delivered = false;
+                                $_superseded = false;
 
-                                //260821.0458 Offset branches are chronological relative to the same EOT. A successful equal/newer offset therefore proves this message was delivered already or was superseded by a later sequence message.
+                                //260821.0555 Once a newer sequence message has been attempted, an older missed message stays superseded even if that newer handoff failed; retry the current message instead of falling back to stale copy.
                                 foreach ($_recipient_state as $_sent_offset => $_sent_attempts) {
                                     if (!is_numeric($_sent_offset) || (int) $_sent_offset < $offset || !is_array($_sent_attempts) || !$_sent_attempts) {
                                         continue;
                                     }
+                                    if ((int) $_sent_offset > $offset) {
+                                        $_superseded = true;
+                                        break;
+                                    }
                                     $_last_sent_attempt = end($_sent_attempts);
                                     if (is_array($_last_sent_attempt) && array_key_exists('success', $_last_sent_attempt)) {
-                                        $_already_sent = true;
+                                        $_already_delivered = true;
                                         break;
                                     }
                                 }
                                 unset($_sent_offset, $_sent_attempts, $_last_sent_attempt);
-                                if ($_already_sent) {
+                                if ($_superseded || $_already_delivered) {
                                     continue;
                                 }
 
@@ -466,6 +905,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                     $_last_attempt_at = (int) key($_offset_attempts);
                                 }
                                 if ($_last_attempt_at && self::$now < $_last_attempt_at + $_retry_delay) {
+                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days);
                                     continue;
                                 }
 
@@ -485,6 +925,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
                                 //260821.0458 Persist each compact attempt immediately so a later timeout/fatal cannot duplicate a successful handoff and a failed handoff retains its retry history.
                                 update_user_option($_user->ID, $reminder_state_option, $_reminder_state);
+                                if (!$_mail_result['success']) {
+                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days);
+                                }
 
                                 $_log_entry = array(
                                     'eot'                       => $_eot,
@@ -528,11 +971,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                 $state = is_array($state) ? $state : array();
                                 if ($_mail_result['success']) {
                                     $state['last_success_at'] = time();
-                                    $state['consecutive_mail_failures'] = 0;
                                 } else {
                                     $state['last_failure_at'] = time();
                                     $state['last_failure_user_id'] = $_user->ID;
                                     $state['last_failure_recipient'] = $_recipient;
+                                    $state['last_failure_offset'] = $offset;
+                                    $state['last_failure_target_at'] = $_target_timestamp;
+                                    $state['last_failure_deadline_at'] = $_target_day->modify('+'.($late_days + 1).' days')->getTimestamp();
                                     $state['last_failure_error_code'] = $_mail_result['error_code'];
                                     $state['last_failure_error_message'] = $_mail_result['error_message'];
                                     $state['last_failure_phpmailer_exception_code'] = $_mail_result['phpmailer_exception_code'];
@@ -545,7 +990,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                     $state['last_failure_mail_number_in_run'] = $mail_count;
                                     $state['last_failure_mail_duration'] = $_mail_result['duration'];
                                     $state['last_failure_run_token'] = $run_token;
-                                    $state['consecutive_mail_failures'] = !empty($state['consecutive_mail_failures']) ? (int) $state['consecutive_mail_failures'] + 1 : 1;
+                                    $state['mail_health_dirty'] = 1; //260821.0555 A full pass will rebuild exact unresolved-recipient counts; until then health must not assume an unrelated success resolved this failure.
                                 }
                                 update_option($state_option, $state, false);
                             }
@@ -579,8 +1024,20 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $state['last_mail_count'] = $mail_count;
             $state['last_stop_reason'] = $runtime_exhausted ? 'runtime_budget' : 'complete';
             $state['active_run_token'] = '';
+
+            //260821.0555 Only normal completion has inspected every currently eligible candidate, so only a complete pass may replace the aggregate unresolved-delivery health state.
+            if (!$runtime_exhausted) {
+                $state['mail_health_scanned_at'] = time();
+                $state['mail_health_dirty'] = 0;
+                $state['active_mail_failures'] = (int) $pending_failure_summary['count'];
+                $state['oldest_active_mail_failure_at'] = (int) $pending_failure_summary['oldest_at'];
+                $state['next_mail_retry_at'] = (int) $pending_failure_summary['next_retry_at'];
+                $state['earliest_mail_failure_deadline_at'] = (int) $pending_failure_summary['earliest_deadline_at'];
+            }
+            unset($state['consecutive_mail_failures']);
             update_option($state_option, $state, false);
             delete_option($lock_option);
+            delete_transient('ws_plugin__s2member_pro_fixed_eot_reminders_health');
 
             if ($runtime_exhausted) {
                 //260820.1924 Do not wait for the next 10-minute heartbeat when due work remains; continue soon, while the recipient/EOT state keeps the continuation idempotent.
