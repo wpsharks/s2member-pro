@@ -805,6 +805,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                             if (!$_user->ID) {
                                 continue;
                             }
+                            //260822.0653 "Delete" now preserves accounts in Pending Deletion; archived EOT history is for administration, not a renewal-reminder sequence for an account intentionally awaiting deletion.
+                            if (in_array('s2member_pending_deletion', (array) $_user->roles, true)) {
+                                continue;
+                            }
 
                             //260821.0057 Refund/reversal EOTs terminate access for a payment exception, not a normal renewal opportunity. Match details to this exact EOT so stale provenance cannot suppress a later legitimate reminder sequence.
                             $_eot_details_option = (string) $current_eot->meta_key === $last_meta_key ? 's2member_last_auto_eot_details' : 's2member_auto_eot_details';
@@ -1116,6 +1120,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             foreach ($user_ids as $_user_id) {
                 $_eot = $_day = $_recipients = $_subject = $_message = null;
                 if (!($_user = new WP_User($_user_id)) || !$_user->ID) {
+                    continue;
+                }
+                //260822.0653 Pending Deletion preserves gateway metadata for administrator review; do not mistake that retained metadata for an active subscription that should receive NPT reminders.
+                if (in_array('s2member_pending_deletion', (array) $_user->roles, true)) {
                     continue;
                 }
 
