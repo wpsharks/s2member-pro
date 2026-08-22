@@ -852,12 +852,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '</div>'."\n";
 
-			echo '<div class="ws-menu-page-group" title="Automatic EOT Behavior">'."\n";
+			echo '<div class="ws-menu-page-group" title="Automatic End-of-Term Behavior">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-eot-behavior-section">'."\n";
-			echo '<h3>Stripe EOT Behavior (required, please choose)</h3>'."\n";
-			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to a Free Subscriber whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member demotes them to a Free Subscriber, so they will no longer have Member Level Access to your site. However, in some cases, you may prefer to have Customer accounts deleted completely, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
-			echo '<p>Your Stripe Webhook (aka: IPN) integration will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel/delete a Customer\'s Subscription through Stripe, s2Member will eventually be notified. The account for that Customer will either be demoted to a Free Subscriber, or deleted automatically (based on your configuration). ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
+			echo '<h3>Stripe End-of-Term Behavior (required, please choose)</h3>'."\n";
+			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to a Free Subscriber whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member demotes them to a Free Subscriber, so they will no longer have Member Level Access to your site. However, in some cases, you may prefer to have Customer accounts moved to Pending Deletion for administrator review, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
+			echo '<p>Your Stripe Webhook (aka: IPN) integration will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel/delete a Customer\'s Subscription through Stripe, s2Member will eventually be notified. The account for that Customer will either be demoted to a Free Subscriber, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
 
 			//260821.0700 Mirror the shared Auto-EOT health/runtime controls anywhere these global settings are exposed; scheduler trouble must not blank the saved mode.
 			$auto_eot_health = c_ws_plugin__s2member_auto_eots::auto_eot_system_health(TRUE);
@@ -865,7 +865,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			$auto_eot_mode = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"];
 			$auto_eot_runtime_target = c_ws_plugin__s2member_auto_eots::auto_eot_system_runtime_budget($auto_eot_mode === '2');
 			$php_execution_limit = (int)ini_get('max_execution_time');
-			$auto_eot_status_labels = array('healthy' => 'Healthy', 'attention' => 'Attention', 'error' => 'Needs attention', 'disabled' => 'Disabled');
+			$auto_eot_status_labels = array('healthy' => 'Healthy', 'catching_up' => 'Catching up', 'attention' => 'Attention', 'error' => 'Needs attention', 'disabled' => 'Disabled');
 			$auto_eot_status_label = isset($auto_eot_status_labels[$auto_eot_health['status']]) ? $auto_eot_status_labels[$auto_eot_health['status']] : ucfirst($auto_eot_health['status']);
 
 			$auto_eot_next_run = 0;
@@ -977,7 +977,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 
 			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-membership-eot-behavior">'."\n";
-			echo 'Membership EOT Behavior (Demote or Delete)?'."\n";
+			echo 'Membership End-of-Term Behavior (Demote or Delete)?'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -987,8 +987,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_membership_eot_behavior" id="ws-plugin--s2member-membership-eot-behavior">'."\n";
 			echo '<option value="demote"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['membership_eot_behavior'] === "demote") ? ' selected="selected"' : '').'>Demote (convert them to a Free Subscriber)</option>'."\n";
-			echo '<option value="delete"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['membership_eot_behavior'] === "delete") ? ' selected="selected"' : '').'>Delete (erase their account completely)</option>'."\n";
-			echo '</select>'."\n";
+			echo '<option value="delete"'.(($GLOBALS['WS_PLUGIN__']['s2member']['o']['membership_eot_behavior'] === "delete") ? ' selected="selected"' : '').'>Delete</option>'."\n";
+			echo '</select><br />'."\n";
+			//260822.0614 Keep the stored `delete` value for compatibility; irreversible deletion is an explicit developer opt-in rather than the product default.
+			echo '<em>Delete removes s2Member membership access and moves the account to the <strong>Pending Deletion</strong> role for administrator review. To restore historical automatic irreversible deletion, a developer must explicitly allow it with the <code>ws_plugin__s2member_allow_eot_user_deletion</code> filter.</em>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
