@@ -50,7 +50,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-eot-reminder-email-section">'."\n";
 			echo '<h3>EOT Renewal/Reminder Emails (optional, for reminding customers who have an EOT Time)</h3>'."\n";
-			echo '<p>The <strong>primary</strong> purpose of this email is to remind a customer that they will soon lose access to what they paid for. You may customize this further by providing details that are specifically geared to your site. Keep in mind that some of your customers may not have an EOT Time; i.e., if you don\'t require a recurring payment or you\'re not selling fixed-term access, then a customer\'s account never expires. Thus, they will have no EOT Time. This email is not going to be sent to those customers. See also: <a href="https://s2member.com/kb-article/when-is-an-eot-time-set-for-each-user/" target="_blank">When is an EOT Time set for each user?</a></p>'."\n";
+			echo '<p>The <strong>primary</strong> purpose of this email is to remind a customer that they will soon lose access to what they paid for. These reminders use an EOT Time already stored for the user; an EOT Time is not the same as a payment gateway\'s Next Payment Time (NPT). With an active recurring subscription, an EOT often is not known or set until the subscription is actually ending, so a reminder before EOT can only be sent when a future EOT Time has already been established. Users with no EOT Time are not sent these reminders. See also: <a href="https://s2member.com/kb-article/when-is-an-eot-time-set-for-each-user/" target="_blank">When is an EOT Time set for each user?</a></p>'."\n";
 
 			//echo '<p><em class="ws-menu-page-bright-hilite">* The email configuration below is universally applied to all Payment Gateway integrations. [ <a href="#" onclick="alert(\'This configuration panel may ALSO appear under (s2Member → PayPal Options). Feel free to configure this email here; but please remember that this configuration is applied universally (i.e., SHARED) among all Payment Gateways integrated with s2Member.\'); return false;">?</a> ]</em></p>'."\n";
 
@@ -86,32 +86,30 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 			$eot_reminder_next_run = $_scheduled ? min($_scheduled) : 0;
 			unset($_scheduled);
 
-			echo '<div class="ws-menu-page-notice ws-menu-page-notice-info">'."\n";
-			echo '<p><strong>EOT Reminder Status: '.esc_html($eot_reminder_status_label).'</strong></p>'."\n";
-			echo '<ul style="margin-bottom:0;">'."\n";
-			echo '<li><strong>Users with EOTs in current reminder windows:</strong> '.number_format_i18n((int)$eot_reminder_health['window_eot_count']).'</li>'."\n";
-			echo '<li><strong>Last completed run:</strong> '.($eot_reminder_health['last_completed_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_completed_at'], time()).' ago') : 'Not recorded yet').'</li>'."\n";
-			echo '<li><strong>Next run:</strong> '.(!$eot_reminder_health['enabled'] ? 'Disabled' : ($eot_reminder_next_run ? esc_html(($eot_reminder_next_run <= time() ? human_time_diff($eot_reminder_next_run, time()).' overdue' : 'in '.human_time_diff(time(), $eot_reminder_next_run))) : 'Not scheduled')).'</li>'."\n";
-			echo '<li><strong>Last successful email:</strong> '.($eot_reminder_health['last_success_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_success_at'], time()).' ago') : 'Not recorded yet').'</li>'."\n";
-			echo '<li><strong>Recipients retrying:</strong> '.(!empty($eot_reminder_health['mail_health_dirty']) && empty($eot_reminder_health['active_mail_failures_exact']) ? 'At least ' : '').number_format_i18n((int)$eot_reminder_health['active_mail_failures']).'</li>'."\n";
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+			echo '<h3>EOT Reminder Status: <span class="ws-plugin--s2member-status-light ws-plugin--s2member-status-light-'.esc_attr($eot_reminder_health['status']).'" aria-hidden="true"></span>'.esc_html($eot_reminder_status_label).'</h3>'."\n";
+			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";
+			echo '<tr><th scope="row">Users with EOTs in current reminder windows:</th><td>'.number_format_i18n((int)$eot_reminder_health['window_eot_count']).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Last completed run:</th><td>'.($eot_reminder_health['last_completed_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_completed_at'], time()).' ago') : 'Not recorded yet').'</td></tr>'."\n";
+			echo '<tr><th scope="row">Next run:</th><td>'.(!$eot_reminder_health['enabled'] ? 'Disabled' : ($eot_reminder_next_run ? esc_html(($eot_reminder_next_run <= time() ? human_time_diff($eot_reminder_next_run, time()).' overdue' : 'in '.human_time_diff(time(), $eot_reminder_next_run))) : 'Not scheduled')).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Last successful email:</th><td>'.($eot_reminder_health['last_success_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['last_success_at'], time()).' ago') : 'Not recorded yet').'</td></tr>'."\n";
+			echo '<tr><th scope="row">Recipients retrying:</th><td>'.(!empty($eot_reminder_health['mail_health_dirty']) && empty($eot_reminder_health['active_mail_failures_exact']) ? 'At least ' : '').number_format_i18n((int)$eot_reminder_health['active_mail_failures']).'</td></tr>'."\n";
 
 			if(!empty($eot_reminder_health['active_mail_failures']))
 				{
-					echo '<li><strong>Oldest unresolved failure:</strong> '.($eot_reminder_health['oldest_active_mail_failure_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['oldest_active_mail_failure_at'], time()).' ago') : 'Unknown').'</li>'."\n";
-					echo '<li><strong>Next retry:</strong> '.($eot_reminder_health['next_mail_retry_at'] ? esc_html(((int)$eot_reminder_health['next_mail_retry_at'] <= time() ? 'Due now' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['next_mail_retry_at']))) : 'Pending worker scan').'</li>'."\n";
-					echo '<li><strong>Earliest recovery deadline:</strong> '.($eot_reminder_health['earliest_mail_failure_deadline_at'] ? esc_html(((int)$eot_reminder_health['earliest_mail_failure_deadline_at'] <= time() ? human_time_diff((int)$eot_reminder_health['earliest_mail_failure_deadline_at'], time()).' ago' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['earliest_mail_failure_deadline_at']))) : 'Unknown').'</li>'."\n";
+					echo '<tr><th scope="row">Oldest unresolved failure:</th><td>'.($eot_reminder_health['oldest_active_mail_failure_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['oldest_active_mail_failure_at'], time()).' ago') : 'Unknown').'</td></tr>'."\n";
+					echo '<tr><th scope="row">Next retry:</th><td>'.($eot_reminder_health['next_mail_retry_at'] ? esc_html(((int)$eot_reminder_health['next_mail_retry_at'] <= time() ? 'Due now' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['next_mail_retry_at']))) : 'Pending worker scan').'</td></tr>'."\n";
+					echo '<tr><th scope="row">Earliest recovery deadline:</th><td>'.($eot_reminder_health['earliest_mail_failure_deadline_at'] ? esc_html(((int)$eot_reminder_health['earliest_mail_failure_deadline_at'] <= time() ? human_time_diff((int)$eot_reminder_health['earliest_mail_failure_deadline_at'], time()).' ago' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['earliest_mail_failure_deadline_at']))) : 'Unknown').'</td></tr>'."\n";
 					if(!empty($eot_reminder_health['last_failure_error_code']) || !empty($eot_reminder_health['last_failure_error_message']))
-						echo '<li><strong>Last mail error:</strong> '.esc_html(trim($eot_reminder_health['last_failure_error_code'].($eot_reminder_health['last_failure_error_code'] && $eot_reminder_health['last_failure_error_message'] ? ': ' : '').$eot_reminder_health['last_failure_error_message'])).'</li>'."\n";
+						echo '<tr><th scope="row">Last mail error:</th><td>'.esc_html(trim($eot_reminder_health['last_failure_error_code'].($eot_reminder_health['last_failure_error_code'] && $eot_reminder_health['last_failure_error_message'] ? ': ' : '').$eot_reminder_health['last_failure_error_message'])).'</td></tr>'."\n";
 				}
 			if(!$eot_reminder_health['config_valid'] && $eot_reminder_health['enabled'])
-				echo '<li><strong>Configuration:</strong> Incomplete; review reminder days, templates, recipients, and the s2Member email From settings.</li>'."\n";
+				echo '<tr><th scope="row">Configuration:</th><td>Incomplete; review reminder days, templates, recipients, and the s2Member email From settings.</td></tr>'."\n";
 
-			echo '</ul>'."\n";
-			echo '</div>'."\n";
+			echo '</tbody></table>'."\n";
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
 			echo '<div class="ws-menu-page-pro-eot-reminder-email-ops" style="opacity:0.5;">'."\n";
-
-			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
@@ -119,7 +117,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 
 			echo '<th>'."\n";
 			echo '<label for="ws-plugin--s2member-pro-eot-reminder-email-days">'."\n";
-			echo 'Remind X Days Before EOT Occurs:'."\n";
+			echo 'Reminder Day(s), Relative to EOT:'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -128,7 +126,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 
 			echo '<td>'."\n";
 			echo '<input type="text" autocomplete="off" name="ws_plugin__s2member_pro_eot_reminder_email_days" id="ws-plugin--s2member-pro-eot-reminder-email-days" value="'.format_to_edit($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_days']).'" /><br />'."\n";
-			echo 'This can be a comma-delimited list of days on which to send the reminder email; e.g., <code>-5,-1</code> sends a reminder email 5 days before the EOT will occur, and then again (if the EOT still exists; i.e., the customer has not yet renewed) 1 day before the EOT occurs. Negative numbers indicate days <em>before</em> the EOT occurs, positive numbers <em>after</em> the EOT has already occurred; <code>0</code> being the day the EOT occurs. If you set this to <code>-5</code> (one value only) the reminder is sent only one time. If you set this to <code>-10,-5,-2,-1,2,5</code> there is the potential for a reminder to be sent up to six times. Four times before the EOT occurs. Two times after the EOT occurs.'."\n";
+			echo 'This can be a comma-delimited list of days on which to send the reminder email. Negative numbers indicate days <em>before</em> the EOT occurs, positive numbers days <em>after</em> the EOT has occurred, and <code>0</code> the day of EOT. For example, <code>-5,-1</code> sends reminders 5 days and 1 day before EOT; <code>-10,-5,-2,-1,2,5</code> sends on each of those six relative days, four before EOT and two after. A reminder is sent only while that exact EOT still applies; if the customer renews or reactivates and the EOT changes or is removed, reminders for the previous EOT are skipped.'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";

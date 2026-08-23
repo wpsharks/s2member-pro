@@ -623,7 +623,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 'error_code'                 => ($wp_error instanceof WP_Error) ? $wp_error->get_error_code() : '',
                 'error_message'              => ($wp_error instanceof WP_Error) ? $wp_error->get_error_message() : '',
                 'phpmailer_exception_code'   => isset($error_data['phpmailer_exception_code']) ? $error_data['phpmailer_exception_code'] : '',
-                'phpmailer_error_info'       => is_object($phpmailer) && isset($phpmailer->ErrorInfo) ? (string) $phpmailer->ErrorInfo : '',
+                'phpmailer_error_info'       => empty($success) && is_object($phpmailer) && isset($phpmailer->ErrorInfo) ? (string) $phpmailer->ErrorInfo : '',
                 'phpmailer_mailer'           => is_object($phpmailer) && isset($phpmailer->Mailer) ? (string) $phpmailer->Mailer : '',
                 'phpmailer_from'             => is_object($phpmailer) && isset($phpmailer->From) ? (string) $phpmailer->From : '',
                 'phpmailer_from_name'        => is_object($phpmailer) && isset($phpmailer->FromName) ? (string) $phpmailer->FromName : '',
@@ -1088,6 +1088,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 return;
             }
 
+            //260822.1831 !!! TO-DO: Redesign the optional gateway-derived NPT reminder path independently of Auto-EOT completion, replacing its legacy daily scan/per-process model with safe continuation, per-recipient retry/recovery state, and health handling comparable to stored-EOT reminders without increasing gateway polling pressure.
             //260820.1952 Keep the old daily scan throttle only on NPT lookups; stored-EOT reminders use per-EOT/per-recipient delivery state instead.
             $scan_time = apply_filters('ws_plugin__s2member_pro_eot_reminders_scan_time', strtotime('-1 day', self::$now), get_defined_vars());
             $per_process = apply_filters('ws_plugin__s2member_pro_eot_reminders_per_process', !empty($vars['per_process']) ? (int) $vars['per_process'] : 10, get_defined_vars());
