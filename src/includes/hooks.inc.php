@@ -102,6 +102,7 @@ add_action('init', 'c_ws_plugin__s2member_pro_reminders::ensure_fixed_eot_remind
 add_action('ws_plugin__s2member_after_update_all_options', 'c_ws_plugin__s2member_pro_reminders::ensure_fixed_eot_reminder_schedule', 20);
 add_action('ws_plugin__s2member_pro_fixed_eot_reminders__schedule', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_remind');
 add_action('ws_plugin__s2member_pro_fixed_eot_reminders__continuation', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_remind_continuation');
+add_action('ws_plugin__s2member_before_auto_eot_system_via_cron', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_remind_via_cron');
 add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_reminders::remind');
 
 //260821.0555 Keep site-wide EOT reminder warnings quiet until automatic recovery is materially at risk; detailed status remains available on the reminder settings panel.

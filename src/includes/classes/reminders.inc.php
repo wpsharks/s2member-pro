@@ -1065,6 +1065,22 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
         }
 
         /**
+         * Runs stored-EOT reminders before an explicitly requested external Auto-EOT pass.
+         *
+         * The Framework's before-external-cron hook fires on every request, before it checks the query parameter,
+         * so this wrapper must verify the external endpoint itself. Both reminder and Auto-EOT workers measure
+         * their runtime deadlines from the same request start, allowing them to share one external request safely.
+         *
+         * @since 260823.1954
+         */
+        public static function fixed_eot_remind_via_cron()
+        {
+            if (!empty($_GET['s2member_auto_eot_system_via_cron'])) {
+                self::fixed_eot_remind();
+            }
+        }
+
+        /**
          * Handles the legacy optional Next Payment Time (NPT) reminder path.
          *
          * Since 260820.1924, reminders based on a user's stored End-of-Term (EOT) date run independently in
