@@ -78,8 +78,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 wp_clear_scheduled_hook($hook); //260820.1924 Repair an inherited/wrong recurrence instead of leaving a slower reminder heartbeat in place indefinitely.
             }
 
-            //260820.1924 A 10-minute heartbeat makes date-sensitive reminders prompt without coupling them back to Auto-EOT; one-off continuations drain unusually large due queues sooner.
-            $scheduled = (bool) wp_schedule_event(time() + MINUTE_IN_SECONDS, 'every10m', $hook);
+            //260823.1829 A 10-minute heartbeat keeps date-sensitive reminders prompt; verify the event itself because older supported WordPress versions return no success value from wp_schedule_event().
+            wp_schedule_event(time() + MINUTE_IN_SECONDS, 'every10m', $hook);
+            $scheduled = (bool) wp_next_scheduled($hook) && wp_get_schedule($hook) === 'every10m';
             self::fixed_eot_record_schedule_result($scheduled);
             delete_transient('ws_plugin__s2member_pro_fixed_eot_reminders_health'); //260821.0555 Schedule repair changes the admin-facing health snapshot immediately.
             return $scheduled;
