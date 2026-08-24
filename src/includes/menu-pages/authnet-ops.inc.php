@@ -1034,8 +1034,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			//260824.1957 Keep the shared EOT terminology accurate while documenting the current Authorize.Net integration limitation.
 			echo '<label for="ws-plugin--s2member-triggers-immediate-eot">'."\n";
-			echo 'Refunds/Partial Refunds/Reversals (trigger Immediate EOT)?'."\n";
+			echo 'Refunds/Partial Refunds/Reversals/Disputes (trigger Immediate EOT)?'."\n";
 			echo '</label>'."\n";
 			echo '</th>'."\n";
 
@@ -1044,9 +1045,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_triggers_immediate_eot" id="ws-plugin--s2member-triggers-immediate-eot" disabled="disabled">'."\n";
-			echo '<option value="none" selected="selected">Neither (I\'ll review these three events manually)</option>'."\n";
+			echo '<option value="none" selected="selected">N/A (this integration does not receive these events)</option>'."\n";
 			echo '</select><br />'."\n";
-			echo '<em>N/A with Authorize.Net. Authorize.Net does NOT notify s2Member on refunds/chargebacks.</em>'."\n";
+			echo '<em>N/A with the current s2Member Authorize.Net integration. It uses Silent Post/ARB and does not receive refund or dispute/chargeback events, so this shared setting does not apply here.</em>'."\n";
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
