@@ -666,7 +666,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_alipay_ops"))
 			echo '<tr><th scope="row">Last run:</th><td>'.($auto_eot_health['last_completed_at'] ? number_format_i18n((int)$auto_eot_health['last_processed']).' EOT(s) in '.esc_html(number_format_i18n((float)$auto_eot_health['last_runtime'], 2)).' seconds' : 'Not recorded yet').'</td></tr>'."\n";
 			echo '<tr><th scope="row">Next run:</th><td>'.($auto_eot_mode === '1' ? ($auto_eot_next_run ? esc_html(($auto_eot_next_run <= time() ? human_time_diff($auto_eot_next_run, time()).' overdue' : 'in '.human_time_diff(time(), $auto_eot_next_run))) : 'Not scheduled') : ($auto_eot_mode === '2' ? 'Controlled by your external cron service' : 'Disabled')).'</td></tr>'."\n";
 			echo '<tr><th scope="row">Current runtime target:</th><td>About '.esc_html(number_format_i18n($auto_eot_runtime_target, 0)).' seconds'.($php_execution_limit > 0 ? ' (PHP limit: '.esc_html($php_execution_limit).')' : ' (no set PHP limit)').'</td></tr>'."\n";
-			echo '<tr><th scope="row">End-of-Term times:</th><td><a href="'.esc_url(admin_url('/users.php?s2member_view=eot')).'">Review users</a></td></tr>'."\n";
+			//260828.0231 Link directly to the separate current EOT queue and previous EOT history views.
+			echo '<tr><th scope="row">End-of-Term users:</th><td><a href="'.esc_url(admin_url('/users.php?s2member_view=eot_current')).'">Current</a> | <a href="'.esc_url(admin_url('/users.php?s2member_view=eot_previous')).'">Previous</a></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 
