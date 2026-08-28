@@ -510,7 +510,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				}
 				else $opt_in = ''; // Not applicable.
 
+				//260828.2030 !!! TO-DO: Persist a server-side checkout identity and Stripe PaymentIntent/subscription IDs across full page re-renders and lost-success recovery. The current per-render request ID prevents duplicate/concurrent submissions of one rendered form, but a future redesign should reconcile an existing Stripe object before allowing another creation after a reload or lost response.
+				//260828.2016 One rendered checkout keeps one random Stripe request ID, so duplicate submits share an idempotency key while any server-rendered retry starts a new attempt.
+				$stripe_request_id = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : md5(uniqid('s2member-stripe-', TRUE).wp_rand());
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_sp_checkout[nonce]" id="s2member-pro-stripe-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-sp-checkout')).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[request_id]" id="s2member-pro-stripe-sp-checkout-request-id" value="'.esc_attr($stripe_request_id).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr((string)($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token'] : '')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr((string)($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token_summary'] : '')).'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
@@ -679,7 +683,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				}
 				else $opt_in = ''; // Not applicable.
 
+				//260828.2016 One rendered checkout keeps one random Stripe request ID, so duplicate submits share an idempotency key while any server-rendered retry starts a new attempt.
+				$stripe_request_id = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : md5(uniqid('s2member-stripe-', TRUE).wp_rand());
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[request_id]" id="s2member-pro-stripe-checkout-request-id" value="'.esc_attr($stripe_request_id).'" />';
 				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token'] : '').'" />';
 				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token_summary'] : '').'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';

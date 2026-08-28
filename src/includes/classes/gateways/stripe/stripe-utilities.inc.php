@@ -480,6 +480,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
+			//260828.2016 Use the rendered checkout's opaque request ID for creation idempotency; this protects duplicate/concurrent submits while a later rendered retry gets a fresh ID.
+			$stripe_request_id = !empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '';
 
 			if(!self::cancel_incomplete_customer_subscriptions($customer_id))
 			{
@@ -500,7 +502,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					'description' => 'Initial period'
 				);
 				$invoice_item = \Stripe\InvoiceItem::create($item, array(
-					'idempotency_key' => md5(serialize($item)),
+					'idempotency_key' => $stripe_request_id ? 's2member-trial-'.$stripe_request_id : md5(serialize($item)),
 				));
 			}
 
@@ -555,7 +557,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					unset($subscription['default_payment_method']);
 
 				$subscription = \Stripe\Subscription::create($subscription, array(
-					'idempotency_key' => md5(serialize($subscription)),
+					'idempotency_key' => $stripe_request_id ? 's2member-sub-'.$stripe_request_id : md5(serialize($subscription)),
 				));
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
@@ -620,10 +622,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			self::init_stripe_sdk();
 			
-			try // Obtain existing customer object; else create a new one.
+			try // Obtain existing subscription object.
 			{
-				$customer     = \Stripe\Customer::retrieve($customer_id);
-				$subscription = $customer->subscriptions->retrieve($subscription_id);
+				//260828.2016 Modern Stripe SDKs no longer expose subscriptions through Customer; retrieve directly and still verify the expected customer owns it.
+				$subscription = \Stripe\Subscription::retrieve($subscription_id);
+				$subscription_customer = $subscription->customer;
+				$subscription_customer_id = is_object($subscription_customer) && !empty($subscription_customer->id) ? (string)$subscription_customer->id : (string)$subscription_customer;
+				if($subscription_customer_id !== (string)$customer_id)
+					throw new \Exception('Stripe subscription does not belong to the expected customer.');
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
@@ -1844,6 +1850,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_intent_metadata($post_vars, $cost_calculations), (array)$metadata);
+			//260828.2016 Keep PaymentIntent creation idempotent for duplicate/concurrent submissions of the same rendered checkout instead of keying idempotency to a per-attempt PaymentMethod.
+			$stripe_request_id = !empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '';
 
 			if(empty($pm_id))
 			{
@@ -1868,7 +1876,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					unset($intent['statement_descriptor_suffix']);
 
 				$intent = \Stripe\PaymentIntent::create($intent, array(
-					'idempotency_key' => md5(serialize($intent))
+					'idempotency_key' => $stripe_request_id ? 's2member-pi-'.$stripe_request_id : md5(serialize($intent))
 				));
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
 

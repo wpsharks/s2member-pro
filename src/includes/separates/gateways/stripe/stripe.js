@@ -856,6 +856,9 @@ jQuery(document).ready( // DOM ready.
 						}
 					});
 
+					//260828.2016 Keep only one Stripe.js submission in flight so a slow createPaymentMethod call cannot turn a double-click/Enter retry into another payment attempt.
+					var stripeSubmissionPending = false;
+
 					// Control form submit.
 					form.addEventListener('submit', function(event) {
 						//260807 The earlier s2Member submit handler may already have rejected missing or invalid fields.
@@ -863,6 +866,10 @@ jQuery(document).ready( // DOM ready.
 							return;
 						}
 						event.preventDefault();
+
+						if (stripeSubmissionPending) {
+							return;
+						}
 
 						var fullName = jQuery('.s2member-pro-stripe-first-name').val() + ' ' + jQuery('.s2member-pro-stripe-last-name').val();
 						var emailAddress = jQuery('.s2member-pro-stripe-email').val();
@@ -889,6 +896,11 @@ jQuery(document).ready( // DOM ready.
 							}
 						}
 
+						stripeSubmissionPending = true;
+						jQuery('.s2member-pro-stripe-submit')
+							.prop('disabled', true)
+							.addClass('ws-plugin--s2member-animate-processing');
+
 						// Create the Payment Method.
 						stripe.createPaymentMethod(
 							'card',
@@ -904,6 +916,7 @@ jQuery(document).ready( // DOM ready.
 							if (result.error) {
 								// Display result.error.message in UI.
 								jQuery('#s2member-pro-stripe-form-card-errors').text(result.error.message);
+								stripeSubmissionPending = false;
 								jQuery('.s2member-pro-stripe-submit')
 									.prop('disabled', false)
 									.removeClass('ws-plugin--s2member-animate-processing');
@@ -915,7 +928,13 @@ jQuery(document).ready( // DOM ready.
 								// Submit the form
 								form.submit();
 							}
-						}).catch(console.error.bind(console));
+						}).catch(function(error) {
+							stripeSubmissionPending = false;
+							jQuery('.s2member-pro-stripe-submit')
+								.prop('disabled', false)
+								.removeClass('ws-plugin--s2member-animate-processing');
+							console.error(error);
+						});
 					});
 				}
 			}

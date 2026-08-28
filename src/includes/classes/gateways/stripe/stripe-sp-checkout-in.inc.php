@@ -116,10 +116,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 											$global_response = array('response' => $payment_method, 'error' => TRUE);
 
 										if (!$global_response) {
-											// if we have a Payment Intent, let's try to update it, if not create one.
+											//260828.2016 Once a checkout has a PaymentIntent, an update failure must remain an error; silently creating another intent here can turn a retry into another charge.
 											if(!empty($post_vars['pi_id']))
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_payment_intent($post_vars['pi_id'], array('payment_method'=>$payment_method->id));
-											if(empty($post_vars['pi_id']) || (!empty($stripe_intent) && !is_object($stripe_intent)))
+											else
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::create_payment_intent($stripe_customer->id, $payment_method->id, $cost_calculations['total'], $cost_calculations['cur'], $cost_calculations['desc'], array(), $post_vars, $cost_calculations);
 											if(!is_object($stripe_intent))
 												$global_response = array('response' => $stripe_intent, 'error' => TRUE);
