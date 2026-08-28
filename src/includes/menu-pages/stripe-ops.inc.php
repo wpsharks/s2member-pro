@@ -248,8 +248,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_ops'))
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-stripe-ipn-section">'."\n";
 			echo '<a href="http://www.s2member.com/r/stripe/" target="_blank"><img src="'.esc_attr($GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"]).'/src/images/stripe-logo.png" class="ws-menu-page-right" style="width:250px; height:116px; background:#0D1F2F; border-radius:5px; border:0; margin-bottom:10px;" alt="." /></a>'."\n";
 			echo '<h3>Stripe Webhook/IPN Integration (required)</h3>'."\n";
-			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Account Settings → Webhooks</strong></p>'."\n";
+			echo '<p>Log into your Stripe Merchant account and navigate to this section:<br /><strong>Workbench → Webhooks</strong></p>'."\n";
 			echo '<p>Your Stripe Webhook URL is:<br /><code>'.esc_html(home_url('/?s2member_pro_stripe_notify=1')).'</code></p>'."\n";
+			//260828.2117 Keep selective Stripe webhook configurations aligned with every event the handler processes, including disputes/chargebacks.
+			echo '<p><em>Required Events:</em> If you do not select <strong>All events</strong>, include all seven of the following:<br /><code>invoice.payment_succeeded</code> <code>invoice.payment_failed</code> <code>customer.deleted</code> <code>customer.subscription.updated</code> <code>customer.subscription.deleted</code> <code>charge.refunded</code> <code>charge.dispute.created</code></p>'."\n";
 			echo '<div class="info" style="margin-bottom:0;">'."\n";
 			echo '<p>If you are currently in Test/Sandbox mode (i.e., you gave s2Member Test API Credentials); please choose the <code>Test</code> option when entering the Webhook URL in your Stripe Dashboard. Otherwise, under normal circumstances you will want to choose <code>Live</code>.</p>'."\n";
 			echo '</div>'."\n";
