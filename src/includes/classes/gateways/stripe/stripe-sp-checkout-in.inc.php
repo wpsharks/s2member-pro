@@ -63,6 +63,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 			{
 				$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'] = array(); // This holds the global response details.
 				$global_response                                                = &$GLOBALS['ws_plugin__s2member_pro_stripe_sp_checkout_response'];
+				$gateway_checkout_state = FALSE;
+				$gateway_checkout_lock = '';
+				$gateway_checkout_fulfilled = FALSE;
+				$gateway_checkout_redirect_url = '';
 
 				$post_vars         = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST['s2member_pro_stripe_sp_checkout']));
 				//260808 Safely unserialize the form attributes.
@@ -75,6 +79,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 
 				$post_vars['name']  = trim($post_vars['first_name'].' '.$post_vars['last_name']);
 				$post_vars['email'] = apply_filters('user_registration_email', sanitize_email($post_vars['email']), get_defined_vars());
+
+				$gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::gateway_checkout_state($post_vars);
+				if($gateway_checkout_state && (string)$gateway_checkout_state['fulfillment_status'] === 'fulfilled' && !empty($gateway_checkout_state['context']['browser_response']))
+				{
+					//260830.0408 Recover a completed Specific Post/Page checkout before form validation or any repeated gateway/local fulfillment work.
+					$global_response = array('response' => (string)$gateway_checkout_state['context']['browser_response']);
+					if(!empty($gateway_checkout_state['context']['redirect_url']))
+						wp_redirect((string)$gateway_checkout_state['context']['redirect_url']).exit();
+					return;
+				}
 
 				$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars); // Collect reCAPTCHA™ post vars.
 
@@ -90,6 +104,35 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						$is_bitcoin        = !empty($post_vars['source_token']) && stripos($post_vars['source_token'], 'btcrcv_') === 0;
 						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost(NULL, $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc'], $is_bitcoin);
+
+						if(!$global_response && $cost_calculations['total'] > 0)
+						{
+							$gateway_checkout_terms = array(
+								'form'        => 'sp-checkout',
+								'operation'   => 'payment',
+								'item_number' => (string)$post_vars['attr']['sp_ids_exp'],
+								'custom'      => (string)$post_vars['attr']['custom'],
+								'total'       => (string)$cost_calculations['total'],
+								'currency'    => (string)$cost_calculations['cur'],
+								'description' => (string)$cost_calculations['desc'],
+								'coupon'      => (string)@$cp_attr['_full_coupon_code'],
+							);
+							if(!($gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::prepare_gateway_checkout($post_vars, 'payment', $gateway_checkout_terms, get_current_user_id())))
+								$global_response = array('response' => _x('Unable to initialize this payment securely. Please reload the checkout page and try again.', 's2member-front', 's2member'), 'error' => TRUE);
+							else
+							{
+								//260830.0052 Keep any server-selected replacement identity in the rendered retry form.
+								$_POST['s2member_pro_stripe_sp_checkout']['gateway_checkout_id']    = $post_vars['gateway_checkout_id'];
+								$_POST['s2member_pro_stripe_sp_checkout']['gateway_checkout_token'] = $post_vars['gateway_checkout_token'];
+								$_POST['s2member_pro_stripe_sp_checkout']['request_id']              = $post_vars['request_id'];
+								if(!empty($post_vars['gateway_checkout_reset']))
+									$_POST['s2member_pro_stripe_sp_checkout']['gateway_checkout_reset'] = '1';
+
+								$gateway_checkout_lock = c_ws_plugin__s2member_gateway_checkouts::processing_lock((string)$gateway_checkout_state['id']);
+								if(!$gateway_checkout_lock)
+									$global_response = array('response' => _x('This checkout is already being processed. Please wait a moment and reload this page.', 's2member-front', 's2member'), 'error' => TRUE);
+							}
+						}
 
 						if(!$global_response)
 							if($cost_calculations['total'] > 0)
@@ -194,11 +237,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 							if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars['attr']['ids'], $post_vars['attr']['exp'])))
 							{
 								$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your purchase has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">click here</a> to proceed.', 's2member-front', 's2member'), esc_attr($sp_access_url)));
+								$gateway_checkout_fulfilled = TRUE;
 
 								if($post_vars['attr']['success'] && (substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) || stripos($ipn['s2member_stripe_proxy_return_url'], 'http') === 0)
 								   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
 								   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-								) wp_redirect($post_vars['attr']['success'] === '%%sp_access_url%%' ? $custom_success_url : c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v')).exit ();
+								) $gateway_checkout_redirect_url = $post_vars['attr']['success'] === '%%sp_access_url%%' ? $custom_success_url : c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v');
 							}
 							else $global_response = array('response' => _x('<strong>Oops.</strong> Unable to generate Access Link. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 						}
@@ -206,6 +250,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 					else // Input form field validation errors.
 						$global_response = $form_submission_validation_errors;
 				}
+
+				if($gateway_checkout_state && $gateway_checkout_fulfilled && !empty($global_response['response']) && empty($global_response['error']))
+				{
+					$gateway_checkout_context = array('browser_response' => (string)$global_response['response']);
+					if($gateway_checkout_redirect_url)
+						$gateway_checkout_context['redirect_url'] = (string)$gateway_checkout_redirect_url;
+
+					//260830.0408 Persist the completed browser result before releasing the processing lock, so a lost success response can be recovered without repeating checkout fulfillment.
+					if(!c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', $gateway_checkout_context, 'fulfilled'))
+						c_ws_plugin__s2member_utils_logs::log_entry('stripe-sp-checkout', array('s2member_log' => array('Unable to mark a successful Stripe Gateway Checkout as fulfilled.'), 'gateway_checkout_id' => (string)$gateway_checkout_state['id']));
+				}
+
+				if($gateway_checkout_lock && $gateway_checkout_state)
+					c_ws_plugin__s2member_gateway_checkouts::processing_unlock((string)$gateway_checkout_state['id'], $gateway_checkout_lock);
+
+				if($gateway_checkout_redirect_url)
+					wp_redirect($gateway_checkout_redirect_url).exit();
 			}
 		}
 	}

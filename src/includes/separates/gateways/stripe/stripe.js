@@ -375,6 +375,11 @@ jQuery(document).ready( // DOM ready.
 							submissionSection = 'div#s2member-pro-stripe-' + coTypeWithDashes + '-form-submission-section',
 							sourceTokenInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[source_token]') + '"]',
 							sourceTokenSummaryInput = submissionSection + ' input[name="' + ws_plugin__s2member_escjQAttr('s2member_pro_stripe_' + coTypeWithUnderscores + '[source_token_summary]') + '"]',
+							gatewayCheckoutIdInput = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-gateway-checkout-id',
+							gatewayCheckoutTokenInput = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-gateway-checkout-token',
+							gatewayCheckoutOperationInput = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-gateway-checkout-operation',
+							gatewayCheckoutResetInput = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-gateway-checkout-reset',
+							gatewayCheckoutRequestIdInput = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-request-id',
 							submissionNonceVerification = submissionSection + ' input#s2member-pro-stripe-' + coTypeWithDashes + '-nonce',
 							submissionButton = submissionSection + ' button#s2member-pro-stripe-' + coTypeWithDashes + '-submit';
 
@@ -383,6 +388,32 @@ jQuery(document).ready( // DOM ready.
 						*/
 						$(optionsSelect).removeAttr('disabled'), $(couponApplyButton).removeAttr('disabled'),
 							$(submissionButton).removeAttr('disabled'), ws_plugin__s2member_animateProcessing($(submissionButton), 'reset');
+
+						//260830.0052 Preserve one logical Gateway Checkout across reload/back-forward of this history entry, while a fresh navigation/tab receives a new checkout identity.
+						if(window.history && window.history.replaceState && $(gatewayCheckoutIdInput).length && $(gatewayCheckoutTokenInput).length && $(gatewayCheckoutOperationInput).length)
+						{
+							var gatewayCheckoutHistoryState = (window.history.state && typeof window.history.state === 'object') ? window.history.state : {},
+								gatewayCheckouts = (gatewayCheckoutHistoryState.s2memberGatewayCheckouts && typeof gatewayCheckoutHistoryState.s2memberGatewayCheckouts === 'object') ? gatewayCheckoutHistoryState.s2memberGatewayCheckouts : {},
+								renderedGatewayCheckout = {
+									id: $(gatewayCheckoutIdInput).val(),
+									token: $(gatewayCheckoutTokenInput).val(),
+									operation: $(gatewayCheckoutOperationInput).val()
+								},
+								storedGatewayCheckout = gatewayCheckouts[coTypeWithDashes] || {};
+
+							if(!$(gatewayCheckoutResetInput).length && storedGatewayCheckout.id && storedGatewayCheckout.token && storedGatewayCheckout.operation === renderedGatewayCheckout.operation)
+							{
+								$(gatewayCheckoutIdInput).val(storedGatewayCheckout.id);
+								$(gatewayCheckoutTokenInput).val(storedGatewayCheckout.token);
+								$(gatewayCheckoutRequestIdInput).val(storedGatewayCheckout.id);
+							}
+							else
+							{
+								gatewayCheckouts[coTypeWithDashes] = renderedGatewayCheckout;
+								gatewayCheckoutHistoryState.s2memberGatewayCheckouts = gatewayCheckouts;
+								window.history.replaceState(gatewayCheckoutHistoryState, document.title, window.location.href);
+							}
+						}
 						/*
 						Handle checkout options. Does this form have checkout options?
 						*/

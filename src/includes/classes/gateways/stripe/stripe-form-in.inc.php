@@ -448,8 +448,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$_p                 = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($_POST));
 				$attr['sp_ids_exp'] = 'sp:'.$attr['ids'].':'.$attr['exp']; // Combined `sp:ids:expiration hours`.
 				$attr['coupon']     = !empty($_p['s2member_pro_stripe_sp_checkout']['coupon']) ? $_p['s2member_pro_stripe_sp_checkout']['coupon'] : $attr['coupon'];
-				$response           = c_ws_plugin__s2member_pro_stripe_responses::stripe_sp_checkout_response($attr);
-				$_p                 = $response['response'] && !$response['error'] ? array() : $_p;
+				$response               = c_ws_plugin__s2member_pro_stripe_responses::stripe_sp_checkout_response($attr);
+				$checkout_succeeded     = $response['response'] && !$response['error'];
+				$gateway_checkout_reset = $checkout_succeeded || !empty($_p['s2member_pro_stripe_sp_checkout']['gateway_checkout_reset']);
+				$_p                     = $checkout_succeeded ? array() : $_p;
 
 				$tax_may_apply = c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply(); // Tax may apply?
 				$cp_attr       = $cp_buy_now_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon']);
@@ -510,11 +512,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				}
 				else $opt_in = ''; // Not applicable.
 
-				//260828.2030 !!! TO-DO: Persist a server-side checkout identity and Stripe PaymentIntent/subscription IDs across full page re-renders and lost-success recovery. The current per-render request ID prevents duplicate/concurrent submissions of one rendered form, but a future redesign should reconcile an existing Stripe object before allowing another creation after a reload or lost response.
-				//260828.2016 One rendered checkout keeps one random Stripe request ID, so duplicate submits share an idempotency key while any server-rendered retry starts a new attempt.
-				$stripe_request_id = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : md5(uniqid('s2member-stripe-', TRUE).wp_rand());
+				//260830.0052 Render a signed provisional Gateway Checkout identity without creating durable state until checkout processing actually begins.
+				$gateway_checkout_identity = c_ws_plugin__s2member_gateway_checkouts::browser_identity((string)@$_p['s2member_pro_stripe_sp_checkout']['gateway_checkout_id'], (string)@$_p['s2member_pro_stripe_sp_checkout']['gateway_checkout_token']);
+				$gateway_checkout_id       = (string)$gateway_checkout_identity['id'];
+				$gateway_checkout_token    = (string)$gateway_checkout_identity['token'];
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_sp_checkout[nonce]" id="s2member-pro-stripe-sp-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-sp-checkout')).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[request_id]" id="s2member-pro-stripe-sp-checkout-request-id" value="'.esc_attr($stripe_request_id).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[gateway_checkout_id]" id="s2member-pro-stripe-sp-checkout-gateway-checkout-id" value="'.esc_attr($gateway_checkout_id).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[gateway_checkout_token]" id="s2member-pro-stripe-sp-checkout-gateway-checkout-token" value="'.esc_attr($gateway_checkout_token).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-sp-checkout-gateway-checkout-operation" value="payment" />';
+				$hidden_inputs .= $gateway_checkout_reset ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-gateway-checkout-reset" value="1" />' : '';
+				//260830.0052 Keep request_id as a compatibility alias while Stripe internals migrate to Gateway Checkout terminology.
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[request_id]" id="s2member-pro-stripe-sp-checkout-request-id" value="'.esc_attr($gateway_checkout_id).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token]" id="s2member-pro-stripe-sp-checkout-source-token" value="'.esc_attr((string)($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token'] : '')).'" />';
 				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_sp_checkout[source_token_summary]" id="s2member-pro-stripe-sp-checkout-source-token-summary" value="'.esc_attr((string)($is_buy_now_amount <= 0 || @$_p['s2member_pro_stripe_sp_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_sp_checkout']['source_token_summary'] : '')).'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-sp-checkout-coupons-not-required-or-not-possible" value="1" />' : '';
@@ -586,7 +594,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$attr['level_ccaps_eotper'] = rtrim($attr['level_ccaps_eotper'], ':'); // Clean any trailing separators from this string.
 				$attr['coupon']             = !empty($_p['s2member_pro_stripe_checkout']['coupon']) ? $_p['s2member_pro_stripe_checkout']['coupon'] : $attr['coupon'];
 				$response                   = c_ws_plugin__s2member_pro_stripe_responses::stripe_checkout_response($attr);
-				$_p                         = $response['response'] && !$response['error'] ? array() : $_p;
+				$checkout_succeeded         = $response['response'] && !$response['error'];
+				$gateway_checkout_reset     = $checkout_succeeded || !empty($_p['s2member_pro_stripe_checkout']['gateway_checkout_reset']);
+				$_p                         = $checkout_succeeded ? array() : $_p;
 
 				$tax_may_apply = c_ws_plugin__s2member_pro_stripe_utilities::tax_may_apply(); // Tax may apply?
 				$cp_attr       = $cp_buy_now_attr = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon']);
@@ -683,10 +693,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				}
 				else $opt_in = ''; // Not applicable.
 
-				//260828.2016 One rendered checkout keeps one random Stripe request ID, so duplicate submits share an idempotency key while any server-rendered retry starts a new attempt.
-				$stripe_request_id = function_exists('wp_generate_uuid4') ? wp_generate_uuid4() : md5(uniqid('s2member-stripe-', TRUE).wp_rand());
+				$gateway_checkout_operation = ($attr['rr'] === 'BN' || (!$attr['tp'] && !$attr['rr'])) ? 'payment' : 'subscription';
+				//260830.0052 Render a signed provisional Gateway Checkout identity without creating durable state until checkout processing actually begins.
+				$gateway_checkout_identity = c_ws_plugin__s2member_gateway_checkouts::browser_identity((string)@$_p['s2member_pro_stripe_checkout']['gateway_checkout_id'], (string)@$_p['s2member_pro_stripe_checkout']['gateway_checkout_token']);
+				$gateway_checkout_id       = (string)$gateway_checkout_identity['id'];
+				$gateway_checkout_token    = (string)$gateway_checkout_identity['token'];
 				$hidden_inputs = '<input type="hidden" name="s2member_pro_stripe_checkout[nonce]" id="s2member-pro-stripe-checkout-nonce" value="'.esc_attr(wp_create_nonce('s2member-pro-stripe-checkout')).'" />';
-				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[request_id]" id="s2member-pro-stripe-checkout-request-id" value="'.esc_attr($stripe_request_id).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[gateway_checkout_id]" id="s2member-pro-stripe-checkout-gateway-checkout-id" value="'.esc_attr($gateway_checkout_id).'" />';
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[gateway_checkout_token]" id="s2member-pro-stripe-checkout-gateway-checkout-token" value="'.esc_attr($gateway_checkout_token).'" />';
+				$hidden_inputs .= '<input type="hidden" id="s2member-pro-stripe-checkout-gateway-checkout-operation" value="'.esc_attr($gateway_checkout_operation).'" />';
+				$hidden_inputs .= $gateway_checkout_reset ? '<input type="hidden" id="s2member-pro-stripe-checkout-gateway-checkout-reset" value="1" />' : '';
+				//260830.0052 Keep request_id as a compatibility alias while Stripe internals migrate to Gateway Checkout terminology.
+				$hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[request_id]" id="s2member-pro-stripe-checkout-request-id" value="'.esc_attr($gateway_checkout_id).'" />';
 				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token]" id="s2member-pro-stripe-checkout-source-token" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token'] : '').'" />';
 				// $hidden_inputs .= '<input type="hidden" name="s2member_pro_stripe_checkout[source_token_summary]" id="s2member-pro-stripe-checkout-source-token-summary" value="'.esc_attr(($cp_attr['ta'] <= 0 && $cp_attr['ra'] <= 0) || @$_p['s2member_pro_stripe_checkout']['source_token'] !== 'free' ? @$_p['s2member_pro_stripe_checkout']['source_token_summary'] : '').'" />';
 				$hidden_inputs .= !$attr['accept_coupons'] ? '<input type="hidden" id="s2member-pro-stripe-checkout-coupons-not-required-or-not-possible" value="1" />' : '';

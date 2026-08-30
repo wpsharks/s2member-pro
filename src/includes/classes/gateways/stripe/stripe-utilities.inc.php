@@ -59,6 +59,254 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Prepares durable Gateway Checkout state for a Stripe Pro-Form submission.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param array   $post_vars      Stripe Pro-Form post vars, updated with the authoritative Gateway Checkout identity.
+		 * @param string  $operation      Gateway Checkout operation; `payment` or `subscription`.
+		 * @param array   $purchase_terms Final server-side purchase terms.
+		 * @param integer $user_id        WordPress user ID, if known.
+		 *
+		 * @return array|bool Gateway Checkout state, else FALSE.
+		 */
+		public static function prepare_gateway_checkout(&$post_vars, $operation = '', $purchase_terms = array(), $user_id = 0)
+		{
+			$post_vars = (array)$post_vars;
+			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
+			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
+			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
+			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
+				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$state = c_ws_plugin__s2member_gateway_checkouts::create_or_resume('stripe', $operation, $gateway_checkout_id, $gateway_checkout_token, $fingerprint, $user_id);
+
+			if(!$state && $existing_state && (string)$existing_state['gateway'] === 'stripe' && (string)$existing_state['operation'] === (string)$operation
+			   && empty($existing_state['gateway_ids']) && empty($existing_state['gateway_status']) && (string)$existing_state['fulfillment_status'] === 'pending')
+			{
+				//260830.0052 Purchase terms may change before gateway work begins (e.g., checkout option/coupon changes); only a pristine checkout can be replaced automatically.
+				$state = c_ws_plugin__s2member_gateway_checkouts::create('stripe', $operation, $fingerprint, $user_id);
+			}
+			if(!$state)
+				return FALSE;
+
+			//260830.0059 If server validation replaced a stale/mismatched browser identity, prevent history.state from restoring the superseded checkout on the retry form.
+			if($gateway_checkout_id && !hash_equals((string)$gateway_checkout_id, (string)$state['id']))
+				$post_vars['gateway_checkout_reset'] = '1';
+
+			$post_vars['gateway_checkout_id']    = (string)$state['id'];
+			$post_vars['gateway_checkout_token'] = c_ws_plugin__s2member_gateway_checkouts::browser_token($state['id']);
+			$post_vars['request_id']              = (string)$state['id']; //260830.0052 Compatibility alias for the v260829 same-render idempotency field.
+			//260830.0052 Once durable state exists, only Stripe object IDs recovered from that signed checkout are authoritative; never trust independently posted intent/subscription IDs.
+			$post_vars['pi_id']   = !empty($state['gateway_ids']['payment_intent_id']) ? (string)$state['gateway_ids']['payment_intent_id'] : '';
+			$post_vars['seti_id'] = !empty($state['gateway_ids']['setup_intent_id']) ? (string)$state['gateway_ids']['setup_intent_id'] : '';
+			$post_vars['sub_id']  = !empty($state['gateway_ids']['subscription_id']) ? (string)$state['gateway_ids']['subscription_id'] : '';
+
+			return $state;
+		}
+
+		/**
+		 * Updates Stripe object IDs/status/context in Gateway Checkout state.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param string $gateway_checkout_id Gateway Checkout ID.
+		 * @param array  $gateway_ids         Stripe object IDs to merge into existing state.
+		 * @param string $gateway_status      Optional Stripe status.
+		 * @param array  $context             Stripe-specific context to merge into existing state.
+		 * @param string $fulfillment_status  Optional local fulfillment status.
+		 *
+		 * @return array|bool Updated state, else FALSE.
+		 */
+		public static function update_gateway_checkout($gateway_checkout_id = '', $gateway_ids = array(), $gateway_status = '', $context = array(), $fulfillment_status = '')
+		{
+			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$state || (string)$state['gateway'] !== 'stripe')
+				return FALSE;
+
+			$updates = array(
+				'gateway_ids' => array_merge((array)$state['gateway_ids'], (array)$gateway_ids),
+				'context'     => array_merge((array)$state['context'], (array)$context),
+			);
+			if($gateway_status !== '')
+				$updates['gateway_status'] = (string)$gateway_status;
+			if($fulfillment_status !== '')
+				$updates['fulfillment_status'] = (string)$fulfillment_status;
+
+			return c_ws_plugin__s2member_gateway_checkouts::update($gateway_checkout_id, $updates);
+		}
+
+		/**
+		 * Gets the Stripe Gateway Checkout state represented by Pro-Form post vars.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param array $post_vars Stripe Pro-Form post vars.
+		 *
+		 * @return array|bool Gateway Checkout state, else FALSE.
+		 */
+		public static function gateway_checkout_state($post_vars = array())
+		{
+			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
+			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
+			$state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
+				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+
+			if(!$state || (string)$state['gateway'] !== 'stripe')
+				return FALSE;
+			//260830.0135 A browser token cannot resume or mutate a checkout already bound to another logged-in WordPress user.
+			if(!empty($state['user_id']) && (int)$state['user_id'] !== get_current_user_id())
+				return FALSE;
+
+			return $state;
+		}
+
+		/**
+		 * Advances a terminal Stripe object's generation while preserving the logical Gateway Checkout.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param string $gateway_checkout_id Gateway Checkout ID.
+		 * @param string $object_type         `payment` or `subscription`.
+		 * @param array  $clear_gateway_ids   Gateway ID keys to clear for the replacement object.
+		 *
+		 * @return integer|bool New generation number, else FALSE.
+		 */
+		public static function advance_gateway_checkout_generation($gateway_checkout_id = '', $object_type = '', $clear_gateway_ids = array())
+		{
+			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$state || !$object_type)
+				return FALSE;
+
+			$key = 'stripe_'.sanitize_key((string)$object_type).'_generation';
+			$generation = max(1, (int)@$state['context'][$key]) + 1;
+			$gateway_ids = array();
+			foreach((array)$clear_gateway_ids as $gateway_id_key)
+				$gateway_ids[(string)$gateway_id_key] = '';
+
+			return self::update_gateway_checkout($gateway_checkout_id, $gateway_ids, '', array($key => $generation)) ? $generation : FALSE;
+		}
+
+		/**
+		 * Finds a Stripe PaymentIntent previously created for a Gateway Checkout generation.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param string  $customer_id         Stripe Customer ID.
+		 * @param string  $gateway_checkout_id Gateway Checkout ID.
+		 * @param integer $generation          Gateway Checkout payment generation.
+		 *
+		 * @return object|bool PaymentIntent, else FALSE.
+		 */
+		public static function find_gateway_checkout_payment_intent($customer_id = '', $gateway_checkout_id = '', $generation = 1)
+		{
+			if(!$customer_id || !$gateway_checkout_id)
+				return FALSE;
+
+			self::init_stripe_sdk();
+			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$state || (string)$state['gateway'] !== 'stripe')
+				return FALSE;
+
+			if(!empty($state['gateway_ids']['payment_intent_id']))
+			{
+				try
+				{
+					$intent = \Stripe\PaymentIntent::retrieve((string)$state['gateway_ids']['payment_intent_id']);
+					$metadata_generation = !empty($intent->metadata->s2member_gateway_checkout_generation) ? (int)$intent->metadata->s2member_gateway_checkout_generation : 1;
+					if((string)$intent->customer === (string)$customer_id && !empty($intent->metadata->s2member_gateway_checkout_id)
+					   && hash_equals((string)$gateway_checkout_id, (string)$intent->metadata->s2member_gateway_checkout_id) && $metadata_generation === (int)$generation)
+						return $intent;
+				}
+				catch(exception $exception)
+				{
+					//260830.0135 A stale locally stored Stripe ID must not suppress metadata-based recovery of the object created for this Gateway Checkout.
+				}
+			}
+
+			$params = array('customer' => $customer_id, 'limit' => 100);
+			if(!empty($state['created_at']))
+				$params['created'] = array('gte' => max(0, (int)$state['created_at'] - 60));
+			$intents = \Stripe\PaymentIntent::all($params); //260830.0308 Let lookup failures abort checkout instead of risking a duplicate object.
+			if(!empty($intents->data) && is_array($intents->data))
+				foreach($intents->data as $intent)
+				{
+					$metadata_generation = !empty($intent->metadata->s2member_gateway_checkout_generation) ? (int)$intent->metadata->s2member_gateway_checkout_generation : 1;
+					if(!empty($intent->metadata->s2member_gateway_checkout_id) && hash_equals((string)$gateway_checkout_id, (string)$intent->metadata->s2member_gateway_checkout_id) && $metadata_generation === (int)$generation)
+						return $intent;
+				}
+			return FALSE;
+		}
+
+		/**
+		 * Finds a Stripe Subscription previously created for a Gateway Checkout generation.
+		 *
+		 * @since 260830.0052
+		 *
+		 * @param string  $customer_id         Stripe Customer ID.
+		 * @param string  $gateway_checkout_id Gateway Checkout ID.
+		 * @param integer $generation          Gateway Checkout subscription generation.
+		 *
+		 * @return object|bool Subscription, else FALSE.
+		 */
+		public static function find_gateway_checkout_subscription($customer_id = '', $gateway_checkout_id = '', $generation = 1)
+		{
+			if(!$customer_id || !$gateway_checkout_id)
+				return FALSE;
+
+			self::init_stripe_sdk();
+			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$state || (string)$state['gateway'] !== 'stripe')
+				return FALSE;
+
+			$subscription = FALSE;
+			if(!empty($state['gateway_ids']['subscription_id']))
+			{
+				try
+				{
+					$subscription = \Stripe\Subscription::retrieve((string)$state['gateway_ids']['subscription_id']);
+					$metadata_generation = !empty($subscription->metadata->s2member_gateway_checkout_generation) ? (int)$subscription->metadata->s2member_gateway_checkout_generation : 1;
+					if((string)$subscription->customer !== (string)$customer_id || empty($subscription->metadata->s2member_gateway_checkout_id)
+					   || !hash_equals((string)$gateway_checkout_id, (string)$subscription->metadata->s2member_gateway_checkout_id) || $metadata_generation !== (int)$generation)
+						$subscription = FALSE;
+				}
+				catch(exception $exception)
+				{
+					$subscription = FALSE; // A stale local ID must still fall through to metadata recovery.
+				}
+			}
+
+			if(!$subscription)
+			{
+				$params = array('customer' => $customer_id, 'status' => 'all', 'limit' => 100);
+				if(!empty($state['created_at']))
+					$params['created'] = array('gte' => max(0, (int)$state['created_at'] - 60));
+				$subscriptions = \Stripe\Subscription::all($params); //260830.0308 Let lookup failures abort checkout instead of risking a duplicate object.
+				if(!empty($subscriptions->data) && is_array($subscriptions->data))
+					foreach($subscriptions->data as $_subscription)
+					{
+						$metadata_generation = !empty($_subscription->metadata->s2member_gateway_checkout_generation) ? (int)$_subscription->metadata->s2member_gateway_checkout_generation : 1;
+						if(!empty($_subscription->metadata->s2member_gateway_checkout_id) && hash_equals((string)$gateway_checkout_id, (string)$_subscription->metadata->s2member_gateway_checkout_id) && $metadata_generation === (int)$generation)
+						{
+							$subscription = \Stripe\Subscription::retrieve((string)$_subscription->id);
+							break;
+						}
+					}
+			}
+			if(!$subscription)
+				return FALSE;
+
+			//260830.0308 Subscription creation requests expand these objects; recovered subscriptions need equivalent expansion for the existing checkout handlers.
+			if(!empty($subscription->latest_invoice) && !is_object($subscription->latest_invoice))
+				$subscription->latest_invoice = \Stripe\Invoice::retrieve((string)$subscription->latest_invoice);
+			if(!empty($subscription->latest_invoice->payment_intent) && !is_object($subscription->latest_invoice->payment_intent))
+				$subscription->latest_invoice->payment_intent = \Stripe\PaymentIntent::retrieve((string)$subscription->latest_invoice->payment_intent);
+			if(!empty($subscription->pending_setup_intent) && !is_object($subscription->pending_setup_intent))
+				$subscription->pending_setup_intent = \Stripe\SetupIntent::retrieve((string)$subscription->pending_setup_intent);
+
+			return $subscription;
+		}
+
+		/**
 		 * Get a Stripe customer object instance.
 		 *
 		 * @param integer $user_id If it's for an existing user; pass the user's ID (optional).
@@ -78,12 +326,38 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_customer_metadata($post_vars), (array)$metadata);
+			$gateway_checkout_state = self::gateway_checkout_state($post_vars);
+			$gateway_checkout_id = $gateway_checkout_state ? (string)$gateway_checkout_state['id'] : '';
 			$customer = '';
 
 			try // Obtain existing customer object; else create a new one.
 			{
+				if($gateway_checkout_state)
+				{
+					//260830.0308 Recover the exact Customer already tied to this checkout before falling back to s2Member's normal stored-ID/email lookup.
+					if(!empty($gateway_checkout_state['gateway_ids']['customer_id']))
+					{
+						try
+						{
+							$customer = \Stripe\Customer::retrieve((string)$gateway_checkout_state['gateway_ids']['customer_id']);
+						}
+						catch(exception $exception)
+						{
+							$customer = ''; // A stale local ID must still fall through to metadata recovery.
+						}
+					}
+					if((empty($customer) || !is_object($customer)) && $email && is_object($customers = \Stripe\Customer::all(array('email' => (string)$email, 'limit' => 100))) && !empty($customers->data) && is_array($customers->data))
+						foreach($customers->data as $_customer)
+							if(empty($_customer->deleted) && !empty($_customer->metadata->s2member_gateway_checkout_id)
+							   && hash_equals($gateway_checkout_id, (string)$_customer->metadata->s2member_gateway_checkout_id))
+							{
+								$customer = $_customer;
+								break;
+							}
+				}
+
 				//260408 First try the stored Stripe customer id, but still fall back to email lookup if that id is stale or no longer retrievable.
-				if($user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
+				if((empty($customer) || !is_object($customer)) && $user_id && ($customer_id = get_user_option('s2member_subscr_cid', $user_id)))
 				{
 					try
 					{
@@ -95,6 +369,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					}
 				}
 
+				//260830.1632 !!! TO-DO: Reuse the earlier checkout email lookup here when available, preserving precedence: exact checkout metadata match -> stored customer ID -> ordinary email fallback. This can avoid a second Stripe Customer::all() call without weakening lost-response recovery.
 				//260408 A stale stored customer id should not prevent reusing an existing customer found by email.
 				if((empty($customer) || !is_object($customer)) && !empty($email))
 				{
@@ -125,6 +400,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 						'name'     => trim($fname.' '.$lname),
 						'metadata' => $metadata,
 					);
+					if($gateway_checkout_id)
+						$args['metadata']['s2member_gateway_checkout_id'] = $gateway_checkout_id;
 					// if we don't have a state, we didn't collect billing address.
 					if (!empty($post_vars['state'])) {
 						$args['address'] = array(
@@ -135,8 +412,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 							'postal_code' => $post_vars['zip'],
 						);
 					}
-					$customer = \Stripe\Customer::create($args);
+					//260830.0135 Customer creation is part of the same durable checkout; retry it idempotently if Stripe created the Customer but its response was lost.
+					$customer = \Stripe\Customer::create($args, $gateway_checkout_id ? array('idempotency_key' => 's2member-cus-'.$gateway_checkout_id) : array());
 				}
+				if($gateway_checkout_state && is_object($customer) && !empty($customer->id))
+					self::update_gateway_checkout((string)$gateway_checkout_state['id'], array('customer_id' => (string)$customer->id));
+
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $customer);
 
 				return $customer;
@@ -480,30 +761,126 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_subscription_metadata($post_vars, $cost_calculations), (array)$metadata);
-			//260828.2016 Use the rendered checkout's opaque request ID for creation idempotency; this protects duplicate/concurrent submits while a later rendered retry gets a fresh ID.
-			$stripe_request_id = !empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '';
+			$gateway_checkout_state = self::gateway_checkout_state($post_vars);
+			$gateway_checkout_id = $gateway_checkout_state ? (string)$gateway_checkout_state['id'] : '';
+			$generation = $gateway_checkout_state ? max(1, (int)@$gateway_checkout_state['context']['stripe_subscription_generation']) : 1;
+			if($gateway_checkout_id)
+			{
+				$metadata['s2member_gateway_checkout_id'] = $gateway_checkout_id;
+				$metadata['s2member_gateway_checkout_generation'] = (string)$generation;
+			}
+			//260830.0052 Gateway Checkout IDs survive reloads and are the preferred Stripe idempotency identity; retain request_id for pre-upgrade rendered forms.
+			$stripe_request_id = $gateway_checkout_id ? $gateway_checkout_id : (!empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '');
 
-			if(!self::cancel_incomplete_customer_subscriptions($customer_id))
+			//260830.0052 Recover this checkout's subscription before the legacy incomplete-subscription cleanup, or that cleanup could cancel the object a lost-response retry needs.
+			$existing_subscription = FALSE;
+			if($gateway_checkout_id)
+			{
+				try
+				{
+					$existing_subscription = self::find_gateway_checkout_subscription($customer_id, $gateway_checkout_id, $generation);
+				}
+				catch(exception $exception)
+				{
+					//260830.0308 A failed reconciliation lookup must stop checkout instead of falling through to another subscription creation.
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+					return self::error_message($exception);
+				}
+			}
+			if(is_object($existing_subscription))
+			{
+				if((string)$existing_subscription->status === 'incomplete_expired')
+				{
+					$generation = self::advance_gateway_checkout_generation($gateway_checkout_id, 'subscription', array('subscription_id', 'payment_intent_id', 'setup_intent_id', 'invoice_item_id'));
+					if(!$generation)
+						return _x('Unable to prepare this subscription retry. Please try again.', 's2member-front', 's2member');
+					$metadata['s2member_gateway_checkout_generation'] = (string)$generation;
+				}
+				else
+				{
+					$gateway_ids = array('customer_id' => (string)$customer_id, 'subscription_id' => (string)$existing_subscription->id);
+					if(!empty($existing_subscription->latest_invoice->payment_intent->id))
+						$gateway_ids['payment_intent_id'] = (string)$existing_subscription->latest_invoice->payment_intent->id;
+					if(!empty($existing_subscription->pending_setup_intent->id))
+						$gateway_ids['setup_intent_id'] = (string)$existing_subscription->pending_setup_intent->id;
+					self::update_gateway_checkout($gateway_checkout_id, $gateway_ids, !empty($existing_subscription->status) ? (string)$existing_subscription->status : '');
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $existing_subscription);
+					return $existing_subscription;
+				}
+			}
+
+			if(!self::cancel_incomplete_customer_subscriptions($customer_id, $gateway_checkout_id))
 			{
 				$error = 'Unable to cancel incomplete Stripe subscription(s) before creating a new subscription.';
-
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $error);
-
 				return $error;
 			}
 
 			// Do we have a paid trial.
-			if (!empty($post_vars['attr']['tp']) && !empty($cost_calculations['trial_total']) && $cost_calculations['trial_total'] > 0) {
+			if(!empty($post_vars['attr']['tp']) && !empty($cost_calculations['trial_total']) && $cost_calculations['trial_total'] > 0)
+			{
 				// Create an invoice item for it, so it gets added to the trial's invoice.
 				$item = array(
 					'customer'    => $customer_id,
 					'amount'      => self::dollar_amount_to_cents($cost_calculations['trial_total'], $cost_calculations['cur']),
 					'currency'    => $cost_calculations['cur'],
-					'description' => 'Initial period'
+					'description' => 'Initial period',
+					'metadata'    => $gateway_checkout_id ? array(
+						's2member_gateway_checkout_id'         => $gateway_checkout_id,
+						's2member_gateway_checkout_generation' => (string)$generation,
+					) : array(),
 				);
-				$invoice_item = \Stripe\InvoiceItem::create($item, array(
-					'idempotency_key' => $stripe_request_id ? 's2member-trial-'.$stripe_request_id : md5(serialize($item)),
-				));
+				$invoice_item = FALSE;
+				if($gateway_checkout_state)
+				{
+					if(!empty($gateway_checkout_state['gateway_ids']['invoice_item_id']))
+					{
+						try
+						{
+							$_invoice_item = \Stripe\InvoiceItem::retrieve((string)$gateway_checkout_state['gateway_ids']['invoice_item_id']);
+							$_generation = !empty($_invoice_item->metadata->s2member_gateway_checkout_generation) ? (int)$_invoice_item->metadata->s2member_gateway_checkout_generation : 1;
+							if((string)$_invoice_item->customer === (string)$customer_id && empty($_invoice_item->invoice) && !empty($_invoice_item->metadata->s2member_gateway_checkout_id)
+							   && hash_equals($gateway_checkout_id, (string)$_invoice_item->metadata->s2member_gateway_checkout_id) && $_generation === (int)$generation)
+								$invoice_item = $_invoice_item;
+						}
+						catch(exception $exception)
+						{
+							$invoice_item = FALSE;
+						}
+					}
+					if(!$invoice_item)
+					{
+						try
+						{
+							$invoice_items = \Stripe\InvoiceItem::all(array('customer' => $customer_id, 'pending' => TRUE, 'limit' => 100));
+						}
+						catch(exception $exception)
+						{
+							//260830.0308 A failed reconciliation lookup must stop checkout instead of risking a duplicate paid-trial item.
+							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+							return self::error_message($exception);
+						}
+						if(!empty($invoice_items->data) && is_array($invoice_items->data))
+							foreach($invoice_items->data as $_invoice_item)
+							{
+								$_generation = !empty($_invoice_item->metadata->s2member_gateway_checkout_generation) ? (int)$_invoice_item->metadata->s2member_gateway_checkout_generation : 1;
+								if(!empty($_invoice_item->metadata->s2member_gateway_checkout_id) && hash_equals($gateway_checkout_id, (string)$_invoice_item->metadata->s2member_gateway_checkout_id) && $_generation === (int)$generation)
+								{
+									$invoice_item = $_invoice_item;
+									break;
+								}
+							}
+					}
+				}
+				if($invoice_item)
+					self::update_gateway_checkout($gateway_checkout_id, array('invoice_item_id' => (string)$invoice_item->id));
+				else
+				{
+					$idempotency_key = $gateway_checkout_id ? 's2member-trial-'.$gateway_checkout_id.'-'.$generation : ($stripe_request_id ? 's2member-trial-'.$stripe_request_id : md5(serialize($item)));
+					$invoice_item = \Stripe\InvoiceItem::create($item, array('idempotency_key' => $idempotency_key));
+					if($gateway_checkout_id && is_object($invoice_item) && !empty($invoice_item->id))
+						self::update_gateway_checkout($gateway_checkout_id, array('invoice_item_id' => (string)$invoice_item->id));
+				}
 			}
 
 			try // Attempt to create a new subscription for this customer.
@@ -556,9 +933,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				if(!$subscription['default_payment_method'])
 					unset($subscription['default_payment_method']);
 
-				$subscription = \Stripe\Subscription::create($subscription, array(
-					'idempotency_key' => $stripe_request_id ? 's2member-sub-'.$stripe_request_id : md5(serialize($subscription)),
-				));
+				$idempotency_key = $gateway_checkout_id ? 's2member-sub-'.$gateway_checkout_id.'-'.$generation : ($stripe_request_id ? 's2member-sub-'.$stripe_request_id : md5(serialize($subscription)));
+				$subscription = \Stripe\Subscription::create($subscription, array('idempotency_key' => $idempotency_key));
+				if($gateway_checkout_id && is_object($subscription) && !empty($subscription->id))
+				{
+					$gateway_ids = array('customer_id' => (string)$customer_id, 'subscription_id' => (string)$subscription->id);
+					if(!empty($subscription->latest_invoice->payment_intent->id))
+						$gateway_ids['payment_intent_id'] = (string)$subscription->latest_invoice->payment_intent->id;
+					if(!empty($subscription->pending_setup_intent->id))
+						$gateway_ids['setup_intent_id'] = (string)$subscription->pending_setup_intent->id;
+					self::update_gateway_checkout($gateway_checkout_id, $gateway_ids, !empty($subscription->status) ? (string)$subscription->status : '');
+				}
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
@@ -916,6 +1301,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			if(self::pending_subscr_is_processed($subscr_id, $user_id))
 			{
+				if(!empty($details['gateway_checkout_id']))
+					self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', array('browser_response' => _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member')), 'fulfilled');
+
 				self::delete_pending_subscr_details($subscr_id);
 				delete_transient($lock_key);
 
@@ -946,6 +1334,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 				wp_set_current_user($previous_user_id);
 			}
+
+			//260830.0408 The asynchronous gateway confirmation completes the same Gateway Checkout, so later browser retries should recover success instead of the earlier pending message.
+			if(!empty($details['gateway_checkout_id']))
+				self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', array('browser_response' => _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member')), 'fulfilled');
 
 			self::delete_pending_subscr_details($subscr_id);
 			delete_transient($lock_key);
@@ -1634,11 +2026,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @since 260321
 		 *
-		 * @param string $customer_id Stripe customer ID.
+		 * @param string $customer_id         Stripe customer ID.
+		 * @param string $gateway_checkout_id Optional Gateway Checkout ID whose incomplete subscription must be preserved.
 		 *
 		 * @return bool True on success; else false.
 		 */
-		public static function cancel_incomplete_customer_subscriptions($customer_id)
+		public static function cancel_incomplete_customer_subscriptions($customer_id, $gateway_checkout_id = '')
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -1656,7 +2049,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				if(!empty($subscriptions->data) && is_array($subscriptions->data))
 					foreach($subscriptions->data as $_subscription)
 						if(!empty($_subscription->id))
+						{
+							//260830.0052 Do not cancel the incomplete subscription owned by the Gateway Checkout currently being recovered.
+							if($gateway_checkout_id && !empty($_subscription->metadata->s2member_gateway_checkout_id) && (string)$_subscription->metadata->s2member_gateway_checkout_id === (string)$gateway_checkout_id)
+								continue;
+
 							$_subscription->cancel();
+						}
 
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), true);
 
@@ -1675,14 +2074,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @since 260321
 		 *
-		 * @param string $payment_intent_id Stripe PaymentIntent ID.
+		 * @param string $payment_intent_id       Stripe PaymentIntent ID.
+		 * @param string $canceled_subscription_id Optional output variable receiving the subscription ID only when this call actually cancels it.
 		 *
 		 * @return bool True on success; else false.
 		 */
-		public static function cancel_incomplete_subscription_by_payment_intent($payment_intent_id)
+		public static function cancel_incomplete_subscription_by_payment_intent($payment_intent_id, &$canceled_subscription_id = '')
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
+			$canceled_subscription_id = '';
 
 			if(strpos((string)$payment_intent_id, 'pi_') !== 0)
 				return false;
@@ -1750,6 +2151,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				{
 					if((string)$exception->getMessage() && stripos($exception->getMessage(), 'No such subscription') !== false)
 					{
+						//260830.0620 We already verified this exact subscription was incomplete; voiding its invoice can remove it before delete(), which is still a successful cleanup and must advance the Gateway Checkout generation.
+						$canceled_subscription_id = (string)$invoice->subscription;
 						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260321 Subscription already gone during cancellation; treating cleanup as successful.');
 
 						return true;
@@ -1757,6 +2160,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					throw $exception;
 				}
 
+				$canceled_subscription_id = !empty($subscription->id) ? (string)$subscription->id : (string)$invoice->subscription;
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $subscription);
 
 				return true;
@@ -1850,8 +2254,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			self::init_stripe_sdk();
 
 			$metadata = array_merge(self::_additional_intent_metadata($post_vars, $cost_calculations), (array)$metadata);
-			//260828.2016 Keep PaymentIntent creation idempotent for duplicate/concurrent submissions of the same rendered checkout instead of keying idempotency to a per-attempt PaymentMethod.
-			$stripe_request_id = !empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '';
+			$gateway_checkout_state = self::gateway_checkout_state($post_vars);
+			$gateway_checkout_id = $gateway_checkout_state ? (string)$gateway_checkout_state['id'] : '';
+			$generation = $gateway_checkout_state ? max(1, (int)@$gateway_checkout_state['context']['stripe_payment_generation']) : 1;
+			if($gateway_checkout_id)
+			{
+				$metadata['s2member_gateway_checkout_id'] = $gateway_checkout_id;
+				$metadata['s2member_gateway_checkout_generation'] = (string)$generation;
+			}
+			//260830.0052 Gateway Checkout IDs survive reloads and are the preferred Stripe idempotency identity; retain request_id for pre-upgrade rendered forms.
+			$stripe_request_id = $gateway_checkout_id ? $gateway_checkout_id : (!empty($post_vars['request_id']) && preg_match('/^[A-Za-z0-9-]{20,64}$/', (string)$post_vars['request_id']) ? (string)$post_vars['request_id'] : '');
 
 			if(empty($pm_id))
 			{
@@ -1859,8 +2271,38 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return _x('The payment failed, please try again with a different card.', 's2member-front', 's2member');
 			}
 
-			try // Attempt to create the Payment Intent.
+			try // Attempt to recover or create the Payment Intent.
 			{
+				if($gateway_checkout_id && is_object($existing_intent = self::find_gateway_checkout_payment_intent($cus_id, $gateway_checkout_id, $generation)))
+				{
+					$expected_amount = self::dollar_amount_to_cents($amount, $currency);
+					if((int)$existing_intent->amount !== (int)$expected_amount || strtolower((string)$existing_intent->currency) !== strtolower((string)$currency))
+					{
+						$error = 'Unable to reconcile the existing Stripe PaymentIntent because its amount or currency does not match this Gateway Checkout.';
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $error);
+						return $error;
+					}
+
+					if((string)$existing_intent->status === 'canceled')
+					{
+						//260830.0052 A canceled PaymentIntent is terminal; keep the logical checkout but advance its Stripe object generation before creating a replacement.
+						$generation = self::advance_gateway_checkout_generation($gateway_checkout_id, 'payment', array('payment_intent_id'));
+						if(!$generation)
+							return _x('Unable to prepare this payment retry. Please try again.', 's2member-front', 's2member');
+						$metadata['s2member_gateway_checkout_generation'] = (string)$generation;
+					}
+					else
+					{
+						//260830.0052 Retryable PaymentIntents remain the same checkout object; a new card updates that object instead of creating another charge candidate.
+						if(in_array((string)$existing_intent->status, array('requires_payment_method', 'requires_confirmation'), TRUE) && (string)$existing_intent->payment_method !== (string)$pm_id)
+							$existing_intent = \Stripe\PaymentIntent::update($existing_intent->id, array('payment_method' => $pm_id));
+
+						self::update_gateway_checkout($gateway_checkout_id, array('customer_id' => (string)$cus_id, 'payment_intent_id' => (string)$existing_intent->id), (string)$existing_intent->status);
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $existing_intent);
+						return $existing_intent;
+					}
+				}
+
 				$intent = array(
 					'amount'                      => self::dollar_amount_to_cents($amount, $currency),
 					'currency'                    => $currency,
@@ -1875,9 +2317,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				if(!trim($intent['statement_descriptor_suffix']))
 					unset($intent['statement_descriptor_suffix']);
 
-				$intent = \Stripe\PaymentIntent::create($intent, array(
-					'idempotency_key' => $stripe_request_id ? 's2member-pi-'.$stripe_request_id : md5(serialize($intent))
-				));
+				$idempotency_key = $gateway_checkout_id ? 's2member-pi-'.$gateway_checkout_id.'-'.$generation : ($stripe_request_id ? 's2member-pi-'.$stripe_request_id : md5(serialize($intent)));
+				$intent = \Stripe\PaymentIntent::create($intent, array('idempotency_key' => $idempotency_key));
+				if($gateway_checkout_id && is_object($intent) && !empty($intent->id))
+					self::update_gateway_checkout($gateway_checkout_id, array('customer_id' => (string)$cus_id, 'payment_intent_id' => (string)$intent->id), !empty($intent->status) ? (string)$intent->status : '');
+
 				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent);
 
 				return $intent; // Stripe charge object.
