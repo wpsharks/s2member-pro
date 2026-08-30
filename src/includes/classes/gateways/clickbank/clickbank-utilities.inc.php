@@ -167,7 +167,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 						unset($s2vars[$var]);
 
 			$is_sale = preg_match('/^(?:TEST_)?SALE$/i', (string)$type);
-			if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, NULL, '&')))
+			//260830.2347 PHP 8.1+ deprecates NULL for http_build_query()'s string $numeric_prefix argument; '' preserves the historical query output.
+			if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, '', '&')))
 				return $s2vars; // Looks good. Return ``$s2vars``.
 
 			return array(); // Default empty array.
@@ -196,7 +197,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 						unset($s2vars[$var]);
 
 			$is_sale = preg_match('/^(?:TEST_)?SALE$/i', (string)$type);
-			if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, NULL, '&')))
+			//260830.2347 PHP 8.1+ deprecates NULL for http_build_query()'s string $numeric_prefix argument; '' preserves the historical query output.
+			if(!$is_sale || c_ws_plugin__s2member_utils_urls::s2member_sig_ok(http_build_query($s2vars, '', '&')))
 				return $s2vars; // Looks good. Return ``$s2vars``.
 
 			return array(); // Default empty array.

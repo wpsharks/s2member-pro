@@ -71,7 +71,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_return_in'))
 					{
 						$clickbank['s2member_log'][] = 'Order API variables have been obtained from ClickBank.';
 
-						$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars_v2_1(http_build_query($clickbank, NULL, '&'), $order['txnType']);
+						//260830.2347 PHP 8.1+ deprecates NULL for http_build_query()'s string $numeric_prefix argument; '' preserves the historical query output.
+						$s2vars = c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_parse_s2vars_v2_1(http_build_query($clickbank, '', '&'), $order['txnType']);
 
 						if(!empty($s2vars['s2_p1']) && !empty($s2vars['s2_p3']) && $s2vars['s2_p1'] === '0 D')
 							// Initial Period. No Trial defaults to Regular Period.
