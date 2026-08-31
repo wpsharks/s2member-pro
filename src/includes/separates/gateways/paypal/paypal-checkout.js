@@ -116,6 +116,9 @@ jQuery(document).ready(function($)
 			var values = [];
 			$.each($form.serializeArray(), function(index, field)
 			{
+				//260831.2048 Password edits invalidate prepared state through an input/change handler below; never retain plaintext passwords inside the reusable browser fingerprint.
+				if(/(?:^|\[)(?:password1|password2)(?:\]|$)/.test(field.name))
+					return;
 				//260818.2056 CAPTCHA responses are one-time transport proof, not purchase data; exclude them from prepared-token reuse.
 				if(/(?:^|\[)(?:g-recaptcha-response|recaptcha_challenge_field|recaptcha_response_field)(?:\]|$)/.test(field.name))
 					return;
@@ -123,6 +126,11 @@ jQuery(document).ready(function($)
 			});
 			return values.join('&');
 		};
+		//260831.2048 Password values stay only in their form controls until a live final approval; changing either field invalidates reuse without retaining another plaintext copy.
+		$form.on('input.s2memberPpcoPassword change.s2memberPpcoPassword', 'input[name="' + options.postName + '[password1]"], input[name="' + options.postName + '[password2]"]', function()
+		{
+			prepared = null, preparedFingerprint = '', planId = null;
+		});
 		var resetCaptcha = function()
 		{
 			//260818.2056 Server preparation consumes the CAPTCHA token; reset its browser widget before any changed purchase can prepare again.
@@ -276,6 +284,12 @@ jQuery(document).ready(function($)
 			};
 			(document.head || document.body || document.documentElement).appendChild(script);
 		};
+		var livePassword = function(name)
+		{
+			//260831.2048 Read a custom password only when sending the final browser approval; never copy it into prepared recovery state or browser storage.
+			var $password = $form.find('input[name="' + options.postName + '[' + name + ']"]');
+			return $password.length ? String($password.val() || '') : '';
+		};
 		var frameworkRequest = function(operation, extra)
 		{
 			if(!prepared || !prepared.endpoint || !prepared.token)
@@ -352,7 +366,11 @@ jQuery(document).ready(function($)
 				};
 				buttonOptions.onApprove = function(data)
 				{
-					return frameworkRequest('confirm_subscription', {subscription_id: data && data.subscriptionID ? data.subscriptionID : ''}).then(function(result)
+					return frameworkRequest('confirm_subscription', {
+						subscription_id: data && data.subscriptionID ? data.subscriptionID : '',
+						s2member_pro_paypal_checkout_password1: livePassword('password1'),
+						s2member_pro_paypal_checkout_password2: livePassword('password2')
+					}).then(function(result)
 					{
 						if(result && result.rtn_url && result.rtn_post)
 						{
@@ -379,7 +397,11 @@ jQuery(document).ready(function($)
 				};
 				buttonOptions.onApprove = function(data)
 				{
-					return frameworkRequest('capture_order', {order_id: data && data.orderID ? data.orderID : ''}).then(function(result)
+					return frameworkRequest('capture_order', {
+						order_id: data && data.orderID ? data.orderID : '',
+						s2member_pro_paypal_checkout_password1: livePassword('password1'),
+						s2member_pro_paypal_checkout_password2: livePassword('password2')
+					}).then(function(result)
 					{
 						if(result && result.rtn_url && result.rtn_post)
 						{

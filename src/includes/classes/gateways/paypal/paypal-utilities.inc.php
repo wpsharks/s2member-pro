@@ -633,7 +633,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				'user_id'       => $user ? (int)$user->ID : 0,
 				'username'      => $user ? (string)$user->user_login : (string)$post_vars['username'],
 				'email'         => $payer_email,
-				'password1'     => $user ? '' : (string)@$post_vars['password1'],
 				'first_name'    => (string)$post_vars['first_name'],
 				'last_name'     => (string)$post_vars['last_name'],
 				'custom_fields' => !empty($post_vars['custom_fields']) && is_array($post_vars['custom_fields']) ? $post_vars['custom_fields'] : array(),
@@ -884,6 +883,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return FALSE;
 
 			$state['invoice'] = (string)$invoice;
+			//260831.2048 Prepared recovery state may contain account PII, but never persist a customer's chosen/generated password; browser completion can supply it live, while webhook recovery intentionally generates one.
+			if(!empty($state['account']) && is_array($state['account']))
+				unset($state['account']['password1'], $state['account']['password2'], $state['account']['user_pass']);
 			set_transient(self::paypal_checkout_prepared_state_key($invoice), c_ws_plugin__s2member_utils_encryption::encrypt(serialize($state)), WEEK_IN_SECONDS);
 
 			return (self::paypal_checkout_prepared_state_get($invoice) !== FALSE);
@@ -1041,18 +1043,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			else if($existing_user && (!is_multisite() || (int)c_ws_plugin__s2member_utils_users::ms_user_login_email_exists_but_not_on_blog((string)$account['username'], (string)$account['email']) !== (int)$existing_user->ID))
 				return new WP_Error('pro_checkout_user_conflict');
 
-			//260818.1752 Persist a generated password before account creation so a retry cannot generate different credentials.
-			if(empty($account['user_pass']))
-			{
-				//260818.1830 maybe_custom_pass() accepts its password by reference, so PHP requires a variable here.
-				$password1 = isset($account['password1']) ? (string)$account['password1'] : '';
-				$state['account']['user_pass'] = c_ws_plugin__s2member_registrations::maybe_custom_pass($password1);
-				$state['account']['password_generated'] = (empty($account['password1']) || (string)$account['password1'] !== (string)$state['account']['user_pass']);
-				if(!self::paypal_checkout_prepared_state_set($invoice, $state))
-					return new WP_Error('pro_checkout_state_save_failed');
-
-				$account = $state['account'];
-			}
+			//260831.2048 Passwords exist only for this account-creation attempt; retries may generate a new random password because no credential is ever recoverably persisted.
+			$password1 = isset($account['password1']) ? (string)$account['password1'] : '';
+			//260818.1830 maybe_custom_pass() accepts its password by reference, so PHP requires a variable here.
+			$user_pass = c_ws_plugin__s2member_registrations::maybe_custom_pass($password1);
+			$password_generated = ($password1 === '' || $password1 !== $user_pass);
 
 			$old_post = $_POST;
 			$old_cookie = $_COOKIE;
@@ -1087,7 +1082,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				$_COOKIE['s2member_item_number'] = c_ws_plugin__s2member_utils_encryption::encrypt((string)$state['notify_paypal']['item_number']);
 
 				$user_login = (string)$account['username'];
-				$user_pass = (string)$account['user_pass'];
 				$user_email = (string)$account['email'];
 				$new_user_id = (is_multisite() && ($new_user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($user_login, $user_email, $user_pass))) ? $new_user_id : wp_create_user($user_login, $user_pass, $user_email);
 			}
@@ -1106,12 +1100,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return new WP_Error('pro_checkout_user_create_failed');
 
 			$new_user_id = (int)$new_user_id;
-			$notification_user_pass = (string)$state['account']['user_pass'];
-			$password_generated = !empty($state['account']['password_generated']);
+			$notification_user_pass = (string)$user_pass; //260831.2048 Kept only in this request for old WordPress versions that still require the plaintext notification argument.
 
 			update_user_meta($new_user_id, 's2member_paypal_checkout_prepared_invoice', (string)$invoice);
 			$state['account']['prepared_user_id'] = $new_user_id;
-			$state['account']['password1'] = $state['account']['user_pass'] = ''; //260818.1752 Do not retain credentials after account creation.
+			$state['account']['password_generated'] = $password_generated;
+			unset($state['account']['password1'], $state['account']['password2'], $state['account']['user_pass']); //260831.2048 Defense in depth before saving scrubbed recovery state.
 			if(!self::paypal_checkout_prepared_state_set($invoice, $state))
 				return new WP_Error('pro_checkout_state_save_failed');
 
@@ -1120,7 +1114,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				update_user_option($new_user_id, 'default_password_nag', TRUE, TRUE);
 
 				if(version_compare(get_bloginfo('version'), '4.3.1', '>='))
-					wp_new_user_notification($new_user_id, NULL, 'both', $notification_user_pass);
+					wp_new_user_notification($new_user_id, NULL, 'both'); //260831.2048 Modern WordPress sends a set-password link and no longer accepts the legacy plaintext-password argument.
 				else if(version_compare(get_bloginfo('version'), '4.3', '>='))
 					wp_new_user_notification($new_user_id, 'both', $notification_user_pass);
 				else
@@ -1129,7 +1123,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			else
 			{
 				if(version_compare(get_bloginfo('version'), '4.3.1', '>='))
-					wp_new_user_notification($new_user_id, NULL, 'admin', $notification_user_pass);
+					wp_new_user_notification($new_user_id, NULL, 'admin'); //260831.2048 Custom-password browser checkouts notify the admin without passing recoverable credentials through modern WordPress APIs.
 				else if(version_compare(get_bloginfo('version'), '4.3', '>='))
 					wp_new_user_notification($new_user_id, 'admin', $notification_user_pass);
 				else
@@ -1172,6 +1166,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$actual_payment_id = !empty($state['recurring']) ? (!empty($context['paypal']['subscr_id']) ? (string)$context['paypal']['subscr_id'] : '') : (!empty($context['paypal']['txn_id']) ? (string)$context['paypal']['txn_id'] : '');
 			if(!$actual_payment_id)
 				return new WP_Error('pro_checkout_payment_id_missing');
+
+			//260831.2048 A live browser approval may carry the just-validated custom password for immediate account creation; webhook/recovery requests omit it and intentionally use WordPress's generated-password flow.
+			$live_password_supplied = array_key_exists('s2member_pro_paypal_checkout_password1', $_POST) || array_key_exists('s2member_pro_paypal_checkout_password2', $_POST);
+			if($live_password_supplied && !empty($state['account']['mode']) && $state['account']['mode'] === 'new' && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+			{
+				$password1 = isset($_POST['s2member_pro_paypal_checkout_password1']) ? stripslashes((string)$_POST['s2member_pro_paypal_checkout_password1']) : '';
+				$password2 = isset($_POST['s2member_pro_paypal_checkout_password2']) ? stripslashes((string)$_POST['s2member_pro_paypal_checkout_password2']) : '';
+				if($password1 === '' || strlen($password1) < c_ws_plugin__s2member_user_securities::min_password_length() || strlen($password1) > 64 || $password2 !== $password1)
+					return new WP_Error('pro_checkout_live_password_invalid');
+
+				$state['account']['password1'] = $password1; // Runtime only; paypal_checkout_prepared_state_set() strips credentials before persistence.
+			}
 
 			if(is_wp_error($user_id = self::paypal_checkout_prepare_account($state, $context['paypal'], $invoice)))
 			{
