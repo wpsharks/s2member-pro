@@ -4,7 +4,7 @@
   "description": "Pro add-on for the s2Member plugin.",
   "keywords": ["websharks", "s2member"],
 
-  "type": "project",
+  "type": "wordpress-plugin",
   "license": "GPL-3.0+",
 
   "authors": [{
