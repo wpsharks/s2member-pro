@@ -360,8 +360,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%last_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_registration']['last_name']))), $code);
 				$code = preg_replace('/%%email_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_registration']['email']))), $code);
 				$code = preg_replace('/%%username_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_registration']['username']))), $code);
-				$code = preg_replace('/%%password1_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_registration']['password1']))), $code);
-				$code = preg_replace('/%%password2_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_registration']['password2']))), $code);
+				//260901.0515 Never repopulate submitted passwords into rendered HTML after validation; keep credentials only in the active request that needs them.
+				$code = preg_replace('/%%password1_value%%/', '', $code);
+				$code = preg_replace('/%%password2_value%%/', '', $code);
 				$code = preg_replace('/%%custom_fields%%/', c_ws_plugin__s2member_utils_strings::esc_refs($custom_fields), $code);
 				$code = preg_replace('/%%captcha%%/', c_ws_plugin__s2member_utils_strings::esc_refs($captcha), $code);
 				$code = preg_replace('/%%opt_in%%/', c_ws_plugin__s2member_utils_strings::esc_refs($opt_in), $code);
@@ -759,8 +760,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%last_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_checkout']['last_name']))), $code);
 				$code = preg_replace('/%%email_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_checkout']['email']))), $code);
 				$code = preg_replace('/%%username_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_checkout']['username']))), $code);
-				$code = preg_replace('/%%password1_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_checkout']['password1']))), $code);
-				$code = preg_replace('/%%password2_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_checkout']['password2']))), $code);
+				//260901.0515 Never repopulate submitted passwords into rendered HTML after validation; keep credentials only in the active request that needs them.
+				$code = preg_replace('/%%password1_value%%/', '', $code);
+				$code = preg_replace('/%%password2_value%%/', '', $code);
 				$code = preg_replace('/%%custom_fields%%/', c_ws_plugin__s2member_utils_strings::esc_refs($custom_fields), $code);
 				$code = preg_replace('/%%source_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html((string)(@$_p['s2member_pro_stripe_checkout']['source_token']))), $code);
 				$code = preg_replace('/%%source_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html((string)(@$_p['s2member_pro_stripe_checkout']['source_token_summary']))), $code);
