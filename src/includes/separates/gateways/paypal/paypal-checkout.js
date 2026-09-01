@@ -28,7 +28,7 @@ jQuery(document).ready(function($)
 		var currency = $.trim($currency.val()).toUpperCase();
 		var locale = $.trim($lang.val());
 		var lc = $.trim($lc.val()).toUpperCase();
-		var prepared = null, preparedFingerprint = '', planId = null;
+		var prepared = null, preparedFingerprint = '';
 		var gatewayCheckoutOperation = expectedFlow === 'subscription' ? 'subscription' : 'payment';
 		var gatewayCheckoutIdentity = null;
 
@@ -154,7 +154,7 @@ jQuery(document).ready(function($)
 		//260831.2048 Password values stay only in their form controls until a live final approval; changing either field invalidates reuse without retaining another plaintext copy.
 		$form.on('input.s2memberPpcoPassword change.s2memberPpcoPassword', 'input[name="' + options.postName + '[password1]"], input[name="' + options.postName + '[password2]"]', function()
 		{
-			prepared = null, preparedFingerprint = '', planId = null;
+			prepared = null, preparedFingerprint = '';
 		});
 		var resetCaptcha = function()
 		{
@@ -363,7 +363,7 @@ jQuery(document).ready(function($)
 
 					var formData = $form.serialize();
 					fingerprint = formFingerprint();
-					prepared = null, preparedFingerprint = '', planId = null;
+					prepared = null, preparedFingerprint = '';
 					return prepare(formData, fingerprint).then(function()
 					{
 						return actions.resolve();
@@ -384,17 +384,14 @@ jQuery(document).ready(function($)
 
 			if(expectedFlow === 'subscription')
 			{
-				buttonOptions.createSubscription = function(data, actions)
+				buttonOptions.createSubscription = function()
 				{
-					if(planId)
-						return actions.subscription.create({plan_id: planId, custom_id: prepared.invoice, application_context: {shipping_preference: 'NO_SHIPPING'}});
-
-					return frameworkRequest('get_plan_id').then(function(result)
+					//260901.2145 Create the PayPal subscription on s2Member's server so its ID is persisted in Gateway Checkout before browser approval/continuation can be lost.
+					return frameworkRequest('create_subscription').then(function(result)
 					{
-						if(!result || !result.plan_id)
-							throw new Error(result && result.error ? result.error : 'plan_get_failed');
-						planId = result.plan_id;
-						return actions.subscription.create({plan_id: planId, custom_id: prepared.invoice, application_context: {shipping_preference: 'NO_SHIPPING'}});
+						if(result && result.subscription_id)
+							return result.subscription_id;
+						throw new Error(result && result.error ? result.error : 'subscription_create_failed');
 					});
 				};
 				buttonOptions.onApprove = function(data)

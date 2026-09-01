@@ -779,6 +779,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$token = array(
 				'exp'         => time() + 10800,
 				'invoice'     => $invoice,
+				//260901.2145 Framework subscription creation uses this trusted token value to lock/persist the PayPal resource before browser approval can lose continuation state.
+				'gateway_checkout_id' => (string)$gateway_checkout_state['id'],
 				'ip'          => c_ws_plugin__s2member_utils_ip::current(),
 				'item_name'   => (string)$cost_calculations['desc'],
 				'item_number' => (string)$post_vars['attr']['level_ccaps_eotper'],
