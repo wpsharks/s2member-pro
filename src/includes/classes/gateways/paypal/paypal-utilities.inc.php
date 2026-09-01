@@ -549,6 +549,44 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Prepares durable Gateway Checkout state for a PayPal Checkout Pro-Form submission.
+		 *
+		 * @since 260901.0722
+		 *
+		 * @param array   $post_vars      PayPal Pro-Form post vars, updated with the authoritative Gateway Checkout identity.
+		 * @param string  $operation      Gateway Checkout operation; `payment` or `subscription`.
+		 * @param array   $purchase_terms Final server-side purchase terms.
+		 * @param integer $user_id        WordPress user ID, if known.
+		 *
+		 * @return array|bool Gateway Checkout state, else FALSE.
+		 */
+		public static function paypal_checkout_prepare_gateway_checkout(&$post_vars, $operation = '', $purchase_terms = array(), $user_id = 0)
+		{
+			$post_vars = (array)$post_vars;
+			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
+			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
+			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
+			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
+				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$state = c_ws_plugin__s2member_gateway_checkouts::create_or_resume('paypal_checkout', $operation, $gateway_checkout_id, $gateway_checkout_token, $fingerprint, $user_id);
+
+			if(!$state && $existing_state && (string)$existing_state['gateway'] === 'paypal_checkout' && (string)$existing_state['operation'] === (string)$operation
+			&& empty($existing_state['gateway_ids']) && empty($existing_state['gateway_status']) && (string)$existing_state['fulfillment_status'] === 'pending')
+			{
+				//260901.0722 Finalized terms may change before PayPal creates anything; replace only a checkout that has no recorded gateway work or fulfillment progress yet.
+				$state = c_ws_plugin__s2member_gateway_checkouts::create('paypal_checkout', $operation, $fingerprint, $user_id);
+			}
+			if(!$state)
+				return FALSE;
+
+			//260901.1538 Return the authoritative signed identity; JavaScript replaces any stale history.state identity with these values.
+			$post_vars['gateway_checkout_id'] = (string)$state['id'];
+			$post_vars['gateway_checkout_token'] = c_ws_plugin__s2member_gateway_checkouts::browser_token($state['id']);
+
+			return $state;
+		}
+
+		/**
 		 * Prepares an authoritative membership Pro-Form purchase for Framework PayPal Checkout.
 		 *
 		 * @since 260818
@@ -617,7 +655,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return new WP_Error('pro_checkout_payment_not_required', _x('Payment is no longer required for this checkout.', 's2member-front', 's2member'), array('free_handoff' => $free_handoff));
 			}
 
-			$invoice = 's2mpf-'.md5(uniqid('s2mpf_', true).wp_rand());
+			$gateway_checkout_operation = $use_recurring_profile ? 'subscription' : 'payment';
+			$gateway_checkout_terms = array(
+				'form'            => 'checkout',
+				'operation'       => $gateway_checkout_operation,
+				'item_number'     => (string)$post_vars['attr']['level_ccaps_eotper'],
+				'custom'          => (string)$post_vars['attr']['custom'],
+				'trial_total'     => (string)$cost_calculations['trial_total'],
+				'total'           => (string)$cost_calculations['total'],
+				'currency'        => (string)$cost_calculations['cur'],
+				'description'     => (string)$cost_calculations['desc'],
+				'trial_period'    => (string)$post_vars['attr']['tp'].' '.(string)$post_vars['attr']['tt'],
+				'regular_period'  => (string)$post_vars['attr']['rp'].' '.(string)$post_vars['attr']['rt'],
+				'recurring'       => (string)$post_vars['attr']['rr'],
+				'recurring_times' => (string)$post_vars['attr']['rrt'],
+				'coupon'          => (string)@$cp_attr['_full_coupon_code'],
+			);
+			if(!($gateway_checkout_state = self::paypal_checkout_prepare_gateway_checkout($post_vars, $gateway_checkout_operation, $gateway_checkout_terms, get_current_user_id())))
+				return new WP_Error('pro_checkout_gateway_checkout_failed', _x('Unable to initialize this payment securely. Please reload the checkout page and try again.', 's2member-front', 's2member'));
+
+			//260901.0722 Carry the random coordinator ID through PayPal's existing invoice/custom_id fields so browser and webhook recovery need no separate invoice-to-checkout mapping.
+			$invoice = 's2mpf-'.(string)$gateway_checkout_state['id'];
 			$period1 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period1($post_vars['attr']['tp'].' '.$post_vars['attr']['tt']);
 			$period3 = c_ws_plugin__s2member_paypal_utilities::paypal_pro_period3($post_vars['attr']['rp'].' '.$post_vars['attr']['rt']);
 			$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = (int)$user->ID)) ? $user : FALSE;
@@ -692,6 +750,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			);
 
 			$state = array(
+				'gateway_checkout_id' => (string)$gateway_checkout_state['id'],
 				'recurring'        => $use_recurring_profile,
 				'independent_ccaps'=> $is_independent_ccaps_sale,
 				'account'          => $account,
@@ -768,13 +827,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			));
 
 			return array(
-				'ok'       => TRUE,
-				'flow'     => $use_recurring_profile ? 'subscription' : 'order',
-				'invoice'  => $invoice,
-				'token'    => $encrypted_token,
-				'endpoint' => home_url('/?s2member_paypal_checkout=1'),
-				'amount'   => (string)$cost_calculations['total'],
-				'cc'       => strtoupper((string)$cost_calculations['cur']),
+				'ok'                     => TRUE,
+				'flow'                   => $use_recurring_profile ? 'subscription' : 'order',
+				'invoice'                => $invoice,
+				'token'                  => $encrypted_token,
+				'endpoint'               => home_url('/?s2member_paypal_checkout=1'),
+				'amount'                 => (string)$cost_calculations['total'],
+				'cc'                     => strtoupper((string)$cost_calculations['cur']),
+				'gateway_checkout_id'    => (string)$gateway_checkout_state['id'],
+				'gateway_checkout_token' => (string)$post_vars['gateway_checkout_token'],
 			);
 		}
 
@@ -868,6 +929,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Extracts a Gateway Checkout ID embedded in a modern PayPal Checkout Pro-Form invoice.
+		 *
+		 * @since 260901.0722
+		 *
+		 * @param string $invoice Prepared purchase invoice.
+		 *
+		 * @return string Gateway Checkout ID, else an empty string.
+		 */
+		public static function paypal_checkout_gateway_checkout_id($invoice = '')
+		{
+			$gateway_checkout_id = self::paypal_checkout_prepared_invoice($invoice) ? substr((string)$invoice, strlen('s2mpf-')) : '';
+
+			return c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id) ? $gateway_checkout_id : '';
+		}
+
+		/**
 		 * Stores encrypted prepared PayPal Checkout membership state.
 		 *
 		 * @since 260818
@@ -886,9 +963,26 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			//260831.2048 Prepared recovery state may contain account PII, but never persist a customer's chosen/generated password; browser completion can supply it live, while webhook recovery intentionally generates one.
 			if(!empty($state['account']) && is_array($state['account']))
 				unset($state['account']['password1'], $state['account']['password2'], $state['account']['user_pass']);
+
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if($private_context === FALSE)
+					return FALSE;
+
+				$private_context = (array)$private_context;
+				$private_context['paypal_checkout'] = !empty($private_context['paypal_checkout']) && is_array($private_context['paypal_checkout']) ? $private_context['paypal_checkout'] : array();
+				$private_context['paypal_checkout']['prepared_state'] = $state;
+				//260901.0722 Mirror prepared recovery into the shared encrypted coordinator before retaining the legacy transient as a migration fallback.
+				if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context))
+					return FALSE;
+			}
+
 			set_transient(self::paypal_checkout_prepared_state_key($invoice), c_ws_plugin__s2member_utils_encryption::encrypt(serialize($state)), WEEK_IN_SECONDS);
 
-			return (self::paypal_checkout_prepared_state_get($invoice) !== FALSE);
+			return (get_transient(self::paypal_checkout_prepared_state_key($invoice)) !== FALSE);
 		}
 
 		/**
@@ -902,7 +996,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		 */
 		public static function paypal_checkout_prepared_state_get($invoice = '')
 		{
-			if(!self::paypal_checkout_prepared_invoice($invoice) || !($encrypted = get_transient(self::paypal_checkout_prepared_state_key($invoice))))
+			if(!self::paypal_checkout_prepared_invoice($invoice))
+				return FALSE;
+
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				$state = is_array($private_context) && !empty($private_context['paypal_checkout']['prepared_state']) && is_array($private_context['paypal_checkout']['prepared_state']) ? $private_context['paypal_checkout']['prepared_state'] : FALSE;
+				if(is_array($state) && !empty($state['invoice']) && hash_equals((string)$invoice, (string)$state['invoice']))
+					return $state;
+			}
+
+			//260901.0722 Existing/in-flight PayPal Checkout transactions remain recoverable from the original encrypted transient throughout the coordinator migration.
+			if(!($encrypted = get_transient(self::paypal_checkout_prepared_state_key($invoice))))
 				return FALSE;
 
 			$state = c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($encrypted));
@@ -923,7 +1031,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		 */
 		public static function paypal_checkout_prepared_state_delete($invoice = '')
 		{
-			return delete_transient(self::paypal_checkout_prepared_state_key($invoice));
+			if(!self::paypal_checkout_prepared_invoice($invoice))
+				return FALSE;
+
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if($private_context === FALSE)
+					return FALSE;
+
+				$private_context = (array)$private_context;
+				if(isset($private_context['paypal_checkout']['prepared_state']))
+					unset($private_context['paypal_checkout']['prepared_state']);
+				if(isset($private_context['paypal_checkout']) && !$private_context['paypal_checkout'])
+					unset($private_context['paypal_checkout']);
+				//260901.0722 Scrub prepared account PII from coordinator state when the existing PayPal lifecycle no longer needs it.
+				if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context))
+					return FALSE;
+			}
+
+			delete_transient(self::paypal_checkout_prepared_state_key($invoice));
+
+			return (get_transient(self::paypal_checkout_prepared_state_key($invoice)) === FALSE);
 		}
 
 		/**

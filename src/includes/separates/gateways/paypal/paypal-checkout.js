@@ -29,9 +29,34 @@ jQuery(document).ready(function($)
 		var locale = $.trim($lang.val());
 		var lc = $.trim($lc.val()).toUpperCase();
 		var prepared = null, preparedFingerprint = '', planId = null;
+		var gatewayCheckoutOperation = expectedFlow === 'subscription' ? 'subscription' : 'payment';
+		var gatewayCheckoutIdentity = null;
 
 		if(!expectedFlow || !currency || !cfg.client_id)
 			return;
+
+		//260901.0722 PPCO prepares over AJAX, so history.state can carry the signed logical checkout across reload/back-forward without adding coordinator fields to the rendered Pro-Form.
+		var gatewayCheckoutHistory = function(identity)
+		{
+			if(!options.gatewayCheckout || !window.history || !window.history.replaceState)
+				return;
+
+			var historyState = (window.history.state && typeof window.history.state === 'object') ? window.history.state : {};
+			var gatewayCheckouts = (historyState.s2memberGatewayCheckouts && typeof historyState.s2memberGatewayCheckouts === 'object') ? historyState.s2memberGatewayCheckouts : {};
+			var key = options.prefix;
+			var stored = gatewayCheckouts[key] || {};
+
+			if(identity && identity.id && identity.token)
+			{
+				gatewayCheckoutIdentity = {id: identity.id, token: identity.token, operation: gatewayCheckoutOperation};
+				gatewayCheckouts[key] = gatewayCheckoutIdentity;
+				historyState.s2memberGatewayCheckouts = gatewayCheckouts;
+				window.history.replaceState(historyState, document.title, window.location.href);
+			}
+			else if(stored.id && stored.token && stored.operation === gatewayCheckoutOperation)
+				gatewayCheckoutIdentity = stored;
+		};
+		gatewayCheckoutHistory();
 
 		//260818.2056 Different flow/currency/locale combinations need isolated SDK globals when multiple Pro-Forms share a page.
 		var sdkNamespace = ('s2m_pro_ppco_' + expectedFlow + '_' + currency + '_' + locale + '_' + lc).replace(/[^a-z0-9_]/gi, '_');
@@ -198,6 +223,12 @@ jQuery(document).ready(function($)
 		var prepare = function(formData, fingerprint)
 		{
 			var body = formData;
+			//260901.0722 Send only the signed coordinator identity recovered for this history entry; finalized purchase terms remain authoritative on the server.
+			if(options.gatewayCheckout && gatewayCheckoutIdentity && gatewayCheckoutIdentity.id && gatewayCheckoutIdentity.token)
+			{
+				body += (body ? '&' : '') + encodeURIComponent(options.postName + '[gateway_checkout_id]') + '=' + encodeURIComponent(gatewayCheckoutIdentity.id);
+				body += '&' + encodeURIComponent(options.postName + '[gateway_checkout_token]') + '=' + encodeURIComponent(gatewayCheckoutIdentity.token);
+			}
 			body += (body ? '&' : '') + encodeURIComponent(options.postName + '[paypal_checkout_op]') + '=prepare';
 
 			return fetchJson($form.attr('action') || window.location.href, {
@@ -218,6 +249,8 @@ jQuery(document).ready(function($)
 					throw new Error(result && result.error ? result.error : 'prepare_failed');
 				}
 
+				if(options.gatewayCheckout && result.gateway_checkout_id && result.gateway_checkout_token)
+					gatewayCheckoutHistory({id: result.gateway_checkout_id, token: result.gateway_checkout_token});
 				prepared = result;
 				preparedFingerprint = fingerprint;
 				resetCaptcha();
@@ -479,7 +512,8 @@ jQuery(document).ready(function($)
 		nonce: 'input#s2member-pro-paypal-checkout-nonce',
 		flow: 'input#s2member-pro-paypal-checkout-ppco-flow',
 		currency: 'input#s2member-pro-paypal-checkout-ppco-currency',
-		lc: 'input#s2member-pro-paypal-checkout-ppco-lc'
+		lc: 'input#s2member-pro-paypal-checkout-ppco-lc',
+		gatewayCheckout: true
 	});
 
 	initForm({
