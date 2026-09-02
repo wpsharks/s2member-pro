@@ -44,15 +44,52 @@ if(!class_exists('c_ws_plugin__s2member_pro_stats_pinger'))
 	 */
 	class c_ws_plugin__s2member_pro_stats_pinger
 	{
+		/**
+		 * Maybe schedules a background stats ping.
+		 *
+		 * Keeps the existing weekly rate limit, but leaves the option update and
+		 * network request to WP-Cron instead of performing them during admin_init.
+		 *
+		 * @package s2Member\Stats
+		 * @since 150708
+		 *
+		 * @return void
+		 */
 		public static function maybe_ping()
 		{
-			if (!apply_filters('c_ws_plugin__s2member_pro_stats_pinger_enable', TRUE))
+			if(!apply_filters('c_ws_plugin__s2member_pro_stats_pinger_enable', TRUE))
 				return; // Stats collection off.
 
-			if ($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_last_stats_log'] >= strtotime('-1 week'))
+			if((int)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_last_stats_log'] >= strtotime('-1 week'))
 				return; // No reason to keep pinging.
 
+			//260902.0340 Keep stats network I/O and option writes out of the admin request.
+			c_ws_plugin__s2member_cron_jobs::maybe_schedule_single_event('ws_plugin__s2member_pro_stats_ping');
+		}
+
+		/**
+		 * Performs a scheduled background stats ping.
+		 *
+		 * Records the weekly attempt before contacting the stats endpoint. This
+		 * intentionally rate-limits failed requests too, so an unavailable stats
+		 * service cannot cause repeated retry attempts on subsequent admin requests.
+		 *
+		 * @package s2Member\Stats
+		 * @since 260902
+		 *
+		 * @return void
+		 */
+		public static function ping()
+		{
+			if(!apply_filters('c_ws_plugin__s2member_pro_stats_pinger_enable', TRUE))
+				return; // Stats collection off.
+
+			if((int)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_last_stats_log'] >= strtotime('-1 week'))
+				return; // Another request may have handled this already.
+
+			//260902.0340 Record the attempt before HTTP so failures remain rate-limited for one week.
 			$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_last_stats_log'] = (string)time();
+			$GLOBALS['WS_PLUGIN__']['s2member']['o'] = ws_plugin__s2member_configure_options_and_their_defaults($GLOBALS['WS_PLUGIN__']['s2member']['o']);
 
 			update_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
 
@@ -70,11 +107,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stats_pinger'))
 			);
 			$stats_api_url = add_query_arg(urlencode_deep($stats_api_url_args), $stats_api_url);
 
-			wp_remote_get ($stats_api_url, array(
-					'blocking'  => false,
-					'sslverify' => false,
-				)
-			);
+			//260902.0340 This runs in WP-Cron, so the remote request no longer belongs to a page-load lifecycle.
+			wp_remote_get($stats_api_url, array('timeout' => 5, 'sslverify' => false));
 		}
 	}
 }
