@@ -54,20 +54,33 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          *
          * @since 260820.1924
          *
+         * @param array|null $vars             Optional `ws_plugin__s2member_after_update_all_options` hook context.
+         * @param bool       $cleanup_disabled Internal. Allow a disabled reminder cron callback to remove stale scheduled work.
+         *
          * @return bool True when the reminder schedule is healthy/disabled as configured, otherwise false.
          */
-        public static function ensure_fixed_eot_reminder_schedule()
+        public static function ensure_fixed_eot_reminder_schedule($vars = null, $cleanup_disabled = false)
         {
+            $after_options_update = is_array($vars) && array_key_exists('updated_all_options', $vars);
+
+            //260902.0654 The after-update hook runs before request-start globals are reloaded, so use its freshly saved options; ignore hook calls where no options were actually saved.
+            if ($after_options_update && empty($vars['updated_all_options'])) {
+                return true;
+            }
+            $options = $after_options_update && isset($vars['options']) && is_array($vars['options']) ? $vars['options'] : $GLOBALS['WS_PLUGIN__']['s2member']['o'];
+            $enabled = !empty($options['pro_eot_reminder_email_enable']);
+
+            //260902.0654 Disabled normal requests do no cron/transient housekeeping; cleanup runs only after a successful options save or when a stale reminder cron callback is already executing.
+            if (!$enabled && !$after_options_update && !$cleanup_disabled) {
+                return true;
+            }
             $hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__schedule';
             $continuation_hook = 'ws_plugin__s2member_pro_fixed_eot_reminders__continuation';
-            $enabled = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_reminder_email_enable']);
 
             if (!$enabled) {
                 wp_clear_scheduled_hook($hook);
                 wp_clear_scheduled_hook($continuation_hook);
-                if (doing_action('ws_plugin__s2member_after_update_all_options')) {
-                    self::fixed_eot_record_schedule_result(true, true);
-                }
+                self::fixed_eot_record_schedule_result(true, true);
                 delete_transient('ws_plugin__s2member_pro_fixed_eot_reminders_health');
                 return true;
             }
@@ -681,7 +694,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             global $wpdb;
 
             if (!($days = self::load_reminder_config())) {
-                self::ensure_fixed_eot_reminder_schedule();
+                //260902.0654 A stale scheduled callback that reaches this disabled path gets one chance to remove its own recurring/continuation events without putting that housekeeping back on normal requests.
+                self::ensure_fixed_eot_reminder_schedule(null, true);
                 return;
             }
 
