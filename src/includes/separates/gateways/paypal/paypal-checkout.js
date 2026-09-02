@@ -30,7 +30,7 @@ jQuery(document).ready(function($)
 		var lc = $.trim($lc.val()).toUpperCase();
 		var prepared = null, preparedFingerprint = '';
 		var gatewayCheckoutOperation = expectedFlow === 'subscription' ? 'subscription' : 'payment';
-		var gatewayCheckoutIdentity = null;
+		var gatewayCheckoutIdentity = null, subscriptionCreateUnresolved = false;
 
 		if(!expectedFlow || !currency || !cfg.client_id)
 			return;
@@ -341,6 +341,61 @@ jQuery(document).ready(function($)
 				credentials: 'same-origin'
 			});
 		};
+		var delay = function(milliseconds)
+		{
+			return new Promise(function(resolve)
+			{
+				window.setTimeout(resolve, milliseconds);
+			});
+		};
+		var recoverSubscriptionId = function(attempt)
+		{
+			return frameworkRequest('get_subscription_id').then(function(result)
+			{
+				if(result && result.subscription_id)
+				{
+					clearMessage();
+					return result.subscription_id;
+				}
+				if(result && result.error)
+					throw new Error(result.error);
+				if(attempt >= 10)
+				{
+					subscriptionCreateUnresolved = true;
+					throw new Error('subscription_create_unresolved');
+				}
+
+				//260902.0200 Give the independent CREATED webhook a short window to repair an ambiguous create without repeatedly calling PayPal from the browser.
+				showInfo(cfg.messages.subscription_recovering);
+				return delay(1500).then(function(){ return recoverSubscriptionId(attempt + 1); });
+			});
+		};
+		var confirmSubscription = function(subscriptionId, attempt)
+		{
+			return frameworkRequest('confirm_subscription', {
+				subscription_id: subscriptionId,
+				s2member_pro_paypal_checkout_password1: livePassword('password1'),
+				s2member_pro_paypal_checkout_password2: livePassword('password2')
+			}).then(function(result)
+			{
+				if(result && result.rtn_url && result.rtn_post)
+				{
+					clearMessage();
+					postTo(result.rtn_url, result.rtn_post);
+					return;
+				}
+				if(result && result.pending_activation)
+				{
+					if(attempt >= 10)
+						throw new Error('subscription_activation_unresolved');
+
+					//260902.0200 Buyer approval is not fulfillment; briefly wait for PayPal ACTIVE while the activation webhook remains an off-session fallback.
+					showInfo(cfg.messages.subscription_recovering);
+					return delay(1500).then(function(){ return confirmSubscription(subscriptionId, attempt + 1); });
+				}
+				throw new Error(result && result.error ? result.error : 'subscription_confirm_failed');
+			});
+		};
 		var renderButton = function(PayPal)
 		{
 			if($button.attr('data-s2m-ppco-rendered') === '1')
@@ -378,7 +433,12 @@ jQuery(document).ready(function($)
 				},
 				onError: function()
 				{
-					showError(expectedFlow === 'subscription' ? cfg.messages.subscription_failed : cfg.messages.payment_failed);
+					if(expectedFlow === 'subscription' && subscriptionCreateUnresolved)
+					{
+						subscriptionCreateUnresolved = false;
+						showError(cfg.messages.subscription_unresolved);
+					}
+					else showError(expectedFlow === 'subscription' ? cfg.messages.subscription_failed : cfg.messages.payment_failed);
 				}
 			};
 
@@ -386,31 +446,26 @@ jQuery(document).ready(function($)
 			{
 				buttonOptions.createSubscription = function()
 				{
+					subscriptionCreateUnresolved = false;
 					//260901.2145 Create the PayPal subscription on s2Member's server so its ID is persisted in Gateway Checkout before browser approval/continuation can be lost.
 					return frameworkRequest('create_subscription').then(function(result)
 					{
 						if(result && result.subscription_id)
 							return result.subscription_id;
+						if(result && result.recoverable)
+						{
+							showInfo(cfg.messages.subscription_recovering);
+							return recoverSubscriptionId(0);
+						}
 						throw new Error(result && result.error ? result.error : 'subscription_create_failed');
 					});
 				};
 				buttonOptions.onApprove = function(data)
 				{
-					return frameworkRequest('confirm_subscription', {
-						subscription_id: data && data.subscriptionID ? data.subscriptionID : '',
-						s2member_pro_paypal_checkout_password1: livePassword('password1'),
-						s2member_pro_paypal_checkout_password2: livePassword('password2')
-					}).then(function(result)
+					var subscriptionId = data && data.subscriptionID ? data.subscriptionID : '';
+					return confirmSubscription(subscriptionId, 0).catch(function(error)
 					{
-						if(result && result.rtn_url && result.rtn_post)
-						{
-							postTo(result.rtn_url, result.rtn_post);
-							return;
-						}
-						throw new Error(result && result.error ? result.error : 'subscription_confirm_failed');
-					}).catch(function()
-					{
-						showError(cfg.messages.subscription_failed);
+						showError(error && error.message === 'subscription_activation_unresolved' ? cfg.messages.subscription_unresolved : cfg.messages.subscription_failed);
 					});
 				};
 			}

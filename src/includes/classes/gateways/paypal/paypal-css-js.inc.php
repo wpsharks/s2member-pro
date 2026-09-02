@@ -96,11 +96,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 									'sandbox'   => $ppco_sandbox,
 									'client_id' => $ppco_client_id,
 									'messages'  => array(
-										'prepare_failed'      => _x('Unable to prepare PayPal Checkout. Please try again.', 's2member-front', 's2member'),
-										'payment_failed'      => _x('PayPal Checkout could not be completed. Please try again.', 's2member-front', 's2member'),
-										'subscription_failed' => _x('PayPal subscription could not be completed. Please try again.', 's2member-front', 's2member'),
-										'sdk_failed'          => _x('PayPal Checkout could not be loaded. Please refresh the page and try again.', 's2member-front', 's2member'),
-										'cancelled'           => _x('PayPal Checkout was cancelled.', 's2member-front', 's2member'),
+										'prepare_failed'          => _x('Unable to prepare PayPal Checkout. Please try again.', 's2member-front', 's2member'),
+										'payment_failed'          => _x('PayPal Checkout could not be completed. Please try again.', 's2member-front', 's2member'),
+										'subscription_failed'     => _x('PayPal subscription could not be completed. Please try again.', 's2member-front', 's2member'),
+										'subscription_recovering' => _x('PayPal is taking longer than expected. Confirming your subscription...', 's2member-front', 's2member'),
+										'subscription_unresolved' => _x('PayPal could not confirm the subscription yet. Please try again. If this continues, contact support for assistance.', 's2member-front', 's2member'),
+										'sdk_failed'              => _x('PayPal Checkout could not be loaded. Please refresh the page and try again.', 's2member-front', 's2member'),
+										'cancelled'               => _x('PayPal Checkout was cancelled.', 's2member-front', 's2member'),
 									),
 								);
 
