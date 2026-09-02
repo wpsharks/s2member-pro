@@ -142,22 +142,20 @@ else if(is_admin()) //  Admin compatibility errors.
 	}
 }
 
-//221021 If we have Pro add-on older than latest release, show updater.
-if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION, '<') // Current Pro older than Framework.
+//260902.0550 If Pro trails the Framework, check for available Pro updates in the background instead of during page loads.
+if(version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION, '<')
 	&& file_exists(dirname(__FILE__).'/src/includes/classes/upgrader.inc.php'))
 {
-	$product = @file_get_contents('https://s2member.com/?product_api[action]=latest_pro_version');
-	if (!empty($product)) {
-		$product = json_decode($product);
-		if (is_object($product)
-			&& !empty($product->pro_version)
-			&& version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, $product->pro_version, '<') // Current Pro older than latest.
-			&& version_compare($product->pro_version, WS_PLUGIN__S2MEMBER_VERSION, '<=')) //260806 Available Pro compatible with installed Framework.
+	if(is_admin() || (defined('DOING_CRON') && DOING_CRON))
+	{
+		//260902.0420 The Pro autoloader may be unavailable when an older Pro needs this updater.
+		include_once dirname(__FILE__).'/src/includes/classes/upgrader.inc.php';
+		add_action('ws_plugin__s2member_pro_update_check', 'c_ws_plugin__s2member_pro_upgrader::update_check');
+
+		if(is_admin())
 		{
-			define('WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION', $product->pro_version);
-			// Include upgrader, s2Member Pro autoload won't be available here.
-			include_once dirname(__FILE__).'/src/includes/classes/upgrader.inc.php';
-			add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade').
+			add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::maybe_schedule_update_check');
+			add_action('admin_init', 'c_ws_plugin__s2member_pro_upgrader::upgrade');
 			add_action('all_admin_notices', function() {
 				echo c_ws_plugin__s2member_pro_upgrader::wizard();
 			});

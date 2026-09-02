@@ -60,6 +60,80 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
         public static $credentials = array();
 
         /**
+         * Maybe schedules a background Pro update availability check.
+         *
+         * Admin requests only inspect the last successful result and schedule stale
+         * work. The remote request itself is performed later by WP-Cron.
+         *
+         * @since 260902.0420
+         *
+         * @return void
+         *
+         * @attaches-to `add_action('admin_init');`
+         */
+        public static function maybe_schedule_update_check()
+        {
+            if (!current_user_can('update_plugins') || (defined('DOING_AJAX') && DOING_AJAX)) {
+                return; // Not applicable.
+            }
+            if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION, '>=')) {
+                return; // Pro is already current with the Framework.
+            }
+            $latest = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'])
+                ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'] : array();
+
+            if (!empty($latest['time']) && (int) $latest['time'] >= strtotime('-1 day')) {
+                return; // Last successful check is still fresh.
+            }
+            //260902.0420 Deduplicate stale update checks and leave the remote lookup to WP-Cron.
+            c_ws_plugin__s2member_cron_jobs::maybe_schedule_single_event('ws_plugin__s2member_pro_update_check');
+        }
+
+        /**
+         * Refreshes Pro update availability in the background.
+         *
+         * Only successful responses replace the cached result. Failures deliberately
+         * leave it stale so a later admin request can schedule another attempt.
+         *
+         * @since 260902.0420
+         *
+         * @return void
+         *
+         * @attaches-to `add_action('ws_plugin__s2member_pro_update_check');`
+         */
+        public static function update_check()
+        {
+            if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_VERSION, '>=')) {
+                return; // No update discovery is needed anymore.
+            }
+            $latest = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'])
+                ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'] : array();
+
+            if (!empty($latest['time']) && (int) $latest['time'] >= strtotime('-1 day')) {
+                return; //260902.0420 Another worker may have refreshed this after the event was scheduled.
+            }
+            $response = wp_remote_get('https://s2member.com/?product_api[action]=latest_pro_version', array('timeout' => 5));
+
+            if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+                return; // Keep the previous result stale so it can be retried later.
+            }
+            $product = json_decode(wp_remote_retrieve_body($response));
+
+            if (!is_object($product) || empty($product->pro_version) || !is_string($product->pro_version)) {
+                return; // Invalid response; keep the previous result stale.
+            }
+            //260902.0420 Cache only a successful lookup; page requests reuse this local result.
+            $options = (array) get_option('ws_plugin__s2member_options');
+            $options['pro_latest_version'] = array('time' => time(), 'version' => $product->pro_version);
+            $options = ws_plugin__s2member_configure_options_and_their_defaults($options);
+
+            update_option('ws_plugin__s2member_options', $options);
+            if (is_multisite() && is_main_site()) {
+                update_site_option('ws_plugin__s2member_options', $options);
+            }
+        }
+
+        /**
          * Upgrade wizard markup.
          *
          * @since 1.5 Adding pro upgrader.
@@ -71,6 +145,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
         {
             if (!current_user_can('update_plugins')) {
                 return ''; // Not applicable.
+            }
+            $latest = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'])
+                ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_latest_version'] : array();
+            $latest_version = !empty($latest['version']) && is_string($latest['version']) ? $latest['version'] : '';
+
+            if (!$latest_version || version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, $latest_version, '>=')) {
+                return ''; // No known newer Pro release.
+            }
+            //260902.0550 A cached Pro release newer than this Framework cannot be offered safely.
+            if (version_compare($latest_version, WS_PLUGIN__S2MEMBER_VERSION, '>')) {
+                return '<div class="notice notice-warning"><p>The latest s2Member Pro release is v'.esc_html($latest_version).', but it requires a newer s2Member Framework than this site currently has. Please update the Framework first, or <a href="https://s2member.com/release-archive/" target="_blank" rel="external">download s2Member Pro v'.esc_html(WS_PLUGIN__S2MEMBER_VERSION).'</a> to match your Framework.</p></div>';
             }
             $error    = !empty(self::$error) ? (string) self::$error : '';
             $wp_error = $error ? new WP_Error('s2member_pro_upgrade_error', $error) : false;
@@ -107,12 +192,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 if (version_compare(WS_PLUGIN__S2MEMBER_PRO_VERSION, WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, '<')) {
                     $wizard = '<div class="notice notice-error">'."\n";
                     $wizard .= '<p style="color:#962722;"><strong>The s2Member Pro add-on is outdated for this installation and has been deactivated.<br />'."\n".
-                    'Please update it to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).(version_compare(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION, '<') ? ' or higher' :'').' to reactivate it.</strong><br />'."\n";
+                    'Please update it to v'.esc_html(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION).(version_compare(WS_PLUGIN__S2MEMBER_MIN_PRO_VERSION, $latest_version, '<') ? ' or higher' :'').' to reactivate it.</strong><br />'."\n";
                 }
                 else {
                     $wizard = '<div class="notice notice-warning is-dismissible">'."\n";
                 }
-                $wizard .= '<p>The latest release of s2Member Pro is v'.esc_html(WS_PLUGIN__S2MEMBER_LATEST_PRO_VERSION).'. Get it from your s2member.com <a href="https://s2member.com/account/" target="_blank" rel="external">Account page</a>,<br />'."\n";
+                $wizard .= '<p>The latest release of s2Member Pro is v'.esc_html($latest_version).'. Get it from your s2member.com <a href="https://s2member.com/account/" target="_blank" rel="external">Account page</a>,<br />'."\n";
                 $wizard .= '<strong>or upgrade automatically using your s2Member.com username &amp; <a href="https://s2member.com/account/" target="_blank" rel="external">license key</a>.</strong>.</p>'."\n";
 
                 $wizard .= '<form method="post" action="'.esc_attr($_SERVER['REQUEST_URI']).'" style="margin: 5px 0 5px 0;" autocomplete="off">'."\n";
@@ -186,9 +271,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_upgrader')) {
                 self::$error = 'Upgrade failed. Error #0003. Invalid username or license key. Please try again.';
                 return; // Nothing more we can do here.
             }
-            //260806 Block installation when the available Pro release requires a newer Framework.
+            //260902.0550 Block installation when the available Pro release requires a newer Framework.
             if (version_compare($latest['pro_version'], WS_PLUGIN__S2MEMBER_VERSION, '>')) {
-                self::$error = 'Upgrade failed. Error #0011. Please update the s2Member Framework before updating s2Member Pro.';
+                self::$error = 'Upgrade failed. Error #0011. Please update the s2Member Framework before updating s2Member Pro, or <a href="https://s2member.com/release-archive/" target="_blank" rel="external">download s2Member Pro v'.esc_html(WS_PLUGIN__S2MEMBER_VERSION).'</a> to match your Framework.';
                 return; // The available Pro release is newer than the installed Framework.
             }
             set_transient(md5('ws_plugin__s2member_pro_upgrade_credentials'), compact('username', 'password'), 5184000);

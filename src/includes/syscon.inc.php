@@ -142,6 +142,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_recaptcha_public_key'                => '', 'pro_recaptcha_private_key'  => '',
 			'pro_recaptcha2_public_key'               => '', 'pro_recaptcha2_private_key' => '',
 
+			'pro_latest_version'                      => array(), //260902.0447 Latest Pro release check.
 			'pro_last_stats_log'                      => '0', // Stats pinger.
 		);
 		$pro_default_options['pro_eot_reminder_email_recipients']['-5'] = $pro_default_options['pro_eot_reminder_email_recipients']['_'];
@@ -268,6 +269,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_recaptcha(?:2)?_(?:public|private)_key$/', $key) && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_latest_version' && !is_array($value)) //260902.0447
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_last_stats_log' && (!is_string($value) || !strlen($value)))
