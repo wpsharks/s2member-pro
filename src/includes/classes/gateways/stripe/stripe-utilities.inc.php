@@ -1491,7 +1491,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$event = json_decode($input);
 
 			$input_time = time(); // Initialize.
-			$input_vars = array('event_id' => $event->id);
+			//260903.1455 Malformed webhook payloads are rejected below; avoid reading an event property before validating the decoded object.
+			$input_vars = array('event_id' => (is_object($event) && isset($event->id)) ? $event->id : '');
 
 			self::init_stripe_sdk();
 

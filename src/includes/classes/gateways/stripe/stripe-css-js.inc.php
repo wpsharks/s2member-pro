@@ -64,8 +64,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_css_js'))
 			) // This check allows a site owner to disable all CSS by removing the main CSS Hook in one shot.
 			{
 				echo "\n"; // Add a line break before inclusion.
+				//260902.1520 Preserve absolute image URLs when this static stylesheet is emitted through the legacy Framework CSS endpoint.
+				ob_start();
 				include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.css';
+				echo str_replace('../../../../images/', $i.'/', ob_get_clean());
 			}
+		}
+
+		/**
+		 * Returns site-wide Stripe JavaScript globals for generated/legacy frontend assets.
+		 *
+		 * @package s2Member\CSS_JS
+		 * @since 260903.0453
+		 *
+		 * @return string JavaScript declarations.
+		 */
+		public static function stripe_js_globals()
+		{
+			$g = 'var S2MEMBER_PRO_STRIPE_GATEWAY = true,';
+			$g .= 'S2MEMBER_PRO_STRIPE_PAYMENT_FAILED = '.json_encode(_x('The payment failed, please try again with a different card.', 's2member-front', 's2member')).',';
+
+			return trim($g, ' ,').';';
 		}
 
 		/**
@@ -80,17 +99,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_css_js'))
 		 */
 		public static function stripe_js_w_globals($vars)
 		{
-			$g = 'var S2MEMBER_PRO_STRIPE_GATEWAY = true,';
-			$g .= 'S2MEMBER_PRO_STRIPE_PAYMENT_FAILED = '.json_encode(_x('The payment failed, please try again with a different card.', 's2member-front', 's2member')).',';
-
-			$g = trim($g, ' ,').';'; // Trim & add semicolon.
+			$g = self::stripe_js_globals();
 
 			$u = $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url'];
 			$i = $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url'].'/src/images';
 
 			echo "\n".$g."\n"; // Add a line break before inclusion.
 
-			//!!! include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.min.js';
 			include_once dirname(dirname(dirname(dirname(__FILE__)))).'/separates/gateways/stripe/stripe.js';
 		}
 	}

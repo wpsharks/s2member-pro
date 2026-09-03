@@ -81,12 +81,12 @@ div.s2member-pro-paypal-form-response-info
 {
 	font-size  : 120%;
 	border     : 1px solid #F1EADA;
-	background : #FFFFCC url('<?php echo $i; ?>/info-icon.png') no-repeat center right;
+	background : #FFFFCC url('../../../../images/info-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-response-error
 {
 	border     : 1px solid #FE8989;
-	background : #FFD5D5 url('<?php echo $i; ?>/error-icon.png') no-repeat center right;
+	background : #FFD5D5 url('../../../../images/error-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-description-div
 {
@@ -109,27 +109,27 @@ div.s2member-pro-paypal-form-coupon-div > label > span::before
 	vertical-align : middle;
 	margin         : 0 5px 0 0;
 	display        : inline-block;
-	content        : url('<?php echo $i; ?>/coupon-icon.png');
+	content        : url('../../../../images/coupon-icon.png');
 }
 div.s2member-pro-paypal-form-registration-section-title
 {
-	background : url('<?php echo $i; ?>/secure-icon.png') no-repeat center right;
+	background : url('../../../../images/secure-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-custom-fields-section-title
 {
-	background : url('<?php echo $i; ?>/details-icon.png') no-repeat center right;
+	background : url('../../../../images/details-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-billing-method-section-title
 {
-	background : url('<?php echo $i; ?>/wallet-icon.png') no-repeat center right;
+	background : url('../../../../images/wallet-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-billing-address-section-title
 {
-	background : url('<?php echo $i; ?>/address-icon.png') no-repeat center right;
+	background : url('../../../../images/address-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-captcha-section-title
 {
-	background : url('<?php echo $i; ?>/captcha-icon.png') no-repeat center right;
+	background : url('../../../../images/captcha-icon.png') no-repeat center right;
 }
 label.s2member-pro-paypal-form-card-type-label
 {
@@ -153,36 +153,36 @@ label.s2member-pro-paypal-form-card-type-label input[type="radio"]
 }
 label.s2member-pro-paypal-form-card-type-paypal-label
 {
-	background : url('<?php echo $i; ?>/paypal-card.png') no-repeat top center;
+	background : url('../../../../images/paypal-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-visa-label
 {
-	background : url('<?php echo $i; ?>/visa-card.png') no-repeat top center;
+	background : url('../../../../images/visa-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-mastercard-label
 {
-	background : url('<?php echo $i; ?>/mastercard-card.png') no-repeat top center;
+	background : url('../../../../images/mastercard-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-amex-label
 {
-	background : url('<?php echo $i; ?>/amex-card.png') no-repeat top center;
+	background : url('../../../../images/amex-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-discover-label
 {
-	background : url('<?php echo $i; ?>/discover-card.png') no-repeat top center;
+	background : url('../../../../images/discover-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-maestro-label
 {
-	background : url('<?php echo $i; ?>/maestro-card.png') no-repeat top center;
+	background : url('../../../../images/maestro-card.png') no-repeat top center;
 }
 label.s2member-pro-paypal-form-card-type-solo-label
 {
-	background : url('<?php echo $i; ?>/solo-card.png') no-repeat top center;
+	background : url('../../../../images/solo-card.png') no-repeat top center;
 }
 div.s2member-pro-paypal-form-submission-section-title
 {
 	margin-bottom : 0;
-	background    : url('<?php echo $i; ?>/arrow-icon.png') no-repeat center right;
+	background    : url('../../../../images/arrow-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-div
 {
@@ -270,7 +270,7 @@ div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-coupon-respo
 	border-radius : 5px;
 	padding       : 5px 60px 5px 5px;
 	border        : 1px solid #A9D6B6;
-	background    : #CCEED9 url('<?php echo $i; ?>/tax-icon.png') no-repeat center right;
+	background    : #CCEED9 url('../../../../images/tax-icon.png') no-repeat center right;
 }
 div.s2member-pro-paypal-form-section > div.s2member-pro-paypal-form-ajax-tax-div > div > img
 {

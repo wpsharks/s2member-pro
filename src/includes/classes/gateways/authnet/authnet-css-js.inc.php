@@ -66,11 +66,27 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_css_js"))
 							{
 								echo "\n"; // Add a line break before inclusion.
 
+								//260902.1520 Preserve absolute image URLs when this static stylesheet is emitted through the legacy Framework CSS endpoint.
+								ob_start();
 								include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/authnet/authnet.css";
+								echo str_replace("../../../../images/", $i . "/", ob_get_clean());
 							}
 
 						return /* Return for uniformity. */;
 					}
+				/**
+				 * Returns site-wide Authorize.Net JavaScript globals for generated/legacy frontend assets.
+				 *
+				 * @package s2Member\CSS_JS
+				 * @since 260903.0453
+				 *
+				 * @return string JavaScript declarations.
+				 */
+				public static function authnet_js_globals()
+					{
+						return "var S2MEMBER_PRO_AUTHNET_GATEWAY = true;";
+					}
+
 				/**
 				* Adds the JavaScript for this Payment Gateway.
 				*
@@ -84,9 +100,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_css_js"))
 				*/
 				public static function authnet_js_w_globals ($vars = FALSE)
 					{
-						$g = "var S2MEMBER_PRO_AUTHNET_GATEWAY = true,";
-
-						$g = trim ($g, " ,") . ";"; // Trim & add semicolon.
+						$g = self::authnet_js_globals();
 
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/src/images";

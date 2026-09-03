@@ -91,7 +91,7 @@ table.ws-plugin--s2member-gift-codes > thead > tr > th.-code::before
 	vertical-align : middle;
 	margin         : 0 .25em 0 0;
 	display        : inline-block;
-	content        : url('<?php echo $i; ?>/coupon-icon.png');
+	content        : url('../images/coupon-icon.png');
 }
 table.ws-plugin--s2member-gift-codes > tbody > tr > td.-code
 {

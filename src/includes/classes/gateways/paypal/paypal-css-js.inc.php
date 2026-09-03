@@ -66,23 +66,23 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 							{
 								echo "\n"; // Add a line break before inclusion.
 
+								//260902.1520 Preserve absolute image URLs when this static stylesheet is emitted through the legacy Framework CSS endpoint.
+								ob_start();
 								include_once dirname (dirname (dirname (dirname (__FILE__)))) . "/separates/gateways/paypal/paypal.css";
+								echo str_replace("../../../../images/", $i . "/", ob_get_clean());
 							}
 
 						return /* Return for uniformity. */;
 					}
 				/**
-				* Adds the JavaScript for this Payment Gateway.
-				*
-				* @package s2Member\CSS_JS
-				* @since 1.5
-				*
-				* @attaches-to ``add_action("ws_plugin__s2member_during_js_w_globals");``
-				*
-				* @param array $vars Expects an array of defined vars to be passed in by the Action Hook.
-				* @return null
-				*/
-				public static function paypal_js_w_globals ($vars = FALSE)
+				 * Returns site-wide PayPal JavaScript globals for generated/legacy frontend assets.
+				 *
+				 * @package s2Member\CSS_JS
+				 * @since 260903.0453
+				 *
+				 * @return string JavaScript declarations.
+				 */
+				public static function paypal_js_globals()
 					{
 						$g = "var S2MEMBER_PRO_PAYPAL_GATEWAY = true,";
 						$ppco_enabled = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled();
@@ -90,7 +90,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 						if($ppco_enabled)
 							{
 								$ppco_sandbox = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_sandbox();
-								$ppco_client_id = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"][($ppco_sandbox) ? "paypal_checkout_sandbox_client_id" : "paypal_checkout_client_id"];
+								$ppco_client_id = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"][(($ppco_sandbox) ? "paypal_checkout_sandbox_client_id" : "paypal_checkout_client_id")];
 								$ppco_config = array(
 									'enabled'   => TRUE,
 									'sandbox'   => $ppco_sandbox,
@@ -110,7 +110,24 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 								$g .= "S2MEMBER_PRO_PAYPAL_CHECKOUT = ".wp_json_encode($ppco_config).",";
 							}
 
-						$g = trim ($g, " ,") . ";"; // Trim & add semicolon.
+						return trim($g, " ,").";";
+					}
+
+				/**
+				* Adds the JavaScript for this Payment Gateway.
+				*
+				* @package s2Member\CSS_JS
+				* @since 1.5
+				*
+				* @attaches-to ``add_action("ws_plugin__s2member_during_js_w_globals");``
+				*
+				* @param array $vars Expects an array of defined vars to be passed in by the Action Hook.
+				* @return null
+				*/
+				public static function paypal_js_w_globals ($vars = FALSE)
+					{
+						$ppco_enabled = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled();
+						$g = self::paypal_js_globals();
 
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/src/images";

@@ -72,6 +72,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_css_js"))
 						return /* Return for uniformity. */;
 					}
 				/**
+				 * Returns site-wide ClickBank JavaScript globals for generated/legacy frontend assets.
+				 *
+				 * @package s2Member\CSS_JS
+				 * @since 260903.0453
+				 *
+				 * @return string JavaScript declarations.
+				 */
+				public static function clickbank_js_globals()
+					{
+						return "var S2MEMBER_PRO_CLICKBANK_GATEWAY = true;";
+					}
+
+				/**
 				* Adds the JavaScript for this Payment Gateway.
 				*
 				* @package s2Member\CSS_JS
@@ -84,9 +97,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_clickbank_css_js"))
 				*/
 				public static function clickbank_js_w_globals ($vars = FALSE)
 					{
-						$g = "var S2MEMBER_PRO_CLICKBANK_GATEWAY = true,";
-
-						$g = trim ($g, " ,") . ";"; // Trim & add semicolon.
+						$g = self::clickbank_js_globals();
 
 						$u = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"];
 						$i = $GLOBALS["WS_PLUGIN__"]["s2member_pro"]["c"]["dir_url"] . "/src/images";

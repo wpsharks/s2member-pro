@@ -81,12 +81,12 @@ div.s2member-pro-stripe-form-response-info
 {
 	font-size  : 120%;
 	border     : 1px solid #F1EADA;
-	background : #FFFFCC url('<?php echo $i; ?>/info-icon.png') no-repeat center right;
+	background : #FFFFCC url('../../../../images/info-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-response-error
 {
 	border     : 1px solid #FE8989;
-	background : #FFD5D5 url('<?php echo $i; ?>/error-icon.png') no-repeat center right;
+	background : #FFD5D5 url('../../../../images/error-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-description-div
 {
@@ -109,32 +109,32 @@ div.s2member-pro-stripe-form-coupon-div > label > span::before
 	vertical-align : middle;
 	margin         : 0 5px 0 0;
 	display        : inline-block;
-	content        : url('<?php echo $i; ?>/coupon-icon.png');
+	content        : url('../../../../images/coupon-icon.png');
 }
 div.s2member-pro-stripe-form-registration-section-title
 {
-	background : url('<?php echo $i; ?>/secure-icon.png') no-repeat center right;
+	background : url('../../../../images/secure-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-custom-fields-section-title
 {
-	background : url('<?php echo $i; ?>/details-icon.png') no-repeat center right;
+	background : url('../../../../images/details-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-billing-method-section-title
 {
-	background : url('<?php echo $i; ?>/wallet-icon.png') no-repeat center right;
+	background : url('../../../../images/wallet-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-billing-address-section-title
 {
-	background : url('<?php echo $i; ?>/address-icon.png') no-repeat center right;
+	background : url('../../../../images/address-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-captcha-section-title
 {
-	background : url('<?php echo $i; ?>/captcha-icon.png') no-repeat center right;
+	background : url('../../../../images/captcha-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-submission-section-title
 {
 	margin-bottom : 0;
-	background    : url('<?php echo $i; ?>/arrow-icon.png') no-repeat center right;
+	background    : url('../../../../images/arrow-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div
 {
@@ -193,7 +193,7 @@ div.s2member-pro-stripe-form-section > label.s2member-pro-stripe-form-card-eleme
 	float      : right;
 	width      : 119px;
 	height     : 24px;
-	background : url('<?php echo $i; ?>/powered-by-stripe.png') no-repeat center right;
+	background : url('../../../../images/powered-by-stripe.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:focus,
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-div button.s2member-pro-stripe-form-source-token-button:active
@@ -264,7 +264,7 @@ div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-coupon-respo
 	border-radius         : 5px;
 	padding               : 5px 60px 5px 5px;
 	border                : 1px solid #A9D6B6;
-	background            : #CCEED9 url('<?php echo $i; ?>/tax-icon.png') no-repeat center right;
+	background            : #CCEED9 url('../../../../images/tax-icon.png') no-repeat center right;
 }
 div.s2member-pro-stripe-form-section > div.s2member-pro-stripe-form-ajax-tax-div > div > img
 {
