@@ -58,14 +58,14 @@ add_action('widgets_init', 'c_ws_plugin__s2member_pro_widgets::login_widget_regi
 
 add_filter('ws_plugin__s2member_during_constants_c', 'c_ws_plugin__s2member_pro_constants::constants', 9, 2);
 
-//260903.0525 Beta static frontend assets mirror the existing combined frontend responses in cacheable files; customized/unsupported dynamic hooks retain the legacy dynamic assets.
+//260903.1918 Beta static frontend assets keep Framework/Pro files separate by default with optional combining; customized/unsupported dynamic hooks retain the legacy dynamic assets.
 add_action('ws_plugin__s2member_during_css', 'c_ws_plugin__s2member_pro_css_js::css');
 add_filter('ws_plugin__s2member_dynamic_css_required', 'c_ws_plugin__s2member_pro_css_js::dynamic_css_required', 9);
-add_filter('ws_plugin__s2member_static_css_sources', 'c_ws_plugin__s2member_pro_css_js::static_css_sources', 10, 2);
+add_filter('ws_plugin__s2member_static_pro_css_sources', 'c_ws_plugin__s2member_pro_css_js::static_css_sources', 10, 2);
 
 add_action('ws_plugin__s2member_during_js_w_globals', 'c_ws_plugin__s2member_pro_css_js::js_w_globals');
 add_filter('ws_plugin__s2member_dynamic_js_required', 'c_ws_plugin__s2member_pro_css_js::dynamic_js_required', 9);
-add_filter('ws_plugin__s2member_static_js_sources', 'c_ws_plugin__s2member_pro_css_js::static_js_sources', 10, 2);
+add_filter('ws_plugin__s2member_static_pro_js_sources', 'c_ws_plugin__s2member_pro_css_js::static_js_sources', 10, 2);
 add_action('ws_plugin__s2member_during_menu_pages_js', 'c_ws_plugin__s2member_pro_admin_css_js::menu_pages_js');
 
 add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_2', 'c_ws_plugin__s2member_pro_menu_pages::add_coupon_codes_page', 10, 2);

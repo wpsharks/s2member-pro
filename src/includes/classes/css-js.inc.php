@@ -89,12 +89,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 					}
 
 				/**
-				 * Appends built-in Pro CSS sources to the generated frontend stylesheet.
+				 * Appends built-in Pro CSS sources to the generated Pro or combined frontend stylesheet.
 				 *
 				 * @package s2Member\CSS_JS
 				 * @since 260903.0525
 				 *
-				 * @attaches-to ``add_filter('ws_plugin__s2member_static_css_sources');``
+				 * @attaches-to ``add_filter('ws_plugin__s2member_static_pro_css_sources');``
 				 *
 				 * @param array $sources Existing ordered CSS source definitions.
 				 * @param array $vars    Framework asset-build context.
@@ -125,7 +125,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 							$styles[$callback] = array('file' => $dir.'/src/includes/separates/gateways/'.$gateway.'/'.$gateway.'.css', 'replacements' => array('../../../../images/' => $images));
 						}
 
-						//260903.0525 Append Pro core/enabled-gateway CSS in the exact legacy callback order; the generated file mirrors s2member-o.php while remaining a single cacheable stylesheet.
+						//260903.1918 Append Pro core/enabled-gateway CSS in exact legacy callback order to either the separate Pro file or the optional combined file.
 						foreach($callbacks as $callback)
 						{
 							if(!is_array($callback) || !isset($callback['function'], $styles[$callback['function']]))
@@ -179,12 +179,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 				}
 
 				/**
-				 * Appends built-in Pro JavaScript sources to the generated frontend script.
+				 * Appends built-in Pro JavaScript sources to the generated Pro or combined frontend script.
 				 *
 				 * @package s2Member\CSS_JS
 				 * @since 260903.0525
 				 *
-				 * @attaches-to ``add_filter('ws_plugin__s2member_static_js_sources');``
+				 * @attaches-to ``add_filter('ws_plugin__s2member_static_pro_js_sources');``
 				 *
 				 * @param array $sources Existing ordered JavaScript source definitions.
 				 * @param array $vars    Framework asset-build context.
