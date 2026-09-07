@@ -179,6 +179,64 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 				}
 
 				/**
+				 * Appends the shipped Pro static JavaScript data map for separate or combined static JS.
+				 *
+				 * @package s2Member\CSS_JS
+				 * @since 260906.0738
+				 *
+				 * @attaches-to ``add_filter('ws_plugin__s2member_static_js_data_map_paths');``
+				 *
+				 * @param array  $paths Existing data-map paths.
+				 * @param string $id    Logical generated JavaScript filename.
+				 * @param array  $vars  Framework context.
+				 * @return array Data-map paths.
+				 */
+				public static function static_js_data_map_paths($paths = array(), $id = '', $vars = FALSE)
+				{
+					$paths = is_array($paths) ? $paths : array();
+					if(!method_exists('c_ws_plugin__s2member_utils_assets', 'static_js_text_delivery') || c_ws_plugin__s2member_utils_assets::static_js_text_delivery() !== 'page')
+						return $paths;
+					if($id === 's2member-pro.js' || ($id === 's2member.js' && !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['static_assets_combine'])))
+						$paths['p'] = $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir'].'/src/includes/s2member-pro.js.php';
+					return $paths;
+				}
+
+				/**
+				 * Returns Pro gateway globals that must remain page-local for static JavaScript delivery.
+				 *
+				 * @package s2Member\CSS_JS
+				 * @since 260906.0738
+				 *
+				 * @attaches-to ``add_filter('ws_plugin__s2member_static_js_inline_globals');``
+				 *
+				 * @param string $globals Existing inline globals.
+				 * @param array  $assets  Active static JavaScript assets.
+				 * @param array  $vars    Framework context.
+				 * @return string Inline Pro gateway globals.
+				 */
+				public static function static_js_inline_globals($globals = '', $assets = array(), $vars = FALSE)
+				{
+					if(!method_exists('c_ws_plugin__s2member_utils_assets', 'static_js_text_delivery') || c_ws_plugin__s2member_utils_assets::static_js_text_delivery() !== 'page')
+						return $globals;
+					$hook = 'ws_plugin__s2member_during_js_w_globals';
+					$callbacks = isset($GLOBALS['wp_filter'][$hook]) ? $GLOBALS['wp_filter'][$hook] : array();
+					if(is_object($callbacks) && isset($callbacks->callbacks))
+						$callbacks = $callbacks->callbacks;
+					$callbacks = isset($callbacks[10]) ? (array)$callbacks[10] : array();
+					$global_callbacks = array(
+						'c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_w_globals' => 'c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_globals',
+						'c_ws_plugin__s2member_pro_stripe_css_js::stripe_js_w_globals' => 'c_ws_plugin__s2member_pro_stripe_css_js::stripe_js_globals',
+						'c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_w_globals' => 'c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_globals',
+						'c_ws_plugin__s2member_pro_clickbank_css_js::clickbank_js_w_globals' => 'c_ws_plugin__s2member_pro_clickbank_css_js::clickbank_js_globals',
+					);
+					foreach($callbacks as $callback)
+						if(is_array($callback) && isset($callback['function'], $global_callbacks[$callback['function']]))
+							$globals .= (($globals !== '') ? "\n" : '').call_user_func($global_callbacks[$callback['function']]);
+					return $globals;
+				}
+
+
+				/**
 				 * Appends built-in Pro JavaScript sources to the generated Pro or combined frontend script.
 				 *
 				 * @package s2Member\CSS_JS
@@ -203,24 +261,27 @@ if (!class_exists ("c_ws_plugin__s2member_pro_css_js"))
 
 						$dir = $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir'];
 						$dir_url = $GLOBALS['WS_PLUGIN__']['s2member_pro']['c']['dir_url'];
+						//260906.2049 Gateway JavaScript rendered into static files still needs these source-template URLs.
 						$template_vars = array('vars' => array('u' => $dir_url, 'i' => $dir_url.'/src/images'));
+						$page_text = method_exists('c_ws_plugin__s2member_utils_assets', 'static_js_text_delivery') && c_ws_plugin__s2member_utils_assets::static_js_text_delivery() === 'page';
+						$data_source = array('data_map' => $dir.'/src/includes/s2member-pro.js.php', 'data_key' => 'p');
 						$core_callback = 'c_ws_plugin__s2member_pro_css_js::js_w_globals';
 						$sources_by_callback = array(
 							$core_callback => array(
 								array('file' => $dir.'/src/includes/s2member-pro.js', 'prefix' => self::js_globals(), 'preserve_header' => TRUE),
 							),
 							'c_ws_plugin__s2member_pro_stripe_css_js::stripe_js_w_globals' => array(
-								array('file' => $dir.'/src/includes/separates/gateways/stripe/stripe.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_stripe_css_js::stripe_js_globals()),
+								($page_text) ? array_merge(array('file' => $dir.'/src/includes/separates/gateways/stripe/stripe.js'), $data_source) : array('file' => $dir.'/src/includes/separates/gateways/stripe/stripe.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_stripe_css_js::stripe_js_globals()),
 							),
 							'c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_w_globals' => array(
-								array('file' => $dir.'/src/includes/separates/gateways/authnet/authnet.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_globals()),
+								($page_text) ? array_merge(array('file' => $dir.'/src/includes/separates/gateways/authnet/authnet.js'), $data_source) : array('file' => $dir.'/src/includes/separates/gateways/authnet/authnet.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_authnet_css_js::authnet_js_globals()),
 							),
 							'c_ws_plugin__s2member_pro_clickbank_css_js::clickbank_js_w_globals' => array(
 								array('file' => $dir.'/src/includes/separates/gateways/clickbank/clickbank.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_clickbank_css_js::clickbank_js_globals()),
 							),
 						);
 						$paypal_sources = array(
-							array('file' => $dir.'/src/includes/separates/gateways/paypal/paypal.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_globals()),
+							($page_text) ? array_merge(array('file' => $dir.'/src/includes/separates/gateways/paypal/paypal.js'), $data_source) : array('file' => $dir.'/src/includes/separates/gateways/paypal/paypal.js', 'render' => TRUE, 'vars' => $template_vars, 'prefix' => c_ws_plugin__s2member_pro_paypal_css_js::paypal_js_globals()),
 						);
 						if(c_ws_plugin__s2member_paypal_utilities::paypal_checkout_is_enabled())
 							$paypal_sources[] = $dir.'/src/includes/separates/gateways/paypal/paypal-checkout.js';

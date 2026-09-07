@@ -33,7 +33,7 @@ jQuery(document).ready (function($)
 	{
 		var $clForm, $upForm, $rgForm, $spForm, $coForm, jumpToResponses, preloadAjaxLoader, ariaTrue = {'aria-required': 'true'}, ariaFalse = {'aria-required': 'false'}, disabled = {'disabled': 'disabled'}, ariaFalseDis = {'aria-required': 'false', 'disabled': 'disabled'};
 
-		preloadAjaxLoader = new Image (), preloadAjaxLoader.src = '<?php echo $vars["i"]; ?>/ajax-loader.gif';
+		preloadAjaxLoader = new Image (), preloadAjaxLoader.src = '<?php echo /*d*/ $vars["i"] /*b*/; ?>/ajax-loader.gif';
 
 		if($('form.s2member-pro-authnet-registration-form').length > 1 || $('form.s2member-pro-authnet-checkout-form').length > 1 || $('form.s2member-pro-authnet-sp-checkout-form').length > 1)
 			return alert('Detected more than one s2Member Pro-Form.\n\nPlease use only ONE s2Member Pro-Form Shortcode on each Post/Page. Attempting to serve more than one Pro-Form on each Post/Page (even w/ DHTML) may result in unexpected/broken functionality.');
@@ -63,14 +63,14 @@ jQuery(document).ready (function($)
 
 						if (errors = $.trim (errors))
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + errors);
 
 								return false;
 							}
 
 						else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Security Verification missing. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 								return false;
 							}
@@ -139,7 +139,7 @@ jQuery(document).ready (function($)
 
 						if (!$(cardType + ':checked').val ())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x ("Please choose a Billing Method.", "s2member-front", "s2member") /*b*/); ?>');
 
 								return false;
 							}
@@ -157,14 +157,14 @@ jQuery(document).ready (function($)
 
 						if (errors = $.trim (errors))
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + errors);
 
 								return false;
 							}
 
 						else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Security Verification missing. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 								return false;
 							}
@@ -252,32 +252,32 @@ jQuery(document).ready (function($)
 
 							if (errors = $.trim (errors))
 								{
-									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + errors);
 
 									return false;
 								}
 
 							else if ($password1.length && $.trim ($password1.val ()) !== $.trim ($password2.val ()))
 								{
-									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Passwords do not match up. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 									return false;
 								}
 
 							else if($password1.length && $.trim($password1.val()).length < ws_plugin__s2member_passwordMinLength())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length())); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length()) /*b*/); ?>');
 								return false;
 							}
 							else if($password1.length && ws_plugin__s2member_passwordStrengthMeter($.trim($password1.val()), $.trim($password2.val()), true) < ws_plugin__s2member_passwordMinStrengthScore())
 							{
-								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label())); ?>');
+								alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label()) /*b*/); ?>');
 								return false;
 							}
 
 							else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
 								{
-									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Security Verification missing. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 									return false;
 								}
@@ -347,18 +347,18 @@ jQuery(document).ready (function($)
 									{
 										(cTaxReq) ? /* Abort. */ cTaxReq.abort () : null, /* Clear. */ clearTimeout(cTaxTimeout), cTaxTimeout = null;
 
-										$ajaxTaxDiv.html ('<div><img src="<?php echo $vars["i"]; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
+										$ajaxTaxDiv.html ('<div><img src="<?php echo /*d*/ $vars["i"] /*b*/; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member")) /*b*/); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("calculating sales tax...", "s2member-front", "s2member") /*b*/); ?></div>');
 
 										cTaxTimeout = setTimeout( /* Create a new cTaxTimeout with a one second delay. */function()
 											{
-												cTaxReq = $.post ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (admin_url ("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_authnet_ajax_tax', 'ws_plugin__s2member_pro_authnet_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-authnet-ajax-tax")); ?>', 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[zip]': zip}, function(response)
+												cTaxReq = $.post ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ admin_url("/admin-ajax.php") /*b*/); ?>', {'action': 'ws_plugin__s2member_pro_authnet_ajax_tax', 'ws_plugin__s2member_pro_authnet_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-authnet-ajax-tax") /*b*/); ?>', 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[zip]': zip}, function(response)
 													{
 														clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = null;
 
 														try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
 															{
 																/* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
-																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
+																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member") /*b*/); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Today", "s2member-front", "s2member") /*b*/); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Today", "s2member-front", "s2member") /*b*/); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
 															}
 														catch (e) {}
 
@@ -503,7 +503,7 @@ jQuery(document).ready (function($)
 
 								if (!$(cardType + ':checked').val ())
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x ("Please choose a Billing Method.", "s2member-front", "s2member") /*b*/); ?>');
 
 										return false;
 									}
@@ -521,14 +521,14 @@ jQuery(document).ready (function($)
 
 								if (errors = $.trim (errors))
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + errors);
 
 										return false;
 									}
 
 								else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Security Verification missing. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 										return false;
 									}
@@ -599,18 +599,18 @@ jQuery(document).ready (function($)
 									{
 										(cTaxReq) ? /* Abort. */ cTaxReq.abort () : null, /* Clear. */ clearTimeout(cTaxTimeout), cTaxTimeout = null;
 
-										$ajaxTaxDiv.html ('<div><img src="<?php echo $vars["i"]; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member"))); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("calculating sales tax...", "s2member-front", "s2member")); ?></div>');
+										$ajaxTaxDiv.html ('<div><img src="<?php echo /*d*/ $vars["i"] /*b*/; ?>/ajax-loader.gif" alt="<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ esc_attr (_x ("Calculating Sales Tax...", "s2member-front", "s2member")) /*b*/); ?>" /> <?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("calculating sales tax...", "s2member-front", "s2member") /*b*/); ?></div>');
 
 										cTaxTimeout = setTimeout( /* Create a new cTaxTimeout with a one second delay. */function()
 											{
-												cTaxReq = $.post ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (admin_url ("/admin-ajax.php")); ?>', {'action': 'ws_plugin__s2member_pro_authnet_ajax_tax', 'ws_plugin__s2member_pro_authnet_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-authnet-ajax-tax")); ?>', 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[zip]': zip}, function(response, textStatus)
+												cTaxReq = $.post ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ admin_url("/admin-ajax.php") /*b*/); ?>', {'action': 'ws_plugin__s2member_pro_authnet_ajax_tax', 'ws_plugin__s2member_pro_authnet_ajax_tax': '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ c_ws_plugin__s2member_utils_encryption::encrypt ("ws-plugin--s2member-pro-authnet-ajax-tax") /*b*/); ?>', 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[attr]': attr, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[state]': state, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[country]': country, 'ws_plugin__s2member_pro_authnet_ajax_tax_vars[zip]': zip}, function(response, textStatus)
 													{
 														clearTimeout /* Clear cTaxTimeout. */(cTaxTimeout), cTaxTimeout = null;
 
 														try // Try/catch here. jQuery will sometimes return a successful response in IE, whenever the connection is aborted with a null response.
 															{
 																/* translators: `Sales Tax (Today)` and `Total (Today)` The word `Today` is displayed when/if a trial period is offered. The word `Today` is translated elsewhere. */
-																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member")); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Today", "s2member-front", "s2member")); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
+																$ajaxTaxDiv.html ('<div>' + $.sprintf ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("<strong>Sales Tax%s:</strong> %s<br /><strong>— Total%s:</strong> %s", "s2member-front", "s2member") /*b*/); ?>', ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Today", "s2member-front", "s2member") /*b*/); ?>' : ''), ((response.tax_per) ? '<em>' + response.tax_per + '</em> ( ' + response.cur_symbol + '' + response.tax + ' )' : response.cur_symbol + '' + response.tax), ((response.trial) ? ' ' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Today", "s2member-front", "s2member") /*b*/); ?>' : ''), response.cur_symbol + '' + response.total) + '</div>');
 															}
 														catch (e) {}
 
@@ -672,8 +672,8 @@ jQuery(document).ready (function($)
 								$(registrationSection + ' > div#s2member-pro-authnet-checkout-form-password-div').hide ();
 								$(registrationSection + ' > div#s2member-pro-authnet-checkout-form-password-div :input').attr (ariaFalseDis);
 
-								if ($.trim ($(registrationSection + ' > div#s2member-pro-authnet-checkout-form-registration-section-title').html ()) === '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Create Profile", "s2member-front", "s2member")); ?>')
-									$(registrationSection + ' > div#s2member-pro-authnet-checkout-form-registration-section-title').html ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Your Profile", "s2member-front", "s2member")); ?>');
+								if ($.trim ($(registrationSection + ' > div#s2member-pro-authnet-checkout-form-registration-section-title').html ()) === '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Create Profile", "s2member-front", "s2member") /*b*/); ?>')
+									$(registrationSection + ' > div#s2member-pro-authnet-checkout-form-registration-section-title').html ('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Your Profile", "s2member-front", "s2member") /*b*/); ?>');
 
 								$(customFieldsSection).hide (), $(customFieldsSection + ' :input').attr (ariaFalseDis);
 							}
@@ -775,7 +775,7 @@ jQuery(document).ready (function($)
 
 								if (!$(cardType + ':checked').val ())
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Please choose a Billing Method.", "s2member-front", "s2member")); ?>');
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x ("Please choose a Billing Method.", "s2member-front", "s2member") /*b*/); ?>');
 
 										return false;
 									}
@@ -793,32 +793,32 @@ jQuery(document).ready (function($)
 
 								if (errors = $.trim (errors))
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + errors);
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + errors);
 
 										return false;
 									}
 
 								else if ($password1.length && $.trim ($password1.val ()) !== $.trim ($password2.val ()))
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Passwords do not match up. Please try again.", "s2member-front", "s2member")); ?>');
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Passwords do not match up. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 										return false;
 									}
 
 								else if($password1.length && $.trim($password1.val()).length < ws_plugin__s2member_passwordMinLength())
 								{
-									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length())); ?>');
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ sprintf(_x("Password MUST be at least %s characters. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_length()) /*b*/); ?>');
 									return false;
 								}
 								else if($password1.length && ws_plugin__s2member_passwordStrengthMeter($.trim($password1.val()), $.trim($password2.val()), true) < ws_plugin__s2member_passwordMinStrengthScore())
 								{
-									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(_x("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label())); ?>');
+									alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ sprintf(_x("Password strength MUST be %s. Please try again.", "s2member-front", "s2member"), c_ws_plugin__s2member_user_securities::min_password_strength_label()) /*b*/); ?>');
 									return false;
 								}
 
 								else if ($recaptchaResponse.length && !$recaptchaResponse.val ())
 									{
-										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("— Oops, you missed something: —", "s2member-front", "s2member")); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq (_x ("Security Verification missing. Please try again.", "s2member-front", "s2member")); ?>');
+										alert('<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("— Oops, you missed something: —", "s2member-front", "s2member") /*b*/); ?>' + '\n\n' + '<?php echo c_ws_plugin__s2member_utils_strings::esc_js_sq(/*d*/ _x("Security Verification missing. Please try again.", "s2member-front", "s2member") /*b*/); ?>');
 
 										return false;
 									}

@@ -66,6 +66,9 @@ add_filter('ws_plugin__s2member_static_pro_css_sources', 'c_ws_plugin__s2member_
 add_action('ws_plugin__s2member_during_js_w_globals', 'c_ws_plugin__s2member_pro_css_js::js_w_globals');
 add_filter('ws_plugin__s2member_dynamic_js_required', 'c_ws_plugin__s2member_pro_css_js::dynamic_js_required', 9);
 add_filter('ws_plugin__s2member_static_pro_js_sources', 'c_ws_plugin__s2member_pro_css_js::static_js_sources', 10, 2);
+add_filter('ws_plugin__s2member_static_js_page_text_supported', '__return_true'); //260906.2049 This Pro release ships the data map required to load JavaScript text with each WordPress page.
+add_filter('ws_plugin__s2member_static_js_data_map_paths', 'c_ws_plugin__s2member_pro_css_js::static_js_data_map_paths', 10, 3); //260906.1530 Keep Pro static JavaScript data-map slots independent from Framework release versions.
+add_filter('ws_plugin__s2member_static_js_inline_globals', 'c_ws_plugin__s2member_pro_css_js::static_js_inline_globals', 10, 3); //260906.0738 Resolve gateway translations/config in the normal page request, not the cacheable external JS.
 add_action('ws_plugin__s2member_during_menu_pages_js', 'c_ws_plugin__s2member_pro_admin_css_js::menu_pages_js');
 
 add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_2', 'c_ws_plugin__s2member_pro_menu_pages::add_coupon_codes_page', 10, 2);

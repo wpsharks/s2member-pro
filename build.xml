@@ -3,6 +3,99 @@
 <project name="PHP PSR-4 Project" default="build">
   <import file="phings/src/psr4/targets.xml" />
 
+  <!-- 260906.1654 Run the project-specific JavaScript data-map generator. -->
+  <target name="-build-js-map" hidden="true">
+    <exec executable="php" dir="${project.basedir}" passthru="true" checkReturn="true">
+      <arg value="${project.basedir}/.build.js-map.php" />
+    </exec>
+  </target>
+
+  <!-- 260907.0025 Keep the generated JavaScript data map out of full-build POT extraction. -->
+  <target name="full-build">
+    <mkdir dir="${project.basedir}/.~build" />
+
+    <!-- 260907.0025 Recover the source map first if a previous full build was interrupted while it was parked for POT extraction. -->
+    <if>
+      <and>
+        <not>
+          <available resource="${project.basedir}/src/includes/s2member-pro.js.php" type="file" />
+        </not>
+        <available resource="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup" type="file" />
+      </and>
+      <then>
+        <move file="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup"
+              tofile="${project.basedir}/src/includes/s2member-pro.js.php"
+              overwrite="true" />
+      </then>
+    </if>
+
+    <!-- 260907.0025 A source map plus backup means the source map is newer and the interrupted-build backup is stale. -->
+    <if>
+      <and>
+        <available resource="${project.basedir}/src/includes/s2member-pro.js.php" type="file" />
+        <available resource="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup" type="file" />
+      </and>
+      <then>
+        <delete file="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup" quiet="true" />
+      </then>
+    </if>
+
+    <if>
+      <available resource="${project.basedir}/src/includes/s2member-pro.js.php" type="file" />
+      <then>
+        <move file="${project.basedir}/src/includes/s2member-pro.js.php"
+              tofile="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup"
+              overwrite="true" />
+      </then>
+    </if>
+
+    <trycatch reference="_s2member_pro_js_map_full_build_exception">
+      <try>
+        <phingCall target="targets.full-build" />
+      </try>
+      <catch>
+        <!-- 260907.0025 Restore the prior generated map if any full-build step fails before the new map safely replaces it. -->
+        <if>
+          <available resource="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup" type="file" />
+          <then>
+            <move file="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup"
+                  tofile="${project.basedir}/src/includes/s2member-pro.js.php"
+                  overwrite="true" />
+          </then>
+        </if>
+        <throw refid="_s2member_pro_js_map_full_build_exception" />
+      </catch>
+    </trycatch>
+  </target>
+
+  <!-- 260907.0025 Regenerate the data map after POT extraction and immediately before copying the source tree into the build. -->
+  <target name="-builds-in-base-dir-after-create-build-dir" hidden="true">
+    <phingCall target="-build-js-map" />
+    <delete file="${project.basedir}/.~build/.s2member-pro.js.php.pot-backup" quiet="true" />
+
+    <!-- 260907.0025 Mirror the shared Phings create-build-directory target because its nested imported target has no callable targets.* alias when overridden here. -->
+    <if>
+      <and>
+        <available resource="${project.basedir}/.~build/${project_slug}" type="dir" />
+      </and>
+      <then>
+        <delete dir="${project.basedir}/.~build/${project_slug}" includeEmptyDirs="true" quiet="true" />
+
+        <echo />
+      </then>
+    </if>
+
+    <mkdir dir="${project.basedir}/.~build/${project_slug}" />
+
+    <copy toDir="${project.basedir}/.~build/${project_slug}">
+      <fileSet dir="${project.basedir}" caseSensitive="false" defaultExcludes="false">
+        <exclude pattern=".git/**" />
+        <exclude pattern=".~build/**" />
+        <exclude pattern="phings/**" />
+      </fileSet>
+    </copy>
+  </target>
+
   <!-- 260317 Wrapper: full-build-all, then write a versioned copy of the ZIP in .~build/. -->
   <target name="full-build-all-v"
           description="Runs full-build-all with project_version=YYMMDD, then writes a versioned copy of the ZIP in .~build/.">
