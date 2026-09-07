@@ -98,6 +98,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_css_js"))
 									'messages'  => array(
 										'prepare_failed'          => _x('Unable to prepare PayPal Checkout. Please try again.', 's2member-front', 's2member'),
 										'payment_failed'          => _x('PayPal Checkout could not be completed. Please try again.', 's2member-front', 's2member'),
+										'payment_recovering'      => _x('PayPal is taking longer than expected. Confirming your payment...', 's2member-front', 's2member'),
+										'payment_unresolved'      => _x('PayPal could not confirm the payment yet. Please try again. If this continues, contact support for assistance.', 's2member-front', 's2member'),
 										'subscription_failed'     => _x('PayPal subscription could not be completed. Please try again.', 's2member-front', 's2member'),
 										'subscription_recovering' => _x('PayPal is taking longer than expected. Confirming your subscription...', 's2member-front', 's2member'),
 										'subscription_unresolved' => _x('PayPal could not confirm the subscription yet. Please try again. If this continues, contact support for assistance.', 's2member-front', 's2member'),

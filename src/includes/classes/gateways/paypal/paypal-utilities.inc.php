@@ -568,12 +568,21 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
 			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
 				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
-			$state = c_ws_plugin__s2member_gateway_checkouts::create_or_resume('paypal_checkout', $operation, $gateway_checkout_id, $gateway_checkout_token, $fingerprint, $user_id);
+			//260907.1820 Only terminal capture failures or an unresolved order-create beyond PayPal's idempotency window are replaceable; any live provider identity/pending work stays bound to the original logical checkout.
+			$replaceable_payment_state = ($existing_state && (string)$operation === 'payment' && (string)$existing_state['gateway'] === 'paypal_checkout' && (string)$existing_state['operation'] === 'payment'
+			&& (string)$existing_state['fulfillment_status'] === 'pending' && (in_array(strtoupper((string)$existing_state['gateway_status']), array('CAPTURE_DENIED', 'CAPTURE_FAILED', 'CAPTURE_DECLINED'), TRUE)
+			|| (empty($existing_state['gateway_ids']['order_id']) && !empty($existing_state['context']['paypal_order_create_started_at']) && (int)$existing_state['context']['paypal_order_create_started_at'] <= time() - (6 * HOUR_IN_SECONDS))));
+
+			//260902.0646 A terminally failed capture or stale unresolved create has finished its useful recovery lifecycle; a newly validated attempt must receive a fresh logical checkout even when the purchase terms are unchanged.
+			if($replaceable_payment_state)
+				$state = c_ws_plugin__s2member_gateway_checkouts::create('paypal_checkout', $operation, $fingerprint, $user_id);
+			else
+				$state = c_ws_plugin__s2member_gateway_checkouts::create_or_resume('paypal_checkout', $operation, $gateway_checkout_id, $gateway_checkout_token, $fingerprint, $user_id);
 
 			if(!$state && $existing_state && (string)$existing_state['gateway'] === 'paypal_checkout' && (string)$existing_state['operation'] === (string)$operation
 			&& empty($existing_state['gateway_ids']) && empty($existing_state['gateway_status']) && (string)$existing_state['fulfillment_status'] === 'pending')
 			{
-				//260901.0722 Finalized terms may change before PayPal creates anything; replace only a checkout that has no recorded gateway work or fulfillment progress yet.
+				//260901.0722 Finalized terms may replace a pristine checkout that has no recorded gateway work; live/pending gateway work remains bound to its original checkout.
 				$state = c_ws_plugin__s2member_gateway_checkouts::create('paypal_checkout', $operation, $fingerprint, $user_id);
 			}
 			if(!$state)
@@ -584,6 +593,85 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$post_vars['gateway_checkout_token'] = c_ws_plugin__s2member_gateway_checkouts::browser_token($state['id']);
 
 			return $state;
+		}
+
+		/**
+		 * Stores a trusted Framework PayPal Checkout token inside encrypted Gateway Checkout recovery state.
+		 *
+		 * @since 260902.0655
+		 */
+		public static function paypal_checkout_gateway_checkout_token_set($gateway_checkout_id = '', $token = array())
+		{
+			if(!c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id) || !is_array($token) || !$token)
+				return FALSE;
+			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$gateway_checkout || (string)$gateway_checkout['gateway'] !== 'paypal_checkout')
+				return FALSE;
+
+			$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+			if($private_context === FALSE)
+				return FALSE;
+			$private_context = (array)$private_context;
+			$private_context['paypal_checkout'] = !empty($private_context['paypal_checkout']) && is_array($private_context['paypal_checkout']) ? $private_context['paypal_checkout'] : array();
+			//260902.0655 Persist only the already-validated gateway token so an interrupted checkout can resume without requiring transient password/CAPTCHA fields again.
+			$private_context['paypal_checkout']['token'] = $token;
+
+			return c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context);
+		}
+
+		/**
+		 * Reissues a prepared PayPal Checkout response after provider work has already started.
+		 *
+		 * @since 260902.0655
+		 */
+		public static function paypal_checkout_resume_gateway_checkout($post_vars = array(), $form_type = 'checkout')
+		{
+			$post_vars = is_array($post_vars) ? $post_vars : array();
+			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
+			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
+			if(!$gateway_checkout_id || !$gateway_checkout_token || !c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
+				return FALSE;
+
+			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			if(!$gateway_checkout || (string)$gateway_checkout['gateway'] !== 'paypal_checkout' || !in_array((string)$gateway_checkout['operation'], array('payment', 'subscription'), TRUE))
+				return FALSE;
+
+			$gateway_status = !empty($gateway_checkout['gateway_status']) ? strtoupper((string)$gateway_checkout['gateway_status']) : '';
+			if((string)$gateway_checkout['operation'] === 'payment' && in_array($gateway_status, array('CAPTURE_DENIED', 'CAPTURE_FAILED', 'CAPTURE_DECLINED'), TRUE))
+				return FALSE; //260902.0655 Terminal payment failure must return through normal validation so a fresh logical checkout can be created.
+
+			//260907.1820 The resume shortcut exists only after provider/coordinator work starts; pristine checkouts must still traverse normal form/password/CAPTCHA/account validation before PayPal work can begin.
+			$gateway_work_started = (!empty($gateway_checkout['gateway_ids']) || $gateway_status !== '' || (string)$gateway_checkout['fulfillment_status'] !== 'pending');
+			if(!$gateway_work_started)
+				return FALSE;
+
+			$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+			$token = is_array($private_context) && !empty($private_context['paypal_checkout']['token']) && is_array($private_context['paypal_checkout']['token']) ? $private_context['paypal_checkout']['token'] : array();
+			if(!$token || empty($token['gateway_checkout_id']) || !hash_equals($gateway_checkout_id, (string)$token['gateway_checkout_id']) || empty($token['invoice']))
+				return FALSE;
+
+			//260907.1820 Bind recovery to its form family as well as checkout ID; an encrypted membership token must not be replayed through Specific Post/Page recovery, or vice versa.
+			$expected_prefix = ((string)$form_type === 'sp-checkout') ? 's2msp-' : 's2mpf-';
+			if(strpos((string)$token['invoice'], $expected_prefix) !== 0)
+				return FALSE;
+
+			//260902.0655 The original token may have expired while server-side state remained recoverable for seven days; reissue only from authenticated encrypted coordinator state.
+			$token['exp'] = time() + 10800;
+			$encrypted_token = urlencode(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($token)));
+			if(!$encrypted_token)
+				return FALSE;
+
+			return array(
+				'ok'                     => TRUE,
+				'flow'                   => ((string)$gateway_checkout['operation'] === 'subscription') ? 'subscription' : 'order',
+				'invoice'                => (string)$token['invoice'],
+				'token'                  => $encrypted_token,
+				'endpoint'               => home_url('/?s2member_paypal_checkout=1'),
+				'amount'                 => isset($token['amount']) ? (string)$token['amount'] : '',
+				'cc'                     => !empty($token['cc']) ? strtoupper((string)$token['cc']) : '',
+				'gateway_checkout_id'    => $gateway_checkout_id,
+				'gateway_checkout_token' => $gateway_checkout_token,
+			);
 		}
 
 		/**
@@ -605,6 +693,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($raw_post_vars));
 			if(empty($post_vars['nonce']) || !wp_verify_nonce((string)$post_vars['nonce'], 's2member-pro-paypal-checkout'))
 				return new WP_Error('pro_checkout_bad_nonce', _x('Unable to verify this checkout request. Please refresh the page and try again.', 's2member-front', 's2member'));
+
+			//260902.0655 Once provider work exists, recover the signed checkout before password/CAPTCHA/account validation; those ephemeral fields may legitimately be absent after reload.
+			if(($resumed = self::paypal_checkout_resume_gateway_checkout($post_vars, 'checkout')))
+				return $resumed;
 
 			$post_vars['attr'] = (!empty($post_vars['attr'])) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars['attr'])) : array();
 			$post_vars['attr'] = apply_filters('ws_plugin__s2member_pro_paypal_checkout_post_attr', $post_vars['attr'], get_defined_vars());
@@ -815,6 +907,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				$token['first_name'] = (string)$post_vars['first_name'];
 				$token['last_name'] = (string)$post_vars['last_name'];
 			}
+
+			//260907.1820 Save the validated purchase token before returning the prepared response; a later PayPal capture webhook may need to fulfill while the original browser request/session is gone.
+			if(!self::paypal_checkout_gateway_checkout_token_set((string)$gateway_checkout_state['id'], $token))
+				return new WP_Error('pro_checkout_state_save_failed', _x('Unable to prepare this checkout. Please try again.', 's2member-front', 's2member'));
 
 			$encrypted_token = urlencode(c_ws_plugin__s2member_utils_encryption::encrypt(serialize($token)));
 
@@ -1089,8 +1185,22 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return FALSE;
 
 			$state['invoice'] = (string)$invoice;
-			set_transient(self::paypal_checkout_completion_state_key($invoice), c_ws_plugin__s2member_utils_encryption::encrypt(serialize($state)), DAY_IN_SECONDS);
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if($private_context === FALSE)
+					return FALSE;
+				$private_context = (array)$private_context;
+				$private_context['paypal_checkout'] = !empty($private_context['paypal_checkout']) && is_array($private_context['paypal_checkout']) ? $private_context['paypal_checkout'] : array();
+				$private_context['paypal_checkout']['completion_state'] = $state;
+				//260902.0635 Keep the scrubbed browser completion result for the same seven-day coordinator recovery window while retaining the legacy one-day transient during migration.
+				if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context))
+					return FALSE;
+			}
 
+			set_transient(self::paypal_checkout_completion_state_key($invoice), c_ws_plugin__s2member_utils_encryption::encrypt(serialize($state)), DAY_IN_SECONDS);
 			return (self::paypal_checkout_completion_state_get($invoice) !== FALSE);
 		}
 
@@ -1105,13 +1215,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		 */
 		public static function paypal_checkout_completion_state_get($invoice = '')
 		{
-			if(!self::paypal_checkout_prepared_invoice($invoice) || !($encrypted = get_transient(self::paypal_checkout_completion_state_key($invoice))))
+			if(!self::paypal_checkout_prepared_invoice($invoice))
 				return FALSE;
 
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			//260907.1820 Coordinator private_context is the authoritative modern recovery store; the one-day transient below remains only as migration compatibility for older/in-flight checkouts.
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				$state = is_array($private_context) && !empty($private_context['paypal_checkout']['completion_state']) && is_array($private_context['paypal_checkout']['completion_state']) ? $private_context['paypal_checkout']['completion_state'] : FALSE;
+				if(is_array($state) && !empty($state['invoice']) && hash_equals((string)$invoice, (string)$state['invoice']))
+					return $state;
+			}
+
+			if(!($encrypted = get_transient(self::paypal_checkout_completion_state_key($invoice))))
+				return FALSE;
 			$state = c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($encrypted));
 			if(!is_array($state) || empty($state['invoice']) || (string)$state['invoice'] !== (string)$invoice)
 				return FALSE;
-
 			return $state;
 		}
 
@@ -1126,7 +1248,88 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		 */
 		public static function paypal_checkout_completion_state_delete($invoice = '')
 		{
-			return delete_transient(self::paypal_checkout_completion_state_key($invoice));
+			if(!self::paypal_checkout_prepared_invoice($invoice))
+				return FALSE;
+			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if($private_context === FALSE)
+					return FALSE;
+				$private_context = (array)$private_context;
+				if(isset($private_context['paypal_checkout']['completion_state'])) unset($private_context['paypal_checkout']['completion_state']);
+				if(isset($private_context['paypal_checkout']) && !$private_context['paypal_checkout']) unset($private_context['paypal_checkout']);
+				if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context))
+					return FALSE;
+			}
+			delete_transient(self::paypal_checkout_completion_state_key($invoice));
+			return (get_transient(self::paypal_checkout_completion_state_key($invoice)) === FALSE);
+		}
+
+		/**
+		 * Sanitizes Specific Post/Page recovery state before persistence.
+		 *
+		 * @since 260902.0635
+		 */
+		public static function paypal_checkout_sp_recovery_sanitize($state = array())
+		{
+			$state = is_array($state) ? $state : array();
+			if(!empty($state['post']['s2member_pro_paypal_sp_checkout']) && is_array($state['post']['s2member_pro_paypal_sp_checkout']))
+			{
+				//260902.0635 Wallet recovery needs purchase/contact data, never card/PAN/CVV/expiration credentials that may coexist in the broader Pro-Form payload.
+				foreach(array('card_number', 'card_verification', 'card_expiration', 'card_expiration_month', 'card_expiration_year', 'card_start_date_issue_number') as $field)
+					unset($state['post']['s2member_pro_paypal_sp_checkout'][$field]);
+			}
+			return $state;
+		}
+
+		/** Stores Specific Post/Page PayPal Checkout recovery state in coordinator + legacy fallback. @since 260902.0635 */
+		public static function paypal_checkout_sp_recovery_set($gateway_checkout_id = '', $state = array())
+		{
+			if(!c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id) || !is_array($state) || !$state)
+				return FALSE;
+			//260907.1820 Sanitize first, then write encrypted coordinator state before the legacy three-hour transient; the migration fallback must never become a less-safe copy of the broader Pro-Form POST.
+			$state = self::paypal_checkout_sp_recovery_sanitize($state);
+			$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+			if($private_context === FALSE) return FALSE;
+			$private_context = (array)$private_context;
+			$private_context['paypal_checkout'] = !empty($private_context['paypal_checkout']) && is_array($private_context['paypal_checkout']) ? $private_context['paypal_checkout'] : array();
+			$private_context['paypal_checkout']['sp_return_state'] = $state;
+			if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context)) return FALSE;
+			set_transient('s2m_'.md5('s2member_transient_paypal_checkout_'.$gateway_checkout_id), $state, 10800);
+			return TRUE;
+		}
+
+		/** Gets Specific Post/Page PayPal Checkout recovery state, coordinator first and legacy fallback second. @since 260902.0635 */
+		public static function paypal_checkout_sp_recovery_get($gateway_checkout_id = '')
+		{
+			//260907.1820 Prefer the seven-day encrypted coordinator state; consult the legacy transient only for migration compatibility, and sanitize again defensively on read.
+			if(c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id))
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if(is_array($private_context) && !empty($private_context['paypal_checkout']['sp_return_state']) && is_array($private_context['paypal_checkout']['sp_return_state']))
+					return self::paypal_checkout_sp_recovery_sanitize($private_context['paypal_checkout']['sp_return_state']);
+			}
+			$legacy = get_transient('s2m_'.md5('s2member_transient_paypal_checkout_'.$gateway_checkout_id));
+			return is_array($legacy) ? self::paypal_checkout_sp_recovery_sanitize($legacy) : FALSE;
+		}
+
+		/** Deletes Specific Post/Page PayPal Checkout recovery state from both migration stores. @since 260902.0635 */
+		public static function paypal_checkout_sp_recovery_delete($gateway_checkout_id = '')
+		{
+			//260907.1820 After a verified SP return, consume both recovery stores so a later browser replay cannot resurrect stale pre-fulfillment state from either migration path.
+			if(c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id))
+			{
+				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
+				if($private_context === FALSE) return FALSE;
+				$private_context = (array)$private_context;
+				if(isset($private_context['paypal_checkout']['sp_return_state'])) unset($private_context['paypal_checkout']['sp_return_state']);
+				if(isset($private_context['paypal_checkout']) && !$private_context['paypal_checkout']) unset($private_context['paypal_checkout']);
+				if(!c_ws_plugin__s2member_gateway_checkouts::private_context_set($gateway_checkout_id, $private_context)) return FALSE;
+			}
+			delete_transient('s2m_'.md5('s2member_transient_paypal_checkout_'.$gateway_checkout_id));
+			return TRUE;
 		}
 
 		/**

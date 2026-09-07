@@ -30,7 +30,7 @@ jQuery(document).ready(function($)
 		var lc = $.trim($lc.val()).toUpperCase();
 		var prepared = null, preparedFingerprint = '';
 		var gatewayCheckoutOperation = expectedFlow === 'subscription' ? 'subscription' : 'payment';
-		var gatewayCheckoutIdentity = null, subscriptionCreateUnresolved = false;
+		var gatewayCheckoutIdentity = null, subscriptionCreateUnresolved = false, paymentCreateUnresolved = false;
 
 		if(!expectedFlow || !currency || !cfg.client_id)
 			return;
@@ -396,6 +396,50 @@ jQuery(document).ready(function($)
 				throw new Error(result && result.error ? result.error : 'subscription_confirm_failed');
 			});
 		};
+		var recoverOrderId = function(attempt)
+		{
+			return frameworkRequest('get_order_status').then(function(result)
+			{
+				if(result && result.order_id)
+				{
+					clearMessage();
+					return result.order_id;
+				}
+				if(result && result.error)
+					throw new Error(result.error);
+				if(attempt >= 10)
+				{
+					paymentCreateUnresolved = true;
+					throw new Error('order_create_unresolved');
+				}
+
+				//260902.0646 This local poll is only for an overlapping server request that may still persist the order ID; ambiguous provider creation itself has no pre-approval webhook and is retried by the customer's next idempotent attempt.
+				showInfo(cfg.messages.payment_recovering);
+				return delay(1500).then(function(){ return recoverOrderId(attempt + 1); });
+			});
+		};
+		var recoverPayment = function(orderId, attempt)
+		{
+			return frameworkRequest('get_order_status').then(function(result)
+			{
+				var status = result && result.status ? String(result.status).toUpperCase() : '';
+				if(result && result.fulfilled)
+					return frameworkRequest('capture_order', {order_id: orderId});
+				if(/^CAPTURE_(?:DENIED|FAILED|DECLINED)$/.test(status))
+					throw new Error(status.toLowerCase());
+				if(result && result.error)
+					throw new Error(result.error);
+				if(attempt >= 10)
+				{
+					paymentCreateUnresolved = true;
+					throw new Error('payment_completion_unresolved');
+				}
+
+				//260902.0635 A PENDING capture is unpaid; briefly wait for the independent capture webhook to complete fulfillment while making only local coordinator checks.
+				showInfo(cfg.messages.payment_recovering);
+				return delay(1500).then(function(){ return recoverPayment(orderId, attempt + 1); });
+			});
+		};
 		var renderButton = function(PayPal)
 		{
 			if($button.attr('data-s2m-ppco-rendered') === '1')
@@ -438,6 +482,11 @@ jQuery(document).ready(function($)
 						subscriptionCreateUnresolved = false;
 						showError(cfg.messages.subscription_unresolved);
 					}
+					else if(expectedFlow !== 'subscription' && paymentCreateUnresolved)
+					{
+						paymentCreateUnresolved = false;
+						showError(cfg.messages.payment_unresolved);
+					}
 					else showError(expectedFlow === 'subscription' ? cfg.messages.subscription_failed : cfg.messages.payment_failed);
 				}
 			};
@@ -473,17 +522,28 @@ jQuery(document).ready(function($)
 			{
 				buttonOptions.createOrder = function()
 				{
+					//260907.1820 Order creation is server-authoritative and idempotent; JS accepts only the persisted server order ID and locally polls only when another server request may still be finishing.
+					paymentCreateUnresolved = false;
 					return frameworkRequest('create_order').then(function(result)
 					{
 						if(result && result.order_id)
 							return result.order_id;
+						if(result && result.recoverable)
+						{
+							showInfo(cfg.messages.payment_recovering);
+							return recoverOrderId(0);
+						}
+						if(result && result.retryable)
+							paymentCreateUnresolved = true;
 						throw new Error(result && result.error ? result.error : 'order_create_failed');
 					});
 				};
 				buttonOptions.onApprove = function(data)
 				{
+					var orderId = data && data.orderID ? data.orderID : '';
+					//260907.1820 Capture remains server-authoritative; recoverable/PENDING responses switch to local coordinator polling so browser retries never issue a second capture POST for a known in-flight capture.
 					return frameworkRequest('capture_order', {
-						order_id: data && data.orderID ? data.orderID : '',
+						order_id: orderId,
 						s2member_pro_paypal_checkout_password1: livePassword('password1'),
 						s2member_pro_paypal_checkout_password2: livePassword('password2')
 					}).then(function(result)
@@ -493,10 +553,34 @@ jQuery(document).ready(function($)
 							postTo(result.rtn_url, result.rtn_post);
 							return;
 						}
+						if(result && result.recoverable)
+						{
+							showInfo(cfg.messages.payment_recovering);
+							return recoverPayment(orderId, 0).then(function(recovered)
+							{
+								if(recovered && recovered.rtn_url && recovered.rtn_post)
+								{
+									postTo(recovered.rtn_url, recovered.rtn_post);
+									return;
+								}
+								throw new Error(recovered && recovered.error ? recovered.error : 'payment_completion_unresolved');
+							});
+						}
 						throw new Error(result && result.error ? result.error : 'order_capture_failed');
-					}).catch(function()
+					}).catch(function(error)
 					{
-						showError(cfg.messages.payment_failed);
+						var errorCode = error && error.message ? String(error.message) : '';
+						if(/^capture_(?:denied|failed|declined)$/.test(errorCode))
+						{
+							//260902.0646 A terminal failed capture is safe to abandon; force the next click through server validation so it receives a fresh logical checkout instead of replaying the failed order.
+							prepared = null, preparedFingerprint = '';
+						}
+						if(/unresolved/.test(errorCode))
+						{
+							paymentCreateUnresolved = false;
+							showError(cfg.messages.payment_unresolved);
+						}
+						else showError(cfg.messages.payment_failed);
 					});
 				};
 			}
@@ -579,6 +663,7 @@ jQuery(document).ready(function($)
 		nonce: 'input#s2member-pro-paypal-sp-checkout-nonce',
 		flow: 'input#s2member-pro-paypal-sp-checkout-ppco-flow',
 		currency: 'input#s2member-pro-paypal-sp-checkout-ppco-currency',
-		lc: 'input#s2member-pro-paypal-sp-checkout-ppco-lc'
+		lc: 'input#s2member-pro-paypal-sp-checkout-ppco-lc',
+		gatewayCheckout: true
 	});
 });

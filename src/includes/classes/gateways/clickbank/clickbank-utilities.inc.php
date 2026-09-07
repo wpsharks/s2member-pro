@@ -44,6 +44,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 	 */
 	class c_ws_plugin__s2member_pro_clickbank_utilities
 	{
+		//260902.0635 TO-DO: Review ClickBank callback/fulfillment replay against shared Gateway Checkout fulfillment invariants; checkout creation remains hosted by ClickBank.
 		/**
 		 * Get ``$_POST`` or ``$_REQUEST`` vars from ClickBank.
 		 *

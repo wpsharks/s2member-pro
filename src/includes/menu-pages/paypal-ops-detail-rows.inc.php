@@ -56,6 +56,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_detail_rows"))
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
+			//260902.0645 TO-DO: Modern PayPal Checkout subscriptions currently bypass pro_paypal_checkout_rdp; before PPCO leaves beta, define the equivalent first-payment entitlement policy using PAYMENT.SALE.COMPLETED when money is due immediately, while genuine free trials may entitle on activation, and update this setting's wording.
 			echo '<label for="ws-plugin--s2member-pro-paypal-checkout-rdp">'."\n";
 			echo 'PayPal Pro-Forms :: Recurring Profile Behavior:<br />'."\n";
 			echo '~ impacts the first payment in Recurring Billing Profiles<br />'."\n";
