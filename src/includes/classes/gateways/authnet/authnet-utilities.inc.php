@@ -44,7 +44,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 		*/
 		class c_ws_plugin__s2member_pro_authnet_utilities
 			{
-		//260902.0635 TO-DO: Migrate supported Authorize.Net AIM/ARB Pro-Forms onto Gateway Checkout; review ambiguous responses and stable retry/recovery separately while preserving existing duplicate-subscription checks.
+		//260907.2110 TO-DO: Migrate supported Authorize.Net Pro-Forms onto Gateway Checkout, reviewing AIM and ARB separately for ambiguous responses, stable provider retries/idempotency, durable recovery, and preservation of existing duplicate-subscription protections.
 				/**
 				* Calls upon Authorize.Net AIM, and returns the response.
 				*

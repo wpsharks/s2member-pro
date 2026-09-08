@@ -75,7 +75,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$post_vars = (array)$post_vars;
 			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
 			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
-			//260902.0635 TO-DO: Fold PayPal Checkout's fulfillment checkpoints into shared Gateway Checkout/Stripe so a recovered successful checkout cannot repeat post-Notify outer side effects.
+			//260907.2110 TO-DO: Move generic post-Notify fulfillment checkpoints into shared Gateway Checkout and apply them to Stripe so recovered successful checkouts cannot repeat outer side effects such as notifications, list processing, cancellations, or equivalent fulfillment work.
 			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
 			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
 				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
