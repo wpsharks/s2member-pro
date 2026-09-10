@@ -118,6 +118,8 @@ add_action('ws_plugin__s2member_before_auto_eot_system_via_cron', 'c_ws_plugin__
 add_action('ws_plugin__s2member_after_auto_eot_system', 'c_ws_plugin__s2member_pro_reminders::remind');
 
 //260821.0555 Keep site-wide EOT reminder warnings quiet until automatic recovery is materially at risk; detailed status remains available on the reminder settings panel.
+//260909.2042 Handle the nonce-protected per-incident X on `admin_init`, before any of the three admin notice contexts can emit output; the handler stores only this administrator/site's dismissal and redirects safely.
+add_action('admin_init', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice_dismiss', 13);
 add_action('admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
 add_action('user_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
 add_action('network_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);

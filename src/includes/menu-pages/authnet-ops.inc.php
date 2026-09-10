@@ -1136,6 +1136,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			if(!empty($eot_reminder_health['active_mail_failures']))
 				{
+					//260909.2042 Show a concrete recipient only when the helper confirms it came from an exact complete scan. The address can be a member/admin/committee copy; the user link identifies the membership whose reminder generated it.
+					$_eot_reminder_failure_recipient = c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_failure_recipient_html($eot_reminder_health);
+					if($_eot_reminder_failure_recipient)
+						echo '<tr><th scope="row">Oldest failing recipient:</th><td>'.$_eot_reminder_failure_recipient.'</td></tr>'."\n";
+					unset($_eot_reminder_failure_recipient);
 					echo '<tr><th scope="row">Oldest unresolved failure:</th><td>'.($eot_reminder_health['oldest_active_mail_failure_at'] ? esc_html(human_time_diff((int)$eot_reminder_health['oldest_active_mail_failure_at'], time()).' ago') : 'Unknown').'</td></tr>'."\n";
 					echo '<tr><th scope="row">Next retry:</th><td>'.($eot_reminder_health['next_mail_retry_at'] ? esc_html(((int)$eot_reminder_health['next_mail_retry_at'] <= time() ? 'Due now' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['next_mail_retry_at']))) : 'Pending worker scan').'</td></tr>'."\n";
 					echo '<tr><th scope="row">Earliest recovery deadline:</th><td>'.($eot_reminder_health['earliest_mail_failure_deadline_at'] ? esc_html(((int)$eot_reminder_health['earliest_mail_failure_deadline_at'] <= time() ? human_time_diff((int)$eot_reminder_health['earliest_mail_failure_deadline_at'], time()).' ago' : 'in '.human_time_diff(time(), (int)$eot_reminder_health['earliest_mail_failure_deadline_at']))) : 'Unknown').'</td></tr>'."\n";

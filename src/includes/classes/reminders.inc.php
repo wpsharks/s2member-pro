@@ -121,6 +121,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          * - `mail_health_dirty`: 1 when a newer failure exists than that complete rebuild, otherwise 0.
          * - `active_mail_failures`: exact unresolved recipient/offset count after a complete pass.
          * - `oldest_active_mail_failure_at`, `next_mail_retry_at`, `earliest_mail_failure_deadline_at`: Unix timestamps.
+         * 260909.2042 Keep the representative failure identity below coupled to this same complete-pass aggregate; `last_failure_*` is newer diagnostic history and is not safe to use as the current unresolved recipient.
+         * - `active_mail_failure_user_id`, `active_mail_failure_recipient`, `active_mail_failure_offset`, `active_mail_failure_target_at`: representative oldest unresolved recipient/offset identity from the last complete pass.
          *
          * Latest failure diagnostics:
          * - `last_failure_at`, `last_failure_user_id`, `last_failure_recipient`, `last_failure_offset`.
@@ -226,14 +228,21 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
          * rebuilt only by a complete reminder pass, so a runtime-limited pass cannot falsely declare an unseen
          * failed recipient recovered.
          *
+         * 260909.2042 The representative identity follows `oldest_at` itself. Keeping those values selected by the
+         * same comparison prevents the admin UI/dismissal signature from identifying one failure while reporting
+         * the age of another.
+         *
          * @since 260821.0555
          *
          * @param array             $summary    Current pass summary (by reference).
          * @param array             $attempts   Compact attempts for one recipient/offset.
          * @param DateTimeImmutable $target_day Reminder target day in the site timezone.
          * @param int               $late_days  Additional eligible calendar days after the target day.
+         * @param int               $user_id    Related WordPress user ID whose reminder generated this recipient.
+         * @param string            $recipient  Exact parsed recipient address for this independent mail handoff.
+         * @param int               $offset     Reminder offset in calendar days.
          */
-        protected static function fixed_eot_add_pending_failure(&$summary, $attempts, $target_day, $late_days)
+        protected static function fixed_eot_add_pending_failure(&$summary, $attempts, $target_day, $late_days, $user_id = 0, $recipient = '', $offset = 0)
         {
             if (!is_array($attempts) || !$attempts) {
                 return;
@@ -249,6 +258,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $summary['count']++;
             if (empty($summary['oldest_at']) || $first_attempt_at < $summary['oldest_at']) {
                 $summary['oldest_at'] = $first_attempt_at;
+
+                //260909.2042 Keep the displayed/dismissal identity synchronized with the oldest unresolved attempt chosen above; these values must move together as one aggregate record.
+                $summary['failure_user_id'] = (int) $user_id;
+                $summary['failure_recipient'] = trim((string) $recipient);
+                $summary['failure_offset'] = (int) $offset;
+                $summary['failure_target_at'] = $target_day->getTimestamp();
             }
             if (empty($summary['next_retry_at']) || $retry_at < $summary['next_retry_at']) {
                 $summary['next_retry_at'] = $retry_at;
@@ -419,6 +434,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $oldest_mail_failure_at = !empty($state['oldest_active_mail_failure_at']) ? (int) $state['oldest_active_mail_failure_at'] : 0;
             $next_mail_retry_at = !empty($state['next_mail_retry_at']) ? (int) $state['next_mail_retry_at'] : 0;
             $earliest_mail_deadline_at = !empty($state['earliest_mail_failure_deadline_at']) ? (int) $state['earliest_mail_failure_deadline_at'] : 0;
+
+            //260909.2042 Read recipient identity only from the last complete aggregate rebuild. Do not substitute `last_failure_*`: that newer diagnostic event may already have recovered while another older recipient is still unresolved.
+            $active_mail_failure_user_id = !empty($state['active_mail_failure_user_id']) ? (int) $state['active_mail_failure_user_id'] : 0;
+            $active_mail_failure_recipient = !empty($state['active_mail_failure_recipient']) ? (string) $state['active_mail_failure_recipient'] : '';
+            $active_mail_failure_offset = isset($state['active_mail_failure_offset']) ? (int) $state['active_mail_failure_offset'] : 0;
+            $active_mail_failure_target_at = !empty($state['active_mail_failure_target_at']) ? (int) $state['active_mail_failure_target_at'] : 0;
             $display_mail_failures = $active_mail_failures;
 
             //260821.0555 A runtime-limited pass may discover a new failure before it can rebuild the complete aggregate. Show that as retrying, but do not raise a global warning from an incomplete count.
@@ -487,6 +508,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 'oldest_active_mail_failure_at'     => $oldest_mail_failure_at,
                 'next_mail_retry_at'                => $next_mail_retry_at,
                 'earliest_mail_failure_deadline_at' => $earliest_mail_deadline_at,
+
+                //260909.2042 These identity fields describe the complete-scan aggregate above; callers must honor `active_mail_failures_exact` before presenting them as the current unresolved recipient.
+                'active_mail_failure_user_id'       => $active_mail_failure_user_id,
+                'active_mail_failure_recipient'     => $active_mail_failure_recipient,
+                'active_mail_failure_offset'        => $active_mail_failure_offset,
+                'active_mail_failure_target_at'     => $active_mail_failure_target_at,
                 'mail_failure_age'                  => $mail_failure_age,
                 'mail_deadline_remaining'           => $mail_deadline_remaining,
                 'last_failure_at'                   => !empty($state['last_failure_at']) ? (int) $state['last_failure_at'] : 0,
@@ -500,6 +527,125 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
             set_transient($cache_key, $health, 5 * MINUTE_IN_SECONDS);
             return $health;
+        }
+
+        /**
+         * Builds a stable signature for the current site-wide reminder problem.
+         *
+         * Routine retry timestamps and attention-only health flags are deliberately excluded, so dismissing one
+         * critical incident does not make it reappear merely because another retry ran or a non-critical status
+         * changed. A new critical issue, escalation, recipient/target/count, or scheduler incident changes the
+         * signature and can alert the administrator again.
+         *
+         * @since 260909.2042
+         *
+         * @param array $health Reminder health snapshot.
+         *
+         * @return string Critical-incident signature, or an empty string when no global notice is needed.
+         */
+        protected static function fixed_eot_reminder_notice_signature($health)
+        {
+            $health = is_array($health) ? $health : array();
+            if (empty($health['needs_admin_notice'])) {
+                return '';
+            }
+
+            //260909.2042 Only critical reasons belong in the dismissal identity. Including attention-only issues would make the X ineffective when unrelated health details fluctuate during the same underlying problem.
+            $health_issues = !empty($health['issues']) && is_array($health['issues']) ? array_values(array_unique(array_map('strval', $health['issues']))) : array();
+            $critical_issues = array_values(array_intersect(array('scheduler_persistent', 'mail_failure_persistent', 'mail_recovery_window'), $health_issues));
+            sort($critical_issues, SORT_STRING);
+            if (!$critical_issues) {
+                return '';
+            }
+            $signature = array('issues' => $critical_issues);
+
+            if (in_array('scheduler_persistent', $critical_issues, true)) {
+                //260909.2042 Anchor a scheduler incident to when that failure period began; generated/next-run timestamps would churn on normal health refreshes.
+                $signature['scheduler_issue_since'] = !empty($health['scheduler_issue_since']) ? (int) $health['scheduler_issue_since'] : 0;
+                $signature['schedule_failure_started_at'] = !empty($health['schedule_failure_started_at']) ? (int) $health['schedule_failure_started_at'] : 0;
+            }
+            if (in_array('mail_failure_persistent', $critical_issues, true) || in_array('mail_recovery_window', $critical_issues, true)) {
+                //260909.2042 Identify the mail incident from the exact complete-scan aggregate, not retry timestamps. Count/recipient/offset/target change only when the unresolved set materially changes.
+                $signature['active_mail_failures'] = !empty($health['active_mail_failures']) ? (int) $health['active_mail_failures'] : 0;
+                $signature['active_mail_failure_user_id'] = !empty($health['active_mail_failure_user_id']) ? (int) $health['active_mail_failure_user_id'] : 0;
+                $signature['active_mail_failure_recipient'] = !empty($health['active_mail_failure_recipient']) ? strtolower(trim((string) $health['active_mail_failure_recipient'])) : '';
+                $signature['active_mail_failure_offset'] = isset($health['active_mail_failure_offset']) ? (int) $health['active_mail_failure_offset'] : 0;
+                $signature['active_mail_failure_target_at'] = !empty($health['active_mail_failure_target_at']) ? (int) $health['active_mail_failure_target_at'] : 0;
+            }
+
+            return md5(wp_json_encode($signature));
+        }
+
+        /**
+         * Persists dismissal of the current site-wide reminder problem for this administrator/site.
+         *
+         * The URL signature is only an incident selector. A WordPress nonce authorizes the action, and fresh
+         * reminder health must still produce the same signature before any dismissal is stored; this prevents an
+         * old X/link from silencing a different problem that appeared between rendering and clicking.
+         *
+         * @since 260909.2042
+         */
+        public static function fixed_eot_reminder_admin_notice_dismiss()
+        {
+            if (!is_admin() || !current_user_can('manage_options') || empty($_GET['s2member-dismiss-eot-reminder-notice'])) {
+                return;
+            }
+
+            //260909.2042 Reject malformed incident selectors instead of normalizing them into a valid-looking hash; the nonce is checked before the more expensive forced health refresh.
+            $requested_signature = strtolower((string) wp_unslash($_GET['s2member-dismiss-eot-reminder-notice']));
+            if (!preg_match('/^[a-f0-9]{32}$/', $requested_signature)) {
+                return;
+            }
+            check_admin_referer('s2member-dismiss-eot-reminder-notice-'.$requested_signature);
+
+            //260909.2042 Recompute health at click time so a stale notice can never dismiss a newer incident that happens to be on the same admin screen.
+            $health = self::fixed_eot_reminder_health(true);
+            $signature = self::fixed_eot_reminder_notice_signature($health);
+            if (!$signature || !hash_equals($signature, $requested_signature)) {
+                return;
+            }
+
+            //260909.2042 A normal user option is intentionally per administrator and per site; one administrator's X must not globally hide operational warnings for everyone else.
+            update_user_option(get_current_user_id(), 's2member_fixed_eot_reminder_notice_dismissed', $signature);
+
+            $redirect = wp_get_referer() ? wp_get_referer() : admin_url();
+            wp_safe_redirect(remove_query_arg(array('s2member-dismiss-eot-reminder-notice', '_wpnonce'), $redirect));
+            exit;
+        }
+
+        /**
+         * Formats the representative oldest unresolved reminder recipient from the last complete worker scan.
+         *
+         * The address is the actual independent mail recipient; the linked WordPress user is the membership whose
+         * reminder generated it, so these can legitimately differ when an administrator/committee copy fails.
+         *
+         * @since 260909.2042
+         *
+         * @param array $health Reminder health snapshot.
+         *
+         * @return string Safe HTML for the status table, or an empty string when the aggregate identity is not exact.
+         */
+        public static function fixed_eot_reminder_failure_recipient_html($health)
+        {
+            $health = is_array($health) ? $health : array();
+
+            //260909.2042 Never present a recipient while `mail_health_dirty` makes the aggregate inexact; the previous representative may have recovered and `last_failure_*` is intentionally not a fallback.
+            if (empty($health['active_mail_failures_exact'])) {
+                return '';
+            }
+            $recipient = !empty($health['active_mail_failure_recipient']) ? trim((string) $health['active_mail_failure_recipient']) : '';
+            if ($recipient === '') {
+                return '';
+            }
+
+            $html = esc_html($recipient);
+            $user_id = !empty($health['active_mail_failure_user_id']) ? (int) $health['active_mail_failure_user_id'] : 0;
+            if ($user_id && ($edit_user_url = get_edit_user_link($user_id))) {
+                //260909.2042 Point directly at s2Member's per-user reminder preference; an intentional recipient exclusion can then be resolved without hunting through the profile or logs.
+                $edit_user_url .= '#ws-plugin--s2member-profile-s2member-reminders-enable-yes';
+                $html .= ' &mdash; <a href="'.esc_url($edit_user_url).'">Edit related user #'.$user_id.'</a>';
+            }
+            return $html;
         }
 
         /**
@@ -518,6 +664,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 return;
             }
 
+            //260909.2042 Dismiss only this stable critical incident for this administrator. Retry timing is absent from the signature, while a materially new/escalated problem produces a different signature and can alert again.
+            $signature = self::fixed_eot_reminder_notice_signature($health);
+            //260910.2131 Read the per-administrator dismissal with get_user_option()'s option-name-first argument order; the dismiss handler stores this same user option for the current administrator.
+            if ($signature && (string) get_user_option('s2member_fixed_eot_reminder_notice_dismissed', get_current_user_id()) === $signature) {
+                return;
+            }
+
             $reasons = array();
             if (in_array('scheduler_persistent', $health['issues'], true)) {
                 $reasons[] = 'The EOT reminder scheduler has been unhealthy for '.human_time_diff($health['scheduler_issue_since'], time()).'.';
@@ -531,7 +684,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
 
             $settings_url = admin_url('/admin.php?page=ws-plugin--s2member-paypal-ops').'#ws-plugin--s2member-pro-eot-reminder-email-enable';
             $notice = '<strong>s2Member EOT reminders need attention.</strong> '.esc_html(implode(' ', $reasons)).' <a href="'.esc_url($settings_url).'">Review EOT reminder status</a>.';
-            c_ws_plugin__s2member_admin_notices::display_admin_notice($notice, true);
+
+            //260909.2042 Carry the exact incident signature and nonce in the X; the click handler rechecks fresh health so this URL cannot dismiss a different problem that appears later.
+            $dismiss_url = wp_nonce_url(add_query_arg('s2member-dismiss-eot-reminder-notice', $signature), 's2member-dismiss-eot-reminder-notice-'.$signature);
+
+            //260909.2042 Render this health notice directly because the generic queued-notice dismissal cannot persist per incident. `position:relative` anchors WordPress' absolute `.notice-dismiss` X to this notice.
+            echo '<div class="notice notice-error" style="position:relative;"><p>'.wp_kses_post($notice).'</p><a href="'.esc_url($dismiss_url).'" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice until a new EOT reminder problem is detected.</span></a></div>';
         }
 
         /**
@@ -753,7 +911,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $last_mail_duration = 0.0;
             $runtime_exhausted = false;
             $last_heartbeat = microtime(true);
-            $pending_failure_summary = array('count' => 0, 'oldest_at' => 0, 'next_retry_at' => 0, 'earliest_deadline_at' => 0);
+            //260909.2042 Keep the representative failure identity in the same pass-local aggregate as its count/timing metrics; it becomes authoritative only if this worker completes the full eligible scan below.
+            $pending_failure_summary = array('count' => 0, 'oldest_at' => 0, 'next_retry_at' => 0, 'earliest_deadline_at' => 0, 'failure_user_id' => 0, 'failure_recipient' => '', 'failure_offset' => 0, 'failure_target_at' => 0);
 
             $email_configs_were_on = c_ws_plugin__s2member_email_configs::email_config_status();
             c_ws_plugin__s2member_email_configs::email_config();
@@ -924,7 +1083,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                     $_last_attempt_at = (int) key($_offset_attempts);
                                 }
                                 if ($_last_attempt_at && self::$now < $_last_attempt_at + $_retry_delay) {
-                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days);
+                                    //260909.2042 This recipient is still unresolved even though its backoff has not elapsed; carry its exact user/address/offset into the complete-pass health aggregate without sending again early.
+                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days, $_user->ID, $_recipient, $offset);
                                     continue;
                                 }
 
@@ -945,7 +1105,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                                 //260821.0458 Persist each compact attempt immediately so a later timeout/fatal cannot duplicate a successful handoff and a failed handoff retains its retry history.
                                 update_user_option($_user->ID, $reminder_state_option, $_reminder_state);
                                 if (!$_mail_result['success']) {
-                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days);
+                                    //260909.2042 A just-failed handoff joins the same aggregate as waiting retries; retain both the concrete recipient address and the related membership for actionable admin diagnostics.
+                                    self::fixed_eot_add_pending_failure($pending_failure_summary, $_offset_attempts, $_target_day, $late_days, $_user->ID, $_recipient, $offset);
                                 }
 
                                 $_log_entry = array(
@@ -1052,6 +1213,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $state['oldest_active_mail_failure_at'] = (int) $pending_failure_summary['oldest_at'];
                 $state['next_mail_retry_at'] = (int) $pending_failure_summary['next_retry_at'];
                 $state['earliest_mail_failure_deadline_at'] = (int) $pending_failure_summary['earliest_deadline_at'];
+
+                //260909.2042 Persist identity only beside the authoritative complete-pass aggregate above. Keeping it out of runtime-limited writes prevents the status UI from naming a recipient the worker has not proven is representative of the unresolved set.
+                $state['active_mail_failure_user_id'] = (int) $pending_failure_summary['failure_user_id'];
+                $state['active_mail_failure_recipient'] = (string) $pending_failure_summary['failure_recipient'];
+                $state['active_mail_failure_offset'] = (int) $pending_failure_summary['failure_offset'];
+                $state['active_mail_failure_target_at'] = (int) $pending_failure_summary['failure_target_at'];
             }
             unset($state['consecutive_mail_failures']);
             update_option($state_option, $state, false);
