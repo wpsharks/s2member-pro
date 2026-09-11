@@ -46,7 +46,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 	{
 		public function __construct()
 		{
-			echo '<div class="ws-menu-page-group" title="EOT Renewal/Reminder Email(s)">'."\n";
+			//260911.0040 Open this collapsed reminder panel when a status notice links here.
+			echo '<div class="ws-menu-page-group" title="EOT Renewal/Reminder Email(s)"'.((!empty($_GET['s2member-open-panel']) && $_GET['s2member-open-panel'] === 'eot-reminder-status') ? ' default-state="open"' : '').'>'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-eot-reminder-email-section">'."\n";
 			echo '<h3>EOT Renewal/Reminder Emails (optional, for reminding customers who have an EOT Time)</h3>'."\n";
@@ -86,6 +87,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 			$eot_reminder_next_run = $_scheduled ? min($_scheduled) : 0;
 			unset($_scheduled);
 
+			//260911.0040 Provide a direct anchor for the EOT Reminder Status block.
+			echo '<div id="ws-plugin--s2member-pro-eot-reminder-status"></div>'."\n";
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 			echo '<h3>EOT Reminder Status: <span class="ws-plugin--s2member-status-light ws-plugin--s2member-status-light-'.esc_attr($eot_reminder_health['status']).'" aria-hidden="true"></span>'.esc_html($eot_reminder_status_label).'</h3>'."\n";
 			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";

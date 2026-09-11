@@ -682,7 +682,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
                 $reasons[] = number_format_i18n($health['active_mail_failures']).' reminder recipient'.($health['active_mail_failures'] === 1 ? ' is' : 's are').' still failing after automatic retries.';
             }
 
-            $settings_url = admin_url('/admin.php?page=ws-plugin--s2member-paypal-ops').'#ws-plugin--s2member-pro-eot-reminder-email-enable';
+            //260911.0040 Open the reminder panel and jump directly to its read-only status block.
+            $settings_url = add_query_arg('s2member-open-panel', 'eot-reminder-status', admin_url('/admin.php?page=ws-plugin--s2member-paypal-ops')).'#ws-plugin--s2member-pro-eot-reminder-status';
             $notice = '<strong>s2Member EOT reminders need attention.</strong> '.esc_html(implode(' ', $reasons)).' <a href="'.esc_url($settings_url).'">Review EOT reminder status</a>.';
 
             //260909.2042 Carry the exact incident signature and nonce in the X; the click handler rechecks fresh health so this URL cannot dismiss a different problem that appears later.
