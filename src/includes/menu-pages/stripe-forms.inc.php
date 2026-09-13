@@ -437,6 +437,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_menu_page_stripe_forms'))
 
 				echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-forms-success-section">'."\n";
 				echo '<h3>Custom Return URLs Upon Success (optional, for developers)</h3>'."\n";
+				//260913.1946 TO-DO Audit Pro-Form success redirects across gateways before considering host restrictions wp_safe_redirect()/wp_validate_redirect(); preserve existing external redirects until there is a compatibility/migration plan.
 				echo '<p>s2Member Pro opens the door for Custom Return URLs upon success. You can add a special attribute to any Form Shortcode (<code>success="/my-thank-you-page/"</code>). This makes it possible to integrate Stripe Pro-Forms in very creative ways; and even receive/verify Replacement Code variables, as needed. For example, (<code>success="/my-thank-you-page/?subscr_id=%%subscr_id%%"</code>).</p>'."\n";
 				echo '<p><em>A Custom Return URL is 100% optional. In fact, if you only need to obtain details for the purpose of tracking sales, you should just use the simpler API Tracking methods provided by s2Member, under: <strong>s2Member → API / Tracking</strong>. In other words, if you don\'t use the <code>success=""</code> attribute in your Shortcode, s2Member will handle things gracefully, all on its own. So using a Custom Return URL is only necessary when you need advanced customization for one reason or another.</em></p>'."\n";
 

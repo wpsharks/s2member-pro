@@ -75,7 +75,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 					{
 						$attr = &$vars["__refs"]["attr"]; // By reference.
 
-						$attr["success"] = str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]);
+						//260913.2024 Keep PayPal Button success string-only before normalization; malformed programmatic values must not be coerced or emit PHP warnings.
+						$attr["success"] = (isset($attr["success"]) && is_string($attr["success"])) ? str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]) : "";
 
 						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array();
 
