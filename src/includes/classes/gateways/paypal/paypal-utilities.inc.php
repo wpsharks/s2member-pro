@@ -773,9 +773,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$user = (is_user_logged_in() && is_object($user = wp_get_current_user()) && ($user_id = (int)$user->ID)) ? $user : FALSE;
 			$referencing = $user ? c_ws_plugin__s2member_utils_users::get_user_subscr_or_wp_id() : FALSE;
 			$payer_email = $user ? (string)$user->user_email : (string)$post_vars['email'];
-			$host = (string)wp_parse_url(home_url('/'), PHP_URL_HOST);
+			$host = (string)c_ws_plugin__s2member_utils_urls::parse_url(home_url('/'), PHP_URL_HOST);
 			$host = $host ? $host : (!empty($_SERVER['HTTP_HOST']) ? preg_replace('/[^a-z0-9.\-]/i', '', (string)$_SERVER['HTTP_HOST']) : '');
-			$port = (int)wp_parse_url(home_url('/'), PHP_URL_PORT);
+			$port = (int)c_ws_plugin__s2member_utils_urls::parse_url(home_url('/'), PHP_URL_PORT);
 			$url_host = $host.($port ? ':'.$port : '');
 
 			$account = array(
