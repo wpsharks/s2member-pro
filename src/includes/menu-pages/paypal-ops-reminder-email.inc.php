@@ -271,7 +271,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_paypal_ops_reminder_email"
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags (optional, for developers). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 

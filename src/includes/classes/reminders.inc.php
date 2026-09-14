@@ -1606,15 +1606,6 @@ if (!class_exists('c_ws_plugin__s2member_pro_reminders')) {
             $subject    = trim(preg_replace('/%%(.+?)%%/i', '', $subject)); // Remove any remaining.
             $message    = trim(preg_replace('/%%(.+?)%%/i', '', $message)); // Remove any remaining.
 
-            if (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) {
-                //
-                $evl_vars = get_defined_vars(); // Defined vars; minus primaries.
-                unset($evl_vars['recipients'], $evl_vars['subject'], $evl_vars['message']);
-
-                $recipients = c_ws_plugin__s2member_utilities::evl($recipients, $evl_vars);
-                $subject    = c_ws_plugin__s2member_utilities::evl($subject, $evl_vars);
-                $message    = c_ws_plugin__s2member_utilities::evl($message, $evl_vars);
-            }
         }
 
         protected static function calculate_day($time)

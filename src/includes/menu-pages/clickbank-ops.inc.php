@@ -407,7 +407,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags—optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$clickbank</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from ClickBank\'s IPN service, which are then translated into a format that s2Member\'s Core Gateway Processor can understand (e.g., <code>$clickbank["item_number"]</code>, <code>$clickbank["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
@@ -530,7 +530,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags—optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$clickbank</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from ClickBank\'s IPN service, which are then translated into a format that s2Member\'s Core Gateway Processor can understand (e.g., <code>$clickbank["item_number"]</code>, <code>$clickbank["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
@@ -646,7 +646,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags—optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$clickbank</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from ClickBank\'s IPN service, which are then translated into a format that s2Member\'s Core Gateway Processor can understand (e.g., <code>$clickbank["item_number"]</code>, <code>$clickbank["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
@@ -750,7 +750,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags—optional (for developers). If you use PHP tags, please run a test email with <code>&lt;?php print_r(get_defined_vars()); ?&gt;</code>. This will give you a full list of all PHP variables available to you in this email. The <code>$clickbank</code> variable is the most important one. It contains all of the <code>$_POST</code> variables received from ClickBank\'s IPN service, which are then translated into a format that s2Member\'s Core Gateway Processor can understand (e.g., <code>$clickbank["item_number"]</code>, <code>$clickbank["item_name"]</code>, etc). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
@@ -1236,7 +1236,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 
 			echo (!is_multisite() || !c_ws_plugin__s2member_utils_conds::is_multisite_farm() || is_main_site()) ?
 				'<div class="ws-menu-page-hr"></div>'."\n".
-				'<p style="margin:0;"><strong>PHP Code:</strong> It is also possible to use PHP tags (optional, for developers). Please note that all Replacement Codes will be parsed first, and then any PHP tags that you\'ve included. Also, please remember that emails are sent in plain text format.</p>'."\n"
+				'<p style="margin:0;"><strong>Advanced Customization:</strong> Further customization is possible with s2Member\'s email filters from a plugin or theme.</p>'."\n"
 				: '';
 			echo '</td>'."\n";
 
