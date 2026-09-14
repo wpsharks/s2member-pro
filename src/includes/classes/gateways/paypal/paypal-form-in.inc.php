@@ -147,7 +147,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 						$attr["rr"] = /* No Trial / non-recurring. Only after running shortcode_atts(). */ (!$attr["tp"] && !$attr["rr"]) ? "BN" : $attr["rr"];
 						$attr["ns"] = /* No shipping directive must be 1 for digital items. After shortcode_atts(). */ ($attr["dg"] === "1") ? "1" : $attr["ns"];
 						$attr["default_country_code"] = /* This MUST be in uppercase format. */ strtoupper($attr["default_country_code"]);
-						$attr["success"] = /* Normalize ampersands. */ c_ws_plugin__s2member_utils_urls::n_amps($attr["success"]);
+						//260914.0101 Keep PayPal Pro-Form success string-only before URL normalization; malformed programmatic values must not be coerced or emit PHP warnings.
+						$attr["success"] = (isset($attr["success"]) && is_string($attr["success"])) ? c_ws_plugin__s2member_utils_urls::n_amps($attr["success"]) : "";
 
 						$attr['accept'] = trim($attr['accept']) ? preg_split('/[;,]+/', preg_replace('/['."\r\n\t".'\s]+/', '', trim(strtolower($attr['accept'])))) : array();
 						$attr['accept'] = !in_array('paypal', $attr['accept']) ? array_merge($attr['accept'], array('paypal')) : $attr['accept'];

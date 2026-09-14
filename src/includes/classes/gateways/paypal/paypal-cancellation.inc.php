@@ -97,9 +97,12 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_cancellation"))
 								if(!empty($post_vars["attr"]["unsub"]))
 									c_ws_plugin__s2member_list_servers::process_list_server_removals_against_current_user(TRUE);
 
+								//260914.0101 Validate the final Success destination after replacement-code processing; preserve relative/external HTTP(S) redirects while rejecting executable/non-web protocols.
 								if(!empty($post_vars["attr"]["success"])
 								&& ($custom_success_url = str_ireplace(array("%%s_response%%", "%%response%%"), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response["response"])), urlencode($global_response["response"])), $post_vars["attr"]["success"]))
-								&& ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url))))
+								&& ($custom_success_url = trim(preg_replace("/%%(.+?)%%/i", "", $custom_success_url)))
+								&& ($custom_success_url = wp_sanitize_redirect($custom_success_url))
+								&& strtolower(wp_kses_bad_protocol($custom_success_url, array("http", "https"))) === strtolower($custom_success_url))
 									wp_redirect(c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, "s2p-v")).exit();
 							}
 						else
