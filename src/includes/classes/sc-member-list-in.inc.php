@@ -111,24 +111,29 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 			$attr['show_display_name']  = filter_var($attr['show_display_name'], FILTER_VALIDATE_BOOLEAN);
 			$attr['enable_list_search'] = filter_var($attr['enable_list_search'], FILTER_VALIDATE_BOOLEAN);
 
-			//260812 Transition period: detect Member List fields that are not yet approved, without changing current output.
+			//260915.0134 Enforce the shared whitelist before any Member List template receives `show_fields`.
 			$shortcode_user_fields_whitelist = trim((string)$GLOBALS['WS_PLUGIN__']['s2member']['o']['sc_user_fields_whitelist']);
 			$shortcode_user_fields_whitelist = ($shortcode_user_fields_whitelist !== '') ? preg_split('/\s*,\s*/', strtolower($shortcode_user_fields_whitelist), -1, PREG_SPLIT_NO_EMPTY) : array();
 			$shortcode_user_fields_whitelist = array_flip($shortcode_user_fields_whitelist);
-			$_unlisted_show_fields = array();
+			$_unlisted_show_fields = $_approved_show_fields = array();
 			if($attr['show_fields'])
 			{
 				foreach(preg_split('/[,]+/', $attr['show_fields'], -1, PREG_SPLIT_NO_EMPTY) as $_show_field)
 				{
-					//260812 Match the Member List template's `Label:field` parsing.
+					//260915.0134 Match the Member List template's `Label:field` parsing, preserving approved entries verbatim and in order.
 					$_show_field_parts = explode(':', $_show_field, 2);
 					$_show_field_id = trim((count($_show_field_parts) > 1) ? $_show_field_parts[1] : $_show_field_parts[0]);
-					if($_show_field_id !== '' && !isset($shortcode_user_fields_whitelist[strtolower($_show_field_id)]))
-						$_unlisted_show_fields[] = $_show_field_id;
+					if($_show_field_id !== '')
+					{
+						if(isset($shortcode_user_fields_whitelist[strtolower($_show_field_id)]))
+							$_approved_show_fields[] = $_show_field;
+						else $_unlisted_show_fields[] = $_show_field_id;
+					}
 				}
+				$attr['show_fields'] = implode(',', $_approved_show_fields);
 				$_unlisted_show_fields = array_values(array_unique($_unlisted_show_fields));
 
-				//260813 Report unapproved fields through the shared Framework warning used by s2Get and Member List.
+				//260915.0134 Keep reporting blocked fields through the shared Framework warning used by s2Get and Member List.
 				if($_unlisted_show_fields)
 				{
 					$_post_id = (int)get_the_ID();
@@ -136,8 +141,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 						c_ws_plugin__s2member_admin_notices::shortcode_user_field_unapproved($_show_field_id, ($shortcode) ? $shortcode : 's2Member-List', $_post_id);
 				}
 
-				//260813 Housekeeping for temporary field-parsing variables.
-				unset($_show_field, $_show_field_parts, $_show_field_id, $_post_id);
+				//260915.0134 Housekeeping for temporary field-parsing variables.
+				unset($_show_field, $_show_field_parts, $_show_field_id, $_approved_show_fields, $_post_id);
 			}
 
 			if($attr['args']) // Custom args?

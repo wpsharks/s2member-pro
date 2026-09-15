@@ -182,8 +182,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_admin_notices'))
 
 			$_settings_url = add_query_arg('s2member-open-panel', 'pro-shortcode-templates-whitelist', admin_url('/admin.php?page=ws-plugin--s2member-gen-ops')).'#ws-plugin--s2member-pro-shortcode-templates-whitelist';
 			$_dismiss_url = wp_nonce_url(add_query_arg('ws-plugin--s2member-dismiss-shortcode-template-notice', '1', admin_url()), 'ws-plugin--s2member-dismiss-shortcode-template-notice');
-			$_message = 'Some Pro shortcodes use custom template files that are not in <em><a href="'.esc_url($_settings_url).'">s2Member → General Options → Pro Shortcode Templates Whitelist</a></em>';
-			c_ws_plugin__s2member_admin_notices::display_security_notice($_message, 'Review the files below and allow the ones you trust:', $_template_items, $_dismiss_url);
+			$_message = 'Some Pro shortcodes attempted to use custom template files that are not in <em><a href="'.esc_url($_settings_url).'">s2Member → General Options → Pro Shortcode Templates Whitelist</a></em>. Those custom templates were blocked and the shortcodes used their standard templates instead.';
+			c_ws_plugin__s2member_admin_notices::display_security_notice($_message, 'Review the blocked files below and allow the ones you trust:', $_template_items, $_dismiss_url);
 		}
 	}
 }

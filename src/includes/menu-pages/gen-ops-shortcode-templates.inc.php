@@ -26,7 +26,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_shortcode_template
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-sc-templates-whitelist-section">'."\n";
 			echo '<h3>Pro Shortcode Templates Whitelist (optional)</h3>'."\n";
-			echo '<p>Custom files specified with a <code>template=""</code> attribute in a Pro shortcode are evaluated as template code. A user who can edit site content should not be able to make a shortcode use an unintended file under <code>wp-content</code>. This whitelist lets you explicitly approve the custom template files you trust.</p>'."\n";
+			echo '<p>Custom files specified with a <code>template=""</code> attribute in a Pro shortcode are evaluated as template code. A user who can edit site content should not be able to make a shortcode use an unintended file under <code>wp-content</code>. This whitelist lets you explicitly approve the custom template files you trust. Unlisted custom templates are blocked and the shortcode uses its standard template instead.</p>'."\n";
 			echo '<table class="form-table">'."\n";
 			echo '<tbody>'."\n";
 			echo '<tr>'."\n";
