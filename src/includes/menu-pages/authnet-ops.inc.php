@@ -817,8 +817,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-eot-behavior-section">'."\n";
 			echo '<h3>Authorize.Net End-of-Term Behavior (required, please choose)</h3>'."\n";
-			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to a Free Subscriber whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member demotes them to a Free Subscriber, so they will no longer have Member Level Access to your site. However, in some cases, you may prefer to have Customer accounts moved to Pending Deletion for administrator review, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
-			echo '<p>The Authorize.Net ARB (Automated Recurring Billing) service will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Authorize.Net, s2Member will eventually be notified (with a 24-48 hour delay), and the account for that Customer will either be demoted to a Free Subscriber, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
+			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to the role selected under Demote To Role whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member assigns the role selected under Demote To Role; resulting access depends on that role and on any unrelated WordPress roles you choose to preserve. However, in some cases, you may prefer to have Customer accounts moved to Pending Deletion for administrator review, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
+			echo '<p>The Authorize.Net ARB (Automated Recurring Billing) service will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Authorize.Net, s2Member will eventually be notified (with a 24-48 hour delay), and the account for that Customer will either be assigned the role selected under Demote To Role, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
 
 			//260821.0700 Mirror the shared Auto-EOT health/runtime controls anywhere these global settings are exposed; scheduler trouble must not blank the saved mode.
 			$auto_eot_health = c_ws_plugin__s2member_auto_eots::auto_eot_system_health(TRUE);
@@ -974,7 +974,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_membership_eot_behavior" id="ws-plugin--s2member-membership-eot-behavior">'."\n";
-			echo '<option value="demote"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "demote") ? ' selected="selected"' : '').'>Demote (convert them to a Free Subscriber)</option>'."\n";
+			echo '<option value="demote"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "demote") ? ' selected="selected"' : '').'>Demote (assign the role selected under Demote To Role)</option>'."\n";
 			echo '<option value="delete"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "delete") ? ' selected="selected"' : '').'>Delete (move to Pending Deletion for review)</option>'."\n";
 			echo '</select><br />'."\n";
 			//260822.0614 Keep the stored `delete` value for compatibility; irreversible deletion is an explicit developer opt-in rather than the product default.
@@ -982,6 +982,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_authnet_ops"))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+
+			//260916.1840 Keep the global EOT role destination/scope controls identical across every gateway page.
+			c_ws_plugin__s2member_menu_pages::eot_demotion_options();
+
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";

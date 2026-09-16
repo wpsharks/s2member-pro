@@ -626,8 +626,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-eot-behavior-section">'."\n";
 			echo '<h3>Google End-of-Term Behavior (required, please choose)</h3>'."\n";
-			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to a Free Subscriber whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member demotes them to a Free Subscriber, so they will no longer have Member Level Access to your site. However, in some cases, you may prefer to have Customer accounts moved to Pending Deletion for administrator review, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
-			echo '<p>The Google Postback/IPN service will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Google Wallet, s2Member will be notified immediately, and the account for that Customer will either be demoted to a Free Subscriber, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
+			echo '<p>EOT = End Of Term. By default, s2Member will demote a paid Member to the role selected under Demote To Role whenever their Subscription term has ended (i.e., expired) or is cancelled. s2Member assigns the role selected under Demote To Role; resulting access depends on that role and on any unrelated WordPress roles you choose to preserve. However, in some cases, you may prefer to have Customer accounts moved to Pending Deletion for administrator review, instead of just being demoted. This is where you choose which method works best for your site. If you don\'t want s2Member to take ANY action at all, you can disable s2Member\'s EOT System temporarily, or even completely. There are also a few other configurable options here, so please read carefully. These options are all very important.</p>'."\n";
+			echo '<p>The Google Postback/IPN service will assist in notifying s2Member whenever a Subscription expires. For example, if a Customer cancels their own Subscription; or if you cancel a Customer\'s Subscription through Google Wallet, s2Member will be notified immediately, and the account for that Customer will either be assigned the role selected under Demote To Role, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
 			echo '<p><em><strong>Limitation:</strong> Google Wallet currently notifies s2Member about subscription expirations and cancellations only; NOT about refunds/chargebacks.</em></p>'."\n";
 			echo '<p><em><strong>Limitation:</strong> Google Wallet currently does NOT notify s2Member about future payments that are processed against a recurring Subscription. For this reason, s2Member\'s API Notifications for Payments (see: <strong>Dashboard → s2Member → API Notifications</strong>); and s2Member\'s ability to accurately set an EOT Time when a Subscription is cancelled after X number of payments, may NOT work as expected in all cases. In many cases, upon being notified that a Subscription was cancelled, s2Member will terminate access immediately, because it has no way of knowing when the last payment was processed successfully; and thus, s2Member has no way to accurately define the amount of any remaining time that a customer may still have left.</em></p>'."\n";
 
@@ -761,7 +761,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 
 			echo '<td>'."\n";
 			echo '<select name="ws_plugin__s2member_membership_eot_behavior" id="ws-plugin--s2member-membership-eot-behavior">'."\n";
-			echo '<option value="demote"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "demote") ? ' selected="selected"' : '').'>Demote (convert them to a Free Subscriber)</option>'."\n";
+			echo '<option value="demote"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "demote") ? ' selected="selected"' : '').'>Demote (assign the role selected under Demote To Role)</option>'."\n";
 			echo '<option value="delete"'.(($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["membership_eot_behavior"] === "delete") ? ' selected="selected"' : '').'>Delete (move to Pending Deletion for review)</option>'."\n";
 			echo '</select><br />'."\n";
 			//260822.0614 Keep the stored `delete` value for compatibility; irreversible deletion is an explicit developer opt-in rather than the product default.
@@ -769,6 +769,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+
+			//260916.1840 Keep the global EOT role destination/scope controls identical across every gateway page.
+			c_ws_plugin__s2member_menu_pages::eot_demotion_options();
+
 			echo '<tr>'."\n";
 
 			echo '<th>'."\n";
