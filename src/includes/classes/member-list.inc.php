@@ -77,6 +77,12 @@ class c_ws_plugin__s2member_pro_member_list
         }
         $context = self::$_query_filter_contexts[spl_object_hash($query)];
 
+        if ($context['meta_orderby']) {
+            //260916.0248 `first_name`, `last_name`, and `nickname` live in usermeta, but sorting by one of them must not make that metadata row a prerequisite for appearing in the list. Order through a nullable scalar lookup instead of `meta_key`/`meta_value`, which would inner-join usermeta and silently exclude users missing the selected field. The subquery also avoids multiplying users if malformed duplicate profile rows exist.
+            $query->set('orderby', $context['meta_orderby']); // Restore the public query var so WordPress query caching distinguishes the requested Member List sort.
+            $meta_orderby_sql = $wpdb->prepare('(SELECT s2ml_order_meta.`meta_value` FROM `'.$wpdb->usermeta.'` s2ml_order_meta WHERE s2ml_order_meta.`user_id` = `'.$wpdb->users.'`.`ID` AND s2ml_order_meta.`meta_key` = %s ORDER BY s2ml_order_meta.`umeta_id` ASC LIMIT 1)', $context['meta_orderby']);
+            $query->query_orderby = 'ORDER BY COALESCE('.$meta_orderby_sql.", '') ".$context['order'];
+        }
         if ($context['search']) {
             $search_clauses = array();
             $query->set('search', isset($context['user_search']) ? $context['user_search'] : $context['search']); // Restore the public query var after suppressing only WordPress's built-in AND search during preparation.
@@ -111,42 +117,73 @@ class c_ws_plugin__s2member_pro_member_list
             }
             if ($context['user_meta_search_cols']) {
                 $meta_searches = array();
+                $meta_search_like = self::_user_meta_search_like($context['search']);
                 foreach ($context['user_meta_search_cols'] as $_search_col) {
-                    $meta_searches[] = $wpdb->prepare('(s2ml_sm.`meta_key` = %s AND s2ml_sm.`meta_value` REGEXP %s)', $_search_col, $context['search_regex']);
+                    $meta_searches[] = $wpdb->prepare('(s2ml_sm.`meta_key` = %s AND s2ml_sm.`meta_value` LIKE %s)', $_search_col, $meta_search_like);
                 }
                 unset($_search_col);
 
                 if ($meta_searches) {
-                    //260915.2136 The legacy usermeta-search branch required first/last/nickname to exist, but username/email and Custom Field matches did not. Keep that branch-specific behavior while replacing its row-multiplying joins with yes/no EXISTS probes.
-                    $meta_search_sql = '('.self::_profile_meta_exists_sql().' AND EXISTS (SELECT 1 FROM `'.$wpdb->usermeta.'` s2ml_sm WHERE s2ml_sm.`user_id` = `'.$wpdb->users.'`.`ID` AND ('.implode(' OR ', $meta_searches).')))';
-                    $search_clauses[] = $meta_search_sql;
+                    //260916.0248 Ordinary usermeta search only needs to answer whether one requested metadata value matches. The old REGEXP plus first_name/last_name/nickname prerequisites made unrelated profile rows part of search eligibility; LIKE preserves the shortcode's exact/leading/trailing/fuzzy wildcard semantics without that undocumented gate.
+                    $search_clauses[] = 'EXISTS (SELECT 1 FROM `'.$wpdb->usermeta.'` s2ml_sm WHERE s2ml_sm.`user_id` = `'.$wpdb->users.'`.`ID` AND ('.implode(' OR ', $meta_searches).'))';
                 }
             }
             if ($context['search_s2_custom_fields']) {
                 $custom_fields_regex = self::_custom_fields_search_regex($context['search'], $context['s2_custom_field_search_cols']);
-                $search_clauses[] = $wpdb->prepare('EXISTS (SELECT 1 FROM `'.$wpdb->usermeta.'` s2ml_scf WHERE s2ml_scf.`user_id` = `'.$wpdb->users.'`.`ID` AND s2ml_scf.`meta_key` = %s AND s2ml_scf.`meta_value` REGEXP %s)', $context['blog_prefix'].'s2member_custom_fields', $custom_fields_regex);
+                $custom_fields_like  = self::_custom_fields_search_like($context['search']);
+                $custom_fields_sql   = $wpdb->prepare('EXISTS (SELECT 1 FROM `'.$wpdb->usermeta.'` s2ml_scf WHERE s2ml_scf.`user_id` = `'.$wpdb->users.'`.`ID` AND s2ml_scf.`meta_key` = %s', $context['blog_prefix'].'s2member_custom_fields');
+                if ($custom_fields_like !== '') {
+                    //260916.0248 Serialized Custom Fields still need the structural REGEXP to keep a match tied to the requested field/value, but a cheap literal LIKE can reject impossible rows before MySQL pays the regex cost. Every regex match necessarily contains this literal fragment, so the prefilter cannot remove a valid match.
+                    $custom_fields_sql .= $wpdb->prepare(' AND s2ml_scf.`meta_value` LIKE %s', $custom_fields_like);
+                }
+                $custom_fields_sql .= $wpdb->prepare(' AND s2ml_scf.`meta_value` REGEXP %s)', $custom_fields_regex);
+                $search_clauses[] = $custom_fields_sql;
             }
             //260915.2136 Search directly in the final paginated query. The old implementation first fetched every matching ID into PHP, merged/deduplicated the full set, then sent those IDs back to MySQL in a second query before pagination.
             $query->query_where .= $search_clauses ? ' AND ('.implode(' OR ', $search_clauses).')' : ' AND 1=0';
-        } else {
-            //260915.2136 Ordinary Member Lists historically required first_name, last_name, and nickname through three WP_Meta_Query joins. EXISTS preserves the qualification rule without multiplying the main Users result before sorting/pagination.
-            $query->query_where .= ' AND '.self::_profile_meta_exists_sql();
         }
     }
     protected static $_query_filter_contexts = array();
 
     /**
-     * SQL requiring the three standard Member List profile values.
+     * Converts the normalized Member List search expression to SQL LIKE syntax.
      *
-     * @return string SQL expression.
+     * @param string $search Normalized search string; only leading/trailing `*` wildcards are supported.
+     *
+     * @return string LIKE pattern.
      */
-    protected static function _profile_meta_exists_sql()
+    protected static function _user_meta_search_like($search)
     {
         global $wpdb;
 
-        return "EXISTS (SELECT 1 FROM `{$wpdb->usermeta}` s2ml_fn WHERE s2ml_fn.`user_id` = `{$wpdb->users}`.`ID` AND s2ml_fn.`meta_key` = 'first_name' AND s2ml_fn.`meta_value` != '___')"
-            ." AND EXISTS (SELECT 1 FROM `{$wpdb->usermeta}` s2ml_ln WHERE s2ml_ln.`user_id` = `{$wpdb->users}`.`ID` AND s2ml_ln.`meta_key` = 'last_name' AND s2ml_ln.`meta_value` != '___')"
-            ." AND EXISTS (SELECT 1 FROM `{$wpdb->usermeta}` s2ml_nn WHERE s2ml_nn.`user_id` = `{$wpdb->users}`.`ID` AND s2ml_nn.`meta_key` = 'nickname' AND s2ml_nn.`meta_value` != '___')";
+        $leading_wild  = (ltrim($search, '*') !== $search);
+        $trailing_wild = (rtrim($search, '*') !== $search);
+        $search        = trim($search, '*');
+        $search        = $wpdb->esc_like($search);
+
+        if ($leading_wild) {
+            $search = '%'.$search;
+        }
+        if ($trailing_wild) {
+            $search .= '%';
+        }
+        return $search;
+    }
+
+    /**
+     * Returns a cheap literal LIKE prefilter for serialized Custom Fields.
+     *
+     * @param string $search Normalized search string.
+     *
+     * @return string LIKE pattern, or an empty string when there is no literal fragment to prefilter.
+     */
+    protected static function _custom_fields_search_like($search)
+    {
+        global $wpdb;
+
+        $literal = str_replace(array('*', '"', '{', '}'), '', $search);
+
+        return $literal === '' ? '' : '%'.$wpdb->esc_like($literal).'%';
     }
 
     /**
@@ -264,8 +301,6 @@ class c_ws_plugin__s2member_pro_member_list
             $args['search'] = '*'.$args['search'].'*';
         }
         $args['search'] = trim($args['search'], '"'." \t\n\r\0\x0B");
-        $search_regex   = '^'.str_replace('\\*', '.*', preg_quote($args['search'])).'$';
-        // Note that an ungreedy `.*?` is not possible. See: <http://jas.xyz/1PIWPZA>
 
         /* ---------------------------------------------------------- */
 
@@ -307,29 +342,23 @@ class c_ws_plugin__s2member_pro_member_list
 
         /* ---------------------------------------------------------- */
 
-        //260915.2211 Keep WordPress in charge of the final Member List query (custom meta_query, Roles/Levels/CCAPs, include/exclude, Multisite membership, ordering, totals, pagination, caching, and user hydration), but add the expensive profile/search conditions as EXISTS clauses instead of building full matching-ID lists in PHP.
+        //260916.0248 Keep WordPress in charge of the final Member List query (custom meta_query, Roles/Levels/CCAPs, include/exclude, Multisite membership, totals, pagination, caching, and user hydration). s2Member only injects the search/sort SQL that WordPress cannot express without either multiplying rows or making optional profile metadata an eligibility requirement.
+        $meta_orderby = in_array($args['orderby'], array('first_name', 'last_name', 'nickname'), true) ? $args['orderby'] : '';
         $token = uniqid('s2ml_', true);
         self::$_query_filter_pending[$token] = array(
             'search'                      => $args['search'],
-            'search_regex'                => $search_regex,
             'user_search_cols'            => array_values($user_search_cols),
             'user_meta_search_cols'       => array_values($user_meta_search_cols),
             's2_custom_field_search_cols' => array_values($s2_custom_field_search_cols),
             'search_s2_custom_fields'     => $search_s2_custom_fields,
             'blog_prefix'                 => $blog_prefix,
+            'meta_orderby'                => $meta_orderby,
+            'order'                       => strtoupper($args['order']) === 'ASC' ? 'ASC' : 'DESC',
         );
         $args['s2member_pro_member_list_query_token'] = $token; // Removed by `_query_prepare_filter()` before WordPress builds SQL/cache keys.
-
-        if ($args['search']) {
-            $search_orderby = $args['orderby'];
-            //260915.2211 Keep `include`/`exclude` on the final WP_User_Query so they consistently constrain the Member List regardless of which search branch matched. The old separate Custom Fields lookup could bypass `include`; that was an implementation leak, not useful list semantics.
-
-            // If ordering by one of the meta values.
-            if (in_array($search_orderby, array('first_name', 'last_name', 'nickname'))) {
-                $args['orderby']  = 'meta_value';
-                $args['meta_key'] = $search_orderby;
-            }
-            unset($search_orderby);
+        if ($meta_orderby) {
+            //260916.0248 Give WordPress a valid built-in order while it prepares the query; `_query_filter()` replaces that SQL with nullable usermeta ordering and restores this public query var before caching/integrations observe the completed query.
+            $args['orderby'] = 'ID';
         }
         self::$_search_columns_for_filter = array_values($user_search_cols);
         if ($user_search_cols && $args['search']) {
