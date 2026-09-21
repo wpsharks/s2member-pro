@@ -155,35 +155,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_admin_notices'))
 			if(!$_templates)
 				return;
 
-			// Build a useful list with the shortcode and edit links when the originating Post/Page is known.
-			$_template_items = array();
+			//260921.2025 Keep this notice compact by listing template paths once and aggregating the pages where they were detected.
+			$_template_paths = $_post_links = array();
 			foreach($_templates as $_template => $_details)
 			{
-				$_item = esc_html($_template);
-				$_shortcodes = (!empty($_details['shortcodes'])) ? array_unique((array)$_details['shortcodes']) : array();
-				if($_shortcodes)
-					$_item .= ' — ['.esc_html(implode('], [', $_shortcodes)).']';
-
-				$_post_links = array();
-				foreach((!empty($_details['post_ids'])) ? array_unique(array_map('intval', (array)$_details['post_ids'])) : array() as $_post_id)
+				$_template_paths[] = '<code>'.esc_html($_template).'</code>';
+				foreach((!empty($_details['post_ids'])) ? (array)$_details['post_ids'] : array() as $_post_id)
 				{
-					if($_post_id > 0 && ($_edit_link = get_edit_post_link($_post_id, '')))
+					$_post_id = (int)$_post_id;
+					if($_post_id > 0 && !isset($_post_links[$_post_id]) && ($_edit_link = get_edit_post_link($_post_id, '')))
 					{
 						$_post_title = get_the_title($_post_id);
 						$_post_title = ($_post_title !== '') ? $_post_title : '(no title)';
-						$_post_links[] = '<a href="'.esc_url($_edit_link).'">'.esc_html($_post_title).' (#'.$_post_id.')</a>';
+						$_post_links[$_post_id] = '<a href="'.esc_url($_edit_link).'">'.esc_html($_post_title).'</a>';
 					}
 				}
-				if($_post_links)
-					$_item .= ' — '.implode(', ', $_post_links);
-
-				$_template_items[] = $_item;
 			}
+			unset($_template, $_details, $_post_id, $_edit_link, $_post_title);
 
 			$_settings_url = add_query_arg('s2member-open-panel', 'pro-shortcode-templates-whitelist', admin_url('/admin.php?page=ws-plugin--s2member-gen-ops')).'#ws-plugin--s2member-pro-shortcode-templates-whitelist';
 			$_dismiss_url = wp_nonce_url(add_query_arg('ws-plugin--s2member-dismiss-shortcode-template-notice', '1', admin_url()), 'ws-plugin--s2member-dismiss-shortcode-template-notice');
-			$_message = 'Some Pro shortcodes attempted to use custom template files that are not in <em><a href="'.esc_url($_settings_url).'">s2Member → General Options → Pro Shortcode Templates Whitelist</a></em>. Those custom templates were blocked and the shortcodes used their standard templates instead.';
-			c_ws_plugin__s2member_admin_notices::display_security_notice($_message, 'Review the blocked files below and allow the ones you trust:', $_template_items, $_dismiss_url);
+			$_template_is_singular = (count($_template_paths) === 1);
+			$_message = ($_template_is_singular ? 'The following custom template file needs' : 'The following custom template files need').' to be added to the whitelist before s2Member can use '.($_template_is_singular ? 'it' : 'them').'. <em><a href="'.esc_url($_settings_url).'">s2Member → General Options → Pro Shortcode Templates Whitelist</a></em>';
+			$_review = implode('<br />', $_template_paths);
+			if($_post_links)
+				$_review .= '<br /><em>Used on:</em> '.implode(', ', $_post_links).'.';
+			c_ws_plugin__s2member_admin_notices::display_security_notice($_message, $_review, array(), $_dismiss_url);
 		}
 	}
 }
