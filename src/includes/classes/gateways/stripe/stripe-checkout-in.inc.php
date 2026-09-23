@@ -334,14 +334,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									{
 										$stripe_pending_subscr = TRUE;
 										$stripe_pending_subscr_response = $handle_intent_status;
+										$stripe_pending_subscr_response['pending'] = TRUE;
 									}
-									// If intent status didn't succeed and no pending subscription is possible, let's get the response with the status requirement.
-									else if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+									//260923.0111 A recoverable pending subscription must continue into its account/recovery setup instead of being consumed here as an ordinary intent error.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && empty($stripe_pending_subscr))
 										$global_response = $handle_intent_status;
 									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
-									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+									else if(empty($stripe_pending_subscr) && empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
 										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
-									// Or we have a successful payment intent charge. Rejoice!
+									// Or we have a successful payment intent charge, or a recoverable pending subscription.
 									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
 										|| (isset($subscription_good) && $subscription_good)
 										|| !empty($stripe_pending_subscr))
@@ -602,14 +603,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									{
 										$stripe_pending_subscr = TRUE;
 										$stripe_pending_subscr_response = $handle_intent_status;
+										$stripe_pending_subscr_response['pending'] = TRUE;
 									}
-									// If intent status didn't succeed and no pending subscription is possible, let's get the response with the status requirement.
-									else if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status))
+									//260923.0111 A recoverable pending subscription must continue into its account/recovery setup instead of being consumed here as an ordinary intent error.
+									if(!isset($stripe_intent_succeeded) && !empty($handle_intent_status) && is_array($handle_intent_status) && empty($stripe_pending_subscr))
 										$global_response = $handle_intent_status;
 									// If we got here, and we don't have a setup or payment intent, or method ID, ask for a card.
-									else if(empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
+									else if(empty($stripe_pending_subscr) && empty($post_vars['seti_id']) && empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
 										$global_response = array('response' => _x('Please submit a card.', 's2member-front', 's2member'), 'error' => TRUE);
-									// Or we have a successful payment intent charge. Rejoice!
+									// Or we have a successful payment intent charge, or a recoverable pending subscription.
 									else if((isset($stripe_intent_succeeded) && is_object($stripe_intent_succeeded) && $stripe_intent_succeeded->status == 'succeeded') 
 										|| (isset($subscription_good) && $subscription_good)
 										|| !empty($stripe_pending_subscr))

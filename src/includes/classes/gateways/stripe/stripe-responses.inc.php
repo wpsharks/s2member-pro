@@ -184,7 +184,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 			$_response = (!$_response) ? c_ws_plugin__s2member_pro_stripe_responses::stripe_form_attr_validation_errors($attr) : $_response;
 			$response  = $error = NULL; // Initialize.
 
-			if($_response && !empty($_response['error']) && !empty($_response['response']) && ($error = $_response['error']))
+			if($_response && !empty($_response['pending']) && !empty($_response['response']))
+			{
+				//260923.0111 Stripe authentication is still in progress; preserve error semantics so form state stays available, but present required customer action as information instead of a payment failure.
+				$error = !empty($_response['error']) ? $_response['error'] : NULL;
+				$response = '<div id="s2member-pro-stripe-form-response" class="s2member-pro-stripe-form-response-info s2member-pro-stripe-checkout-form-response-info">';
+				$response .= $_response['response'];
+				$response .= '</div>';
+			}
+			else if($_response && !empty($_response['error']) && !empty($_response['response']) && ($error = $_response['error']))
 			{
 				$response = '<div id="s2member-pro-stripe-form-response" class="s2member-pro-stripe-form-response-error s2member-pro-stripe-checkout-form-response-error">';
 				$response .= $_response['response'];
