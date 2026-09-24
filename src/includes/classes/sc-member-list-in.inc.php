@@ -163,45 +163,49 @@ if(!class_exists('c_ws_plugin__s2member_pro_sc_member_list_in'))
 					'orderby'        => $attr['orderby'],
 					'number'         => (int)$attr['limit'],
 				);
+				//260924.1451 Keep Roles/Levels/CCAPs in their own logical group so `rlc_satisfy=ANY` cannot turn unrelated metadata conditions added by `pre_get_users` integrations into additional OR branches.
+				$_rlc_meta_query = array();
 				if($attr['roles']) // Must satisfy all Roles in the list (default behavior).
 				{
 					foreach(preg_split('/[;,\s]+/', $attr['roles'], -1, PREG_SPLIT_NO_EMPTY) as $_role)
-						$args['meta_query'][] = array(
+						$_rlc_meta_query[] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"'.$_role.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
-						$args['meta_query']['relation'] = 'OR';
 
 					unset($_role); // Housekeeping.
 				}
 				if(isset($attr['levels'][0])) // Must satisfy all Levels in the list (default behavior).
 				{
 					foreach(preg_split('/[;,\s]+/', $attr['levels'], -1, PREG_SPLIT_NO_EMPTY) as $_level)
-						$args['meta_query'][] = array(
+						$_rlc_meta_query[] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => (int)$_level === 0 ? '"subscriber"' : '"s2member_level'.$_level.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
-						$args['meta_query']['relation'] = 'OR';
 
 					unset($_level); // Housekeeping.
 				}
 				if($attr['ccaps']) // Must satisfy all CCAPs in the list (default behavior).
 				{
 					foreach(preg_split('/[;,\s]+/', $attr['ccaps'], -1, PREG_SPLIT_NO_EMPTY) as $_ccap)
-						$args['meta_query'][] = array(
+						$_rlc_meta_query[] = array(
 							'key'     => $wpdb->get_blog_prefix().'capabilities',
 							'value'   => '"access_s2member_ccap_'.$_ccap.'"',
 							'compare' => 'LIKE',
 						);
-					if($attr['rlc_satisfy'] === 'ANY') // Default is `ALL` (i.e., `AND`).
-						$args['meta_query']['relation'] = 'OR';
 
 					unset($_ccap); // Housekeeping.
 				}
+				if($_rlc_meta_query)
+				{
+					if($attr['rlc_satisfy'] === 'ANY' && count($_rlc_meta_query) > 1)
+						$args['meta_query'][] = array_merge(array('relation' => 'OR'), $_rlc_meta_query);
+					else
+						$args['meta_query'] = array_merge($args['meta_query'], $_rlc_meta_query);
+				}
+				unset($_rlc_meta_query); // Housekeeping.
 			}
 			if(is_multisite() && c_ws_plugin__s2member_utils_conds::is_multisite_farm() && !is_main_site())
 				$args['blog_id'] = $GLOBALS['blog_id']; // Disallow for security reasons.
