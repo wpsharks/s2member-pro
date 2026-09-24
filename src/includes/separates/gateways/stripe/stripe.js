@@ -816,6 +816,9 @@ jQuery(document).ready( // DOM ready.
 									paymentIntentId = result.error.payment_intent.id;
 								} else if (jQuery('#s2member-pro-stripe-form-pi-id').val()) {
 									paymentIntentId = jQuery('#s2member-pro-stripe-form-pi-id').val();
+								} else if (piSecret && piSecret.indexOf('_secret_') > 0) {
+									//260924.0124 StripeError.payment_intent is optional; recover the PaymentIntent ID from the client secret so failed-3DS cleanup can still reach the server.
+									paymentIntentId = piSecret.split('_secret_')[0];
 								}
 
 								errorElement.textContent = result.error.message;
