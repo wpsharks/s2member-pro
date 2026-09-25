@@ -1082,7 +1082,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 									// If status didn't succeed, let's get the response with the status requirement.
 									if(!isset($stripe_intent_succeeded) && !empty($handle_pi_status) && is_array($handle_pi_status))
-										$global_response = $handle_pi_status;
+									{
+										//260925.2349 Preserve the validated new-user account before one-time 3DS; the browser remains a guest and resumes through durable Gateway Checkout ownership.
+										if(!empty($GLOBALS['ws_plugin__s2member_pro_stripe']['pi_secret']))
+										{
+											$stripe_pending_payment = TRUE;
+											$stripe_pending_payment_response = $handle_pi_status;
+											$stripe_pending_payment_response['pending'] = TRUE;
+										}
+										else $global_response = $handle_pi_status;
+									}
 
 									// If we got here, maybe we don't have a payment intent or method ID, ask for card.
 									else if(empty($post_vars['pi_id']) && empty($post_vars['pm_id']))
@@ -1143,53 +1152,96 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_'.$field_var]
 												= $post_vars['custom_fields'][$field_var];
 									}
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_gateway'] = 'stripe';
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_cid']     = $new__txn_cid;
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_id']      = $new__txn_id;
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']          = $post_vars['attr']['level'];
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
-								$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
-								@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
-								if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
-									= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
+								//260925.2349 Create one-time SCA accounts at Level 0 until Stripe confirms the PaymentIntent; final fulfillment upgrades the same durable guest-owned account.
+								if(!empty($stripe_pending_payment))
+								{
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']  = '0';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']  = '';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom'] = $post_vars['attr']['custom'];
+								}
+								else
+								{
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_gateway'] = 'stripe';
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_cid']     = $new__txn_cid;
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_id']      = $new__txn_id;
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_level']          = $post_vars['attr']['level'];
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_ccaps']          = $post_vars['attr']['ccaps'];
+									$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_custom']         = $post_vars['attr']['custom'];
+									@list ($level, $ccaps, $eotper) = preg_split('/\:/', $post_vars['attr']['level_ccaps_eotper'], 3);
+									if(!empty($eotper)) $GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_auto_eot_time']
+										= date('Y-m-d H:i:s', c_ws_plugin__s2member_utils_time::auto_eot_time('', '', '', $eotper));
+								}
 
 								$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_pass']  = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
 								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
+								$pending_checkout_user_id  = !empty($post_vars['_gateway_checkout_pending_user_id']) ? abs((int)$post_vars['_gateway_checkout_pending_user_id']) : 0;
 
-								if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
-								    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
-								   && !is_wp_error($new__user_id)
-								)
+								//260925.2349 Reuse the Level-0 account bound to this signed one-time SCA checkout; never authenticate the guest browser merely to preserve the password across 3DS.
+								if($pending_checkout_user_id)
+									$new__user_id = $pending_checkout_user_id;
+								else $new__user_id = (is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
+									? $new__user_id : wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email']);
+
+								if($new__user_id && !is_wp_error($new__user_id))
 								{
-									update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
+									if(!$pending_checkout_user_id)
+									{
+										update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
-									if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
-										wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
-									else if (version_compare(get_bloginfo("version"), "4.3", ">="))
-										wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
-									else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+										if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+											wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										else if (version_compare(get_bloginfo("version"), "4.3", ">="))
+											wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+									}
 
-									$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+									if($pending_checkout_user_id && $gateway_checkout_state && array_key_exists('pending_user_has_custom_password', (array)$gateway_checkout_state['context']))
+										$has_custom_password = !empty($gateway_checkout_state['context']['pending_user_has_custom_password']);
 
-									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
-									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
-									($_COOKIE['s2member_tracking'] = $s2member_tracking);
+									if(!empty($stripe_pending_payment))
+									{
+										$global_response = $stripe_pending_payment_response;
+										if($gateway_checkout_state)
+										{
+											$gateway_checkout_context = array('browser_response' => (string)$global_response['response'], 'pending_user_id' => (int)$new__user_id);
+											if(!$pending_checkout_user_id)
+												$gateway_checkout_context['pending_user_has_custom_password'] = $has_custom_password ? 1 : 0;
 
-									if($has_custom_password)
-										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
-									else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
-									$gateway_checkout_fulfilled = TRUE;
+											c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', $gateway_checkout_context, 'pending_gateway');
+										}
+									}
+									else
+									{
+										if($pending_checkout_user_id)
+										{
+											$ipn['option_name1']      = 'Referencing Customer ID';
+											$ipn['option_selection1'] = $new__user_id;
+										}
 
-									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
-									   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
-									   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-									) $gateway_checkout_redirect_url = c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v');
+										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+
+										setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+										setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+										($_COOKIE['s2member_tracking'] = $s2member_tracking);
+
+										if($has_custom_password)
+											$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+										else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
+										$gateway_checkout_fulfilled = TRUE;
+
+										if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
+										   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
+										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
+										) $gateway_checkout_redirect_url = c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v');
+									}
 								}
 								else // Else, an error reponse should be given.
 								{
-									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+									//260925.2349 Never send a synthetic web_accept while one-time 3DS is still pending; no successful payment exists yet.
+									if(empty($stripe_pending_payment))
+										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
 
 									$global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 								}
