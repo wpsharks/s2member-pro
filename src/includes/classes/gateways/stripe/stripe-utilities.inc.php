@@ -80,7 +80,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			//260907.2110 TO-DO: Move generic post-Notify fulfillment checkpoints into shared Gateway Checkout and apply them to Stripe so recovered successful checkouts cannot repeat outer side effects such as notifications, list processing, cancellations, or equivalent fulfillment work.
 			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
 			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
-				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+				? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			$state = c_ws_plugin__s2member_gateway_checkouts::create_or_resume('stripe', $operation, $gateway_checkout_id, $gateway_checkout_token, $fingerprint, $user_id);
 
 			if(!$state && $existing_state && (string)$existing_state['gateway'] === 'stripe' && (string)$existing_state['operation'] === (string)$operation
@@ -122,20 +122,76 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 */
 		public static function update_gateway_checkout($gateway_checkout_id = '', $gateway_ids = array(), $gateway_status = '', $context = array(), $fulfillment_status = '')
 		{
-			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$state || (string)$state['gateway'] !== 'stripe')
 				return FALSE;
 
-			$updates = array(
-				'gateway_ids' => array_merge((array)$state['gateway_ids'], (array)$gateway_ids),
-				'context'     => array_merge((array)$state['context'], (array)$context),
-			);
+			//260925.0232 Patch only Stripe-owned operational keys against the latest stored checkout version; concurrent browser/webhook writes must not replace each other's context.
+			$updates = array('gateway_ids' => (array)$gateway_ids, 'context' => (array)$context);
 			if($gateway_status !== '')
 				$updates['gateway_status'] = (string)$gateway_status;
 			if($fulfillment_status !== '')
 				$updates['fulfillment_status'] = (string)$fulfillment_status;
 
-			return c_ws_plugin__s2member_gateway_checkouts::update($gateway_checkout_id, $updates);
+			return c_ws_plugin__s2member_gateway_checkouts::patch($gateway_checkout_id, $updates);
+		}
+
+		/**
+		 * Resolves a final signed browser success URL from the IPN proxy return and configured Pro-Form success URL.
+		 *
+		 * @since 260925.0232
+		 *
+		 * @param string $proxy_return_url       URL returned by the local IPN proxy.
+		 * @param string $configured_success_url Original encrypted Pro-Form success URL/template.
+		 * @param string $browser_response       Final browser response used for success placeholders.
+		 *
+		 * @return string Final signed redirect URL, else an empty string.
+		 */
+		public static function gateway_checkout_success_redirect($proxy_return_url = '', $configured_success_url = '', $browser_response = '')
+		{
+			$proxy_return_url = trim((string)$proxy_return_url);
+			$configured_success_url = trim((string)$configured_success_url);
+			if(!$proxy_return_url || !$configured_success_url || substr($proxy_return_url, 0, 2) !== substr($configured_success_url, 0, 2))
+				return '';
+
+			$success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt((string)$browser_response)), urlencode((string)$browser_response)), $proxy_return_url);
+			$success_url = trim(preg_replace('/%%(.+?)%%/i', '', $success_url));
+
+			return $success_url ? c_ws_plugin__s2member_utils_urls::add_s2member_sig($success_url, 's2p-v') : '';
+		}
+
+		/**
+		 * Waits briefly for another request to publish terminal Stripe Gateway Checkout fulfillment.
+		 *
+		 * @since 260925.0411
+		 *
+		 * @param string  $gateway_checkout_id Gateway Checkout ID.
+		 * @param integer $timeout_ms          Maximum wait in milliseconds.
+		 *
+		 * @return array|bool Fulfilled Gateway Checkout state, else FALSE.
+		 */
+		public static function wait_for_gateway_checkout_fulfillment($gateway_checkout_id = '', $timeout_ms = 5000)
+		{
+			$timeout_ms = max(0, min(10000, abs((int)$timeout_ms)));
+			$deadline = microtime(TRUE) + ($timeout_ms / 1000);
+
+			do
+			{
+				//260925.0411 A duplicate browser IPN can finish while the webhook worker is still publishing checkout fulfillment; bypass this request's stale option cache while they converge.
+				$state = c_ws_plugin__s2member_gateway_checkouts::load_state_uncached($gateway_checkout_id);
+				if(!$state || (string)$state['gateway'] !== 'stripe')
+					return FALSE;
+				if((string)$state['fulfillment_status'] === 'fulfilled')
+					return $state;
+
+				if(microtime(TRUE) >= $deadline)
+					break;
+
+				usleep(50000);
+			}
+			while(TRUE);
+
+			return FALSE;
 		}
 
 		/**
@@ -152,7 +208,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$gateway_checkout_id = !empty($post_vars['gateway_checkout_id']) ? (string)$post_vars['gateway_checkout_id'] : '';
 			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
 			$state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
-				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+				? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 
 			if(!$state || (string)$state['gateway'] !== 'stripe')
 				return FALSE;
@@ -176,7 +232,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 */
 		public static function advance_gateway_checkout_generation($gateway_checkout_id = '', $object_type = '', $clear_gateway_ids = array())
 		{
-			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$state || !$object_type)
 				return FALSE;
 
@@ -206,7 +262,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return FALSE;
 
 			self::init_stripe_sdk();
-			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$state || (string)$state['gateway'] !== 'stripe')
 				return FALSE;
 
@@ -257,7 +313,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return FALSE;
 
 			self::init_stripe_sdk();
-			$state = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$state || (string)$state['gateway'] !== 'stripe')
 				return FALSE;
 
@@ -1316,7 +1372,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$ipn['s2member_paypal_proxy']              = 'stripe';
 			$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-			c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+			$proxy_return_url = c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+			$proxy_return_url = is_string($proxy_return_url) ? trim($proxy_return_url) : '';
+			//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
+			wp_cache_delete($user_id, 'user_meta');
 
 			if(!self::pending_subscr_is_processed($subscr_id, $user_id))
 			{
@@ -1340,7 +1399,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			//260830.0408 The asynchronous gateway confirmation completes the same Gateway Checkout, so later browser retries should recover success instead of the earlier pending message.
 			if(!empty($details['gateway_checkout_id']))
-				self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', array('browser_response' => _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member')), 'fulfilled');
+			{
+				$browser_response = _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member');
+				$gateway_checkout_context = array('browser_response' => $browser_response);
+				//260925.0232 Persist one unambiguous redirect value: the final signed browser destination, not the raw IPN proxy-return URL.
+				if(($redirect_url = self::gateway_checkout_success_redirect($proxy_return_url, (string)@$ipn['s2member_paypal_proxy_return_url'], $browser_response)))
+					$gateway_checkout_context['redirect_url'] = $redirect_url;
+
+				self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', $gateway_checkout_context, 'fulfilled');
+			}
 
 			self::delete_pending_subscr_details($subscr_id);
 			delete_transient($lock_key);

@@ -641,7 +641,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 				{
 					/** @var $_errors \WP_Error For IDEs. This variable is used below in at least one place. */
 
-					if($s['attr']['modify'] && !is_user_logged_in())
+					//260924.2045 A signed pending Gateway Checkout may continue as a guest against the exact account it already created; do not mistake that account for an unrelated duplicate signup.
+					$pending_checkout_user_id = !empty($s['_gateway_checkout_pending_user_id']) ? abs((int)$s['_gateway_checkout_pending_user_id']) : 0;
+					$pending_checkout_user = $pending_checkout_user_id ? get_userdata($pending_checkout_user_id) : FALSE;
+					$pending_checkout_guest = $pending_checkout_user && !is_user_logged_in();
+
+					if($pending_checkout_user_id && (!$pending_checkout_user
+					   || (is_user_logged_in() && get_current_user_id() !== $pending_checkout_user_id)
+					   || ($pending_checkout_guest && ((string)$pending_checkout_user->user_login !== (string)@$s['username'] || strcasecmp((string)$pending_checkout_user->user_email, (string)@$s['email']) !== 0))))
+						$response = array('response' => _x('Unable to resume this checkout securely. Please reload the checkout page and try again.', 's2member-front', 's2member'), 'error' => TRUE);
+					else if($s['attr']['modify'] && !is_user_logged_in())
 						$response = array('response' => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to modify your billing plan.', 's2member-front', 's2member'), esc_attr(wp_login_url($_SERVER['REQUEST_URI']))), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					else if($s['attr']['level'] === '*' && !is_user_logged_in())
@@ -656,40 +665,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_responses'))
 					else if(empty($s['last_name']) || !is_string($s['last_name']))
 						$response = array('response' => _x('Missing Last Name. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['email']) || !is_string($s['email'])))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (empty($s['email']) || !is_string($s['email'])))
 						$response = array('response' => _x('Missing or invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && !is_email($s['email']))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && !is_email($s['email']))
 						$response = array('response' => _x('Invalid Email Address. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s['username'], $s['email'])))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && email_exists($s['email']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s['username'], $s['email'])))
 						$response = array('response' => _x('That Email Address is already in use. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['username']) || !is_string($s['username']) || empty($s['_o_username']) || !is_string($s['_o_username'])))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (empty($s['username']) || !is_string($s['username']) || empty($s['_o_username']) || !is_string($s['_o_username'])))
 						$response = array('response' => _x('Missing or invalid Username. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (!validate_username($s['username']) || !validate_username($s['_o_username'])))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (!validate_username($s['username']) || !validate_username($s['_o_username'])))
 						$response = array('response' => _x('Invalid Username. Please try again. Use ONLY lowercase alphanumerics.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && username_exists($s['username']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s['username'], $s['email'])))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && username_exists($s['username']) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s['username'], $s['email'])))
 						$response = array('response' => _x('That Username is already in use. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s['username'], $s['email']) && ($_response = wpmu_validate_user_signup($s['username'], $s['email'])) && is_wp_error($_errors = $_response['errors']) && $_errors->get_error_message())
+					else if(!$pending_checkout_guest && !is_user_logged_in() && is_multisite() && !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog($s['username'], $s['email']) && ($_response = wpmu_validate_user_signup($s['username'], $s['email'])) && is_wp_error($_errors = $_response['errors']) && $_errors->get_error_message())
 						$response = array('response' => $_errors->get_error_message(), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (empty($s['password1']) || !is_string($s['password1'])) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Missing Password. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < c_ws_plugin__s2member_user_securities::min_password_length()) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (empty($s['password1']) || strlen($s['password1']) < c_ws_plugin__s2member_user_securities::min_password_length()) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => sprintf(_x('Invalid Password. Must be at least %1$s characters. Please try again.', 's2member-front', 's2member'), c_ws_plugin__s2member_user_securities::min_password_length()), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 64 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!$pending_checkout_guest && !is_user_logged_in() && !empty($s['password1']) && strlen($s['password1']) > 64 && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Invalid Password. Max length is 64 characters. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && (empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
+					else if(!$pending_checkout_guest && !is_user_logged_in() && (empty($s['password2']) || $s['password2'] !== $s['password1']) && $GLOBALS['WS_PLUGIN__']['s2member']['o']['custom_reg_password'])
 						$response = array('response' => _x('Password fields do NOT match. Please try again.', 's2member-front', 's2member'), 'error' => TRUE);
 
-					else if(!is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s['custom_fields']) ? $s['custom_fields'] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s['attr']['level'] === '*' ? 'auto-detection' : $s['attr']['level'], 'registration', TRUE))))
+					else if(!$pending_checkout_guest && !is_user_logged_in() && ($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s['custom_fields']) ? $s['custom_fields'] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s['attr']['level'] === '*' ? 'auto-detection' : $s['attr']['level'], 'registration', TRUE))))
 						$response = array('response' => array_shift($custom_field_validation_errors), 'error' => TRUE);
 					// -----------------------------------------------------------------------------------------------------------------
 					//!!! else if(empty($s['source_token']) || !is_string($s['source_token'])) // Token = `free` for free checkouts.

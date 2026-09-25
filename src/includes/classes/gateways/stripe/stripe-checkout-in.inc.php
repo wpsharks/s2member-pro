@@ -93,6 +93,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 					return;
 				}
 
+				//260924.2045 A pending guest checkout belongs to the account recorded in durable Gateway Checkout state; keep browser authentication independent from that account association.
+				if($gateway_checkout_state && !empty($gateway_checkout_state['context']['pending_user_id']))
+					$post_vars['_gateway_checkout_pending_user_id'] = abs((int)$gateway_checkout_state['context']['pending_user_id']);
+
 				if(!empty($post_vars['cancel_incomplete_sub_id']))
 				{
 					$gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::gateway_checkout_state($post_vars);
@@ -449,30 +453,65 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								}
 								else
 								{
-									if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id))
+									$pending_checkout_fulfilled_elsewhere = FALSE;
+									$pending_checkout_processing_elsewhere = FALSE;
+									$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id);
+									if($pending_checkout_processed)
 										$ipn['s2member_stripe_proxy_return_url'] = '';
-									else $ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+									else
+									{
+										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+										//260924.2301 The synchronous IPN request can race a webhook that updates this user in another PHP request; clear stale metadata before checking which side fulfilled first.
+										wp_cache_delete($user_id, 'user_meta');
+										$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id);
+									}
+									if($pending_checkout_processed && $gateway_checkout_state)
+									{
+										//260925.0411 An empty duplicate IPN response means another request may own fulfillment; wait for its durable terminal state instead of completing from this request's stale checkout snapshot.
+										if(empty($ipn['s2member_stripe_proxy_return_url']))
+											$recovered_gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::wait_for_gateway_checkout_fulfillment((string)$gateway_checkout_state['id']);
+										else
+											$recovered_gateway_checkout_state = c_ws_plugin__s2member_gateway_checkouts::load_state_uncached((string)$gateway_checkout_state['id']);
 
-									if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id))
-										c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
+										if($recovered_gateway_checkout_state && (string)$recovered_gateway_checkout_state['fulfillment_status'] === 'fulfilled')
+										{
+											$pending_checkout_fulfilled_elsewhere = TRUE;
+											if(!empty($recovered_gateway_checkout_state['context']['redirect_url']))
+												$gateway_checkout_redirect_url = (string)$recovered_gateway_checkout_state['context']['redirect_url'];
+										}
+										else if(empty($ipn['s2member_stripe_proxy_return_url']))
+											$pending_checkout_processing_elsewhere = TRUE;
+									}
 
-									if(!empty($stripe_subscription_failed_charge_succeeded))
-										update_user_option($user_id, 's2member_auto_eot_time', $start_time);
+									if($pending_checkout_processing_elsewhere)
+										$global_response = array('response' => _x('<strong>Thank you.</strong> Your payment has been confirmed, but your account update is still processing. Access should be enabled shortly; please contact Support if it is not.', 's2member-front', 's2member'));
+									else
+									{
+										if($pending_checkout_processed)
+											c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
 
-									if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
-										c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
+										if(!empty($stripe_subscription_failed_charge_succeeded))
+											update_user_option($user_id, 's2member_auto_eot_time', $start_time);
 
-									c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+										//260924.2301 If webhook recovery already fulfilled this Gateway Checkout, it also handled old-subscription cancellation and list-server updates; do not repeat those side effects in the browser race loser.
+										if(!$pending_checkout_fulfilled_elsewhere)
+										{
+											if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
+												c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
 
-									setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
-									setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
-									($_COOKIE['s2member_tracking'] = $s2member_tracking);
+											c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)@$post_vars['custom_fields']['opt_in'], TRUE, TRUE);
+										}
 
-									$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated :-)', 's2member-front', 's2member'), esc_attr(wp_login_url())));
-									$gateway_checkout_fulfilled = TRUE;
+										setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+										setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+										($_COOKIE['s2member_tracking'] = $s2member_tracking);
 
-									if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2) && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url'])) && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url))))
-										$gateway_checkout_redirect_url = c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v');
+										$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been updated :-)', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+										$gateway_checkout_fulfilled = TRUE;
+
+										if(!$gateway_checkout_redirect_url)
+											$gateway_checkout_redirect_url = c_ws_plugin__s2member_pro_stripe_utilities::gateway_checkout_success_redirect((string)@$ipn['s2member_stripe_proxy_return_url'], (string)@$post_vars['attr']['success'], (string)$global_response['response']);
+									}
 								}
 							}
 						}
@@ -726,19 +765,29 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
 								$create_user['user_pass']  = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
 								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
+								$pending_checkout_user_id  = !empty($post_vars['_gateway_checkout_pending_user_id']) ? abs((int)$post_vars['_gateway_checkout_pending_user_id']) : 0;
 
-								if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
-								    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
-								   && !is_wp_error($new__user_id)
-								)
+								//260924.2045 Reuse the account already bound to this signed pending checkout instead of creating it again; the browser remains a guest.
+								if($pending_checkout_user_id)
+									$new__user_id = $pending_checkout_user_id;
+								else $new__user_id = (is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
+									? $new__user_id : wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email']);
+
+								if($new__user_id && !is_wp_error($new__user_id))
 								{
-									update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
+									if(!$pending_checkout_user_id)
+									{
+										update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
-									if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
-										wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
-									else if (version_compare(get_bloginfo("version"), "4.3", ">="))
-										wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
-									else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+										if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
+											wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										else if (version_compare(get_bloginfo("version"), "4.3", ">="))
+											wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
+										else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+									}
+
+									if($pending_checkout_user_id && $gateway_checkout_state && array_key_exists('pending_user_has_custom_password', (array)$gateway_checkout_state['context']))
+										$has_custom_password = !empty($gateway_checkout_state['context']['pending_user_has_custom_password']);
 
 									// if(!empty($stripe_subscription_failed_charge_succeeded))
 									// 	update_user_option($new__user_id, 's2member_auto_eot_time', $start_time);
@@ -754,12 +803,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 										if(c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $new__user_id, 'ipn' => $ipn, 'gateway_checkout_id' => (string)@$post_vars['gateway_checkout_id'])))
 										{
-											wp_set_current_user($new__user_id);
-											wp_set_auth_cookie($new__user_id, false, is_ssl());
-
 											$global_response = $stripe_pending_subscr_response;
 											if($gateway_checkout_state)
-												c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', array('browser_response' => (string)$global_response['response']), 'pending_gateway');
+											{
+												//260924.2045 Bind the pending account to the durable checkout instead of silently authenticating the customer's browser as that account.
+												$gateway_checkout_context = array('browser_response' => (string)$global_response['response'], 'pending_user_id' => (int)$new__user_id);
+												if(!$pending_checkout_user_id)
+													$gateway_checkout_context['pending_user_has_custom_password'] = $has_custom_password ? 1 : 0;
+
+												c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', $gateway_checkout_context, 'pending_gateway');
+											}
 										}
 										else
 										{
@@ -773,26 +826,76 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									}
 									else
 									{
-										if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
-											$ipn['s2member_stripe_proxy_return_url'] = '';
-										else $ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+										//260924.2045 A returning guest continues against the account already bound to this checkout; refresh pending recovery data for the current Stripe subscription generation before fulfillment.
+										if($pending_checkout_user_id && !c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
+										{
+											$ipn['option_name1']      = 'Referencing Customer ID';
+											$ipn['option_selection1'] = $new__user_id;
 
-										if(c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
-											c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
+											if(!c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $new__user_id, 'ipn' => $ipn, 'gateway_checkout_id' => (string)@$post_vars['gateway_checkout_id'])))
+											{
+												c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Unable to refresh pending Stripe subscription details while resuming a guest checkout.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $new__user_id));
+												$global_response = array('response' => _x('<strong>Oops.</strong> A problem occurred while resuming your payment. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+											}
+										}
 
-										setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
-										setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
-										($_COOKIE['s2member_tracking'] = $s2member_tracking);
+										if(!$global_response)
+										{
+											$pending_checkout_processing_elsewhere = FALSE;
+											$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id);
+											if($pending_checkout_processed)
+												$ipn['s2member_stripe_proxy_return_url'] = '';
+											else
+											{
+												$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+												//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
+												wp_cache_delete($new__user_id, 'user_meta');
+												$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id);
+											}
+											if($pending_checkout_processed && $gateway_checkout_state)
+											{
+												//260925.0411 When another request processed this pending subscription, wait for its terminal Gateway Checkout publication instead of trusting this request's cached checkout state.
+												if(empty($ipn['s2member_stripe_proxy_return_url']))
+													$recovered_gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::wait_for_gateway_checkout_fulfillment((string)$gateway_checkout_state['id']);
+												else
+													$recovered_gateway_checkout_state = c_ws_plugin__s2member_gateway_checkouts::load_state_uncached((string)$gateway_checkout_state['id']);
 
-										if($has_custom_password)
-											$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
-										else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
-										$gateway_checkout_fulfilled = TRUE;
+												if($recovered_gateway_checkout_state && (string)$recovered_gateway_checkout_state['fulfillment_status'] === 'fulfilled')
+												{
+													if(!empty($recovered_gateway_checkout_state['context']['redirect_url']))
+														$gateway_checkout_redirect_url = (string)$recovered_gateway_checkout_state['context']['redirect_url'];
+												}
+												else if(empty($ipn['s2member_stripe_proxy_return_url']))
+													$pending_checkout_processing_elsewhere = TRUE;
+											}
 
-										if($post_vars['attr']['success'] && substr($ipn['s2member_stripe_proxy_return_url'], 0, 2) === substr($post_vars['attr']['success'], 0, 2)
-										   && ($custom_success_url = str_ireplace(array('%%s_response%%', '%%response%%'), array(urlencode(c_ws_plugin__s2member_utils_encryption::encrypt($global_response['response'])), urlencode($global_response['response'])), $ipn['s2member_stripe_proxy_return_url']))
-										   && ($custom_success_url = trim(preg_replace('/%%(.+?)%%/i', '', $custom_success_url)))
-										) $gateway_checkout_redirect_url = c_ws_plugin__s2member_utils_urls::add_s2member_sig($custom_success_url, 's2p-v');
+											if($pending_checkout_user_id && !$pending_checkout_processed)
+											{
+												//260924.2050 Stripe succeeded, but local fulfillment has not converged yet; keep the durable checkout pending so the webhook can finish it safely.
+												$global_response = array('response' => _x('<strong>Thank you.</strong> Your payment has been confirmed, but your account update is still processing. Access should be enabled shortly; please contact Support if it is not.', 's2member-front', 's2member'));
+												if($gateway_checkout_state)
+													c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', array('browser_response' => (string)$global_response['response']), 'pending_gateway');
+											}
+											else if($pending_checkout_processing_elsewhere)
+												$global_response = array('response' => _x('<strong>Thank you.</strong> Your payment has been confirmed, but your account update is still processing. Access should be enabled shortly; please contact Support if it is not.', 's2member-front', 's2member'));
+											else
+											{
+												if($pending_checkout_processed)
+													c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details($new__subscr_id);
+
+												setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
+												setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
+												($_COOKIE['s2member_tracking'] = $s2member_tracking);
+
+												if($has_custom_password)
+													$global_response = array('response' => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', 's2member-front', 's2member'), esc_attr(wp_login_url())));
+												else $global_response = array('response' => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', 's2member-front', 's2member'));
+												$gateway_checkout_fulfilled = TRUE;
+
+												if(!$gateway_checkout_redirect_url)
+													$gateway_checkout_redirect_url = c_ws_plugin__s2member_pro_stripe_utilities::gateway_checkout_success_redirect((string)@$ipn['s2member_stripe_proxy_return_url'], (string)@$post_vars['attr']['success'], (string)$global_response['response']);
+											}
+										}
 									}
 								}
 								else // Else, an error reponse should be given.
