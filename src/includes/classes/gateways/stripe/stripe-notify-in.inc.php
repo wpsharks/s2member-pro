@@ -292,6 +292,57 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							}
 							break; // Break switch handler.
 
+						case 'setup_intent.setup_failed': // Failed off-session payment-method authentication for a pending subscription.
+
+							//260925.1847 A failed SetupIntent can leave a trialing pending subscription alive indefinitely; cancel only the subscription durably bound to this exact SetupIntent and Gateway Checkout.
+							if(!empty($event->data->object)
+							   && ($stripe_setup_intent = $event->data->object) instanceof \Stripe\SetupIntent
+							   && !empty($stripe_setup_intent->id) && !empty($stripe_setup_intent->customer)
+							)
+							{
+								$processing = TRUE;
+
+								$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
+
+								try
+								{
+									$stripe_subscriptions = \Stripe\Subscription::all(array('customer' => (string)$stripe_setup_intent->customer, 'status' => 'all', 'limit' => 100));
+									$stripe_event_processed = TRUE; // A verified SetupIntent failure with no matching s2Member pending subscription requires no local action.
+
+									if(!empty($stripe_subscriptions->data) && is_array($stripe_subscriptions->data))
+										foreach($stripe_subscriptions->data as $stripe_subscription)
+										{
+											$pending_setup_intent_id = is_object($stripe_subscription->pending_setup_intent) && !empty($stripe_subscription->pending_setup_intent->id) ? (string)$stripe_subscription->pending_setup_intent->id : (string)$stripe_subscription->pending_setup_intent;
+											$gateway_checkout_id = !empty($stripe_subscription->metadata->s2member_gateway_checkout_id) ? (string)$stripe_subscription->metadata->s2member_gateway_checkout_id : '';
+
+											if(!$pending_setup_intent_id || !hash_equals((string)$stripe_setup_intent->id, $pending_setup_intent_id)
+											   || !$gateway_checkout_id || !c_ws_plugin__s2member_pro_stripe_utilities::get_pending_subscr_details((string)$stripe_subscription->id)
+											   || !($gateway_checkout_state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id))
+											   || empty($gateway_checkout_state['gateway_ids']['subscription_id']) || !hash_equals((string)$stripe_subscription->id, (string)$gateway_checkout_state['gateway_ids']['subscription_id'])
+											   || empty($gateway_checkout_state['gateway_ids']['setup_intent_id']) || !hash_equals((string)$stripe_setup_intent->id, (string)$gateway_checkout_state['gateway_ids']['setup_intent_id']))
+												continue;
+
+											if(!is_object($canceled_subscription = c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription((string)$stripe_setup_intent->customer, (string)$stripe_subscription->id, FALSE)))
+											{
+												$stripe['s2member_log'][] = 'Unable to cancel pending Stripe subscription after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
+												break;
+											}
+
+											c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details((string)$stripe_subscription->id);
+											if(!c_ws_plugin__s2member_pro_stripe_utilities::advance_gateway_checkout_generation($gateway_checkout_id, 'subscription', array('subscription_id', 'payment_intent_id', 'setup_intent_id', 'invoice_item_id')))
+												$stripe['s2member_log'][] = 'Pending Stripe subscription was canceled after failed SetupIntent authentication, but its Gateway Checkout generation could not be advanced.';
+
+											$stripe['s2member_log'][] = 'Pending Stripe subscription canceled after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
+											break;
+										}
+								}
+								catch(exception $exception)
+								{
+									$stripe['s2member_log'][] = 'Unable to clean up a pending Stripe subscription after failed SetupIntent authentication: `'.$exception->getMessage().'`.';
+								}
+							}
+							break; // Break switch handler.
+
 						case 'customer.subscription.updated': // Customer subscription update.
 
 							//260619 Process or discard pending subscriptions when Stripe changes their status.
