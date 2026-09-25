@@ -567,7 +567,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			$gateway_checkout_token = !empty($post_vars['gateway_checkout_token']) ? (string)$post_vars['gateway_checkout_token'] : '';
 			$fingerprint = c_ws_plugin__s2member_gateway_checkouts::purchase_fingerprint((array)$purchase_terms);
 			$existing_state = ($gateway_checkout_id && $gateway_checkout_token && c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
-				? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+				? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			//260907.1820 Only terminal capture failures or an unresolved order-create beyond PayPal's idempotency window are replaceable; any live provider identity/pending work stays bound to the original logical checkout.
 			$replaceable_payment_state = ($existing_state && (string)$operation === 'payment' && (string)$existing_state['gateway'] === 'paypal_checkout' && (string)$existing_state['operation'] === 'payment'
 			&& (string)$existing_state['fulfillment_status'] === 'pending' && (in_array(strtoupper((string)$existing_state['gateway_status']), array('CAPTURE_DENIED', 'CAPTURE_FAILED', 'CAPTURE_DECLINED'), TRUE)
@@ -604,7 +604,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		{
 			if(!c_ws_plugin__s2member_gateway_checkouts::valid_id($gateway_checkout_id) || !is_array($token) || !$token)
 				return FALSE;
-			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$gateway_checkout || (string)$gateway_checkout['gateway'] !== 'paypal_checkout')
 				return FALSE;
 
@@ -632,7 +632,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			if(!$gateway_checkout_id || !$gateway_checkout_token || !c_ws_plugin__s2member_gateway_checkouts::browser_token_verify($gateway_checkout_id, $gateway_checkout_token))
 				return FALSE;
 
-			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id);
+			$gateway_checkout = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
 			if(!$gateway_checkout || (string)$gateway_checkout['gateway'] !== 'paypal_checkout' || !in_array((string)$gateway_checkout['operation'], array('payment', 'subscription'), TRUE))
 				return FALSE;
 
@@ -1063,7 +1063,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				unset($state['account']['password1'], $state['account']['password2'], $state['account']['user_pass']);
 
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
 				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
@@ -1098,7 +1098,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return FALSE;
 
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
 				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
@@ -1133,7 +1133,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return FALSE;
 
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
 				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
@@ -1186,7 +1186,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 
 			$state['invoice'] = (string)$invoice;
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
 				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
@@ -1219,7 +1219,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return FALSE;
 
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			//260907.1820 Coordinator private_context is the authoritative modern recovery store; the one-day transient below remains only as migration compatibility for older/in-flight checkouts.
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
@@ -1251,7 +1251,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 			if(!self::paypal_checkout_prepared_invoice($invoice))
 				return FALSE;
 			$gateway_checkout_id = self::paypal_checkout_gateway_checkout_id($invoice);
-			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::get($gateway_checkout_id) : FALSE;
+			$gateway_checkout = $gateway_checkout_id ? c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id) : FALSE;
 			if($gateway_checkout && (string)$gateway_checkout['gateway'] === 'paypal_checkout')
 			{
 				$private_context = c_ws_plugin__s2member_gateway_checkouts::private_context_get($gateway_checkout_id);
