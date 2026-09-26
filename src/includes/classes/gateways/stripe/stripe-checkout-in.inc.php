@@ -100,13 +100,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 				if(!empty($post_vars['cancel_incomplete_sub_id']))
 				{
 					$gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::gateway_checkout_state($post_vars);
-					//260830.0052 A failed-3DS cleanup may cancel only the PaymentIntent bound to this signed Gateway Checkout; never trust a separately posted Stripe ID for cancellation.
-					if($gateway_checkout_state && !empty($gateway_checkout_state['gateway_ids']['payment_intent_id']))
+					//260926.0332 Failed-auth cleanup may cancel only Stripe objects already bound to this signed Gateway Checkout; never trust separately posted intent/subscription IDs.
+					if($gateway_checkout_state)
 					{
 						$canceled_subscription_id = '';
-						if(c_ws_plugin__s2member_pro_stripe_utilities::cancel_incomplete_subscription_by_payment_intent((string)$gateway_checkout_state['gateway_ids']['payment_intent_id'], $canceled_subscription_id)
-						   && $canceled_subscription_id && !empty($gateway_checkout_state['gateway_ids']['subscription_id'])
-						   && hash_equals((string)$gateway_checkout_state['gateway_ids']['subscription_id'], (string)$canceled_subscription_id))
+						$cleanup_succeeded = FALSE;
+						$cleanup_gateway_id_key = '';
+						$cleanup_gateway_id = '';
+
+						if(!empty($gateway_checkout_state['gateway_ids']['payment_intent_id']))
+						{
+							$cleanup_gateway_id_key = 'payment_intent_id';
+							$cleanup_gateway_id = (string)$gateway_checkout_state['gateway_ids']['payment_intent_id'];
+							$cleanup_succeeded = c_ws_plugin__s2member_pro_stripe_utilities::cancel_incomplete_subscription_by_payment_intent($cleanup_gateway_id, $canceled_subscription_id);
+						}
+						else if(!empty($gateway_checkout_state['gateway_ids']['customer_id']) && !empty($gateway_checkout_state['gateway_ids']['subscription_id']) && !empty($gateway_checkout_state['gateway_ids']['setup_intent_id']))
+						{
+							$cleanup_gateway_id_key = 'setup_intent_id';
+							$cleanup_gateway_id = (string)$gateway_checkout_state['gateway_ids']['setup_intent_id'];
+							$cleanup_succeeded = c_ws_plugin__s2member_pro_stripe_utilities::cancel_pending_subscription_by_setup_intent((string)$gateway_checkout_state['gateway_ids']['customer_id'], (string)$gateway_checkout_state['gateway_ids']['subscription_id'], $cleanup_gateway_id, $canceled_subscription_id);
+						}
+
+						//260926.0332 Browser and webhook cleanup can race; advance only if the latest durable checkout still points at the same failed provider generation.
+						$latest_gateway_checkout_state = $cleanup_succeeded && $canceled_subscription_id ? c_ws_plugin__s2member_gateway_checkouts::load_state_uncached((string)$gateway_checkout_state['id']) : FALSE;
+						if($latest_gateway_checkout_state && $cleanup_gateway_id_key && !empty($latest_gateway_checkout_state['gateway_ids']['subscription_id']) && !empty($latest_gateway_checkout_state['gateway_ids'][$cleanup_gateway_id_key])
+						   && hash_equals((string)$canceled_subscription_id, (string)$latest_gateway_checkout_state['gateway_ids']['subscription_id'])
+						   && hash_equals((string)$cleanup_gateway_id, (string)$latest_gateway_checkout_state['gateway_ids'][$cleanup_gateway_id_key]))
 						{
 							//260830.0135 The failed incomplete subscription was deliberately canceled, so the next card attempt must use a fresh Stripe subscription generation instead of recovering that canceled object.
 							c_ws_plugin__s2member_pro_stripe_utilities::advance_gateway_checkout_generation((string)$gateway_checkout_state['id'], 'subscription', array('subscription_id', 'payment_intent_id', 'setup_intent_id', 'invoice_item_id'));

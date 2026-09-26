@@ -771,9 +771,22 @@ jQuery(document).ready( // DOM ready.
 						).then(function(result) {
 							// Handle result.error or result.setupIntent
 							if (result.error) {
-								// Display result.error.message in UI.
 								var errorElement = document.getElementById('s2member-pro-stripe-form-card-errors');
 								errorElement.textContent = result.error.message;
+
+								jQuery('#s2member-pro-stripe-form-response')
+									.removeClass('s2member-pro-stripe-form-response-info')
+									.addClass('s2member-pro-stripe-form-response-error')
+									.text(S2MEMBER_PRO_STRIPE_PAYMENT_FAILED);
+
+								//260926.0332 Round-trip failed SetupIntent authentication through the signed Gateway Checkout before another card attempt, so server cleanup can advance the subscription generation without trusting browser-supplied Stripe IDs.
+								jQuery('#s2member-pro-stripe-form-cancel-incomplete-sub-id').val('1');
+								jQuery('.s2member-pro-stripe-submit')
+									.prop('disabled', true)
+									.addClass('ws-plugin--s2member-animate-processing');
+								jQuery(form).addClass('s2member-pro-stripe-form-disabled');
+
+								form.submit();
 							} else {
 								// The SetupIntent has successfully been authorized.
 								// Update Setup Intent hidden field with ID.

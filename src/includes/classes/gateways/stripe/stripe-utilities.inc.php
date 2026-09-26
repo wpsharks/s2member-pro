@@ -2244,6 +2244,123 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			}
 		}
 
+		/**
+		 * Cancels the pending Stripe subscription bound to a failed SetupIntent.
+		 *
+		 * @since 260926.0332
+		 *
+		 * @param string $customer_id Stripe Customer ID from durable Gateway Checkout state.
+		 * @param string $subscription_id Stripe Subscription ID from durable Gateway Checkout state.
+		 * @param string $setup_intent_id Stripe SetupIntent ID from durable Gateway Checkout state.
+		 * @param string $canceled_subscription_id Optional output variable receiving the subscription ID when cleanup owns that subscription.
+		 *
+		 * @return bool TRUE when cleanup is complete/not needed; else FALSE.
+		 */
+		public static function cancel_pending_subscription_by_setup_intent($customer_id, $subscription_id, $setup_intent_id, &$canceled_subscription_id = '')
+		{
+			$input_time = time();
+			$input_vars = get_defined_vars();
+			$canceled_subscription_id = '';
+
+			if(strpos((string)$customer_id, 'cus_') !== 0 || strpos((string)$subscription_id, 'sub_') !== 0 || strpos((string)$setup_intent_id, 'seti_') !== 0)
+				return FALSE;
+
+			self::init_stripe_sdk();
+
+			try
+			{
+				$setup_intent = \Stripe\SetupIntent::retrieve($setup_intent_id);
+				if(!empty($setup_intent->customer) && !hash_equals((string)$customer_id, (string)$setup_intent->customer))
+					throw new \Exception('Stripe SetupIntent and Gateway Checkout customer IDs do not match.');
+
+				//260926.0332 A late failed-auth cleanup must never cancel a subscription after the same SetupIntent has already succeeded on a retry.
+				if((string)$setup_intent->status === 'succeeded')
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Skipped cancellation because the SetupIntent has already succeeded.');
+					return TRUE;
+				}
+
+				try
+				{
+					$subscription = \Stripe\Subscription::retrieve($subscription_id);
+				}
+				catch(exception $exception)
+				{
+					if((string)$exception->getMessage() && stripos($exception->getMessage(), 'No such subscription') !== FALSE)
+					{
+						$canceled_subscription_id = (string)$subscription_id;
+						self::delete_pending_subscr_details((string)$subscription_id);
+						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Pending SetupIntent subscription is already gone; treating cleanup as successful.');
+						return TRUE;
+					}
+					throw $exception;
+				}
+
+				if(!empty($subscription->customer) && !hash_equals((string)$customer_id, (string)$subscription->customer))
+					throw new \Exception('Stripe subscription and Gateway Checkout customer IDs do not match.');
+
+				$pending_setup_intent_id = is_object($subscription->pending_setup_intent) && !empty($subscription->pending_setup_intent->id) ? (string)$subscription->pending_setup_intent->id : (string)$subscription->pending_setup_intent;
+				if($pending_setup_intent_id && !hash_equals((string)$setup_intent_id, $pending_setup_intent_id))
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Skipped cancellation because the subscription is now bound to another SetupIntent.');
+					return TRUE;
+				}
+
+				if(in_array((string)$subscription->status, array('canceled', 'incomplete_expired'), TRUE))
+				{
+					$canceled_subscription_id = (string)$subscription_id;
+					self::delete_pending_subscr_details((string)$subscription_id);
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Pending SetupIntent subscription was already canceled; treating cleanup as successful.');
+					return TRUE;
+				}
+
+				if(!in_array((string)$subscription->status, array('incomplete', 'trialing'), TRUE))
+				{
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Skipped cancellation because the subscription is no longer pending authentication.');
+					return TRUE;
+				}
+
+				$canceled_subscription = self::cancel_customer_subscription((string)$customer_id, (string)$subscription_id, FALSE);
+				if(!is_object($canceled_subscription))
+				{
+					//260926.0457 Browser/webhook cleanup can race between retrieval and cancellation; accept either a provider-missing subscription or one that is still retrievable in a terminal canceled state.
+					try
+					{
+						$subscription_after_cancel = \Stripe\Subscription::retrieve((string)$subscription_id);
+						if(is_object($subscription_after_cancel) && in_array((string)$subscription_after_cancel->status, array('canceled', 'incomplete_expired'), TRUE))
+						{
+							$canceled_subscription_id = (string)$subscription_id;
+							self::delete_pending_subscr_details((string)$subscription_id);
+							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Pending SetupIntent subscription was already canceled during concurrent cleanup; treating cleanup as successful.');
+							return TRUE;
+						}
+					}
+					catch(\Stripe\Exception\InvalidRequestException $exception)
+					{
+						if($exception->getStripeCode() === 'resource_missing')
+						{
+							$canceled_subscription_id = (string)$subscription_id;
+							self::delete_pending_subscr_details((string)$subscription_id);
+							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), 'Pending SetupIntent subscription disappeared during concurrent cleanup; treating cleanup as successful.');
+							return TRUE;
+						}
+					}
+					return FALSE;
+				}
+
+				$canceled_subscription_id = (string)$subscription_id;
+				self::delete_pending_subscr_details((string)$subscription_id);
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $canceled_subscription);
+
+				return TRUE;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+				return FALSE;
+			}
+		}
+
 		public static function set_customer_default_payment_method($customer_id, $payment_method_id)
 		{
 			$input_time = time(); // Initialize.
@@ -2495,6 +2612,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			// Do we have it?
 			if (!is_object($intent))
 				return $global_response = array('response' => $intent, 'error' => TRUE);
+
+			//260926.0235 Retrying a failed SetupIntent with a new card can return it to requires_confirmation; confirm it before evaluating the retry outcome.
+			if($intent->status == 'requires_confirmation')
+				try {
+					$intent->confirm();
+				}
+				catch(exception $exception) {
+					self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
+					return array('response' => self::error_message($exception), 'error' => TRUE);
+				}
 
 			self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $intent->status);
 

@@ -322,17 +322,31 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 											   || empty($gateway_checkout_state['gateway_ids']['setup_intent_id']) || !hash_equals((string)$stripe_setup_intent->id, (string)$gateway_checkout_state['gateway_ids']['setup_intent_id']))
 												continue;
 
-											if(!is_object($canceled_subscription = c_ws_plugin__s2member_pro_stripe_utilities::cancel_customer_subscription((string)$stripe_setup_intent->customer, (string)$stripe_subscription->id, FALSE)))
+											//260926.0433 Browser cleanup can win this race first; use the shared SetupIntent cleanup helper so an already-canceled/gone subscription is treated as successful convergence instead of an error.
+											$canceled_subscription_id = '';
+											if(!c_ws_plugin__s2member_pro_stripe_utilities::cancel_pending_subscription_by_setup_intent((string)$stripe_setup_intent->customer, (string)$stripe_subscription->id, (string)$stripe_setup_intent->id, $canceled_subscription_id))
 											{
-												$stripe['s2member_log'][] = 'Unable to cancel pending Stripe subscription after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
+												$stripe['s2member_log'][] = 'Unable to clean up pending Stripe subscription after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
+												break;
+											}
+											if(!$canceled_subscription_id)
+											{
+												$stripe['s2member_log'][] = 'Pending Stripe subscription no longer requires failed-SetupIntent cleanup: `'.$stripe_subscription->id.'`.';
 												break;
 											}
 
-											c_ws_plugin__s2member_pro_stripe_utilities::delete_pending_subscr_details((string)$stripe_subscription->id);
-											if(!c_ws_plugin__s2member_pro_stripe_utilities::advance_gateway_checkout_generation($gateway_checkout_id, 'subscription', array('subscription_id', 'payment_intent_id', 'setup_intent_id', 'invoice_item_id')))
-												$stripe['s2member_log'][] = 'Pending Stripe subscription was canceled after failed SetupIntent authentication, but its Gateway Checkout generation could not be advanced.';
+											//260926.0332 A browser failed-auth cleanup can race this webhook; advance only while the latest durable checkout still points at this exact failed subscription/SetupIntent generation.
+											$latest_gateway_checkout_state = c_ws_plugin__s2member_gateway_checkouts::load_state_uncached($gateway_checkout_id);
+											if($latest_gateway_checkout_state && !empty($latest_gateway_checkout_state['gateway_ids']['subscription_id']) && !empty($latest_gateway_checkout_state['gateway_ids']['setup_intent_id'])
+											   && hash_equals((string)$stripe_subscription->id, (string)$latest_gateway_checkout_state['gateway_ids']['subscription_id'])
+											   && hash_equals((string)$stripe_setup_intent->id, (string)$latest_gateway_checkout_state['gateway_ids']['setup_intent_id']))
+											{
+												if(!c_ws_plugin__s2member_pro_stripe_utilities::advance_gateway_checkout_generation($gateway_checkout_id, 'subscription', array('subscription_id', 'payment_intent_id', 'setup_intent_id', 'invoice_item_id')))
+													$stripe['s2member_log'][] = 'Pending Stripe subscription was canceled after failed SetupIntent authentication, but its Gateway Checkout generation could not be advanced.';
+											}
+											else $stripe['s2member_log'][] = 'Gateway Checkout generation was already advanced by concurrent failed-auth cleanup.';
 
-											$stripe['s2member_log'][] = 'Pending Stripe subscription canceled after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
+											$stripe['s2member_log'][] = 'Pending Stripe subscription cleanup completed after failed SetupIntent authentication: `'.$stripe_subscription->id.'`.';
 											break;
 										}
 								}
