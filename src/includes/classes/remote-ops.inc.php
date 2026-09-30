@@ -63,7 +63,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_remote_ops')) {
                 }
                 while (@ob_end_clean()); // Clean output buffers.
 
-                if (empty($data['api_key']) || $data['api_key'] !== self::remote_ops_key_gen()) {
+                //261001.0059 Compare the remotely supplied API key in constant time; reject non-string values before hash_equals().
+                if (empty($data['api_key']) || !is_string($data['api_key']) || !hash_equals((string) self::remote_ops_key_gen(), $data['api_key'])) {
                     if ($format === 'serialized') {
                         exit('Error: Invalid API key.');
                     } elseif ($format === 'json') {
@@ -103,7 +104,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_remote_ops')) {
             }
             extract($op); // `[format, data]` elements.
 
-            if (!empty($data['api_key']) && $data['api_key'] === self::remote_ops_key_gen()) {
+            //261001.0059 Keep Remote Operations authentication timing-safe here too; this path trusts the same API key.
+            if (!empty($data['api_key']) && is_string($data['api_key']) && hash_equals((string) self::remote_ops_key_gen(), $data['api_key'])) {
                 if (!empty($data['op']) && (!$check_op || $data['op'] === $check_op)) {
                     return true; // Is remote OP.
                 }
