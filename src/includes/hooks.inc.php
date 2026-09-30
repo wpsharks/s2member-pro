@@ -125,4 +125,6 @@ add_action('user_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot
 add_action('network_admin_notices', 'c_ws_plugin__s2member_pro_reminders::fixed_eot_reminder_admin_notice', 13);
 
 add_filter('update_feedback', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches');
+//260930.2113 Automatic/background core updates do not pass through the Network Admin feedback flow; reapply legacy Multisite patches only after WordPress reports a successful core update.
+add_action('_core_updated_successfully', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches_after_core_update');
 add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro_menu_pages::before_mms_ops_page_hook');
