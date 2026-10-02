@@ -99,6 +99,17 @@ add_action('ws_plugin__s2member_after_update_all_options', 'c_ws_plugin__s2membe
 add_filter('ws_plugin__s2member_recaptcha_version', 'c_ws_plugin__s2member_pro_utils_captchas::recaptcha_version', 10, 2);
 add_filter('ws_plugin__s2member_recaptcha_keys', 'c_ws_plugin__s2member_pro_utils_captchas::recaptcha_keys', 10, 2);
 
+//261002.1932 Keep Pro-Form anti-spam centralized on existing render/validation seams so new checks and adapters do not require gateway-specific integration.
+add_action('ws_plugin__s2member_pro_during_sc_stripe_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_action('ws_plugin__s2member_pro_during_sc_paypal_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_action('ws_plugin__s2member_pro_during_sc_authnet_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_action('ws_plugin__s2member_pro_during_sc_stripe_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_action('ws_plugin__s2member_pro_during_sc_paypal_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_action('ws_plugin__s2member_pro_during_sc_authnet_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+add_filter('ws_plugin__s2member_pro_stripe_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
+add_filter('ws_plugin__s2member_pro_paypal_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
+add_filter('ws_plugin__s2member_pro_authnet_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
+
 add_filter('ws_plugin__s2member_login_redirect', 'c_ws_plugin__s2member_pro_login_redirects::login_redirect', 11, 2);
 
 add_filter('ws_plugin__s2member_return_template_header', 'c_ws_plugin__s2member_pro_return_templates::return_template_header', 10, 2);

@@ -142,6 +142,9 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_recaptcha_public_key'                => '', 'pro_recaptcha_private_key'  => '',
 			'pro_recaptcha2_public_key'               => '', 'pro_recaptcha2_private_key' => '',
 
+			//261002.1932 Keep new local anti-spam checks opt-in on upgrade; the admin UI can enable each protection independently.
+			'pro_antispam_honeypot'         => '0', 'pro_antispam_form_age' => '0',
+
 			'pro_latest_version'                      => array(), //260902.0447 Latest Pro release check.
 			'pro_last_stats_log'                      => '0', // Stats pinger.
 		);
