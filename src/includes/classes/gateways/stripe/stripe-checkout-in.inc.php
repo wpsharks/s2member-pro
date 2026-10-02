@@ -95,7 +95,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 				//260924.2045 A pending guest checkout belongs to the account recorded in durable Gateway Checkout state; keep browser authentication independent from that account association.
 				if($gateway_checkout_state && !empty($gateway_checkout_state['context']['pending_user_id']))
+				{
 					$post_vars['_gateway_checkout_pending_user_id'] = abs((int)$gateway_checkout_state['context']['pending_user_id']);
+					//261003.0120 Reuse anti-spam trust only when this signed delayed checkout is already bound to its pending account and carries the original verified pass record.
+					c_ws_plugin__s2member_pro_antispam::trust_gateway_checkout_state($gateway_checkout_state);
+				}
 
 				if(!empty($post_vars['cancel_incomplete_sub_id']))
 				{
@@ -221,9 +225,15 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								if(!empty($post_vars['gateway_checkout_reset']))
 									$_POST['s2member_pro_stripe_checkout']['gateway_checkout_reset'] = '1';
 
-								$gateway_checkout_lock = c_ws_plugin__s2member_gateway_checkouts::processing_lock((string)$gateway_checkout_state['id']);
-								if(!$gateway_checkout_lock)
-									$global_response = array('response' => _x('This checkout is already being processed. Please wait a moment and reload this page.', 's2member-front', 's2member'), 'error' => TRUE);
+								//261003.0120 If authoritative terms replace a trusted pending checkout, stop here and require a fresh form/provider token instead of migrating old anti-spam trust to the replacement identity.
+								if(!empty($post_vars['gateway_checkout_reset']) && c_ws_plugin__s2member_pro_antispam::request_is_trusted())
+									$global_response = array('response' => _x('This checkout changed. Please reload the checkout page and submit it again.', 's2member-front', 's2member'), 'error' => TRUE);
+								else
+								{
+									$gateway_checkout_lock = c_ws_plugin__s2member_gateway_checkouts::processing_lock((string)$gateway_checkout_state['id']);
+									if(!$gateway_checkout_lock)
+										$global_response = array('response' => _x('This checkout is already being processed. Please wait a moment and reload this page.', 's2member-front', 's2member'), 'error' => TRUE);
+								}
 							}
 						}
 						// Subscription, existing user.
@@ -840,6 +850,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 												$gateway_checkout_context = array('browser_response' => (string)$global_response['response'], 'pending_user_id' => (int)$new__user_id);
 												if(!$pending_checkout_user_id)
 													$gateway_checkout_context['pending_user_has_custom_password'] = $has_custom_password ? 1 : 0;
+												//261003.0120 Persist only the normalized anti-spam pass record; provider tokens are single-use and must never enter delayed-checkout state.
+												if(($antispam_pass = c_ws_plugin__s2member_pro_antispam::current_pass_record()))
+													$gateway_checkout_context['antispam_pass'] = $antispam_pass;
 
 												c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', $gateway_checkout_context, 'pending_gateway');
 											}
@@ -1255,6 +1268,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$gateway_checkout_context = array('browser_response' => (string)$global_response['response'], 'pending_user_id' => (int)$new__user_id);
 											if(!$pending_checkout_user_id)
 												$gateway_checkout_context['pending_user_has_custom_password'] = $has_custom_password ? 1 : 0;
+											//261003.0120 Persist only the normalized anti-spam pass record; provider tokens are single-use and must never enter delayed-checkout state.
+											if(($antispam_pass = c_ws_plugin__s2member_pro_antispam::current_pass_record()))
+												$gateway_checkout_context['antispam_pass'] = $antispam_pass;
 
 											c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', $gateway_checkout_context, 'pending_gateway');
 										}

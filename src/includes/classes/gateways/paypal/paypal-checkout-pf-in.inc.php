@@ -71,7 +71,12 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 								//260808 Safely unserialize the form attributes.
 								$post_vars["attr"]   = (!empty($post_vars["attr"])) ? (array)c_ws_plugin__s2member_utils_arrays::maybe_unserialize(c_ws_plugin__s2member_utils_encryption::decrypt($post_vars["attr"])) : array();
 								$post_vars["attr"]   = apply_filters("ws_plugin__s2member_pro_paypal_checkout_post_attr", $post_vars["attr"], get_defined_vars());
-								if(!empty($xco_post_vars)) $post_vars["attr"]["captcha"] = "0"; // No need to revalidate captcha in this case.
+								if(!empty($xco_post_vars))
+									{
+										$post_vars["attr"]["captcha"] = "0"; // No need to revalidate captcha in this case.
+										//261003.0120 Express Checkout returns restore server-side POST state created only after the original Pro-Form passed validation; do not consume external anti-spam tokens twice.
+										c_ws_plugin__s2member_pro_antispam::trust_request('paypal_express');
+									}
 
 								$post_vars["name"] = trim($post_vars["first_name"]." ".$post_vars["last_name"]);
 								$post_vars["email"] = apply_filters("user_registration_email", sanitize_email((string)@$post_vars["email"]), get_defined_vars());

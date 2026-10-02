@@ -486,7 +486,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return '';
 
 			$post_vars = c_ws_plugin__s2member_utils_strings::trim_deep(stripslashes_deep($raw_post_vars));
-			unset($post_vars['card_type'], $post_vars['paypal_checkout_op'], $post_vars['paypal_checkout_free_handoff']);
+			//261003.0125 Anti-spam was already validated before this one-time handoff exists; exclude ephemeral provider/local fields so token refresh/expiry cannot invalidate an otherwise identical prepared purchase.
+			unset($post_vars['card_type'], $post_vars['paypal_checkout_op'], $post_vars['paypal_checkout_free_handoff'], $post_vars['antispam']);
 
 			return hash_hmac('sha256', (string)$form_type.'|'.serialize($post_vars), wp_salt('auth'));
 		}

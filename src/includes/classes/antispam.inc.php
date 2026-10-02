@@ -43,6 +43,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
      */
     class c_ws_plugin__s2member_pro_antispam
     {
+        /** @var array Request-local anti-spam pass record. */
+        protected static $request_pass = array();
+        /** @var bool Whether this request is resuming already-verified server-side checkout state. */
+        protected static $request_trusted = false;
+        /** @var string Trusted-state source for diagnostics and replacement-checkout handling. */
+        protected static $request_trusted_source = '';
+
         /**
          * Determines whether account-creation protection applies to a form surface.
          *
@@ -114,16 +121,11 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         {
             //261002.1932 Keep adapter discovery in one coordinator so CAPTCHA, proof-of-work, and reputation integrations can evolve without revisiting every protected Pro-Form surface.
             $adapters = apply_filters('ws_plugin__s2member_pro_antispam_adapter_classes', array(
-                'altcha'           => 'c_ws_plugin__s2member_pro_antispam_altcha',
-                'turnstile'        => 'c_ws_plugin__s2member_pro_antispam_turnstile',
-                'recaptcha_v3'     => 'c_ws_plugin__s2member_pro_antispam_recaptcha_v3',
-                'hcaptcha'         => 'c_ws_plugin__s2member_pro_antispam_hcaptcha',
-                'friendly_captcha' => 'c_ws_plugin__s2member_pro_antispam_friendly_captcha',
-                'recaptcha_v2'     => 'c_ws_plugin__s2member_pro_antispam_recaptcha_v2',
-                'akismet'          => 'c_ws_plugin__s2member_pro_antispam_akismet',
-                'cleantalk'        => 'c_ws_plugin__s2member_pro_antispam_cleantalk',
-                'oopspam'          => 'c_ws_plugin__s2member_pro_antispam_oopspam',
-                'proxycheck'       => 'c_ws_plugin__s2member_pro_antispam_proxycheck',
+                //261003.0120 Keep Pro-Forms intentionally focused; the broader adapter catalog belongs to the separate forms add-on instead of turning this compatibility upgrade into a provider marketplace.
+                'turnstile'    => 'c_ws_plugin__s2member_pro_antispam_turnstile',
+                'recaptcha_v3' => 'c_ws_plugin__s2member_pro_antispam_recaptcha_v3',
+                'recaptcha_v2' => 'c_ws_plugin__s2member_pro_antispam_recaptcha_v2',
+                'akismet'      => 'c_ws_plugin__s2member_pro_antispam_akismet',
             ));
             $required_methods = array('label', 'kind', 'available', 'configured', 'render', 'verify', 'test_configuration', 'health');
             $valid            = array();
@@ -161,7 +163,110 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         }
 
         /**
-         * Renders enabled local anti-spam fields for a protected form surface.
+         * Returns the selected bot-verification adapter ID.
+         *
+         * @since 261003.0120
+         *
+         * @return string Adapter ID, or an empty string for no external verification.
+         */
+        public static function verification_provider()
+        {
+            return strtolower(trim((string) @$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider']));
+        }
+
+        /**
+         * Resolves the selected bot-verification adapter only when it is available and tested/configured.
+         *
+         * @since 261003.0120
+         *
+         * @return string Adapter class, or an empty string while inactive/unhealthy.
+         */
+        public static function verification_adapter_class()
+        {
+            $adapter = self::adapter_class(self::verification_provider());
+            if (!$adapter || call_user_func(array($adapter, 'kind')) !== 'verification' || !call_user_func(array($adapter, 'available')) || !call_user_func(array($adapter, 'configured'))) {
+                return '';
+            }
+            return $adapter;
+        }
+
+        /**
+         * Returns the request-local anti-spam pass record, without any provider token.
+         *
+         * @since 261003.0120
+         *
+         * @return array Pass record, or an empty array when this request has not passed anti-spam.
+         */
+        public static function current_pass_record()
+        {
+            return self::$request_pass;
+        }
+
+        /**
+         * Returns whether this request is using already-verified server-side checkout state.
+         *
+         * @since 261003.0120
+         *
+         * @return bool True when provider/local checks must not be consumed again.
+         */
+        public static function request_is_trusted()
+        {
+            return self::$request_trusted;
+        }
+
+        /**
+         * Clears request-local verification state.
+         *
+         * @since 261003.0120
+         *
+         * @return void
+         */
+        public static function reset_request_state()
+        {
+            self::$request_pass = array();
+            self::$request_trusted = false;
+            self::$request_trusted_source = '';
+        }
+
+        /**
+         * Trusts a server-side continuation that exists only because its original form submission already passed validation.
+         *
+         * @since 261003.0120
+         *
+         * @param string $source Short diagnostic source, e.g. `paypal_express`.
+         *
+         * @return bool Always true.
+         */
+        public static function trust_request($source = '')
+        {
+            self::$request_trusted = true;
+            self::$request_trusted_source = (string) $source;
+            return true;
+        }
+
+        /**
+         * Trusts a delayed Stripe checkout only when its durable state is bound to a pending user and contains a prior anti-spam pass.
+         *
+         * @since 261003.0120
+         *
+         * @param array $state Gateway Checkout state.
+         *
+         * @return bool True only for a valid trusted continuation.
+         */
+        public static function trust_gateway_checkout_state($state = array())
+        {
+            $record = !empty($state['context']['antispam_pass']) && is_array($state['context']['antispam_pass']) ? $state['context']['antispam_pass'] : array();
+            if (empty($state['context']['pending_user_id']) || !self::valid_pass_record($record, 'checkout')) {
+                return false;
+            }
+            self::$request_pass = $record;
+            self::$request_trusted = true;
+            self::$request_trusted_source = 'gateway_checkout';
+            return true;
+        }
+
+        /**
+         * Renders enabled anti-spam fields for a protected form surface.
          *
          * @since 261002.1449
          *
@@ -174,7 +279,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         public static function render_fields($surface = '', $input_name = '', $is_logged_in = null)
         {
             $is_logged_in = isset($is_logged_in) ? (bool) $is_logged_in : is_user_logged_in();
-            if (!self::protection_applies($surface, $is_logged_in) || (!self::honeypot_enabled() && !self::form_age_enabled()) || !$input_name) {
+            $verification_adapter = self::verification_adapter_class();
+            if (!self::protection_applies($surface, $is_logged_in) || (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) || !$input_name) {
                 return '';
             }
             $html = '';
@@ -186,6 +292,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             }
             if (self::form_age_enabled()) {
                 $html .= '<input type="hidden" name="'.esc_attr($input_name.'[antispam][form_age]').'" value="'.esc_attr(self::form_age_token()).'" />'."\n";
+            }
+            if ($verification_adapter) {
+                $html .= (string) call_user_func(array($verification_adapter, 'render'), $surface, $input_name);
             }
             return $html;
         }
@@ -257,21 +366,74 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         public static function validate_submission($surface = '', $submission = array(), $is_logged_in = null, $now = null)
         {
             $is_logged_in = isset($is_logged_in) ? (bool) $is_logged_in : is_user_logged_in();
-            if (!self::protection_applies($surface, $is_logged_in) || (!self::honeypot_enabled() && !self::form_age_enabled())) {
+            if (!self::protection_applies($surface, $is_logged_in)) {
+                return true;
+            }
+            //261003.0120 Delayed gateway continuations reuse server-side trust; never submit an expired/single-use provider token a second time.
+            if (self::$request_trusted) {
+                return true;
+            }
+            self::$request_pass = array();
+            $verification_provider = self::verification_provider();
+            $verification_adapter = self::verification_adapter_class();
+            if (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) {
                 return true;
             }
             $antispam = !empty($submission['antispam']) && is_array($submission['antispam']) ? $submission['antispam'] : array();
-            $honeypot           = isset($antispam['website']) ? (string) $antispam['website'] : '';
-            $form_age_token     = isset($antispam['form_age']) ? (string) $antispam['form_age'] : '';
+            $honeypot = isset($antispam['website']) ? (string) $antispam['website'] : '';
+            $form_age_token = isset($antispam['form_age']) ? (string) $antispam['form_age'] : '';
+            $checks = array();
 
-            if (self::honeypot_enabled() && $honeypot !== '') {
-                return new WP_Error('s2member_antispam_honeypot', __('Security verification failed. Please try again.', 's2member'));
+            if (self::honeypot_enabled()) {
+                if ($honeypot !== '') {
+                    return new WP_Error('s2member_antispam_honeypot', __('Security verification failed. Please try again.', 's2member'));
+                }
+                $checks[] = 'honeypot';
             }
             if (self::form_age_enabled()) {
                 //261002.1449 Reuse the signed-age verifier with an empty honeypot because honeypot enablement is independently configurable.
-                return self::validate_local('', $form_age_token, $now);
+                $local_result = self::validate_local('', $form_age_token, $now);
+                if (is_wp_error($local_result)) {
+                    return $local_result;
+                }
+                $checks[] = 'form_age';
             }
+            if ($verification_adapter) {
+                $verification_result = call_user_func(array($verification_adapter, 'verify'), $surface, $submission);
+                if (is_wp_error($verification_result)) {
+                    return $verification_result;
+                }
+                $checks[] = $verification_provider;
+            }
+            self::$request_pass = array(
+                'version'               => 1,
+                'surface'               => (string) $surface,
+                'passed_at'             => time(),
+                'verification_provider' => $verification_adapter ? (string) $verification_provider : '',
+                'checks'                => $checks,
+            );
             return true;
+        }
+
+        /**
+         * Validates a persisted anti-spam pass record without relying on its age; checkout-state expiry remains the outer lifetime boundary.
+         *
+         * @since 261003.0120
+         *
+         * @param array  $record  Persisted anti-spam pass record.
+         * @param string $surface Expected protected surface.
+         *
+         * @return bool True only for a structurally valid record.
+         */
+        protected static function valid_pass_record($record = array(), $surface = '')
+        {
+            return is_array($record)
+                && isset($record['version'], $record['surface'], $record['passed_at'], $record['checks'])
+                && (int) $record['version'] === 1
+                && (string) $record['surface'] === (string) $surface
+                && (int) $record['passed_at'] > 0
+                && is_array($record['checks'])
+                && !empty($record['checks']);
         }
 
         /**

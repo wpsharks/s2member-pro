@@ -627,7 +627,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_responses"))
 
 						//260818.2056 The exact prepared purchase already passed CAPTCHA; skip only its second validation in this request.
 						if($free_handoff_verified)
+						{
 							$s['attr']['captcha'] = '0';
+							//261003.0120 The signed one-time free handoff proves this exact server-validated submission already passed anti-spam; do not reuse a provider token during the second validation pass.
+							c_ws_plugin__s2member_pro_antispam::trust_request('paypal_checkout_free_handoff');
+						}
 
 						//260818.2204 Prepared free purchases use normal validation; the scoped request flag bypasses only unrelated legacy credentials.
 						$skip_legacy_paypal_validation = ($skip_legacy_paypal_validation || c_ws_plugin__s2member_pro_paypal_utilities::paypal_checkout_free_fallback_is_active());

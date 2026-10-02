@@ -144,6 +144,10 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			//261002.1932 Keep new local anti-spam checks opt-in on upgrade; the admin UI can enable each protection independently.
 			'pro_antispam_honeypot'         => '0', 'pro_antispam_form_age' => '0',
+			//261003.0120 External verification remains disabled until the admin explicitly selects a tested provider.
+			'pro_antispam_verification_provider' => '',
+			//261002.2358 Provider credentials remain inert until an admin explicitly configures and successfully tests the provider.
+			'pro_antispam_turnstile_site_key' => '', 'pro_antispam_turnstile_secret_key' => '', 'pro_antispam_turnstile_tested_fingerprint' => '',
 
 			'pro_latest_version'                      => array(), //260902.0447 Latest Pro release check.
 			'pro_last_stats_log'                      => '0', // Stats pinger.
