@@ -786,6 +786,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
 								$pending_checkout_user_id  = !empty($post_vars['_gateway_checkout_pending_user_id']) ? abs((int)$post_vars['_gateway_checkout_pending_user_id']) : 0;
 
+								//261002.0228 Preserve pending-new-user-signup semantics through delayed Stripe fulfillment, including webhook recovery.
+								if(!empty($stripe_pending_subscr) || $pending_checkout_user_id)
+									$ipn['pending_new_user_signup'] = '1';
+
 								//260924.2045 Reuse the account already bound to this signed pending checkout instead of creating it again; the browser remains a guest.
 								if($pending_checkout_user_id)
 									$new__user_id = $pending_checkout_user_id;
@@ -798,11 +802,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									{
 										update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
+										//261002.0228 Keep the pending account at Level 0, but let the admin New User email report the paid level/ccaps selected at checkout.
+										if(!empty($stripe_pending_subscr))
+											$GLOBALS['ws_plugin__s2member_new_user_notification_access'] = array('user_id' => (int)$new__user_id, 'level' => (int)$post_vars['attr']['level'], 'ccaps' => (string)$post_vars['attr']['ccaps']);
+
 										if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
 											wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 										else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 											wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 										else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+
+										if(!empty($stripe_pending_subscr))
+											unset($GLOBALS['ws_plugin__s2member_new_user_notification_access']);
 									}
 
 									if($pending_checkout_user_id && $gateway_checkout_state && array_key_exists('pending_user_has_custom_password', (array)$gateway_checkout_state['context']))
@@ -853,8 +864,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 
 											if(!c_ws_plugin__s2member_pro_stripe_utilities::store_pending_subscr_details($new__subscr_id, array('user_id' => $new__user_id, 'ipn' => $ipn, 'gateway_checkout_id' => (string)@$post_vars['gateway_checkout_id'])))
 											{
-												c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Unable to refresh pending Stripe subscription details while resuming a guest checkout.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $new__user_id));
-												$global_response = array('response' => _x('<strong>Oops.</strong> A problem occurred while resuming your payment. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+												//261002.0410 A Stripe webhook can fulfill and delete these pending details between our pre-check and storage verification; recover that completed checkout instead of showing a false resume error.
+												wp_cache_delete($new__user_id, 'user_meta');
+												if(!c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id))
+												{
+													c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Unable to refresh pending Stripe subscription details while resuming a guest checkout.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $new__user_id));
+													$global_response = array('response' => _x('<strong>Oops.</strong> A problem occurred while resuming your payment. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
+												}
+												else c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Pending Stripe subscription was fulfilled concurrently while resuming the guest checkout; recovering the completed result.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid, 'user_id' => $new__user_id));
 											}
 										}
 
@@ -1197,6 +1214,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$has_custom_password       = !empty($post_vars['password1']) && $post_vars['password1'] === $create_user['user_pass'];
 								$pending_checkout_user_id  = !empty($post_vars['_gateway_checkout_pending_user_id']) ? abs((int)$post_vars['_gateway_checkout_pending_user_id']) : 0;
 
+								//261002.0228 Preserve pending-new-user-signup semantics when one-time SCA resumes against its durable Level-0 account.
+								if(!empty($stripe_pending_payment) || $pending_checkout_user_id)
+									$ipn['pending_new_user_signup'] = '1';
+
 								//260925.2349 Reuse the Level-0 account bound to this signed one-time SCA checkout; never authenticate the guest browser merely to preserve the password across 3DS.
 								if($pending_checkout_user_id)
 									$new__user_id = $pending_checkout_user_id;
@@ -1209,11 +1230,18 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									{
 										update_user_option($new__user_id, 'default_password_nag', $has_custom_password ? FALSE : TRUE, TRUE);
 
+										//261002.0228 Keep the pending account at Level 0, but let the admin New User email report the paid level/ccaps selected at checkout.
+										if(!empty($stripe_pending_payment))
+											$GLOBALS['ws_plugin__s2member_new_user_notification_access'] = array('user_id' => (int)$new__user_id, 'level' => (int)$post_vars['attr']['level'], 'ccaps' => (string)$post_vars['attr']['ccaps']);
+
 										if (version_compare(get_bloginfo("version"), "4.3.1", ">="))
 											wp_new_user_notification($new__user_id, null, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 										else if (version_compare(get_bloginfo("version"), "4.3", ">="))
 											wp_new_user_notification($new__user_id, $has_custom_password ? "admin" : "both", $create_user['user_pass']);
 										else wp_new_user_notification($new__user_id, $create_user['user_pass']);
+
+										if(!empty($stripe_pending_payment))
+											unset($GLOBALS['ws_plugin__s2member_new_user_notification_access']);
 									}
 
 									if($pending_checkout_user_id && $gateway_checkout_state && array_key_exists('pending_user_has_custom_password', (array)$gateway_checkout_state['context']))
