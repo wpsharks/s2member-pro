@@ -207,6 +207,58 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         }
 
         /**
+         * Returns the selected spam-intelligence adapter ID.
+         *
+         * @since 261003.0347
+         *
+         * @return string Adapter ID, or an empty string for no spam-intelligence service.
+         */
+        public static function spam_provider()
+        {
+            return strtolower(trim((string) @$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_spam_provider']));
+        }
+
+        /**
+         * Resolves the selected spam-intelligence adapter only when it is available and configured.
+         *
+         * @since 261003.0347
+         *
+         * @return string Adapter class, or an empty string while inactive/unhealthy.
+         */
+        public static function spam_adapter_class()
+        {
+            $adapter = self::adapter_class(self::spam_provider());
+            if (!$adapter || call_user_func(array($adapter, 'kind')) !== 'spam' || !call_user_func(array($adapter, 'available')) || !call_user_func(array($adapter, 'configured'))) {
+                return '';
+            }
+            return $adapter;
+        }
+
+        /**
+         * Determines whether signup-oriented spam intelligence applies to this submission.
+         *
+         * @since 261003.0347
+         *
+         * @param string $surface    Pro-Form surface identifier.
+         * @param array  $submission Normalized Pro-Form submission array.
+         *
+         * @return bool True only when this submission creates a new user account.
+         */
+        public static function spam_check_applies($surface = '', $submission = array())
+        {
+            if ((string) $surface === 'registration') {
+                return true;
+            }
+            if ((string) $surface !== 'checkout' || is_user_logged_in()) {
+                return false;
+            }
+            $attr = !empty($submission['attr']) && is_array($submission['attr']) ? $submission['attr'] : array();
+
+            //261003.0347 Akismet's `signup` type is for account creation only; never send modification, member-only (`level="*"`), SP, update, or cancellation traffic as signups.
+            return empty($attr['modify']) && (!isset($attr['level']) || (string) $attr['level'] !== '*');
+        }
+
+        /**
          * Returns the request-local anti-spam pass record, without any provider token.
          *
          * @since 261003.0120
@@ -396,7 +448,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             self::$request_pass = array();
             $verification_provider = self::verification_provider();
             $verification_adapter = self::verification_adapter_class();
-            if (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) {
+            $spam_provider = self::spam_provider();
+            $spam_adapter = self::spam_check_applies($surface, $submission) ? self::spam_adapter_class() : '';
+            if (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter && !$spam_adapter) {
                 return true;
             }
             $antispam = !empty($submission['antispam']) && is_array($submission['antispam']) ? $submission['antispam'] : array();
@@ -424,6 +478,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                     return $verification_result;
                 }
                 $checks[] = $verification_provider;
+            }
+            if ($spam_adapter) {
+                $spam_result = call_user_func(array($spam_adapter, 'verify'), $surface, $submission);
+                if (is_wp_error($spam_result)) {
+                    return $spam_result;
+                }
+                $checks[] = $spam_provider;
             }
             self::$request_pass = array(
                 'version'               => 1,
