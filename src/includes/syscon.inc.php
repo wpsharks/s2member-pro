@@ -148,6 +148,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_antispam_verification_provider' => '',
 			//261002.2358 Provider credentials remain inert until an admin explicitly configures and successfully tests the provider.
 			'pro_antispam_turnstile_site_key' => '', 'pro_antispam_turnstile_secret_key' => '', 'pro_antispam_turnstile_tested_fingerprint' => '',
+			//261003.0156 reCAPTCHA v3 also remains inert until tested; 0.5 follows Google's documented starting threshold.
+			'pro_antispam_recaptcha_v3_site_key' => '', 'pro_antispam_recaptcha_v3_secret_key' => '', 'pro_antispam_recaptcha_v3_tested_fingerprint' => '', 'pro_antispam_recaptcha_v3_minimum_score' => '0.5',
 
 			'pro_latest_version'                      => array(), //260902.0447 Latest Pro release check.
 			'pro_last_stats_log'                      => '0', // Stats pinger.
