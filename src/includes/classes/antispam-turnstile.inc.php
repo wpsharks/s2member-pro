@@ -132,6 +132,10 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_turnstile')) {
             if (!self::site_key() || !self::secret_key()) {
                 return new WP_Error('s2member_antispam_turnstile_configuration', __('Enter both the Turnstile site key and secret key first.', 's2member'));
             }
+            //261003.0801 Cloudflare publishes dummy credentials for automated browser testing; refuse them on public hosts so a site owner cannot accidentally activate an always-pass test widget in production.
+            if (self::uses_official_test_credential() && !self::official_test_credentials_allowed()) {
+                return new WP_Error('s2member_antispam_turnstile_test_credentials', __('Cloudflare Turnstile test keys may only be used on localhost or another loopback development host.', 's2member'));
+            }
             if (!(string)$token) {
                 return new WP_Error('s2member_antispam_turnstile_test_token', __('Complete the Turnstile test before saving this configuration.', 's2member'));
             }
@@ -189,14 +193,53 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_turnstile')) {
             if (empty($result['success'])) {
                 return new WP_Error('s2member_antispam_turnstile_failed', __('Security verification failed. Please try again.', 's2member'));
             }
-            if (!isset($result['action']) || (string)$result['action'] !== 's2member_pro_form') {
+            //261003.0801 Official Cloudflare dummy keys return fixed test metadata (`action=test`, `hostname=localhost`); accept that metadata only on loopback development hosts while keeping strict action/hostname checks for every real credential.
+            $official_local_test = self::uses_official_test_credential() && self::official_test_credentials_allowed();
+            if (!$official_local_test && (!isset($result['action']) || (string)$result['action'] !== 's2member_pro_form')) {
                 return new WP_Error('s2member_antispam_turnstile_action', __('Security verification failed. Please try again.', 's2member'));
             }
             $expected_host = self::expected_hostname();
-            if ($expected_host && !empty($result['hostname']) && strcasecmp($expected_host, (string)$result['hostname']) !== 0) {
+            if (!$official_local_test && $expected_host && !empty($result['hostname']) && strcasecmp($expected_host, (string)$result['hostname']) !== 0) {
                 return new WP_Error('s2member_antispam_turnstile_hostname', __('Security verification failed. Please try again.', 's2member'));
             }
             return true;
+        }
+
+        /**
+         * Returns whether either configured credential is one of Cloudflare's published Turnstile test keys.
+         *
+         * @since 261003.0801
+         *
+         * @return bool True when a published test site key or secret key is configured.
+         */
+        protected static function uses_official_test_credential()
+        {
+            $site_keys = array(
+                '1x00000000000000000000AA',
+                '2x00000000000000000000AB',
+                '1x00000000000000000000BB',
+                '2x00000000000000000000BB',
+                '3x00000000000000000000FF',
+            );
+            $secret_keys = array(
+                '1x0000000000000000000000000000000AA',
+                '2x0000000000000000000000000000000AA',
+                '3x0000000000000000000000000000000AA',
+            );
+
+            return in_array(self::site_key(), $site_keys, true) || in_array(self::secret_key(), $secret_keys, true);
+        }
+
+        /**
+         * Allows Cloudflare test credentials only on loopback development hosts.
+         *
+         * @since 261003.0801
+         *
+         * @return bool True only for localhost/loopback hosts.
+         */
+        protected static function official_test_credentials_allowed()
+        {
+            return in_array(self::expected_hostname(), array('localhost', '127.0.0.1', '0.0.0.0', '::1'), true);
         }
 
         /**
