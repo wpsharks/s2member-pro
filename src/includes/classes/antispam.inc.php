@@ -80,9 +80,14 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 return false;
             }
             $provider = self::verification_provider();
-
-            //261003.0229 An empty provider preserves every existing reCAPTCHA shortcode unchanged; selecting a modern provider replaces only the implementation behind the same `captcha` switch.
-            return !$provider || $provider === 'recaptcha_v2';
+            if (!$provider || $provider === 'recaptcha_v2') {
+                return true;
+            }
+            if ($provider === 'none') {
+                return false;
+            }
+            //261003.0407 Keep the proven legacy CAPTCHA active until a selected modern provider has passed its configuration test; a typo or stale key must never silently lower protection.
+            return !self::verification_adapter_class();
         }
 
         /**
@@ -232,6 +237,64 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 return '';
             }
             return $adapter;
+        }
+
+        /**
+         * Tests one saved anti-spam adapter configuration from the General Options screen.
+         *
+         * @since 261003.0407
+         *
+         * @return void Terminates through wp_send_json_*().
+         */
+        public static function ajax_test_configuration()
+        {
+            if (!current_user_can('manage_options')) {
+                wp_send_json_error(array('message' => __('You do not have permission to test this configuration.', 's2member')), 403);
+            }
+            check_ajax_referer('ws-plugin--s2member-pro-antispam-test', 'nonce');
+
+            $provider = !empty($_POST['provider']) ? sanitize_key((string) wp_unslash($_POST['provider'])) : '';
+            $token = isset($_POST['token']) ? trim((string) wp_unslash($_POST['token'])) : '';
+            $adapter = self::adapter_class($provider);
+            if (!$adapter) {
+                wp_send_json_error(array('message' => __('Select a configured anti-spam service first.', 's2member')), 400);
+            }
+            $result = call_user_func(array($adapter, 'test_configuration'), $token);
+            if (is_wp_error($result)) {
+                wp_send_json_error(array('message' => $result->get_error_message()), 400);
+            }
+
+            //261003.0407 Persist only derived test metadata here; user-entered keys continue through s2Member's normal Save All Changes path and existing multisite option handling.
+            if ($provider === 'turnstile' && is_callable(array($adapter, 'configuration_fingerprint'))) {
+                self::persist_tested_fingerprint('pro_antispam_turnstile_tested_fingerprint', call_user_func(array($adapter, 'configuration_fingerprint')));
+            } elseif ($provider === 'recaptcha_v3' && is_callable(array($adapter, 'configuration_fingerprint'))) {
+                self::persist_tested_fingerprint('pro_antispam_recaptcha_v3_tested_fingerprint', call_user_func(array($adapter, 'configuration_fingerprint')));
+            }
+            $health = call_user_func(array($adapter, 'health'));
+            wp_send_json_success(array(
+                'message' => __('Configuration test passed.', 's2member'),
+                'status'  => !empty($health['status']) ? (string) $health['status'] : 'healthy',
+                'label'   => !empty($health['label']) ? (string) $health['label'] : __('Healthy', 's2member'),
+            ));
+        }
+
+        /**
+         * Saves derived provider-test metadata without bypassing s2Member's normal storage format.
+         *
+         * @since 261003.0407
+         *
+         * @param string $option Option key inside the s2Member options array.
+         * @param string $value  Tested key fingerprint.
+         *
+         * @return void
+         */
+        protected static function persist_tested_fingerprint($option, $value)
+        {
+            $GLOBALS['WS_PLUGIN__']['s2member']['o'][(string) $option] = (string) $value;
+            update_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
+            if (is_multisite() && is_main_site()) {
+                update_site_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
+            }
         }
 
         /**
