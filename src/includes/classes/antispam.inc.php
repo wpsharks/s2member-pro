@@ -132,6 +132,18 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         }
 
         /**
+         * Returns whether administrator-only frontend diagnostics are enabled.
+         *
+         * @since 261003.0533
+         *
+         * @return bool True only for an administrator while the diagnostic option is enabled.
+         */
+        public static function admin_diagnostics_enabled()
+        {
+            return !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_admin_diagnostics']) && current_user_can('manage_options');
+        }
+
+        /**
          * Returns implemented anti-spam adapters.
          *
          * @since 261002.1932
@@ -451,7 +463,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             $surface = $type === 'sp' ? 'sp-checkout' : ($type && $type !== 'modification' ? $type : 'checkout');
             $suffix  = $type === 'sp' ? 'sp_checkout' : ($type && $type !== 'modification' ? $type : 'checkout');
             $fields  = self::render_fields($surface, 's2member_pro_'.$gateway.'_'.$suffix, $captcha);
-            if (!$fields || empty($vars['__refs']['code']) || !is_string($vars['__refs']['code'])) {
+            $diagnostics = self::admin_diagnostics_enabled() ? self::render_admin_diagnostics($surface, $gateway, $captcha) : '';
+            $injection = $fields.$diagnostics;
+            if (!$injection || empty($vars['__refs']['code']) || !is_string($vars['__refs']['code'])) {
                 return;
             }
             $closing_form_pos = strripos($vars['__refs']['code'], '</form>');
@@ -459,7 +473,45 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 return;
             }
             //261003.0229 Use the same existing Pro-Form render points and `captcha` switch for every legacy CAPTCHA-capable surface; only the anti-spam implementation changes.
-            $vars['__refs']['code'] = substr_replace($vars['__refs']['code'], $fields, $closing_form_pos, 0);
+            $vars['__refs']['code'] = substr_replace($vars['__refs']['code'], $injection, $closing_form_pos, 0);
+        }
+
+        /**
+         * Renders administrator-only diagnostics for one Pro-Form without exposing credentials or visitor data.
+         *
+         * @since 261003.0533
+         *
+         * @param string $surface Form surface identifier.
+         * @param string $gateway Gateway identifier.
+         * @param mixed  $captcha Existing Pro-Form `captcha` value.
+         *
+         * @return string Diagnostic HTML, or an empty string for non-administrators/disabled diagnostics.
+         */
+        public static function render_admin_diagnostics($surface = '', $gateway = '', $captcha = '')
+        {
+            if (!self::admin_diagnostics_enabled()) {
+                return '';
+            }
+            $verification_provider = self::verification_provider();
+            $verification_adapter = self::verification_adapter_class();
+            $spam_provider = self::spam_provider();
+            $built_in = array_filter(array(self::honeypot_enabled() ? 'Honeypot' : '', self::form_age_enabled() ? 'Minimum form age' : ''));
+            $id = 's2member-pro-antispam-diagnostics-'.substr(md5($gateway.'|'.$surface.'|'.wp_rand()), 0, 12);
+            $nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-self-test');
+            $verification_label = $verification_adapter ? call_user_func(array($verification_adapter, 'label')) : ($verification_provider === 'none' ? __('None', 's2member') : __('Legacy/default', 's2member'));
+
+            //261003.0533 Keep frontend diagnostics explicitly admin-only and credential-free; the dry run uses a separate AJAX request and never submits the surrounding payment/registration form.
+            $html = '<div id="'.esc_attr($id).'" class="s2member-pro-antispam-admin-diagnostics" style="margin:1em 0;padding:10px;border:1px dashed #8c8f94;background:#f6f7f7;">'."\n";
+            $html .= '<strong>'.esc_html__('Anti-Spam Diagnostics (administrators only)', 's2member').'</strong><ul style="margin:.5em 0 1em 1.5em;list-style:disc;">'."\n";
+            $html .= '<li>'.esc_html__('Surface:', 's2member').' <code>'.esc_html((string) $gateway.' / '.(string) $surface).'</code></li>'."\n";
+            $html .= '<li>'.esc_html__('Per-form switch:', 's2member').' <code>captcha=&quot;'.esc_html((string) $captcha).'&quot;</code> — '.esc_html(self::captcha_enabled($captcha) ? __('enabled', 's2member') : __('disabled', 's2member')).'</li>'."\n";
+            $html .= '<li>'.esc_html__('Built-in checks:', 's2member').' '.esc_html($built_in ? implode(' + ', $built_in) : __('Disabled', 's2member')).'</li>'."\n";
+            $html .= '<li>'.esc_html__('Bot verification:', 's2member').' '.esc_html($verification_label).'</li>'."\n";
+            $html .= '<li>'.esc_html__('Signup spam detection:', 's2member').' '.esc_html($spam_provider ? ucfirst($spam_provider).' '.__('(new-user surfaces only)', 's2member') : __('Disabled', 's2member')).'</li>'."\n";
+            $html .= '</ul><button type="button" class="button s2member-pro-antispam-simulate-bot">'.esc_html__('Simulate Bot', 's2member').'</button> <span class="s2member-pro-antispam-simulate-result"></span>'."\n";
+            $html .= '<script>(function($){$("#'.esc_js($id).' .s2member-pro-antispam-simulate-bot").on("click",function(){var $r=$(this).siblings(".s2member-pro-antispam-simulate-result");$r.text("'.esc_js(__('Testing...', 's2member')).'");$.post('.wp_json_encode(admin_url('admin-ajax.php')).',{action:"ws_plugin__s2member_pro_antispam_self_test",nonce:'.wp_json_encode($nonce).',surface:'.wp_json_encode((string) $surface).',captcha:'.wp_json_encode((string) $captcha).'}).done(function(r){$r.text(r&&r.data&&r.data.message?r.data.message:"'.esc_js(__('Self-test completed.', 's2member')).'");}).fail(function(xhr){var r=xhr.responseJSON;$r.text(r&&r.data&&r.data.message?r.data.message:"'.esc_js(__('Self-test failed.', 's2member')).'");});});})(jQuery);</script>'."\n";
+            $html .= '</div>'."\n";
+            return $html;
         }
 
         /**
@@ -482,9 +534,74 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             $captcha = isset($submission['attr']['captcha']) ? $submission['attr']['captcha'] : '';
             $result  = self::validate_submission($form, $submission, $captcha);
             if (is_wp_error($result)) {
+                if (class_exists('c_ws_plugin__s2member_pro_antispam_stats')) {
+                    c_ws_plugin__s2member_pro_antispam_stats::record(c_ws_plugin__s2member_pro_antispam_stats::event_for_error($result));
+                }
                 return array('response' => $result->get_error_message(), 'error' => true);
             }
+            //261003.0533 Count only original verified submissions; delayed trusted continuations reuse an earlier pass and must not inflate activity statistics.
+            if (!self::$request_trusted && !empty(self::$request_pass) && class_exists('c_ws_plugin__s2member_pro_antispam_stats')) {
+                c_ws_plugin__s2member_pro_antispam_stats::record('allowed');
+            }
             return $response;
+        }
+
+        /**
+         * Runs a safe dry-run bot submission through local/modern verification gates only.
+         *
+         * @since 261003.0533
+         *
+         * @param string $surface Form surface identifier.
+         * @param mixed  $captcha Existing Pro-Form `captcha` value.
+         *
+         * @return array|\WP_Error Block diagnostic on success, or an explanatory error when no safe dry-run path is active.
+         */
+        public static function simulate_bot($surface = 'registration', $captcha = 'clean')
+        {
+            if (!self::captcha_enabled($captcha)) {
+                return new WP_Error('s2member_antispam_self_test_disabled', __('Anti-spam is disabled on this form by its captcha attribute.', 's2member'));
+            }
+            $submission = array('attr' => array('captcha' => $captcha), 'antispam' => array());
+            $now = time();
+            if (self::honeypot_enabled()) {
+                $submission['antispam']['website'] = 's2member-dry-run-bot';
+                if (self::form_age_enabled()) {
+                    $submission['antispam']['form_age'] = self::form_age_token($now - 2);
+                }
+            } elseif (self::form_age_enabled()) {
+                $submission['antispam']['form_age'] = self::form_age_token($now);
+            } elseif (!self::verification_adapter_class()) {
+                return new WP_Error('s2member_antispam_self_test_no_safe_gate', __('No built-in or modern bot-verification gate is active for a safe dry-run simulation.', 's2member'));
+            }
+
+            self::reset_request_state();
+            $result = self::validate_submission((string) $surface, $submission, $captcha, $now);
+            if (!is_wp_error($result)) {
+                return new WP_Error('s2member_antispam_self_test_unexpected_pass', __('The simulated bot was not blocked. Review the anti-spam configuration.', 's2member'));
+            }
+            return array('blocked' => true, 'error_code' => $result->get_error_code(), 'message' => sprintf(__('Simulated bot blocked (%s). No form was submitted.', 's2member'), $result->get_error_code()));
+        }
+
+        /**
+         * Runs the administrator-only dry-run bot simulation without touching a Pro-Form or payment gateway.
+         *
+         * @since 261003.0533
+         *
+         * @return void Terminates through wp_send_json_*().
+         */
+        public static function ajax_self_test()
+        {
+            if (!current_user_can('manage_options')) {
+                wp_send_json_error(array('message' => __('You do not have permission to run this self-test.', 's2member')), 403);
+            }
+            check_ajax_referer('ws-plugin--s2member-pro-antispam-self-test', 'nonce');
+            $surface = !empty($_POST['surface']) ? sanitize_key((string) wp_unslash($_POST['surface'])) : 'registration';
+            $captcha = isset($_POST['captcha']) ? sanitize_text_field((string) wp_unslash($_POST['captcha'])) : 'clean';
+            $result = self::simulate_bot($surface, $captcha);
+            if (is_wp_error($result)) {
+                wp_send_json_error(array('message' => $result->get_error_message(), 'code' => $result->get_error_code()), 400);
+            }
+            wp_send_json_success($result);
         }
 
         /**

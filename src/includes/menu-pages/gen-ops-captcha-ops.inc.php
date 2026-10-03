@@ -50,6 +50,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			$spam_provider = c_ws_plugin__s2member_pro_antispam::spam_provider();
 			$honeypot_enabled = c_ws_plugin__s2member_pro_antispam::honeypot_enabled();
 			$form_age_enabled = c_ws_plugin__s2member_pro_antispam::form_age_enabled();
+			$admin_diagnostics_enabled = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_admin_diagnostics']);
+			$stats = class_exists('c_ws_plugin__s2member_pro_antispam_stats') ? c_ws_plugin__s2member_pro_antispam_stats::summary(30) : array('daily' => array(), 'totals' => array('allowed' => 0, 'blocked' => 0, 'blocked_local' => 0, 'blocked_verification' => 0, 'blocked_spam' => 0, 'blocked_service' => 0));
 
 			$effective_verification_provider = $verification_provider ? $verification_provider : 'recaptcha_v2';
 			$verification_health = array('status' => 'disabled', 'label' => 'Disabled');
@@ -103,6 +105,39 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<tr><th scope="row">Bot verification:</th><td id="ws-plugin--s2member-pro-antispam-verification-health">'.esc_html($verification_health['label']).'</td></tr>'."\n";
 			echo '<tr><th scope="row">Signup spam detection:</th><td id="ws-plugin--s2member-pro-antispam-spam-health">'.esc_html($spam_health['label']).'</td></tr>'."\n";
 			echo '</tbody></table>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+			echo '<h3>Recent Activity (30 days)</h3>'."\n";
+			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";
+			echo '<tr><th scope="row">Verified/allowed:</th><td>'.esc_html(number_format_i18n((int)$stats['totals']['allowed'])).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Blocked:</th><td>'.esc_html(number_format_i18n((int)$stats['totals']['blocked'])).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Blocked by layer:</th><td>'.esc_html(sprintf('Built-in %s · Bot verification %s · Signup spam %s · Service/configuration %s', number_format_i18n((int)$stats['totals']['blocked_local']), number_format_i18n((int)$stats['totals']['blocked_verification']), number_format_i18n((int)$stats['totals']['blocked_spam']), number_format_i18n((int)$stats['totals']['blocked_service']))).'</td></tr>'."\n";
+			echo '</tbody></table>'."\n";
+			$_max_daily = 1;
+			foreach((array)$stats['daily'] as $_day_stats)
+				$_max_daily = max($_max_daily, (int)$_day_stats['allowed'] + (int)$_day_stats['blocked_local'] + (int)$_day_stats['blocked_verification'] + (int)$_day_stats['blocked_spam'] + (int)$_day_stats['blocked_service']);
+			//261003.0533 Render a dependency-free aggregate chart; title text keeps exact daily values available without retaining or exposing visitor-level records.
+			echo '<div class="ws-plugin--s2member-pro-antispam-stats-chart" style="display:flex;align-items:flex-end;gap:2px;height:90px;margin:12px 0 6px;border-bottom:1px solid #c3c4c7;">'."\n";
+			foreach((array)$stats['daily'] as $_day => $_day_stats)
+				{
+					$_allowed = (int)$_day_stats['allowed'];
+					$_blocked = (int)$_day_stats['blocked_local'] + (int)$_day_stats['blocked_verification'] + (int)$_day_stats['blocked_spam'] + (int)$_day_stats['blocked_service'];
+					$_allowed_height = (int)round(78 * ($_allowed / $_max_daily));
+					$_blocked_height = (int)round(78 * ($_blocked / $_max_daily));
+					echo '<span title="'.esc_attr($_day.' — Allowed: '.$_allowed.', Blocked: '.$_blocked).'" style="display:flex;flex:1;min-width:2px;height:78px;align-items:flex-end;gap:1px;"><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_allowed_height).'px;background:#2271b1;"></i><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_blocked_height).'px;background:#d63638;"></i></span>'."\n";
+				}
+			echo '</div><p><small><span style="color:#2271b1">■</span> Allowed &nbsp; <span style="color:#d63638">■</span> Blocked. Aggregate counts only; s2Member does not store IP addresses, emails, usernames, tokens, or submitted form data in these statistics.</small></p>'."\n";
+
+			echo '<div class="ws-menu-page-hr"></div>'."\n";
+			echo '<h3>Diagnostics</h3>'."\n";
+			echo '<table class="form-table"><tbody>'."\n";
+			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-admin-diagnostics">Show Admin Diagnostics on Pro-Forms</label></th></tr>'."\n";
+			echo '<tr><td><select name="ws_plugin__s2member_pro_antispam_admin_diagnostics" id="ws-plugin--s2member-pro-antispam-admin-diagnostics">'."\n";
+			echo '<option value="0"'.(!$admin_diagnostics_enabled ? ' selected="selected"' : '').'>Disabled</option>'."\n";
+			echo '<option value="1"'.($admin_diagnostics_enabled ? ' selected="selected"' : '').'>Enabled</option>'."\n";
+			echo '</select><br /><em>When enabled, administrators see a credential-free status panel beneath each Pro-Form plus a dry-run Simulate Bot button. Visitors never see the panel.</em></td></tr>'."\n";
+			echo '</tbody></table>'."\n";
+			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-self-test">Simulate Bot</button> <span id="ws-plugin--s2member-pro-antispam-self-test-result"></span><br /><em>This dry run does not submit a form, create an account, or contact a payment gateway.</em></p>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 			echo '<h3>Built-in Protection</h3>'."\n";
@@ -175,23 +210,25 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-test-spam">Test Spam Detection</button> <span id="ws-plugin--s2member-pro-antispam-test-spam-result"></span></p>'."\n";
 
 			$_ajax_nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-test');
+			$_self_test_nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-self-test');
 			$_saved_turnstile_site_key = (string)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_turnstile_site_key'];
 			$_saved_recaptcha_v3_site_key = (string)$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_recaptcha_v3_site_key'];
 
 			//261003.0407 Keep diagnostics admin-only and test saved credentials in place; provider test metadata is persisted only after server-side verification succeeds.
 			echo '<script>(function($){'."\n";
-			echo 'var nonce='.wp_json_encode($_ajax_nonce).',turnstileSiteKey='.wp_json_encode($_saved_turnstile_site_key).',recaptchaV3SiteKey='.wp_json_encode($_saved_recaptcha_v3_site_key).';'."\n";
+			echo 'var nonce='.wp_json_encode($_ajax_nonce).',selfTestNonce='.wp_json_encode($_self_test_nonce).',turnstileSiteKey='.wp_json_encode($_saved_turnstile_site_key).',recaptchaV3SiteKey='.wp_json_encode($_saved_recaptcha_v3_site_key).';'."\n";
 			echo 'function sync(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val();$(".ws-plugin--s2member-pro-antispam-provider-settings").hide();if(p==="turnstile")$("#ws-plugin--s2member-pro-antispam-turnstile-settings").show();else if(p==="recaptcha_v3")$("#ws-plugin--s2member-pro-antispam-recaptcha-v3-settings").show();else if(p==="recaptcha_v2"||p==="")$("#ws-plugin--s2member-pro-antispam-recaptcha-v2-settings").show();var s=$("#ws-plugin--s2member-pro-antispam-spam-provider").val();$("#ws-plugin--s2member-pro-antispam-akismet-key-row,#ws-plugin--s2member-pro-antispam-akismet-key-value-row").toggle(s==="akismet");}'."\n";
 			echo 'function result($el,message,ok){$el.text(message).css("font-weight","bold").css("color",ok?"#2271b1":"#b32d2e");}'."\n";
 			echo 'function postTest(provider,token,$out){$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_test_configuration",nonce:nonce,provider:provider,token:token||""}).done(function(r){if(r&&r.success){result($out,r.data.message+" ("+r.data.label+")",true);if(provider==="akismet")$("#ws-plugin--s2member-pro-antispam-spam-health").text(r.data.label);else $("#ws-plugin--s2member-pro-antispam-verification-health").text(r.data.label);}else result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);});}'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-verification-provider,#ws-plugin--s2member-pro-antispam-spam-provider").on("change",sync);sync();'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-test-verification").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-verification-result");if(p==="")p="recaptcha_v2";if(p==="none"){result($out,"No external bot-verification provider is selected.",false);return;}if(p==="turnstile"){if(!turnstileSiteKey||!window.turnstile){result($out,"Save the Turnstile keys first, then reload this page to test them.",false);return;}var $w=$("#ws-plugin--s2member-pro-antispam-turnstile-test-widget").empty();window.turnstile.render($w[0],{sitekey:turnstileSiteKey,action:"s2member_pro_form",callback:function(t){postTest("turnstile",t,$out);},"error-callback":function(){result($out,"Turnstile could not complete the browser test.",false);}});return;}if(p==="recaptcha_v3"){if(!recaptchaV3SiteKey||!window.grecaptcha){result($out,"Save the reCAPTCHA v3 keys first, then reload this page to test them.",false);return;}grecaptcha.ready(function(){grecaptcha.execute(recaptchaV3SiteKey,{action:"s2member_config_test"}).then(function(t){postTest("recaptcha_v3",t,$out);},function(){result($out,"reCAPTCHA v3 could not complete the browser test.",false);});});return;}postTest(p,"",$out);});'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-test-spam").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-spam-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-spam-result");if(!p){result($out,"No signup-spam service is selected.",false);return;}postTest(p,"",$out);});'."\n";
+			echo '$("#ws-plugin--s2member-pro-antispam-self-test").on("click",function(){var $out=$("#ws-plugin--s2member-pro-antispam-self-test-result");$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_self_test",nonce:selfTestNonce,surface:"registration",captcha:"clean"}).done(function(r){result($out,r&&r.data&&r.data.message?r.data.message:"Self-test completed.",true);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Self-test failed.",false);});});'."\n";
 			echo '})(jQuery);</script>'."\n";
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 
-			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key);
+			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_self_test_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key, $_max_daily, $_day_stats, $_day, $_allowed, $_blocked, $_allowed_height, $_blocked_height);
 		}
 	}
 }

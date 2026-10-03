@@ -152,6 +152,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_antispam_recaptcha_v3_site_key' => '', 'pro_antispam_recaptcha_v3_secret_key' => '', 'pro_antispam_recaptcha_v3_tested_fingerprint' => '', 'pro_antispam_recaptcha_v3_minimum_score' => '0.5',
 			//261003.0347 Spam intelligence is separate from bot verification and remains disabled on upgrade; an explicit s2Member Akismet key is optional because the site's existing Akismet key can be reused.
 			'pro_antispam_spam_provider' => '', 'pro_antispam_akismet_api_key' => '',
+			//261003.0533 Frontend diagnostics are administrator-only and opt-in; aggregate counters are stored separately from the main options array.
+			'pro_antispam_admin_diagnostics' => '0',
 
 			'pro_latest_version'                      => array(), //260902.0447 Latest Pro release check.
 			'pro_last_stats_log'                      => '0', // Stats pinger.

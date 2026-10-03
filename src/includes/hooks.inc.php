@@ -101,6 +101,8 @@ add_filter('ws_plugin__s2member_recaptcha_keys', 'c_ws_plugin__s2member_pro_util
 
 //261003.0407 Keep provider configuration testing in one authenticated admin endpoint; successful tests activate modern providers without adding gateway-specific admin plumbing.
 add_action('wp_ajax_ws_plugin__s2member_pro_antispam_test_configuration', 'c_ws_plugin__s2member_pro_antispam::ajax_test_configuration');
+//261003.0533 Keep the bot simulation admin-only and out-of-band so diagnostics can prove blocking behavior without submitting a live Pro-Form or touching a gateway.
+add_action('wp_ajax_ws_plugin__s2member_pro_antispam_self_test', 'c_ws_plugin__s2member_pro_antispam::ajax_self_test');
 
 //261003.0229 Attach the new anti-spam layer at every existing Pro-Form CAPTCHA render point; the shortcode's established `captcha` attribute remains the per-form switch.
 foreach(array('stripe', 'paypal', 'authnet') as $ws_plugin__s2member_pro_antispam_gateway)
