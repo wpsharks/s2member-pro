@@ -80,7 +80,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 						= c_ws_plugin__s2member_pro_stripe_responses::stripe_form_submission_validation_errors('registration', $post_vars))
 					) // If this fails the global response is set to the error(s) returned during form field validation.
 					{
-						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = $post_vars['password1'];
+						//261003.1904 Free Registration legitimately omits password fields when custom registration passwords are disabled; normalize the optional value before registration hooks/user creation to avoid PHP 8+ undefined-key diagnostics.
+						$password1 = isset($post_vars['password1']) ? (string) $post_vars['password1'] : '';
+						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_user_pass1'] = $password1;
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_first_name'] = $post_vars['first_name'];
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_last_name']  = $post_vars['last_name'];
 						$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_opt_in']     = @$post_vars['custom_fields']['opt_in'];
@@ -104,8 +106,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_registration_in'))
 
 						$create_user['user_email'] = $post_vars['email']; // Copy this into a separate array for `wp_create_user()`.
 						$create_user['user_login'] = $post_vars['username']; // Copy this into a separate array for `wp_create_user()`.
-						$create_user['user_pass']  = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
-						$has_custom_password       = $post_vars['password1'] && $post_vars['password1'] === $create_user['user_pass'];
+						$create_user['user_pass']  = c_ws_plugin__s2member_registrations::maybe_custom_pass($password1);
+						$has_custom_password       = $password1 && $password1 === $create_user['user_pass'];
 
 						if(((is_multisite() && ($new__user_id = c_ws_plugin__s2member_registrations::ms_create_existing_user($create_user['user_login'], $create_user['user_email'], $create_user['user_pass'])))
 						    || ($new__user_id = wp_create_user($create_user['user_login'], $create_user['user_pass'], $create_user['user_email'])))
