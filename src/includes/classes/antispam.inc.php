@@ -51,22 +51,38 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         protected static $request_trusted_source = '';
 
         /**
-         * Determines whether account-creation protection applies to a form surface.
+         * Determines whether the existing Pro-Form `captcha` attribute enables anti-spam for this form.
          *
-         * @since 261002.0750
+         * @since 261003.0229
          *
-         * @param string $surface      Form surface identifier.
-         * @param bool   $is_logged_in Whether the submitter is already logged in.
+         * @param mixed $captcha Existing Pro-Form `captcha` attribute value.
          *
-         * @return bool True only for anonymous account-creation surfaces.
+         * @return bool True for the same truthy values historically used by the legacy CAPTCHA implementation.
          */
-        public static function protection_applies($surface = '', $is_logged_in = false)
+        public static function captcha_enabled($captcha = '')
         {
-            //261002.0750 Keep anti-spam scoped to anonymous account creation; modifications and Specific Post/Page checkout must remain unaffected.
-            if ($is_logged_in) {
+            //261003.0229 Preserve the established shortcode contract exactly: `captcha="0"`/empty disables protection; any existing truthy theme/value enables it.
+            return (bool) $captcha;
+        }
+
+        /**
+         * Determines whether the legacy Google reCAPTCHA renderer/validator should handle an enabled `captcha` attribute.
+         *
+         * @since 261003.0229
+         *
+         * @param mixed $captcha Existing Pro-Form `captcha` attribute value.
+         *
+         * @return bool True when legacy reCAPTCHA remains the selected verification implementation.
+         */
+        public static function legacy_captcha_enabled($captcha = '')
+        {
+            if (!self::captcha_enabled($captcha)) {
                 return false;
             }
-            return in_array((string) $surface, array('registration', 'checkout'), true);
+            $provider = self::verification_provider();
+
+            //261003.0229 An empty provider preserves every existing reCAPTCHA shortcode unchanged; selecting a modern provider replaces only the implementation behind the same `captcha` switch.
+            return !$provider || $provider === 'recaptcha_v2';
         }
 
         /**
@@ -249,14 +265,15 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
          *
          * @since 261003.0120
          *
-         * @param array $state Gateway Checkout state.
+         * @param array  $state   Gateway Checkout state.
+         * @param string $surface Expected Pro-Form surface for the persisted pass.
          *
          * @return bool True only for a valid trusted continuation.
          */
-        public static function trust_gateway_checkout_state($state = array())
+        public static function trust_gateway_checkout_state($state = array(), $surface = 'checkout')
         {
             $record = !empty($state['context']['antispam_pass']) && is_array($state['context']['antispam_pass']) ? $state['context']['antispam_pass'] : array();
-            if (empty($state['context']['pending_user_id']) || !self::valid_pass_record($record, 'checkout')) {
+            if (!self::valid_pass_record($record, $surface)) {
                 return false;
             }
             self::$request_pass = $record;
@@ -270,17 +287,16 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
          *
          * @since 261002.1449
          *
-         * @param string    $surface      Form surface identifier.
-         * @param string    $input_name   Root form input name, e.g. `s2member_pro_stripe_registration`.
-         * @param bool|null $is_logged_in Whether the submitter is already logged in; defaults to WordPress state.
+         * @param string $surface    Pro-Form surface identifier.
+         * @param string $input_name Root form input name, e.g. `s2member_pro_stripe_registration`.
+         * @param mixed  $captcha    Existing Pro-Form `captcha` attribute value.
          *
-         * @return string HTML fields, or an empty string when local checks do not apply.
+         * @return string HTML fields, or an empty string when anti-spam is disabled/not configured.
          */
-        public static function render_fields($surface = '', $input_name = '', $is_logged_in = null)
+        public static function render_fields($surface = '', $input_name = '', $captcha = '')
         {
-            $is_logged_in = isset($is_logged_in) ? (bool) $is_logged_in : is_user_logged_in();
             $verification_adapter = self::verification_adapter_class();
-            if (!self::protection_applies($surface, $is_logged_in) || (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) || !$input_name) {
+            if (!self::captcha_enabled($captcha) || (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) || !$input_name) {
                 return '';
             }
             $html = '';
@@ -294,7 +310,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 $html .= '<input type="hidden" name="'.esc_attr($input_name.'[antispam][form_age]').'" value="'.esc_attr(self::form_age_token()).'" />'."\n";
             }
             if ($verification_adapter) {
-                $html .= (string) call_user_func(array($verification_adapter, 'render'), $surface, $input_name);
+                $html .= (string) call_user_func(array($verification_adapter, 'render'), $surface, $input_name, $captcha);
             }
             return $html;
         }
@@ -311,11 +327,15 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         public static function render_form_hook($vars = array())
         {
             $hook = current_filter();
-            if (!preg_match('/^ws_plugin__s2member_pro_during_sc_(stripe|paypal|authnet)(?:_(registration))?_form$/', $hook, $matches)) {
+            if (!preg_match('/^ws_plugin__s2member_pro_during_sc_(stripe|paypal|authnet)(?:_(cancellation|registration|update|sp|modification))?_form$/', $hook, $matches)) {
                 return;
             }
-            $surface = !empty($matches[2]) ? 'registration' : 'checkout';
-            $fields  = self::render_fields($surface, 's2member_pro_'.$matches[1].'_'.$surface);
+            $gateway = (string) $matches[1];
+            $type    = !empty($matches[2]) ? (string) $matches[2] : '';
+            $captcha = isset($vars['attr']['captcha']) ? $vars['attr']['captcha'] : '';
+            $surface = $type === 'sp' ? 'sp-checkout' : ($type && $type !== 'modification' ? $type : 'checkout');
+            $suffix  = $type === 'sp' ? 'sp_checkout' : ($type && $type !== 'modification' ? $type : 'checkout');
+            $fields  = self::render_fields($surface, 's2member_pro_'.$gateway.'_'.$suffix, $captcha);
             if (!$fields || empty($vars['__refs']['code']) || !is_string($vars['__refs']['code'])) {
                 return;
             }
@@ -323,7 +343,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             if ($closing_form_pos === false) {
                 return;
             }
-            //261002.1451 Inject immediately before the form closes so standard and approved custom Pro-Form templates receive the same protection without gateway-specific markup edits.
+            //261003.0229 Use the same existing Pro-Form render points and `captcha` switch for every legacy CAPTCHA-capable surface; only the anti-spam implementation changes.
             $vars['__refs']['code'] = substr_replace($vars['__refs']['code'], $fields, $closing_form_pos, 0);
         }
 
@@ -344,7 +364,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             if ($response !== null) {
                 return $response;
             }
-            $result = self::validate_submission($form, $submission);
+            $captcha = isset($submission['attr']['captcha']) ? $submission['attr']['captcha'] : '';
+            $result  = self::validate_submission($form, $submission, $captcha);
             if (is_wp_error($result)) {
                 return array('response' => $result->get_error_message(), 'error' => true);
             }
@@ -356,17 +377,16 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
          *
          * @since 261002.1449
          *
-         * @param string    $surface      Form surface identifier.
-         * @param array     $submission   Normalized Pro-Form submission array.
-         * @param bool|null $is_logged_in Whether the submitter is already logged in; defaults to WordPress state.
-         * @param int|null  $now          Unix timestamp used by deterministic tests; defaults to the current time.
+         * @param string   $surface    Pro-Form surface identifier.
+         * @param array    $submission Normalized Pro-Form submission array.
+         * @param mixed    $captcha    Existing Pro-Form `captcha` attribute value.
+         * @param int|null $now        Unix timestamp used by deterministic tests; defaults to the current time.
          *
          * @return true|\WP_Error True on success/not-applicable, otherwise a stable diagnostic error.
          */
-        public static function validate_submission($surface = '', $submission = array(), $is_logged_in = null, $now = null)
+        public static function validate_submission($surface = '', $submission = array(), $captcha = '', $now = null)
         {
-            $is_logged_in = isset($is_logged_in) ? (bool) $is_logged_in : is_user_logged_in();
-            if (!self::protection_applies($surface, $is_logged_in)) {
+            if (!self::captcha_enabled($captcha)) {
                 return true;
             }
             //261003.0120 Delayed gateway continuations reuse server-side trust; never submit an expired/single-use provider token a second time.

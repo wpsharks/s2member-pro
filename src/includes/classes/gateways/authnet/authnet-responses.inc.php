@@ -517,7 +517,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										if(!is_user_logged_in())
 											$response = array("response" => sprintf(_x('You must <a href="%s" rel="nofollow">log in</a> to cancel your account.', "s2member-front", "s2member"), esc_attr(wp_login_url($_SERVER["REQUEST_URI"]))), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
-										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
+										else if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($s["attr"]["captcha"]) && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"]))) //261003.0229 Validate legacy reCAPTCHA only when it remains selected behind the existing `captcha` switch.
 											$response = array("response" => _x('Missing or invalid Security Verification. Please try again.', "s2member-front", "s2member"), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
 										else if(is_object($user = wp_get_current_user()) && $user->ID && /* NOT for Administrators. */ $user->has_cap("administrator"))
@@ -567,7 +567,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (empty($s["zip"]) || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
-										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
+										else if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($s["attr"]["captcha"]) && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"]))) //261003.0229 Validate legacy reCAPTCHA only when it remains selected behind the existing `captcha` switch.
 											$response = array("response" => _x('Missing or invalid Security Verification. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
 								else if /* Validation routines for free Registration forms. */($form === "registration")
@@ -614,7 +614,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(($custom_field_validation_errors = c_ws_plugin__s2member_custom_reg_fields::validation_errors(isset($s["custom_fields"]) ? $s["custom_fields"] : array(), c_ws_plugin__s2member_custom_reg_fields::custom_fields_configured_at_level($s["attr"]["level"], "registration", TRUE))))
 											$response = array("response" => array_shift($custom_field_validation_errors), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
-										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
+										else if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($s["attr"]["captcha"]) && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"]))) //261003.0229 Validate legacy reCAPTCHA only when it remains selected behind the existing `captcha` switch.
 											$response = array("response" => _x('Missing or invalid Security Verification. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
 								else if /* Validation routines for Specific Post/Page checkout forms. */($form === "sp-checkout")
@@ -670,7 +670,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (empty($s["zip"]) || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
-										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
+										else if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($s["attr"]["captcha"]) && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"]))) //261003.0229 Validate legacy reCAPTCHA only when it remains selected behind the existing `captcha` switch.
 											$response = array("response" => _x('Missing or invalid Security Verification. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
 								else if /* Validation routines for Member Level checkout forms. This is the default functionality. */($form === "checkout")
@@ -765,7 +765,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(in_array($s["card_type"], array("Visa", "MasterCard", "Discover", "Amex", "Maestro", "Solo")) && (empty($s["zip"]) || !is_string($s["zip"])))
 											$response = array("response" => _x('Missing Postal/Zip Code. Please try again.', "s2member-front", "s2member"), "error" => true);
 										// -----------------------------------------------------------------------------------------------------------------
-										else if($s["attr"]["captcha"] && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"])))
+										else if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($s["attr"]["captcha"]) && (empty($s["recaptcha_challenge_field"]) || empty($s["recaptcha_response_field"]) || !c_ws_plugin__s2member_utils_captchas::recaptcha_code_validates($s["recaptcha_challenge_field"], $s["recaptcha_response_field"]))) //261003.0229 Validate legacy reCAPTCHA only when it remains selected behind the existing `captcha` switch.
 											$response = array("response" => _x('Missing or invalid Security Verification. Please try again.', "s2member-front", "s2member"), "error" => true);
 									}
 								else // Else we are dealing with an unknown form submission type.

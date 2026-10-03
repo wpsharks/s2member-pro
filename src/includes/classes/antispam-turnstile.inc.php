@@ -79,18 +79,20 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_turnstile')) {
          *
          * @param string $surface    Form surface identifier.
          * @param string $input_name Root Pro-Form input name.
+         * @param mixed  $captcha    Existing Pro-Form `captcha` attribute value; light/dark are appearance hints.
          *
          * @return string Widget HTML, or an empty string until configuration has been tested successfully.
          */
-        public static function render($surface = '', $input_name = '')
+        public static function render($surface = '', $input_name = '', $captcha = '')
         {
             if (!self::available() || !self::configured() || !$input_name) {
                 return '';
             }
-            //261002.2358 Use Cloudflare's cacheable hosted client and a namespaced response field so multiple Pro-Forms can coexist without sharing a token input.
+            //261003.0229 Keep the script cacheable and let the existing `captcha` theme act only as an appearance hint for providers that support one.
             wp_enqueue_script('ws-plugin--s2member-pro-antispam-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', array(), null, true);
+            $theme = in_array((string) $captcha, array('light', 'dark'), true) ? ' data-theme="'.esc_attr((string) $captcha).'"' : '';
 
-            return '<div class="cf-turnstile s2member-pro-antispam-turnstile" data-sitekey="'.esc_attr(self::site_key()).'" data-action="s2member_signup" data-response-field-name="'.esc_attr($input_name.'[antispam][turnstile]').'"></div>'."\n";
+            return '<div class="cf-turnstile s2member-pro-antispam-turnstile" data-sitekey="'.esc_attr(self::site_key()).'" data-action="s2member_pro_form"'.$theme.' data-response-field-name="'.esc_attr($input_name.'[antispam][turnstile]').'"></div>'."\n";
         }
 
         /**
@@ -187,7 +189,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_turnstile')) {
             if (empty($result['success'])) {
                 return new WP_Error('s2member_antispam_turnstile_failed', __('Security verification failed. Please try again.', 's2member'));
             }
-            if (!isset($result['action']) || (string)$result['action'] !== 's2member_signup') {
+            if (!isset($result['action']) || (string)$result['action'] !== 's2member_pro_form') {
                 return new WP_Error('s2member_antispam_turnstile_action', __('Security verification failed. Please try again.', 's2member'));
             }
             $expected_host = self::expected_hostname();

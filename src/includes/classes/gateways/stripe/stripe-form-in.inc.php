@@ -223,7 +223,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$response = c_ws_plugin__s2member_pro_stripe_responses::stripe_cancellation_response($attr);
 				$_p       = ($response['response'] && !$response['error']) ? array() : $_p;
 
-				if($attr['captcha']) // Is a captcha being used on this form?
+				if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr['captcha'])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 				{
 					$captcha = '<div id="s2member-pro-stripe-cancellation-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-cancellation-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-cancellation-form-captcha-section">'."\n";
 
@@ -304,7 +304,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 							}
 						$custom_fields .= '</div>'."\n";
 					}
-				if($attr['captcha']) // Is a captcha being used on this form?
+				if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr['captcha'])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 				{
 					$captcha = '<div id="s2member-pro-stripe-registration-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-registration-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-registration-form-captcha-section">'."\n";
 
@@ -378,7 +378,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$response = c_ws_plugin__s2member_pro_stripe_responses::stripe_update_response($attr);
 				$_p       = ($response['response'] && !$response['error']) ? array() : $_p;
 
-				if($attr['captcha']) // Is a captcha being used on this form?
+				if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr['captcha'])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 				{
 					$captcha = '<div id="s2member-pro-stripe-update-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-update-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-update-form-captcha-section">'."\n";
 
@@ -478,7 +478,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 					if($country_l && $country_v) // Here we also check on the default pre-selected country; as determined above; based on currency.
 						$country_options .= '<option value="'.esc_attr(strtoupper($country_v)).'"'.((@$_p['s2member_pro_stripe_sp_checkout']['country'] === $country_v || $default_country_v === $country_v) ? ' selected="selected"' : '').'>'.esc_html(ucwords(strtolower($country_l))).'</option>';
 				}
-				if($attr['captcha']) // Is a captcha being used on this form?
+				if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr['captcha'])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 				{
 					$captcha = '<div id="s2member-pro-stripe-sp-checkout-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-sp-checkout-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-sp-checkout-form-captcha-section">'."\n";
 
@@ -661,7 +661,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 						$custom_fields .= '</div>'."\n";
 					}
 
-				if($attr['captcha']) // Is a captcha being used on this form?
+				if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr['captcha'])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 				{
 					$captcha = '<div id="s2member-pro-stripe-checkout-form-captcha-section" class="s2member-pro-stripe-form-section s2member-pro-stripe-checkout-form-section s2member-pro-stripe-form-captcha-section s2member-pro-stripe-checkout-form-captcha-section">'."\n";
 

@@ -188,7 +188,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-authnet-cancellation-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-cancellation-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-cancellation-form-captcha-section">' . "\n";
 
@@ -299,7 +299,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-authnet-registration-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-registration-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-registration-form-captcha-section">' . "\n";
 
@@ -452,7 +452,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-authnet-update-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-update-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-update-form-captcha-section">' . "\n";
 
@@ -591,7 +591,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-authnet-sp-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-sp-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-sp-checkout-form-captcha-section">' . "\n";
 
@@ -801,7 +801,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if ($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-authnet-checkout-form-captcha-section" class="s2member-pro-authnet-form-section s2member-pro-authnet-checkout-form-section s2member-pro-authnet-form-captcha-section s2member-pro-authnet-checkout-form-captcha-section">' . "\n";
 

@@ -89,6 +89,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 						wp_redirect((string)$gateway_checkout_state['context']['redirect_url']).exit();
 					return;
 				}
+				//261003.0229 Specific Post/Page payment authentication can also span requests; reuse only the normalized pass previously bound to this signed checkout.
+				if($gateway_checkout_state)
+					c_ws_plugin__s2member_pro_antispam::trust_gateway_checkout_state($gateway_checkout_state, 'sp-checkout');
 
 				$post_vars = c_ws_plugin__s2member_utils_captchas::recaptcha_post_vars($post_vars); // Collect reCAPTCHA™ post vars.
 
@@ -128,9 +131,19 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_sp_checkout_in'))
 								if(!empty($post_vars['gateway_checkout_reset']))
 									$_POST['s2member_pro_stripe_sp_checkout']['gateway_checkout_reset'] = '1';
 
-								$gateway_checkout_lock = c_ws_plugin__s2member_gateway_checkouts::processing_lock((string)$gateway_checkout_state['id']);
-								if(!$gateway_checkout_lock)
-									$global_response = array('response' => _x('This checkout is already being processed. Please wait a moment and reload this page.', 's2member-front', 's2member'), 'error' => TRUE);
+								//261003.0229 Never migrate an old trusted pass when authoritative SP purchase terms replace the signed checkout identity.
+								if(!empty($post_vars['gateway_checkout_reset']) && c_ws_plugin__s2member_pro_antispam::request_is_trusted())
+									$global_response = array('response' => _x('This checkout changed. Please reload the checkout page and submit it again.', 's2member-front', 's2member'), 'error' => TRUE);
+								else
+								{
+									//261003.0229 Persist only the normalized pass so Stripe 3DS can resume SP checkout without replaying a single-use CAPTCHA/provider token.
+									if(($antispam_pass = c_ws_plugin__s2member_pro_antispam::current_pass_record()))
+										c_ws_plugin__s2member_pro_stripe_utilities::update_gateway_checkout((string)$gateway_checkout_state['id'], array(), '', array('antispam_pass' => $antispam_pass));
+
+									$gateway_checkout_lock = c_ws_plugin__s2member_gateway_checkouts::processing_lock((string)$gateway_checkout_state['id']);
+									if(!$gateway_checkout_lock)
+										$global_response = array('response' => _x('This checkout is already being processed. Please wait a moment and reload this page.', 's2member-front', 's2member'), 'error' => TRUE);
+								}
 							}
 						}
 

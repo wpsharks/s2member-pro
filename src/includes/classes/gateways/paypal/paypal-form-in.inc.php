@@ -194,7 +194,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if($attr["captcha"]) // Is a captcha being used on this form?
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-paypal-cancellation-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-cancellation-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-cancellation-form-captcha-section">'."\n";
 
@@ -305,7 +305,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if /* Is a captcha being used on this form? */($attr["captcha"])
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-paypal-registration-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-registration-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-registration-form-captcha-section">'."\n";
 
@@ -459,7 +459,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if /* Is a captcha being used on this form? */($attr["captcha"])
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-paypal-update-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-update-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-update-form-captcha-section">'."\n";
 
@@ -598,7 +598,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if /* Is a captcha being used on this form? */($attr["captcha"])
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-paypal-sp-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-sp-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-sp-checkout-form-captcha-section">'."\n";
 
@@ -818,7 +818,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Build the reCaptcha box via JavaScript.
 								*/
-								if /* Is a captcha being used on this form? */($attr["captcha"])
+								if(c_ws_plugin__s2member_pro_antispam::legacy_captcha_enabled($attr["captcha"])) //261003.0229 Render legacy reCAPTCHA only when it remains the selected implementation behind the existing `captcha` switch.
 									{
 										$captcha = '<div id="s2member-pro-paypal-checkout-form-captcha-section" class="s2member-pro-paypal-form-section s2member-pro-paypal-checkout-form-section s2member-pro-paypal-form-captcha-section s2member-pro-paypal-checkout-form-captcha-section">'."\n";
 

@@ -99,13 +99,11 @@ add_action('ws_plugin__s2member_after_update_all_options', 'c_ws_plugin__s2membe
 add_filter('ws_plugin__s2member_recaptcha_version', 'c_ws_plugin__s2member_pro_utils_captchas::recaptcha_version', 10, 2);
 add_filter('ws_plugin__s2member_recaptcha_keys', 'c_ws_plugin__s2member_pro_utils_captchas::recaptcha_keys', 10, 2);
 
-//261002.1932 Keep Pro-Form anti-spam centralized on existing render/validation seams so new checks and adapters do not require gateway-specific integration.
-add_action('ws_plugin__s2member_pro_during_sc_stripe_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
-add_action('ws_plugin__s2member_pro_during_sc_paypal_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
-add_action('ws_plugin__s2member_pro_during_sc_authnet_registration_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
-add_action('ws_plugin__s2member_pro_during_sc_stripe_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
-add_action('ws_plugin__s2member_pro_during_sc_paypal_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
-add_action('ws_plugin__s2member_pro_during_sc_authnet_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+//261003.0229 Attach the new anti-spam layer at every existing Pro-Form CAPTCHA render point; the shortcode's established `captcha` attribute remains the per-form switch.
+foreach(array('stripe', 'paypal', 'authnet') as $ws_plugin__s2member_pro_antispam_gateway)
+    foreach(array('cancellation', 'registration', 'update', 'sp', 'modification', '') as $ws_plugin__s2member_pro_antispam_form)
+        add_action('ws_plugin__s2member_pro_during_sc_'.$ws_plugin__s2member_pro_antispam_gateway.($ws_plugin__s2member_pro_antispam_form ? '_'.$ws_plugin__s2member_pro_antispam_form : '').'_form', 'c_ws_plugin__s2member_pro_antispam::render_form_hook');
+unset($ws_plugin__s2member_pro_antispam_gateway, $ws_plugin__s2member_pro_antispam_form);
 add_filter('ws_plugin__s2member_pro_stripe_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
 add_filter('ws_plugin__s2member_pro_paypal_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
 add_filter('ws_plugin__s2member_pro_authnet_form_submission_validation_response', 'c_ws_plugin__s2member_pro_antispam::validation_response', 20, 3);
