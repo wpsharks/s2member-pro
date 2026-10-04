@@ -108,6 +108,34 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         }
 
         /**
+         * Returns the trusted elapsed age of a signed form token.
+         *
+         * @since 261004.0528
+         *
+         * @param string   $form_age_token Signed token produced when the form was rendered.
+         * @param int|null $now            Unix timestamp used for validation; defaults to the current time.
+         *
+         * @return int|\WP_Error Elapsed whole seconds, or a stable diagnostic error.
+         */
+        public static function form_age_elapsed_seconds($form_age_token = '', $now = null)
+        {
+            $parts = explode('.', (string) $form_age_token, 2);
+            if (count($parts) !== 2 || $parts[0] === '' || !ctype_digit($parts[0])) {
+                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
+            }
+            $issued_at = (int) $parts[0];
+            $expected  = hash_hmac('sha256', 's2member-antispam-form-age|'.$issued_at, wp_salt('nonce'));
+            if (!hash_equals($expected, $parts[1])) {
+                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
+            }
+            $now = isset($now) ? (int) $now : time();
+            if ($issued_at > $now) {
+                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
+            }
+            return $now - $issued_at;
+        }
+
+        /**
          * Returns whether the honeypot local check is enabled.
          *
          * @since 261002.1449
@@ -157,6 +185,47 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         {
             //261004.0315 Cancellation can legitimately be an immediate action and has no meaningful form-fill duration; do not weaken every other surface to accommodate it.
             return (string) $surface !== 'cancellation';
+        }
+
+        /**
+         * Extracts privacy-minimal timing observations from one submission.
+         *
+         * The signed form age is trusted server timing. Browser interaction timing is advisory
+         * only and never participates in validation; it is accepted only when structurally
+         * plausible relative to the signed form age.
+         *
+         * @since 261004.0528
+         *
+         * @param string   $surface    Pro-Form surface identifier.
+         * @param array    $submission Normalized Pro-Form submission.
+         * @param mixed    $captcha    Existing Pro-Form `captcha` value.
+         * @param int|null $now        Unix timestamp used for deterministic tests.
+         *
+         * @return array Nullable `form_age_seconds` and `interaction_seconds` observations.
+         */
+        public static function submission_timing($surface = '', $submission = array(), $captcha = '', $now = null)
+        {
+            $timing = array('form_age_seconds' => null, 'interaction_seconds' => null);
+            if (!self::captcha_enabled($captcha) || !self::form_age_enabled() || !self::form_age_applies($surface)) {
+                return $timing;
+            }
+            $antispam = !empty($submission['antispam']) && is_array($submission['antispam']) ? $submission['antispam'] : array();
+            $form_age_token = isset($antispam['form_age']) ? (string) $antispam['form_age'] : '';
+            $form_age = self::form_age_elapsed_seconds($form_age_token, $now);
+            if (is_wp_error($form_age)) {
+                return $timing;
+            }
+            $timing['form_age_seconds'] = (int) $form_age;
+
+            $interaction_ms = isset($antispam['interaction_ms']) && is_scalar($antispam['interaction_ms']) ? trim((string) $antispam['interaction_ms']) : '';
+            if ($interaction_ms !== '' && strlen($interaction_ms) <= 12 && ctype_digit($interaction_ms)) {
+                $interaction_seconds = ((float) $interaction_ms) / 1000;
+                //261004.0528 Client timing is never trusted for security. Discard impossible observations instead of allowing a forged value to distort administrator guidance.
+                if ($interaction_seconds <= ((float) $timing['form_age_seconds'] + 2)) {
+                    $timing['interaction_seconds'] = $interaction_seconds;
+                }
+            }
+            return $timing;
         }
 
         /**
@@ -464,6 +533,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             }
             if ($form_age_enabled) {
                 $html .= '<input type="hidden" name="'.esc_attr($input_name.'[antispam][form_age]').'" value="'.esc_attr(self::form_age_token()).'" />'."\n";
+                $html .= '<input type="hidden" class="s2member-pro-antispam-interaction-ms" name="'.esc_attr($input_name.'[antispam][interaction_ms]').'" value="" />'."\n";
+                //261004.0528 Observe first real field input/change through submit for aggregate administrator guidance only. The browser value is never used to pass or fail anti-spam.
+                $html .= '<script>(function(){var s=document.currentScript,f=s&&s.previousElementSibling,form=f&&f.form,start=0;if(!f||!form)return;function mark(e){var t=e.target;if(start||!t||t===f||String(t.type||"").toLowerCase()==="hidden")return;start=Date.now();}form.addEventListener("input",mark,true);form.addEventListener("change",mark,true);form.addEventListener("submit",function(){if(start)f.value=String(Math.max(0,Date.now()-start));},true);})();</script>'."\n";
             }
             if ($verification_adapter) {
                 $html .= (string) call_user_func(array($verification_adapter, 'render'), $surface, $input_name, $captcha);
@@ -561,16 +633,31 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 return $response;
             }
             $captcha = isset($submission['attr']['captcha']) ? $submission['attr']['captcha'] : '';
-            $result  = self::validate_submission($form, $submission, $captcha);
+            $now = time();
+            $result = self::validate_submission($form, $submission, $captcha, $now);
+            $timing = self::submission_timing($form, $submission, $captcha, $now);
             if (is_wp_error($result)) {
                 if (class_exists('c_ws_plugin__s2member_pro_antispam_stats')) {
-                    c_ws_plugin__s2member_pro_antispam_stats::record(c_ws_plugin__s2member_pro_antispam_stats::event_for_error($result));
+                    $stats_event = c_ws_plugin__s2member_pro_antispam_stats::event_for_error($result);
+                    c_ws_plugin__s2member_pro_antispam_stats::record($stats_event);
+                    if ($stats_event !== 'blocked_service' && $timing['form_age_seconds'] !== null) {
+                        c_ws_plugin__s2member_pro_antispam_stats::record_timing('blocked_form_age', $timing['form_age_seconds']);
+                    }
+                    if ($result->get_error_code() === 's2member_antispam_form_too_fast' && $timing['form_age_seconds'] !== null) {
+                        c_ws_plugin__s2member_pro_antispam_stats::record_timing('blocked_speedtrap_form_age', $timing['form_age_seconds']);
+                    }
                 }
                 return array('response' => $result->get_error_message(), 'error' => true);
             }
             //261003.0533 Count only original verified submissions; delayed trusted continuations reuse an earlier pass and must not inflate activity statistics.
             if (!self::$request_trusted && !empty(self::$request_pass) && class_exists('c_ws_plugin__s2member_pro_antispam_stats')) {
                 c_ws_plugin__s2member_pro_antispam_stats::record('allowed');
+                if ($timing['form_age_seconds'] !== null) {
+                    c_ws_plugin__s2member_pro_antispam_stats::record_timing('allowed_form_age', $timing['form_age_seconds']);
+                }
+                if ($timing['interaction_seconds'] !== null) {
+                    c_ws_plugin__s2member_pro_antispam_stats::record_timing('allowed_interaction', $timing['interaction_seconds']);
+                }
             }
             return $response;
         }
@@ -744,21 +831,12 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             if ((string) $honeypot !== '') {
                 return new WP_Error('s2member_antispam_honeypot', __('Security verification failed. Please try again.', 's2member'));
             }
-            $parts = explode('.', (string) $form_age_token, 2);
-            if (count($parts) !== 2 || $parts[0] === '' || !ctype_digit($parts[0])) {
-                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
-            }
-            $issued_at = (int) $parts[0];
-            $expected  = hash_hmac('sha256', 's2member-antispam-form-age|'.$issued_at, wp_salt('nonce'));
-            if (!hash_equals($expected, $parts[1])) {
-                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
-            }
-            $now = isset($now) ? (int) $now : time();
-            if ($issued_at > $now) {
-                return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
+            $form_age = self::form_age_elapsed_seconds($form_age_token, $now);
+            if (is_wp_error($form_age)) {
+                return $form_age;
             }
             //261004.0315 Speedtrap uses a configurable server-signed minimum age; deliberately omit a maximum age so slow/cached forms only become more permissive, never false positives.
-            if (($now - $issued_at) < self::form_age_minimum_seconds()) {
+            if ($form_age < self::form_age_minimum_seconds()) {
                 return new WP_Error('s2member_antispam_form_too_fast', __('The form was submitted too quickly. Please wait a moment and try again.', 's2member'));
             }
             return true;

@@ -54,6 +54,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			$admin_diagnostics_enabled = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_admin_diagnostics']);
 			$stats = class_exists('c_ws_plugin__s2member_pro_antispam_stats') ? c_ws_plugin__s2member_pro_antispam_stats::summary(30) : array('daily' => array(), 'totals' => array('allowed' => 0, 'blocked' => 0, 'blocked_local' => 0, 'blocked_verification' => 0, 'blocked_spam' => 0, 'blocked_service' => 0));
 
+			$timing = !empty($stats['timing']) && is_array($stats['timing']) ? $stats['timing'] : array(
+				'bucket_labels' => array(),
+				'metrics' => array(),
+			);
+
 			$effective_verification_provider = $verification_provider ? $verification_provider : 'recaptcha_v2';
 			$verification_health = array('status' => 'disabled', 'label' => 'Disabled');
 			if($verification_provider === '')
@@ -130,7 +135,49 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 					$_blocked_height = (int)round(78 * ($_blocked / $_max_daily));
 					echo '<span title="'.esc_attr($_day.' — Allowed: '.$_allowed.', Blocked: '.$_blocked).'" style="position:relative;z-index:1;display:flex;flex:1;min-width:2px;height:78px;align-items:flex-end;gap:1px;"><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_allowed_height).'px;background:#2271b1;"></i><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_blocked_height).'px;background:#d63638;"></i></span>'."\n";
 				}
-			echo '</div><p><small><span style="color:#2271b1">■</span> Allowed &nbsp; <span style="color:#d63638">■</span> Blocked. Aggregate counts only; s2Member does not store IP addresses, emails, usernames, tokens, or submitted form data in these statistics.</small></p>'."\n";
+			echo '</div><p><small><span style="color:#2271b1">■</span> Allowed &nbsp; <span style="color:#d63638">■</span> Blocked. Aggregate counts only; timing is stored only as aggregate buckets. s2Member does not store IP addresses, emails, usernames, tokens, individual durations, or submitted form data in these statistics.</small></p>'."\n";
+
+			echo '<h4>Submission Timing</h4>'."\n";
+			echo '<p>Current Speedtrap threshold: <strong>'.esc_html(number_format_i18n($form_age_seconds)).' seconds</strong>. Timing samples are collected only while Speedtrap is enabled on an applicable Pro-Form.</p>'."\n";
+			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";
+			$_timing_rows = array(
+				'allowed_form_age' => 'Allowed — form age',
+				'allowed_interaction' => 'Allowed — active entry',
+				'blocked_form_age' => 'Blocked by anti-spam — form age',
+				'blocked_speedtrap_form_age' => 'Speedtrap blocks — form age',
+			);
+			foreach($_timing_rows as $_timing_metric => $_timing_label)
+				{
+					$_timing_data = !empty($timing['metrics'][$_timing_metric]) && is_array($timing['metrics'][$_timing_metric]) ? $timing['metrics'][$_timing_metric] : array('total' => 0, 'p10' => '', 'median' => '', 'buckets' => array());
+					$_timing_total = isset($_timing_data['total']) ? (int)$_timing_data['total'] : 0;
+					if($_timing_total)
+						{
+							$_timing_p10 = !empty($_timing_data['p10']) && isset($timing['bucket_labels'][$_timing_data['p10']]) ? $timing['bucket_labels'][$_timing_data['p10']] : '—';
+							$_timing_median = !empty($_timing_data['median']) && isset($timing['bucket_labels'][$_timing_data['median']]) ? $timing['bucket_labels'][$_timing_data['median']] : '—';
+							$_timing_value = sprintf('%s samples · Fast-end (10th percentile): %s · Median: %s', number_format_i18n($_timing_total), $_timing_p10, $_timing_median);
+						}
+					else
+						$_timing_value = 'No samples yet · Fast-end (10th percentile): — · Median: —';
+					echo '<tr><th scope="row">'.esc_html($_timing_label).':</th><td>'.esc_html($_timing_value).'</td></tr>'."\n";
+				}
+			echo '</tbody></table>'."\n";
+			echo '<p><small>Form age is trusted server time from form generation to submission. Active entry is browser-observed from the visitor\'s first field edit/change to submission and is advisory only; it never affects blocking.</small></p>'."\n";
+			if(!empty($timing['bucket_labels']))
+				{
+					echo '<details><summary>Timing distribution</summary><div style="overflow-x:auto;margin-top:8px;"><table class="widefat striped" style="width:auto;min-width:760px;"><thead><tr><th>Metric</th>'."\n";
+					foreach((array)$timing['bucket_labels'] as $_timing_bucket_label)
+						echo '<th>'.esc_html($_timing_bucket_label).'</th>'."\n";
+					echo '</tr></thead><tbody>'."\n";
+					foreach($_timing_rows as $_timing_metric => $_timing_label)
+						{
+							$_timing_data = !empty($timing['metrics'][$_timing_metric]) && is_array($timing['metrics'][$_timing_metric]) ? $timing['metrics'][$_timing_metric] : array('buckets' => array());
+							echo '<tr><th scope="row">'.esc_html($_timing_label).'</th>'."\n";
+							foreach((array)$timing['bucket_labels'] as $_timing_bucket => $_timing_bucket_label)
+								echo '<td>'.esc_html(number_format_i18n(isset($_timing_data['buckets'][$_timing_bucket]) ? (int)$_timing_data['buckets'][$_timing_bucket] : 0)).'</td>'."\n";
+							echo '</tr>'."\n";
+						}
+					echo '</tbody></table></div></details>'."\n";
+				}
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 			echo '<h3>Diagnostics</h3>'."\n";
@@ -235,7 +282,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 
-			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_self_test_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key, $_max_daily, $_recorded_activity, $_day_stats, $_day, $_allowed, $_blocked, $_allowed_height, $_blocked_height);
+			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_self_test_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key, $_max_daily, $_recorded_activity, $_day_stats, $_day, $_allowed, $_blocked, $_allowed_height, $_blocked_height, $_timing_rows, $_timing_metric, $_timing_label, $_timing_data, $_timing_total, $_timing_p10, $_timing_median, $_timing_value, $_timing_bucket, $_timing_bucket_label);
 		}
 	}
 }
