@@ -143,7 +143,7 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_recaptcha2_public_key'               => '', 'pro_recaptcha2_private_key' => '',
 
 			//261002.1932 Keep new local anti-spam checks opt-in on upgrade; the admin UI can enable each protection independently.
-			'pro_antispam_honeypot'         => '0', 'pro_antispam_form_age' => '0',
+			'pro_antispam_honeypot'         => '0', 'pro_antispam_form_age' => '0', 'pro_antispam_form_age_seconds' => '5',
 			//261003.0120 External verification remains disabled until the admin explicitly selects a tested provider.
 			'pro_antispam_verification_provider' => '',
 			//261002.2358 Provider credentials remain inert until an admin explicitly configures and successfully tests the provider.

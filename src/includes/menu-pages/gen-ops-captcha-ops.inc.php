@@ -50,6 +50,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			$spam_provider = c_ws_plugin__s2member_pro_antispam::spam_provider();
 			$honeypot_enabled = c_ws_plugin__s2member_pro_antispam::honeypot_enabled();
 			$form_age_enabled = c_ws_plugin__s2member_pro_antispam::form_age_enabled();
+			$form_age_seconds = c_ws_plugin__s2member_pro_antispam::form_age_minimum_seconds();
 			$admin_diagnostics_enabled = !empty($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_admin_diagnostics']);
 			$stats = class_exists('c_ws_plugin__s2member_pro_antispam_stats') ? c_ws_plugin__s2member_pro_antispam_stats::summary(30) : array('daily' => array(), 'totals' => array('allowed' => 0, 'blocked' => 0, 'blocked_local' => 0, 'blocked_verification' => 0, 'blocked_spam' => 0, 'blocked_service' => 0));
 
@@ -91,19 +92,19 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			elseif($effective_verification_provider === 'recaptcha_v3' && c_ws_plugin__s2member_pro_antispam_recaptcha_v3::site_key())
 				wp_enqueue_script('ws-plugin--s2member-pro-antispam-recaptcha-v3-admin-test', 'https://www.google.com/recaptcha/api.js?render='.rawurlencode(c_ws_plugin__s2member_pro_antispam_recaptcha_v3::site_key()), array(), NULL, TRUE);
 
-			echo '<div class="ws-menu-page-group" title="Anti-Spam & Bot Protection">'."\n";
+			echo '<div class="ws-menu-page-group" title="Pro-Form Anti-Spam & Bot Protection (Beta)">'."\n";
 
 			echo '<div class="ws-menu-page-section ws-plugin--s2member-pro-captchas-section">'."\n";
-			echo '<h3>Anti-Spam & Bot Protection (for s2Member Pro-Forms)</h3>'."\n";
-			echo '<p>s2Member Pro-Forms can layer quiet built-in bot checks with a bot-verification service and optional signup-spam detection. The existing <code>captcha</code> Shortcode attribute remains the per-form switch: <code>captcha="0"</code> disables s2Member anti-spam on that form; any existing enabled value such as <code>clean</code>, <code>light</code>, or <code>dark</code> enables it.</p>'."\n";
-			echo '<p>Existing reCAPTCHA v2 sites remain compatible. A modern provider does not replace legacy reCAPTCHA until its saved configuration passes the test below.</p>'."\n";
+			echo '<h3>Pro-Form Anti-Spam & Bot Protection (Beta)</h3>'."\n";
+			echo '<p>Protects s2Member Pro-Forms when their <code>captcha</code> Shortcode attribute is enabled. Protection can combine built-in checks with one external bot check (Google reCAPTCHA or Cloudflare Turnstile). For Pro-Forms that create a new WordPress user, optional signup screening can add another layer.</p>'."\n";
+			echo '<p>These are independent pass/fail checks, not a weighted score: a blocking result from any enabled check rejects the submission. <code>captcha="0"</code> disables s2Member anti-spam for that Pro-Form; enabled values such as <code>clean</code>, <code>light</code>, or <code>dark</code> enable it.</p>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 			echo '<h3>Anti-Spam Health: <span class="ws-plugin--s2member-status-light ws-plugin--s2member-status-light-'.esc_attr($overall_status).'" aria-hidden="true"></span>'.esc_html($overall_label).'</h3>'."\n";
 			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";
-			echo '<tr><th scope="row">Built-in checks:</th><td>'.esc_html(($honeypot_enabled || $form_age_enabled) ? implode(' + ', array_filter(array($honeypot_enabled ? 'Honeypot' : '', $form_age_enabled ? 'Minimum form age' : ''))) : 'Disabled').'</td></tr>'."\n";
-			echo '<tr><th scope="row">Bot verification:</th><td id="ws-plugin--s2member-pro-antispam-verification-health">'.esc_html($verification_health['label']).'</td></tr>'."\n";
-			echo '<tr><th scope="row">Signup spam detection:</th><td id="ws-plugin--s2member-pro-antispam-spam-health">'.esc_html($spam_health['label']).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Built-in checks:</th><td>'.esc_html(($honeypot_enabled || $form_age_enabled) ? implode(' + ', array_filter(array($honeypot_enabled ? 'Honeypot' : '', $form_age_enabled ? 'Speedtrap ('.$form_age_seconds.'s)' : ''))) : 'Disabled').'</td></tr>'."\n";
+			echo '<tr><th scope="row">Bot check:</th><td id="ws-plugin--s2member-pro-antispam-verification-health">'.esc_html($verification_health['label']).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Signup screening:</th><td id="ws-plugin--s2member-pro-antispam-spam-health">'.esc_html($spam_health['label']).'</td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
@@ -111,20 +112,23 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<table class="ws-plugin--s2member-status-table"><tbody>'."\n";
 			echo '<tr><th scope="row">Verified/allowed:</th><td>'.esc_html(number_format_i18n((int)$stats['totals']['allowed'])).'</td></tr>'."\n";
 			echo '<tr><th scope="row">Blocked:</th><td>'.esc_html(number_format_i18n((int)$stats['totals']['blocked'])).'</td></tr>'."\n";
-			echo '<tr><th scope="row">Blocked by layer:</th><td>'.esc_html(sprintf('Built-in %s · Bot verification %s · Signup spam %s · Service/configuration %s', number_format_i18n((int)$stats['totals']['blocked_local']), number_format_i18n((int)$stats['totals']['blocked_verification']), number_format_i18n((int)$stats['totals']['blocked_spam']), number_format_i18n((int)$stats['totals']['blocked_service']))).'</td></tr>'."\n";
+			echo '<tr><th scope="row">Blocked by layer:</th><td>'.esc_html(sprintf('Built-in %s · Bot check %s · Signup screening %s · Service/configuration %s', number_format_i18n((int)$stats['totals']['blocked_local']), number_format_i18n((int)$stats['totals']['blocked_verification']), number_format_i18n((int)$stats['totals']['blocked_spam']), number_format_i18n((int)$stats['totals']['blocked_service']))).'</td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 			$_max_daily = 1;
 			foreach((array)$stats['daily'] as $_day_stats)
 				$_max_daily = max($_max_daily, (int)$_day_stats['allowed'] + (int)$_day_stats['blocked_local'] + (int)$_day_stats['blocked_verification'] + (int)$_day_stats['blocked_spam'] + (int)$_day_stats['blocked_service']);
 			//261003.0533 Render a dependency-free aggregate chart; title text keeps exact daily values available without retaining or exposing visitor-level records.
-			echo '<div class="ws-plugin--s2member-pro-antispam-stats-chart" style="display:flex;align-items:flex-end;gap:2px;height:90px;margin:12px 0 6px;border-bottom:1px solid #c3c4c7;">'."\n";
+			$_recorded_activity = (int)$stats['totals']['allowed'] + (int)$stats['totals']['blocked'];
+			echo '<div class="ws-plugin--s2member-pro-antispam-stats-chart" style="position:relative;display:flex;align-items:flex-end;gap:2px;height:90px;margin:12px 0 6px;border-bottom:1px solid #c3c4c7;background:repeating-linear-gradient(to top,transparent 0,transparent 21px,#dcdcde 22px);">'."\n";
+			if(!$_recorded_activity)
+				echo '<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#646970;font-style:italic;">No recorded activity in the last 30 days.</span>'."\n";
 			foreach((array)$stats['daily'] as $_day => $_day_stats)
 				{
 					$_allowed = (int)$_day_stats['allowed'];
 					$_blocked = (int)$_day_stats['blocked_local'] + (int)$_day_stats['blocked_verification'] + (int)$_day_stats['blocked_spam'] + (int)$_day_stats['blocked_service'];
 					$_allowed_height = (int)round(78 * ($_allowed / $_max_daily));
 					$_blocked_height = (int)round(78 * ($_blocked / $_max_daily));
-					echo '<span title="'.esc_attr($_day.' — Allowed: '.$_allowed.', Blocked: '.$_blocked).'" style="display:flex;flex:1;min-width:2px;height:78px;align-items:flex-end;gap:1px;"><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_allowed_height).'px;background:#2271b1;"></i><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_blocked_height).'px;background:#d63638;"></i></span>'."\n";
+					echo '<span title="'.esc_attr($_day.' — Allowed: '.$_allowed.', Blocked: '.$_blocked).'" style="position:relative;z-index:1;display:flex;flex:1;min-width:2px;height:78px;align-items:flex-end;gap:1px;"><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_allowed_height).'px;background:#2271b1;"></i><i aria-hidden="true" style="display:block;flex:1;height:'.esc_attr($_blocked_height).'px;background:#d63638;"></i></span>'."\n";
 				}
 			echo '</div><p><small><span style="color:#2271b1">■</span> Allowed &nbsp; <span style="color:#d63638">■</span> Blocked. Aggregate counts only; s2Member does not store IP addresses, emails, usernames, tokens, or submitted form data in these statistics.</small></p>'."\n";
 
@@ -137,7 +141,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<option value="1"'.($admin_diagnostics_enabled ? ' selected="selected"' : '').'>Enabled</option>'."\n";
 			echo '</select><br /><em>When enabled, administrators see a credential-free status panel beneath each Pro-Form plus a dry-run Simulate Bot button. Visitors never see the panel.</em></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
-			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-self-test" onclick="return window.ws_plugin__s2member_pro_antispam_self_test ? window.ws_plugin__s2member_pro_antispam_self_test() : false;">Simulate Bot</button> <span id="ws-plugin--s2member-pro-antispam-self-test-result"></span><br /><em>This dry run does not submit a form, create an account, or contact a payment gateway.</em></p>'."\n";
+			echo '<p style="display:flex;align-items:flex-start;gap:8px;"><button type="button" class="button" style="flex:none;" id="ws-plugin--s2member-pro-antispam-self-test" onclick="return window.ws_plugin__s2member_pro_antispam_self_test ? window.ws_plugin__s2member_pro_antispam_self_test() : false;">Simulate Bot</button><span id="ws-plugin--s2member-pro-antispam-self-test-result" style="flex:1;min-width:0;"></span></p>'."\n";
+			echo '<p><em>This dry run does not submit a form, create an account, or contact a payment gateway.</em></p>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
 			echo '<h3>Built-in Protection</h3>'."\n";
@@ -147,24 +152,25 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<option value="1"'.($honeypot_enabled ? ' selected="selected"' : '').'>Enabled</option>'."\n";
 			echo '<option value="0"'.(!$honeypot_enabled ? ' selected="selected"' : '').'>Disabled</option>'."\n";
 			echo '</select><br /><em>Invisible decoy field. Legitimate visitors never need to interact with it.</em></td></tr>'."\n";
-			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-form-age">Minimum Form Age</label></th></tr>'."\n";
+			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-form-age">Speedtrap</label></th></tr>'."\n";
 			echo '<tr><td><select name="ws_plugin__s2member_pro_antispam_form_age" id="ws-plugin--s2member-pro-antispam-form-age">'."\n";
 			echo '<option value="1"'.($form_age_enabled ? ' selected="selected"' : '').'>Enabled</option>'."\n";
 			echo '<option value="0"'.(!$form_age_enabled ? ' selected="selected"' : '').'>Disabled</option>'."\n";
-			echo '</select><br /><em>Rejects only impossibly fast submissions. There is no maximum age, so cached forms remain valid.</em></td></tr>'."\n";
+			echo '</select><br /><em>Blocks submissions made unusually soon after the server generated the form. Cancellation forms are exempt because they have no meaningful form-fill time.</em></td></tr>'."\n";
+			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-form-age-seconds">Speedtrap Threshold</label></th></tr>'."\n";
+			echo '<tr><td><input type="number" min="1" max="60" step="1" name="ws_plugin__s2member_pro_antispam_form_age_seconds" id="ws-plugin--s2member-pro-antispam-form-age-seconds" value="'.esc_attr($form_age_seconds).'" /> seconds<br /><em>Default: <code>5</code> seconds. Slow-loading or cached forms only make this check more permissive; there is no maximum form age.</em></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
-			echo '<h3>Bot Verification</h3>'."\n";
+			echo '<h3>Bot Check</h3>'."\n";
 			echo '<table class="form-table"><tbody>'."\n";
 			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-verification-provider">Provider</label></th></tr>'."\n";
 			echo '<tr><td><select name="ws_plugin__s2member_pro_antispam_verification_provider" id="ws-plugin--s2member-pro-antispam-verification-provider">'."\n";
-			echo '<option value=""'.($verification_provider === '' ? ' selected="selected"' : '').'>Legacy/default reCAPTCHA behavior</option>'."\n";
 			echo '<option value="none"'.($verification_provider === 'none' ? ' selected="selected"' : '').'>None (built-in checks only)</option>'."\n";
-			echo '<option value="turnstile"'.($verification_provider === 'turnstile' ? ' selected="selected"' : '').'>Cloudflare Turnstile</option>'."\n";
+			echo '<option value="recaptcha_v2"'.(($verification_provider === '' || $verification_provider === 'recaptcha_v2') ? ' selected="selected"' : '').'>Google reCAPTCHA v2 (Legacy)</option>'."\n";
 			echo '<option value="recaptcha_v3"'.($verification_provider === 'recaptcha_v3' ? ' selected="selected"' : '').'>Google reCAPTCHA v3</option>'."\n";
-			echo '<option value="recaptcha_v2"'.($verification_provider === 'recaptcha_v2' ? ' selected="selected"' : '').'>Google reCAPTCHA v2 (Legacy)</option>'."\n";
-			echo '</select><br /><em>Save provider/key changes before running a configuration test. Untested modern credentials do not replace an existing legacy CAPTCHA.</em></td></tr>'."\n";
+			echo '<option value="turnstile"'.($verification_provider === 'turnstile' ? ' selected="selected"' : '').'>Cloudflare Turnstile</option>'."\n";
+			echo '</select><br /><em>Choose one external bot-check provider. Save provider/key changes before running a configuration test. Untested modern credentials do not replace an existing legacy CAPTCHA.</em></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 
 			echo '<div id="ws-plugin--s2member-pro-antispam-turnstile-settings" class="ws-plugin--s2member-pro-antispam-provider-settings">'."\n";
@@ -194,20 +200,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<tr><td><input type="password" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha2_private_key" id="ws-plugin--s2member-pro-recaptcha2-private-key" value="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_private_key']).'" /></td></tr>'."\n";
 			echo '</tbody></table></div>'."\n";
 
-			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-test-verification">Test Bot Verification</button> <span id="ws-plugin--s2member-pro-antispam-test-verification-result"></span></p>'."\n";
+			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-test-verification">Test Bot Check</button> <span id="ws-plugin--s2member-pro-antispam-test-verification-result"></span></p>'."\n";
 
 			echo '<div class="ws-menu-page-hr"></div>'."\n";
-			echo '<h3>Signup Spam Detection</h3>'."\n";
+			echo '<h3>Signup Screening</h3>'."\n";
 			echo '<table class="form-table"><tbody>'."\n";
 			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-spam-provider">Service</label></th></tr>'."\n";
 			echo '<tr><td><select name="ws_plugin__s2member_pro_antispam_spam_provider" id="ws-plugin--s2member-pro-antispam-spam-provider">'."\n";
 			echo '<option value=""'.($spam_provider === '' ? ' selected="selected"' : '').'>None</option>'."\n";
 			echo '<option value="akismet"'.($spam_provider === 'akismet' ? ' selected="selected"' : '').'>Akismet</option>'."\n";
-			echo '</select><br /><em>Signup spam detection applies only when a Pro-Form creates a new WordPress user account; payment-only and account-maintenance forms are not submitted as Akismet signups.</em></td></tr>'."\n";
+			echo '</select><br /><em>Checks new-account submissions for spam. Applies only when a Pro-Form creates a new WordPress user; payment-only and account-maintenance forms are not submitted to Akismet as signups.</em></td></tr>'."\n";
 			echo '<tr id="ws-plugin--s2member-pro-antispam-akismet-key-row"><th><label for="ws-plugin--s2member-pro-antispam-akismet-api-key">Akismet API Key</label></th></tr>'."\n";
 			echo '<tr id="ws-plugin--s2member-pro-antispam-akismet-key-value-row"><td><input type="password" autocomplete="off" name="ws_plugin__s2member_pro_antispam_akismet_api_key" id="ws-plugin--s2member-pro-antispam-akismet-api-key" value="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_akismet_api_key']).'" /><br /><em>Leave blank to reuse the API key from the Akismet plugin when available.</em></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
-			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-test-spam">Test Spam Detection</button> <span id="ws-plugin--s2member-pro-antispam-test-spam-result"></span></p>'."\n";
+			echo '<p><button type="button" class="button" id="ws-plugin--s2member-pro-antispam-test-spam">Test Signup Screening</button> <span id="ws-plugin--s2member-pro-antispam-test-spam-result"></span></p>'."\n";
 
 			$_ajax_nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-test');
 			$_self_test_nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-self-test');
@@ -221,15 +227,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo 'function result($el,message,ok){$el.text(message).css("font-weight","bold").css("color",ok?"#2271b1":"#b32d2e");}'."\n";
 			echo 'function postTest(provider,token,$out){$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_test_configuration",nonce:nonce,provider:provider,token:token||""}).done(function(r){if(r&&r.success){result($out,r.data.message+" ("+r.data.label+")",true);if(provider==="akismet")$("#ws-plugin--s2member-pro-antispam-spam-health").text(r.data.label);else $("#ws-plugin--s2member-pro-antispam-verification-health").text(r.data.label);}else result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);});}'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-verification-provider,#ws-plugin--s2member-pro-antispam-spam-provider").on("change",sync);sync();'."\n";
-			echo '$("#ws-plugin--s2member-pro-antispam-test-verification").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-verification-result");if(p==="")p="recaptcha_v2";if(p==="none"){result($out,"No external bot-verification provider is selected.",false);return;}if(p==="turnstile"){if(!turnstileSiteKey||!window.turnstile){result($out,"Save the Turnstile keys first, then reload this page to test them.",false);return;}var $w=$("#ws-plugin--s2member-pro-antispam-turnstile-test-widget").empty();window.turnstile.render($w[0],{sitekey:turnstileSiteKey,action:"s2member_pro_form",callback:function(t){postTest("turnstile",t,$out);},"error-callback":function(){result($out,"Turnstile could not complete the browser test.",false);}});return;}if(p==="recaptcha_v3"){if(!recaptchaV3SiteKey||!window.grecaptcha){result($out,"Save the reCAPTCHA v3 keys first, then reload this page to test them.",false);return;}grecaptcha.ready(function(){grecaptcha.execute(recaptchaV3SiteKey,{action:"s2member_config_test"}).then(function(t){postTest("recaptcha_v3",t,$out);},function(){result($out,"reCAPTCHA v3 could not complete the browser test.",false);});});return;}postTest(p,"",$out);});'."\n";
-			echo '$("#ws-plugin--s2member-pro-antispam-test-spam").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-spam-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-spam-result");if(!p){result($out,"No signup-spam service is selected.",false);return;}postTest(p,"",$out);});'."\n";
+			echo '$("#ws-plugin--s2member-pro-antispam-test-verification").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-verification-result");if(p==="")p="recaptcha_v2";if(p==="none"){result($out,"No external bot-check provider is selected.",false);return;}if(p==="turnstile"){if(!turnstileSiteKey||!window.turnstile){result($out,"Save the Turnstile keys first, then reload this page to test them.",false);return;}var $w=$("#ws-plugin--s2member-pro-antispam-turnstile-test-widget").empty();window.turnstile.render($w[0],{sitekey:turnstileSiteKey,action:"s2member_pro_form",callback:function(t){postTest("turnstile",t,$out);},"error-callback":function(){result($out,"Turnstile could not complete the browser test.",false);}});return;}if(p==="recaptcha_v3"){if(!recaptchaV3SiteKey||!window.grecaptcha){result($out,"Save the reCAPTCHA v3 keys first, then reload this page to test them.",false);return;}grecaptcha.ready(function(){grecaptcha.execute(recaptchaV3SiteKey,{action:"s2member_config_test"}).then(function(t){postTest("recaptcha_v3",t,$out);},function(){result($out,"reCAPTCHA v3 could not complete the browser test.",false);});});return;}postTest(p,"",$out);});'."\n";
+			echo '$("#ws-plugin--s2member-pro-antispam-test-spam").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-spam-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-spam-result");if(!p){result($out,"No signup-screening service is selected.",false);return;}postTest(p,"",$out);});'."\n";
 			//261003.2111 Keep Simulate Bot independent of admin-page event propagation quirks; the server-rendered button calls this namespaced function directly.
 			echo 'window.ws_plugin__s2member_pro_antispam_self_test=function(){var $out=$("#ws-plugin--s2member-pro-antispam-self-test-result");$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_self_test",nonce:selfTestNonce,surface:"registration",captcha:"clean"}).done(function(r){result($out,r&&r.data&&r.data.message?r.data.message:"Self-test completed.",true);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Self-test failed.",false);});return false;};'."\n";
 			echo '})(jQuery);</script>'."\n";
 			echo '</div>'."\n";
 			echo '</div>'."\n";
 
-			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_self_test_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key, $_max_daily, $_day_stats, $_day, $_allowed, $_blocked, $_allowed_height, $_blocked_height);
+			unset($_verification_adapter, $_spam_adapter, $_verification_active, $_active_component, $_attention_statuses, $_ajax_nonce, $_self_test_nonce, $_saved_turnstile_site_key, $_saved_recaptcha_v3_site_key, $_max_daily, $_recorded_activity, $_day_stats, $_day, $_allowed, $_blocked, $_allowed_height, $_blocked_height);
 		}
 	}
 }

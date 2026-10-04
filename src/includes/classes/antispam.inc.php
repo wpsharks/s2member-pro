@@ -132,6 +132,34 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         }
 
         /**
+         * Returns the configured Speedtrap minimum form age in seconds.
+         *
+         * @since 261004.0315
+         *
+         * @return int Minimum elapsed seconds, clamped to a conservative administrator-adjustable range.
+         */
+        public static function form_age_minimum_seconds()
+        {
+            $seconds = isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_form_age_seconds']) ? (int) $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_form_age_seconds'] : 5;
+            return max(1, min(60, $seconds ?: 5));
+        }
+
+        /**
+         * Determines whether the Speedtrap timing heuristic is meaningful for this Pro-Form surface.
+         *
+         * @since 261004.0315
+         *
+         * @param string $surface Pro-Form surface identifier.
+         *
+         * @return bool False for cancellation forms; true elsewhere.
+         */
+        public static function form_age_applies($surface = '')
+        {
+            //261004.0315 Cancellation can legitimately be an immediate action and has no meaningful form-fill duration; do not weaken every other surface to accommodate it.
+            return (string) $surface !== 'cancellation';
+        }
+
+        /**
          * Returns whether administrator-only frontend diagnostics are enabled.
          *
          * @since 261003.0533
@@ -423,7 +451,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
         public static function render_fields($surface = '', $input_name = '', $captcha = '')
         {
             $verification_adapter = self::verification_adapter_class();
-            if (!self::captcha_enabled($captcha) || (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter) || !$input_name) {
+            $form_age_enabled = self::form_age_enabled() && self::form_age_applies($surface);
+            if (!self::captcha_enabled($captcha) || (!self::honeypot_enabled() && !$form_age_enabled && !$verification_adapter) || !$input_name) {
                 return '';
             }
             $html = '';
@@ -433,7 +462,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 $html .= '<input type="text" name="'.esc_attr($input_name.'[antispam][website]').'" value="" tabindex="-1" autocomplete="off" autocapitalize="none" spellcheck="false" />'."\n";
                 $html .= '</div>'."\n";
             }
-            if (self::form_age_enabled()) {
+            if ($form_age_enabled) {
                 $html .= '<input type="hidden" name="'.esc_attr($input_name.'[antispam][form_age]').'" value="'.esc_attr(self::form_age_token()).'" />'."\n";
             }
             if ($verification_adapter) {
@@ -495,7 +524,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             $verification_provider = self::verification_provider();
             $verification_adapter = self::verification_adapter_class();
             $spam_provider = self::spam_provider();
-            $built_in = array_filter(array(self::honeypot_enabled() ? 'Honeypot' : '', self::form_age_enabled() ? 'Minimum form age' : ''));
+            $built_in = array_filter(array(self::honeypot_enabled() ? 'Honeypot' : '', (self::form_age_enabled() && self::form_age_applies($surface)) ? 'Speedtrap' : ''));
             $id = 's2member-pro-antispam-diagnostics-'.substr(md5($gateway.'|'.$surface.'|'.wp_rand()), 0, 12);
             $nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-self-test');
             $verification_label = $verification_adapter ? call_user_func(array($verification_adapter, 'label')) : ($verification_provider === 'none' ? __('None', 's2member') : __('Legacy/default', 's2member'));
@@ -506,8 +535,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             $html .= '<li>'.esc_html__('Surface:', 's2member').' <code>'.esc_html((string) $gateway.' / '.(string) $surface).'</code></li>'."\n";
             $html .= '<li>'.esc_html__('Per-form switch:', 's2member').' <code>captcha=&quot;'.esc_html((string) $captcha).'&quot;</code> — '.esc_html(self::captcha_enabled($captcha) ? __('enabled', 's2member') : __('disabled', 's2member')).'</li>'."\n";
             $html .= '<li>'.esc_html__('Built-in checks:', 's2member').' '.esc_html($built_in ? implode(' + ', $built_in) : __('Disabled', 's2member')).'</li>'."\n";
-            $html .= '<li>'.esc_html__('Bot verification:', 's2member').' '.esc_html($verification_label).'</li>'."\n";
-            $html .= '<li>'.esc_html__('Signup spam detection:', 's2member').' '.esc_html($spam_provider ? ucfirst($spam_provider).' '.__('(new-user surfaces only)', 's2member') : __('Disabled', 's2member')).'</li>'."\n";
+            $html .= '<li>'.esc_html__('Bot check:', 's2member').' '.esc_html($verification_label).'</li>'."\n";
+            $html .= '<li>'.esc_html__('Signup screening:', 's2member').' '.esc_html($spam_provider ? ucfirst($spam_provider).' '.__('(new-user surfaces only)', 's2member') : __('Disabled', 's2member')).'</li>'."\n";
             $html .= '</ul><button type="button" class="button s2member-pro-antispam-simulate-bot">'.esc_html__('Simulate Bot', 's2member').'</button> <span class="s2member-pro-antispam-simulate-result"></span>'."\n";
             $html .= '<script>(function($){$("#'.esc_js($id).' .s2member-pro-antispam-simulate-bot").on("click",function(){var $r=$(this).siblings(".s2member-pro-antispam-simulate-result");$r.text("'.esc_js(__('Testing...', 's2member')).'");$.post('.wp_json_encode(admin_url('admin-ajax.php')).',{action:"ws_plugin__s2member_pro_antispam_self_test",nonce:'.wp_json_encode($nonce).',surface:'.wp_json_encode((string) $surface).',captcha:'.wp_json_encode((string) $captcha).'}).done(function(r){$r.text(r&&r.data&&r.data.message?r.data.message:"'.esc_js(__('Self-test completed.', 's2member')).'");}).fail(function(xhr){var r=xhr.responseJSON;$r.text(r&&r.data&&r.data.message?r.data.message:"'.esc_js(__('Self-test failed.', 's2member')).'");});});})(jQuery);</script>'."\n";
             $html .= '</div>'."\n";
@@ -566,7 +595,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             if (self::honeypot_enabled()) {
                 $submission['antispam']['website'] = 's2member-dry-run-bot';
                 if (self::form_age_enabled()) {
-                    $submission['antispam']['form_age'] = self::form_age_token($now - 2);
+                    $submission['antispam']['form_age'] = self::form_age_token($now - self::form_age_minimum_seconds());
                 }
             } elseif (self::form_age_enabled()) {
                 $submission['antispam']['form_age'] = self::form_age_token($now);
@@ -630,7 +659,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             $verification_adapter = self::verification_adapter_class();
             $spam_provider = self::spam_provider();
             $spam_adapter = self::spam_check_applies($surface, $submission) ? self::spam_adapter_class() : '';
-            if (!self::honeypot_enabled() && !self::form_age_enabled() && !$verification_adapter && !$spam_adapter) {
+            $form_age_enabled = self::form_age_enabled() && self::form_age_applies($surface);
+            if (!self::honeypot_enabled() && !$form_age_enabled && !$verification_adapter && !$spam_adapter) {
                 return true;
             }
             $antispam = !empty($submission['antispam']) && is_array($submission['antispam']) ? $submission['antispam'] : array();
@@ -644,7 +674,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 }
                 $checks[] = 'honeypot';
             }
-            if (self::form_age_enabled()) {
+            if ($form_age_enabled) {
                 //261002.1449 Reuse the signed-age verifier with an empty honeypot because honeypot enablement is independently configurable.
                 $local_result = self::validate_local('', $form_age_token, $now);
                 if (is_wp_error($local_result)) {
@@ -727,9 +757,9 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             if ($issued_at > $now) {
                 return new WP_Error('s2member_antispam_form_age', __('Security verification is invalid. Please reload the page and try again.', 's2member'));
             }
-            //261002.0750 Enforce only a conservative one-second minimum; deliberately omit a maximum age so cached forms do not become false positives.
-            if (($now - $issued_at) < 1) {
-                return new WP_Error('s2member_antispam_form_too_fast', __('The form was submitted too quickly. Please try again.', 's2member'));
+            //261004.0315 Speedtrap uses a configurable server-signed minimum age; deliberately omit a maximum age so slow/cached forms only become more permissive, never false positives.
+            if (($now - $issued_at) < self::form_age_minimum_seconds()) {
+                return new WP_Error('s2member_antispam_form_too_fast', __('The form was submitted too quickly. Please wait a moment and try again.', 's2member'));
             }
             return true;
         }
