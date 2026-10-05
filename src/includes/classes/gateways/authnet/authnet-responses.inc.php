@@ -584,6 +584,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 										else if(!is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
 
+										//261005.0438 Apply the Framework mail-domain option only where this Pro-Form is creating an account.
+										else if(method_exists('c_ws_plugin__s2member_registrations', 'registration_email_domain_validation_error') && ($_email_domain_error = c_ws_plugin__s2member_registrations::registration_email_domain_validation_error($s["email"])))
+											$response = array("response" => $_email_domain_error, "error" => true);
+
 										else if(email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
 
@@ -695,6 +699,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_responses"))
 
 										else if(!is_user_logged_in() && !is_email($s["email"]))
 											$response = array("response" => _x('Invalid Email Address. Please try again.', "s2member-front", "s2member"), "error" => true);
+
+										//261005.0509 Guest checkout creates an account; skip payment-only paths and guard the Framework helper for mixed-version upgrades.
+										else if(!is_user_logged_in() && method_exists('c_ws_plugin__s2member_registrations', 'registration_email_domain_validation_error') && ($_email_domain_error = c_ws_plugin__s2member_registrations::registration_email_domain_validation_error($s["email"])))
+											$response = array("response" => $_email_domain_error, "error" => true);
 
 										else if(!is_user_logged_in() && email_exists($s["email"]) && (!is_multisite() || !c_ws_plugin__s2member_utils_users::ms_user_login_email_can_join_blog((string)@$s["username"], $s["email"])))
 											$response = array("response" => _x('That Email Address is already in use. Please try again.', "s2member-front", "s2member"), "error" => true);
