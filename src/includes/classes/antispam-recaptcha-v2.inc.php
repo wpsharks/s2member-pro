@@ -52,7 +52,7 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_recaptcha_v2')) {
          */
         public static function label()
         {
-            return __('Google reCAPTCHA v2 (Legacy)', 's2member');
+            return __('Google reCAPTCHA v2', 's2member');
         }
 
         /**

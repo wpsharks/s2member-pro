@@ -144,8 +144,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 			//261002.1932 Keep new local anti-spam checks opt-in on upgrade; the admin UI can enable each protection independently.
 			'pro_antispam_honeypot'         => '0', 'pro_antispam_form_age' => '0', 'pro_antispam_form_age_seconds' => '5',
-			//261003.0120 External verification remains disabled until the admin explicitly selects a tested provider.
-			'pro_antispam_verification_provider' => '',
+			//261005.0131 New installs start with no external Bot Check; existing v2 sites are migrated explicitly below instead of assigning special meaning to an empty value.
+			'pro_antispam_verification_provider' => 'none',
 			//261002.2358 Provider credentials remain inert until an admin explicitly configures and successfully tests the provider.
 			'pro_antispam_turnstile_site_key' => '', 'pro_antispam_turnstile_secret_key' => '', 'pro_antispam_turnstile_tested_fingerprint' => '',
 			//261003.0156 reCAPTCHA v3 also remains inert until tested; 0.5 follows Google's documented starting threshold.
@@ -172,6 +172,36 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 
 		return array_merge($default_options, $pro_default_options);
 	}
+}
+
+//261005.0131 Migrate the new Bot Check selector once from the only supported pre-selector state: a complete existing reCAPTCHA v2 key pair means v2; otherwise use None.
+if(!function_exists('ws_plugin__s2member_pro_migrate_antispam_verification_provider'))
+{
+	function ws_plugin__s2member_pro_migrate_antispam_verification_provider()
+	{
+		$options = get_option('ws_plugin__s2member_options');
+		if(!is_array($options))
+			return FALSE;
+
+		$provider = array_key_exists('pro_antispam_verification_provider', $options) ? trim((string)$options['pro_antispam_verification_provider']) : '';
+		if($provider !== '')
+			return FALSE; // Already migrated/configured; the new selector is authoritative from here forward.
+
+		$site_key = isset($options['pro_recaptcha2_public_key']) ? trim((string)$options['pro_recaptcha2_public_key']) : '';
+		$secret_key = isset($options['pro_recaptcha2_private_key']) ? trim((string)$options['pro_recaptcha2_private_key']) : '';
+		$options['pro_antispam_verification_provider'] = ($site_key !== '' && $secret_key !== '') ? 'recaptcha_v2' : 'none';
+
+		update_option('ws_plugin__s2member_options', $options);
+		if(is_multisite() && is_main_site())
+			update_site_option('ws_plugin__s2member_options', $options);
+		if(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']))
+			$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider'] = $options['pro_antispam_verification_provider'];
+
+		return TRUE;
+	}
+	//261005.0131 `init` covers normal upgrades (including Pro-only file replacement); `after_activation` also seeds a genuinely fresh installation after the Framework creates its options row.
+	add_action('init', 'ws_plugin__s2member_pro_migrate_antispam_verification_provider', 1);
+	add_action('ws_plugin__s2member_after_activation', 'ws_plugin__s2member_pro_migrate_antispam_verification_provider');
 }
 /*
 Check/validate default options for the Pro Add-on.
@@ -282,6 +312,10 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 					$value = $pro_default_options[$key];
 
 				else if(preg_match('/^pro_recaptcha(?:2)?_(?:public|private)_key$/', $key) && (!is_string($value) || !strlen($value)))
+					$value = $pro_default_options[$key];
+
+				//261005.0131 Empty/unknown Bot Check provider values are no longer compatibility states; only explicit supported selector values survive validation.
+				else if($key === 'pro_antispam_verification_provider' && (!is_string($value) || !in_array($value, array('none', 'recaptcha_v2', 'recaptcha_v3', 'turnstile'), TRUE)))
 					$value = $pro_default_options[$key];
 
 				else if($key === 'pro_latest_version' && !is_array($value)) //260902.0447

@@ -59,14 +59,9 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 				'metrics' => array(),
 			);
 
-			$effective_verification_provider = $verification_provider ? $verification_provider : 'recaptcha_v2';
+			$effective_verification_provider = $verification_provider;
 			$verification_health = array('status' => 'disabled', 'label' => 'Disabled');
-			if($verification_provider === '')
-				{
-					$_verification_adapter = c_ws_plugin__s2member_pro_antispam::adapter_class('recaptcha_v2');
-					$verification_health = ($_verification_adapter && call_user_func(array($_verification_adapter, 'configured'))) ? call_user_func(array($_verification_adapter, 'health')) : array('status' => 'legacy', 'label' => 'Legacy/default behavior');
-				}
-			elseif($verification_provider !== 'none')
+			if($verification_provider !== 'none')
 				{
 					$_verification_adapter = c_ws_plugin__s2member_pro_antispam::adapter_class($effective_verification_provider);
 					if($_verification_adapter)
@@ -82,7 +77,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 
 			$overall_status = 'disabled';
 			$overall_label = 'Disabled';
-			$_verification_active = ($verification_provider === '') ? ($verification_health['status'] === 'healthy') : ($verification_provider !== 'none' && $verification_health['status'] !== 'disabled');
+			$_verification_active = ($verification_provider !== 'none' && $verification_health['status'] !== 'disabled');
 			$_active_component = $honeypot_enabled || $form_age_enabled || $_verification_active || $spam_health['status'] !== 'disabled';
 			$_attention_statuses = array('unavailable', 'needs_configuration', 'needs_test');
 			if($_active_component)
@@ -213,11 +208,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '<table class="form-table"><tbody>'."\n";
 			echo '<tr><th><label for="ws-plugin--s2member-pro-antispam-verification-provider">Provider</label></th></tr>'."\n";
 			echo '<tr><td><select name="ws_plugin__s2member_pro_antispam_verification_provider" id="ws-plugin--s2member-pro-antispam-verification-provider">'."\n";
-			echo '<option value="none"'.($verification_provider === 'none' ? ' selected="selected"' : '').'>None (built-in checks only)</option>'."\n";
-			echo '<option value="recaptcha_v2"'.(($verification_provider === '' || $verification_provider === 'recaptcha_v2') ? ' selected="selected"' : '').'>Google reCAPTCHA v2 (Legacy)</option>'."\n";
+			echo '<option value="none"'.($verification_provider === 'none' ? ' selected="selected"' : '').'>None</option>'."\n";
+			echo '<option value="recaptcha_v2"'.($verification_provider === 'recaptcha_v2' ? ' selected="selected"' : '').'>Google reCAPTCHA v2</option>'."\n";
 			echo '<option value="recaptcha_v3"'.($verification_provider === 'recaptcha_v3' ? ' selected="selected"' : '').'>Google reCAPTCHA v3</option>'."\n";
 			echo '<option value="turnstile"'.($verification_provider === 'turnstile' ? ' selected="selected"' : '').'>Cloudflare Turnstile</option>'."\n";
-			echo '</select><br /><em>Choose one external bot-check provider. Save provider/key changes before running a configuration test. Untested modern credentials do not replace an existing legacy CAPTCHA.</em></td></tr>'."\n";
+			echo '</select><br /><em>Choose one external bot-check provider. Save provider/key changes before running a configuration test. When switching from reCAPTCHA v2, configured v2 protection stays active until the new provider passes its test.</em></td></tr>'."\n";
 			echo '</tbody></table>'."\n";
 
 			echo '<div id="ws-plugin--s2member-pro-antispam-turnstile-settings" class="ws-plugin--s2member-pro-antispam-provider-settings">'."\n";
@@ -240,7 +235,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			echo '</tbody></table></div>'."\n";
 
 			echo '<div id="ws-plugin--s2member-pro-antispam-recaptcha-v2-settings" class="ws-plugin--s2member-pro-antispam-provider-settings">'."\n";
-			echo '<h4>Google reCAPTCHA v2 (Legacy)</h4><table class="form-table"><tbody>'."\n";
+			echo '<h4>Google reCAPTCHA v2</h4><table class="form-table"><tbody>'."\n";
 			echo '<tr><th><label for="ws-plugin--s2member-pro-recaptcha2-public-key">Site Key</label></th></tr>'."\n";
 			echo '<tr><td><input type="text" autocomplete="off" name="ws_plugin__s2member_pro_recaptcha2_public_key" id="ws-plugin--s2member-pro-recaptcha2-public-key" value="'.esc_attr($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_recaptcha2_public_key']).'" /></td></tr>'."\n";
 			echo '<tr><th><label for="ws-plugin--s2member-pro-recaptcha2-private-key">Secret Key</label></th></tr>'."\n";
@@ -270,11 +265,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_gen_ops_captcha_ops"))
 			//261003.0407 Keep diagnostics admin-only and test saved credentials in place; provider test metadata is persisted only after server-side verification succeeds.
 			echo '<script>(function($){'."\n";
 			echo 'var nonce='.wp_json_encode($_ajax_nonce).',selfTestNonce='.wp_json_encode($_self_test_nonce).',turnstileSiteKey='.wp_json_encode($_saved_turnstile_site_key).',recaptchaV3SiteKey='.wp_json_encode($_saved_recaptcha_v3_site_key).';'."\n";
-			echo 'function sync(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val();$(".ws-plugin--s2member-pro-antispam-provider-settings").hide();if(p==="turnstile")$("#ws-plugin--s2member-pro-antispam-turnstile-settings").show();else if(p==="recaptcha_v3")$("#ws-plugin--s2member-pro-antispam-recaptcha-v3-settings").show();else if(p==="recaptcha_v2"||p==="")$("#ws-plugin--s2member-pro-antispam-recaptcha-v2-settings").show();var s=$("#ws-plugin--s2member-pro-antispam-spam-provider").val();$("#ws-plugin--s2member-pro-antispam-akismet-key-row,#ws-plugin--s2member-pro-antispam-akismet-key-value-row").toggle(s==="akismet");}'."\n";
+			echo 'function sync(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val();$(".ws-plugin--s2member-pro-antispam-provider-settings").hide();if(p==="turnstile")$("#ws-plugin--s2member-pro-antispam-turnstile-settings").show();else if(p==="recaptcha_v3")$("#ws-plugin--s2member-pro-antispam-recaptcha-v3-settings").show();else if(p==="recaptcha_v2")$("#ws-plugin--s2member-pro-antispam-recaptcha-v2-settings").show();var s=$("#ws-plugin--s2member-pro-antispam-spam-provider").val();$("#ws-plugin--s2member-pro-antispam-akismet-key-row,#ws-plugin--s2member-pro-antispam-akismet-key-value-row").toggle(s==="akismet");}'."\n";
 			echo 'function result($el,message,ok){$el.text(message).css("font-weight","bold").css("color",ok?"#2271b1":"#b32d2e");}'."\n";
 			echo 'function postTest(provider,token,$out){$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_test_configuration",nonce:nonce,provider:provider,token:token||""}).done(function(r){if(r&&r.success){result($out,r.data.message+" ("+r.data.label+")",true);if(provider==="akismet")$("#ws-plugin--s2member-pro-antispam-spam-health").text(r.data.label);else $("#ws-plugin--s2member-pro-antispam-verification-health").text(r.data.label);}else result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Configuration test failed.",false);});}'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-verification-provider,#ws-plugin--s2member-pro-antispam-spam-provider").on("change",sync);sync();'."\n";
-			echo '$("#ws-plugin--s2member-pro-antispam-test-verification").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-verification-result");if(p==="")p="recaptcha_v2";if(p==="none"){result($out,"No external bot-check provider is selected.",false);return;}if(p==="turnstile"){if(!turnstileSiteKey||!window.turnstile){result($out,"Save the Turnstile keys first, then reload this page to test them.",false);return;}var $w=$("#ws-plugin--s2member-pro-antispam-turnstile-test-widget").empty();window.turnstile.render($w[0],{sitekey:turnstileSiteKey,action:"s2member_pro_form",callback:function(t){postTest("turnstile",t,$out);},"error-callback":function(){result($out,"Turnstile could not complete the browser test.",false);}});return;}if(p==="recaptcha_v3"){if(!recaptchaV3SiteKey||!window.grecaptcha){result($out,"Save the reCAPTCHA v3 keys first, then reload this page to test them.",false);return;}grecaptcha.ready(function(){grecaptcha.execute(recaptchaV3SiteKey,{action:"s2member_config_test"}).then(function(t){postTest("recaptcha_v3",t,$out);},function(){result($out,"reCAPTCHA v3 could not complete the browser test.",false);});});return;}postTest(p,"",$out);});'."\n";
+			echo '$("#ws-plugin--s2member-pro-antispam-test-verification").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-verification-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-verification-result");if(p==="none"){result($out,"No external bot-check provider is selected.",false);return;}if(p==="turnstile"){if(!turnstileSiteKey||!window.turnstile){result($out,"Save the Turnstile keys first, then reload this page to test them.",false);return;}var $w=$("#ws-plugin--s2member-pro-antispam-turnstile-test-widget").empty();window.turnstile.render($w[0],{sitekey:turnstileSiteKey,action:"s2member_pro_form",callback:function(t){postTest("turnstile",t,$out);},"error-callback":function(){result($out,"Turnstile could not complete the browser test.",false);}});return;}if(p==="recaptcha_v3"){if(!recaptchaV3SiteKey||!window.grecaptcha){result($out,"Save the reCAPTCHA v3 keys first, then reload this page to test them.",false);return;}grecaptcha.ready(function(){grecaptcha.execute(recaptchaV3SiteKey,{action:"s2member_config_test"}).then(function(t){postTest("recaptcha_v3",t,$out);},function(){result($out,"reCAPTCHA v3 could not complete the browser test.",false);});});return;}postTest(p,"",$out);});'."\n";
 			echo '$("#ws-plugin--s2member-pro-antispam-test-spam").on("click",function(){var p=$("#ws-plugin--s2member-pro-antispam-spam-provider").val(),$out=$("#ws-plugin--s2member-pro-antispam-test-spam-result");if(!p){result($out,"No signup-screening service is selected.",false);return;}postTest(p,"",$out);});'."\n";
 			//261003.2111 Keep Simulate Bot independent of admin-page event propagation quirks; the server-rendered button calls this namespaced function directly.
 			echo 'window.ws_plugin__s2member_pro_antispam_self_test=function(){var $out=$("#ws-plugin--s2member-pro-antispam-self-test-result");$out.text("Testing...");$.post(ajaxurl,{action:"ws_plugin__s2member_pro_antispam_self_test",nonce:selfTestNonce,surface:"registration",captcha:"clean"}).done(function(r){result($out,r&&r.data&&r.data.message?r.data.message:"Self-test completed.",true);}).fail(function(xhr){var r=xhr.responseJSON;result($out,r&&r.data&&r.data.message?r.data.message:"Self-test failed.",false);});return false;};'."\n";

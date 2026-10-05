@@ -80,14 +80,17 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
                 return false;
             }
             $provider = self::verification_provider();
-            if (!$provider || $provider === 'recaptcha_v2') {
-                return true;
-            }
             if ($provider === 'none') {
                 return false;
             }
-            //261003.0407 Keep the proven legacy CAPTCHA active until a selected modern provider has passed its configuration test; a typo or stale key must never silently lower protection.
-            return !self::verification_adapter_class();
+            $recaptcha_v2_adapter = self::adapter_class('recaptcha_v2');
+            $recaptcha_v2_ready = $recaptcha_v2_adapter && call_user_func(array($recaptcha_v2_adapter, 'available')) && call_user_func(array($recaptcha_v2_adapter, 'configured'));
+            if ($provider === 'recaptcha_v2') {
+                //261005.0131 The v2 selector owns only the working v2 path; missing v2 keys must not fall through to the obsolete default CAPTCHA implementation.
+                return (bool) $recaptcha_v2_ready;
+            }
+            //261005.0131 While a selected modern provider awaits a successful test, retain configured v2 protection when available, but never revive the obsolete default fallback.
+            return !self::verification_adapter_class() && (bool) $recaptcha_v2_ready;
         }
 
         /**
@@ -297,11 +300,14 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
          *
          * @since 261003.0120
          *
-         * @return string Adapter ID, or an empty string for no external verification.
+         * @return string Explicit adapter ID; `none` means no external Bot Check.
          */
         public static function verification_provider()
         {
-            return strtolower(trim((string) @$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider']));
+            $provider = strtolower(trim((string) @$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider']));
+
+            //261005.0131 The selector is authoritative after migration; never reinterpret an empty/unknown value as an older CAPTCHA path.
+            return in_array($provider, array('none', 'recaptcha_v2', 'recaptcha_v3', 'turnstile'), true) ? $provider : 'none';
         }
 
         /**
@@ -595,11 +601,13 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
             }
             $verification_provider = self::verification_provider();
             $verification_adapter = self::verification_adapter_class();
+            $selected_verification_adapter = self::adapter_class($verification_provider);
             $spam_provider = self::spam_provider();
             $built_in = array_filter(array(self::honeypot_enabled() ? 'Honeypot' : '', (self::form_age_enabled() && self::form_age_applies($surface)) ? 'Speedtrap' : ''));
             $id = 's2member-pro-antispam-diagnostics-'.substr(md5($gateway.'|'.$surface.'|'.wp_rand()), 0, 12);
             $nonce = wp_create_nonce('ws-plugin--s2member-pro-antispam-self-test');
-            $verification_label = $verification_adapter ? call_user_func(array($verification_adapter, 'label')) : ($verification_provider === 'none' ? __('None', 's2member') : __('Legacy/default', 's2member'));
+            //261005.0131 Diagnostics name the explicit selector value even while a modern provider is awaiting its configuration test; there is no hidden/default provider state anymore.
+            $verification_label = $verification_provider === 'none' ? __('None', 's2member') : ($selected_verification_adapter ? call_user_func(array($selected_verification_adapter, 'label')) : __('None', 's2member'));
 
             //261003.0533 Keep frontend diagnostics explicitly admin-only and credential-free; the dry run uses a separate AJAX request and never submits the surrounding payment/registration form.
             $html = '<div id="'.esc_attr($id).'" class="s2member-pro-antispam-admin-diagnostics" style="margin:1em 0;padding:10px;border:1px dashed #8c8f94;background:#f6f7f7;">'."\n";
