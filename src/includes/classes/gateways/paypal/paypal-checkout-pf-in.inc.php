@@ -576,10 +576,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																		if(!empty($paypal_xco_bagree["BAID"])) // For registration configuration.
 																			$GLOBALS["ws_plugin__s2member_registration_vars"]["ws_plugin__s2member_custom_reg_field_s2member_subscr_baid"] = $paypal_xco_bagree["BAID"];
 
-																		$_COOKIE["s2member_subscr_gateway"] = c_ws_plugin__s2member_utils_encryption::encrypt("paypal"); // Fake this for registration configuration.
-																		$_COOKIE["s2member_subscr_id"] = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id); // Fake this for registration configuration.
-																		$_COOKIE["s2member_custom"] = c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["custom"]); // Fake this for registration configuration.
-																		$_COOKIE["s2member_item_number"] = c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["level_ccaps_eotper"]); // Fake this too.
+																		$_COOKIE["s2member_subscr_gateway"] = c_ws_plugin__s2member_register_access::encrypt_token("paypal", 'subscr_gateway'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_subscr_id"] = c_ws_plugin__s2member_register_access::encrypt_token($new__subscr_id, 'subscr_id'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_custom"] = c_ws_plugin__s2member_register_access::encrypt_token($post_vars["attr"]["custom"], 'custom'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_item_number"] = c_ws_plugin__s2member_register_access::encrypt_token($post_vars["attr"]["level_ccaps_eotper"], 'item_number'); // Fake this too.
 
 																		$create_user["user_login"] = $post_vars["username"]; // Copy this into a separate array for `wp_create_user()`.
 																		$create_user["user_pass"] = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);
@@ -901,10 +901,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_pf_in"))
 																					if(isset($post_vars["custom_fields"][$field_var]))
 																						$_POST["ws_plugin__s2member_custom_reg_field_".$field_var] = $post_vars["custom_fields"][$field_var];
 																				}
-																		$_COOKIE["s2member_subscr_gateway"] = c_ws_plugin__s2member_utils_encryption::encrypt("paypal"); // Fake this for registration configuration.
-																		$_COOKIE["s2member_subscr_id"] = c_ws_plugin__s2member_utils_encryption::encrypt($new__subscr_id); // Fake this for registration configuration.
-																		$_COOKIE["s2member_custom"] = c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["custom"]); // Fake this for registration configuration.
-																		$_COOKIE["s2member_item_number"] = c_ws_plugin__s2member_utils_encryption::encrypt($post_vars["attr"]["level_ccaps_eotper"]); // Fake this too.
+																		$_COOKIE["s2member_subscr_gateway"] = c_ws_plugin__s2member_register_access::encrypt_token("paypal", 'subscr_gateway'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_subscr_id"] = c_ws_plugin__s2member_register_access::encrypt_token($new__subscr_id, 'subscr_id'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_custom"] = c_ws_plugin__s2member_register_access::encrypt_token($post_vars["attr"]["custom"], 'custom'); // Fake this for registration configuration.
+																		$_COOKIE["s2member_item_number"] = c_ws_plugin__s2member_register_access::encrypt_token($post_vars["attr"]["level_ccaps_eotper"], 'item_number'); // Fake this too.
 
 																		$create_user["user_login"] = $post_vars["username"]; // Copy this into a separate array for `wp_create_user()`.
 																		$create_user["user_pass"] = c_ws_plugin__s2member_registrations::maybe_custom_pass($post_vars["password1"]);

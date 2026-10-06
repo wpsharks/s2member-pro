@@ -1413,10 +1413,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				if(!empty($state['recurring']) && !empty($paypal['subscr_baid']))
 					$GLOBALS['ws_plugin__s2member_registration_vars']['ws_plugin__s2member_custom_reg_field_s2member_subscr_baid'] = (string)$paypal['subscr_baid'];
 
-				$_COOKIE['s2member_subscr_gateway'] = c_ws_plugin__s2member_utils_encryption::encrypt('paypal');
-				$_COOKIE['s2member_subscr_id'] = c_ws_plugin__s2member_utils_encryption::encrypt($subscr_id);
-				$_COOKIE['s2member_custom'] = c_ws_plugin__s2member_utils_encryption::encrypt((string)$state['notify_paypal']['custom']);
-				$_COOKIE['s2member_item_number'] = c_ws_plugin__s2member_utils_encryption::encrypt((string)$state['notify_paypal']['item_number']);
+				$_COOKIE['s2member_subscr_gateway'] = c_ws_plugin__s2member_register_access::encrypt_token('paypal', 'subscr_gateway');
+				$_COOKIE['s2member_subscr_id'] = c_ws_plugin__s2member_register_access::encrypt_token($subscr_id, 'subscr_id');
+				$_COOKIE['s2member_custom'] = c_ws_plugin__s2member_register_access::encrypt_token((string)$state['notify_paypal']['custom'], 'custom');
+				$_COOKIE['s2member_item_number'] = c_ws_plugin__s2member_register_access::encrypt_token((string)$state['notify_paypal']['item_number'], 'item_number');
 
 				$user_login = (string)$account['username'];
 				$user_email = (string)$account['email'];
