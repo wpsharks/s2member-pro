@@ -142,3 +142,9 @@ add_filter('update_feedback', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_p
 //260930.2113 Automatic/background core updates do not pass through the Network Admin feedback flow; reapply legacy Multisite patches only after WordPress reports a successful core update.
 add_action('_core_updated_successfully', 'c_ws_plugin__s2member_pro_mms_patches::sync_mms_patches_after_core_update');
 add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro_menu_pages::before_mms_ops_page_hook');
+
+//261007.2010 Pro rules extend shared EOT controls and run before established developer overrides.
+add_action('ws_plugin__s2member_after_eot_demotion_options', 'c_ws_plugin__s2member_pro_eot_rules::render');
+add_filter('ws_plugin__s2member_eot_demotion_role', 'c_ws_plugin__s2member_pro_eot_rules::destination', 10, 2);
+add_filter('ws_plugin__s2member_eot_remove_ccaps_default', 'c_ws_plugin__s2member_pro_eot_rules::removal_default', 10, 2);
+add_filter('ws_plugin__s2member_eot_ccaps_to_remove', 'c_ws_plugin__s2member_pro_eot_rules::removal_list', 10, 2);

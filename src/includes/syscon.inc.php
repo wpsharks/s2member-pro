@@ -99,6 +99,8 @@ if(!function_exists('ws_plugin__s2member_pro_default_options'))
 			'pro_sp_email_subject'                    => 'Thank You! (instructions for access)',
 			'pro_sp_email_message'                    => sprintf("Thanks %%%%first_name%%%%! \n\n%%%%item_name%%%%\n\nTransaction ID: %%%%txn_id%%%%\nCharges today: %%%%currency_symbol%%%%%%%%amount%%%%\n\nYour order can be retrieved here: \n%%%%sp_access_url%%%%\n(link expires in %%%%sp_access_exp%%%%)\n\nIf you have any trouble, please feel free to contact us.\n\nBest Regards,\n%s", get_bloginfo('name')),
 
+			'pro_eot_demotion_rules'                 => array(), //261007.2010 Optional per-level destination and custom capability removal overrides.
+
 			'pro_eot_reminder_email_enable'           => '0',
 			'pro_eot_reminder_email_on_npt_also'      => '0',
 			'pro_eot_reminder_email_days'             => '-5,-1',
@@ -243,6 +245,9 @@ if(!function_exists('ws_plugin__s2member_pro_options_before_checksum'))
 
 				else if(preg_match('/^pro_(?:signup|sp|eot_reminder)_email_(?:subject|message)$/', $key) && (!is_string($value) || !strlen($value)))
 					$value = $pro_default_options[$key];
+
+				else if($key === 'pro_eot_demotion_rules')
+					$value = c_ws_plugin__s2member_pro_eot_rules::normalize($value);
 
 				else if($key === 'pro_eot_reminder_email_enable' && (!is_string($value) || !is_numeric($value)))
 					$value = $pro_default_options[$key];

@@ -32,6 +32,53 @@
 jQuery(document).ready(
 	function($)
 	{
+		//261007.2010 Custom EOT rows are added only when requested; removal and Delete mode preserve the remaining values.
+		var $eotRules = $('#ws-plugin--s2member-pro-eot-demotion-rules');
+		if($eotRules.length)
+		{
+			var $eotAdd = $('#ws-plugin--s2member-pro-eot-add-rule');
+			var $eotBehavior = $('#ws-plugin--s2member-membership-eot-behavior');
+			var eotNextIndex = $eotRules.find('tbody tr[data-eot-rule]').length;
+			var syncEotRules = function()
+			{
+				var disabled = $eotBehavior.val() === 'delete';
+				var $rows = $eotRules.find('tbody tr[data-eot-rule]');
+				var used = [];
+				$rows.find('[data-eot-field="from_role"]').each(function() { if($(this).val()) used.push($(this).val()); });
+				$eotRules.closest('tr.ws-plugin--s2member-eot-demotion-option-row').find(':input').prop('disabled', disabled);
+				$rows.find('[data-eot-field="from_role"]').each(function()
+				{
+					var value = $(this).val();
+					$(this).find('option').each(function() { $(this).prop('disabled', !!this.value && this.value !== value && $.inArray(this.value, used) !== -1); });
+				});
+				$('#ws-plugin--s2member-pro-eot-rules-empty').toggle(!$rows.length);
+			};
+			$eotAdd.on('click', function(event)
+			{
+				event.preventDefault();
+				if($eotBehavior.val() === 'delete') return;
+				var $row = $($('#ws-plugin--s2member-pro-eot-rule-template').html());
+				$row.find('[data-eot-field]').each(function()
+				{
+					$(this).attr('name', 'ws_plugin__s2member_pro_eot_demotion_rules[' + eotNextIndex + '][' + $(this).attr('data-eot-field') + ']');
+				});
+				eotNextIndex++;
+				$eotRules.find('tbody').append($row);
+				syncEotRules();
+				$row.find('[data-eot-field="from_role"]').trigger('focus');
+			});
+			$eotRules.on('click', '[data-eot-remove]', function(event)
+			{
+				event.preventDefault();
+				if($eotBehavior.val() === 'delete') return;
+				$(this).closest('tr[data-eot-rule]').remove();
+				syncEotRules();
+			});
+			$eotRules.on('change', '[data-eot-field="from_role"]', syncEotRules);
+			$eotBehavior.on('change', syncEotRules);
+			syncEotRules();
+		}
+
 		var esc_attr = esc_html = function(string/* Convert special characters. */)
 		{
 			if(/[&\<\>"']/.test(string = String(string)))
