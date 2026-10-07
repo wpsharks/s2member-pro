@@ -155,7 +155,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 				$levels[$entry[0]] = $entry[1];
 			$rules = self::normalize(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules']) ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules'] : array());
 			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'><td>';
-			echo '<h3>Custom EOT Rules</h3>';
+			echo '<h3>Custom EOT Rules (beta)</h3>';
 			echo '<p>Choose a paid level in <strong>From</strong> and the level it should become in <strong>To</strong>. A blank choice uses the site-wide Demote To setting. <strong>Remove CCaps</strong> accepts comma-separated custom capabilities to remove, or <code>all-ccaps</code> on its own to remove all. A blank list uses the site-wide custom capability removal setting. Other custom capabilities remain available when a named list is used. Refunds/reversals that trigger an Immediate EOT still remove all custom capabilities.</p>';
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_demotion_rules[update]" value="update-signal"'.($disabled ? ' disabled="disabled"' : '').' />';
 			echo '<table id="ws-plugin--s2member-pro-eot-demotion-rules" class="widefat"><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Remove CCaps</th><th scope="col">Action</th></tr></thead><tbody>';
