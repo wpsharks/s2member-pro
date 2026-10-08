@@ -56,6 +56,7 @@ jQuery(document).ready(
 					var value = $(this).val();
 					$(this).find('option').each(function() { $(this).prop('disabled', !!this.value && this.value !== value && $.inArray(this.value, used) !== -1); });
 				});
+				$eotRules.toggle(!!$rows.length);
 				$('#ws-plugin--s2member-pro-eot-rules-empty').toggle(!$rows.length);
 				sizeEotRules();
 			};

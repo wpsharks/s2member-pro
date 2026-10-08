@@ -1,6 +1,6 @@
 /*261008.0548 Keep the demotion fields inside the settings column and reserve only a compact removal slot. */
 #ws-plugin--s2member-pro-eot-demotions { min-width: 0; max-width: 100%; }
-#ws-plugin--s2member-pro-eot-demotions h3 { margin: 16px 0 10px; }
+#ws-plugin--s2member-pro-eot-demotions h4 { margin: 0 0 8px; font-size: 14px; line-height: 1.4; font-weight: 600; }
 #ws-plugin--s2member-pro-eot-demotions .s2-eot-help { font-size: 13px; color: #50575e; margin-bottom: 14px; }
 #ws-plugin--s2member-pro-eot-demotion-rules { display: block; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #dcdcde; border-radius: 6px; background: #fff; }
 #ws-plugin--s2member-pro-eot-demotion-rules thead,

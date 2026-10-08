@@ -148,7 +148,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 		}
 
 		/**
-		 * Renders the combined table after the shared EOT demotion controls.
+		 * Renders the per-level editor after the site-wide EOT capability setting.
 		 *
 		 * @param array $vars Shared renderer context; the saved settings determine disabled state.
 		 * @return null
@@ -166,11 +166,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 				$levels[$entry[0]] = $entry[1];
 			$rules = self::normalize(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules']) ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules'] : array());
 			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'><td>';
-			echo '<div id="ws-plugin--s2member-pro-eot-demotions"><h3>Custom EOT Demotions (beta)</h3>';
+			echo '<div id="ws-plugin--s2member-pro-eot-demotions"><h4>Custom EOT Demotions (beta)</h4>';
 			echo '<p>Choose the level <strong>From</strong>, its destination <strong>To</strong>, and the custom capabilities to remove. Choose the same level to keep it. Blank fields follow the site-wide defaults.</p>';
 			echo '<p class="s2-eot-help"><strong>Remove CCaps:</strong> separate names with commas, or enter <code>all-ccaps</code> to remove all. Immediate refund/reversal EOTs still remove all custom capabilities.</p>';
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_demotion_rules[update]" value="update-signal"'.($disabled ? ' disabled="disabled"' : '').' />';
-			echo '<table id="ws-plugin--s2member-pro-eot-demotion-rules" class="widefat"><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Remove CCaps</th><th scope="col" class="s2-eot-action"><span class="screen-reader-text">Remove demotion</span></th></tr></thead><tbody>';
+			echo '<table id="ws-plugin--s2member-pro-eot-demotion-rules" class="widefat"'.($rules ? '' : ' style="display:none;"').'><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Remove CCaps</th><th scope="col" class="s2-eot-action"><span class="screen-reader-text">Remove demotion</span></th></tr></thead><tbody>';
 			foreach($rules as $index => $rule)
 				self::render_row($rule, $index, $levels, $disabled);
 			echo '</tbody></table>';

@@ -144,7 +144,7 @@ add_action('_core_updated_successfully', 'c_ws_plugin__s2member_pro_mms_patches:
 add_filter('ws_plugin__s2member_before_mms_ops_page', 'c_ws_plugin__s2member_pro_menu_pages::before_mms_ops_page_hook');
 
 //261007.2010 Pro rules extend shared EOT controls and run before established developer overrides.
-add_action('ws_plugin__s2member_after_eot_demotion_options', 'c_ws_plugin__s2member_pro_eot_rules::render');
+add_action('ws_plugin__s2member_after_eot_ccap_options', 'c_ws_plugin__s2member_pro_eot_rules::render');
 add_action('ws_plugin__s2member_during_menu_pages_css', 'c_ws_plugin__s2member_pro_eot_rules::styles');
 add_filter('ws_plugin__s2member_eot_demotion_role', 'c_ws_plugin__s2member_pro_eot_rules::destination', 10, 2);
 add_filter('ws_plugin__s2member_eot_remove_ccaps_default', 'c_ws_plugin__s2member_pro_eot_rules::removal_default', 10, 2);
