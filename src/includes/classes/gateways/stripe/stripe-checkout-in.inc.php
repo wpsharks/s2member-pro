@@ -909,7 +909,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											{
 												//260925.0411 When another request processed this pending subscription, wait for its terminal Gateway Checkout publication instead of trusting this request's cached checkout state.
 												if(empty($ipn['s2member_stripe_proxy_return_url']))
-													$recovered_gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::wait_for_gateway_checkout_fulfillment((string)$gateway_checkout_state['id']);
+												{
+													//261008.0648 Give the guest SetupIntent webhook up to 10 seconds to publish fulfillment before reporting that the account update is still processing.
+													$recovered_gateway_checkout_state = c_ws_plugin__s2member_pro_stripe_utilities::wait_for_gateway_checkout_fulfillment((string)$gateway_checkout_state['id'], 10000);
+												}
 												else
 													$recovered_gateway_checkout_state = c_ws_plugin__s2member_gateway_checkouts::load_state_uncached((string)$gateway_checkout_state['id']);
 
