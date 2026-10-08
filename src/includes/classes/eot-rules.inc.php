@@ -165,8 +165,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 			foreach($paid as $entry)
 				$levels[$entry[0]] = $entry[1];
 			$rules = self::normalize(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules']) ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules'] : array());
-			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'><td>';
-			echo '<div id="ws-plugin--s2member-pro-eot-demotions"><h4>Custom EOT Demotions (beta)</h4>';
+			//261008.0829 Match the neighboring EOT setting rows; the label names this dynamic group instead of one field.
+			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'>'."\n";
+			echo '<th>'."\n";
+			echo '<label id="ws-plugin--s2member-pro-eot-demotions-label">'."\n";
+			echo 'Custom EOT Demotions (beta)'."\n";
+			echo '</label>'."\n";
+			echo '</th>'."\n";
+			echo '</tr>'."\n";
+			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'>'."\n";
+			echo '<td>'."\n";
+			echo '<div id="ws-plugin--s2member-pro-eot-demotions" role="group" aria-labelledby="ws-plugin--s2member-pro-eot-demotions-label">'."\n";
 			echo '<p>Choose the level <strong>From</strong>, its destination <strong>To</strong>, and the custom capabilities to remove. Choose the same level to keep it. Blank fields follow the site-wide defaults.</p>';
 			echo '<p class="s2-eot-help"><strong>Remove CCaps:</strong> separate names with commas, or enter <code>all-ccaps</code> to remove all. Immediate refund/reversal EOTs still remove all custom capabilities.</p>';
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_demotion_rules[update]" value="update-signal"'.($disabled ? ' disabled="disabled"' : '').' />';
@@ -178,7 +187,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 			echo '<p><button type="button" id="ws-plugin--s2member-pro-eot-add-rule" class="button"'.($disabled ? ' disabled="disabled"' : '').'>Add demotion</button></p>';
 			echo '<template id="ws-plugin--s2member-pro-eot-rule-template">';
 			self::render_row(array('from_role' => '', 'to_role' => '', 'remove_ccaps' => ''), NULL, $levels, FALSE);
-			echo '</template></div></td></tr>';
+			echo '</template>'."\n";
+			echo '</div>'."\n";
+			echo '</td>'."\n";
+			echo '</tr>'."\n";
 		}
 
 		/**
