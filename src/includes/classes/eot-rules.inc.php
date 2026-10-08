@@ -137,6 +137,17 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 		}
 
 		/**
+		 * Outputs styles scoped to the Pro EOT demotion editor.
+		 *
+		 * @param array $vars Shared administrative stylesheet context.
+		 * @return null
+		 */
+		public static function styles($vars = array())
+		{
+			include dirname(dirname(__FILE__)).'/menu-pages/eot-demotions.css';
+		}
+
+		/**
 		 * Renders the combined table after the shared EOT demotion controls.
 		 *
 		 * @param array $vars Shared renderer context; the saved settings determine disabled state.
@@ -155,22 +166,23 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 				$levels[$entry[0]] = $entry[1];
 			$rules = self::normalize(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules']) ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_eot_demotion_rules'] : array());
 			echo '<tr class="ws-plugin--s2member-eot-demotion-option-row"'.($disabled ? ' style="opacity:0.5;"' : '').'><td>';
-			echo '<h3>Custom EOT Rules (beta)</h3>';
-			echo '<p>Choose a paid level in <strong>From</strong> and the level it should become in <strong>To</strong>. A blank choice uses the site-wide Demote To setting. <strong>Remove CCaps</strong> accepts comma-separated custom capabilities to remove, or <code>all-ccaps</code> on its own to remove all. A blank list uses the site-wide custom capability removal setting. Other custom capabilities remain available when a named list is used. Refunds/reversals that trigger an Immediate EOT still remove all custom capabilities.</p>';
+			echo '<div id="ws-plugin--s2member-pro-eot-demotions"><h3>Custom EOT Demotions (beta)</h3>';
+			echo '<p>Choose the level <strong>From</strong>, its destination <strong>To</strong>, and the custom capabilities to remove. Choose the same level to keep it. Blank fields follow the site-wide defaults.</p>';
+			echo '<p class="s2-eot-help"><strong>Remove CCaps:</strong> separate names with commas, or enter <code>all-ccaps</code> to remove all. Immediate refund/reversal EOTs still remove all custom capabilities.</p>';
 			echo '<input type="hidden" name="ws_plugin__s2member_pro_eot_demotion_rules[update]" value="update-signal"'.($disabled ? ' disabled="disabled"' : '').' />';
-			echo '<table id="ws-plugin--s2member-pro-eot-demotion-rules" class="widefat"><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Remove CCaps</th><th scope="col">Action</th></tr></thead><tbody>';
+			echo '<table id="ws-plugin--s2member-pro-eot-demotion-rules" class="widefat"><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Remove CCaps</th><th scope="col" class="s2-eot-action"><span class="screen-reader-text">Remove demotion</span></th></tr></thead><tbody>';
 			foreach($rules as $index => $rule)
 				self::render_row($rule, $index, $levels, $disabled);
 			echo '</tbody></table>';
-			echo '<p id="ws-plugin--s2member-pro-eot-rules-empty"'.($rules ? ' style="display:none;"' : '').'>No custom rules. Existing site-wide defaults apply.</p>';
-			echo '<p><button type="button" id="ws-plugin--s2member-pro-eot-add-rule" class="button"'.($disabled ? ' disabled="disabled"' : '').'>Add rule</button></p>';
+			echo '<p id="ws-plugin--s2member-pro-eot-rules-empty"'.($rules ? ' style="display:none;"' : '').'>No custom demotions. Site-wide defaults apply.</p>';
+			echo '<p><button type="button" id="ws-plugin--s2member-pro-eot-add-rule" class="button"'.($disabled ? ' disabled="disabled"' : '').'>Add demotion</button></p>';
 			echo '<template id="ws-plugin--s2member-pro-eot-rule-template">';
 			self::render_row(array('from_role' => '', 'to_role' => '', 'remove_ccaps' => ''), NULL, $levels, FALSE);
-			echo '</template></td></tr>';
+			echo '</template></div></td></tr>';
 		}
 
 		/**
-		 * Renders a saved row or an inert template for the Add rule button.
+		 * Renders a saved row or an inert template for the Add demotion button.
 		 *
 		 * @param array $rule Normalized row values.
 		 * @param int|null $index Saved row index; null omits names in the inert template.
@@ -185,7 +197,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 			foreach(array('from_role', 'to_role') as $field)
 			{
 				$name = $index === NULL ? '' : ' name="ws_plugin__s2member_pro_eot_demotion_rules['.(int)$index.']['.$field.']"';
-				echo '<td><select data-eot-field="'.$field.'" aria-label="'.($field === 'from_role' ? 'From level' : 'To level').'"'.$name.$disabled_attr.'>';
+				echo '<td><span class="s2-eot-field-label" aria-hidden="true">'.($field === 'from_role' ? 'From' : 'To').'</span><select data-eot-field="'.$field.'" aria-label="'.($field === 'from_role' ? 'From level' : 'To level').'"'.$name.$disabled_attr.'>';
 				echo '<option value="">'.($field === 'from_role' ? 'Choose a level' : 'Use site-wide default').'</option>';
 				foreach($levels as $slug => $label)
 					if($field !== 'from_role' || $slug !== 'subscriber')
@@ -193,8 +205,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 				echo '</select></td>';
 			}
 			$name = $index === NULL ? '' : ' name="ws_plugin__s2member_pro_eot_demotion_rules['.(int)$index.'][remove_ccaps]"';
-			echo '<td><input type="text" data-eot-field="remove_ccaps" aria-label="Custom capabilities to remove" value="'.esc_attr($rule['remove_ccaps']).'"'.$name.$disabled_attr.' placeholder="Use site-wide default" /></td>';
-			echo '<td><button type="button" data-eot-remove="1" class="button"'.$disabled_attr.'>Remove rule</button></td></tr>';
+			echo '<td><span class="s2-eot-field-label" aria-hidden="true">Remove CCaps</span><input type="text" data-eot-field="remove_ccaps" aria-label="Custom capabilities to remove" value="'.esc_attr($rule['remove_ccaps']).'"'.$name.$disabled_attr.' placeholder="Use site-wide default" /></td>';
+			echo '<td class="s2-eot-action"><button type="button" data-eot-remove="1" aria-label="Remove demotion" title="Remove demotion"'.$disabled_attr.'><span class="dashicons dashicons-trash" aria-hidden="true"></span></button></td></tr>';
 		}
 	}
 }

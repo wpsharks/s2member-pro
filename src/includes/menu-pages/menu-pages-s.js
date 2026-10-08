@@ -32,13 +32,18 @@
 jQuery(document).ready(
 	function($)
 	{
-		//261007.2010 Custom EOT rows are added only when requested; removal and Delete mode preserve the remaining values.
+		//261008.0548 Size the demotion editor to its settings column, which can be narrower than the browser viewport.
 		var $eotRules = $('#ws-plugin--s2member-pro-eot-demotion-rules');
 		if($eotRules.length)
 		{
 			var $eotAdd = $('#ws-plugin--s2member-pro-eot-add-rule');
 			var $eotBehavior = $('#ws-plugin--s2member-membership-eot-behavior');
+			var $eotEditor = $('#ws-plugin--s2member-pro-eot-demotions');
 			var eotNextIndex = $eotRules.find('tbody tr[data-eot-rule]').length;
+			var sizeEotRules = function()
+			{
+				$eotEditor.toggleClass('s2-eot-narrow', $eotEditor.width() < 620);
+			};
 			var syncEotRules = function()
 			{
 				var disabled = $eotBehavior.val() === 'delete';
@@ -52,7 +57,24 @@ jQuery(document).ready(
 					$(this).find('option').each(function() { $(this).prop('disabled', !!this.value && this.value !== value && $.inArray(this.value, used) !== -1); });
 				});
 				$('#ws-plugin--s2member-pro-eot-rules-empty').toggle(!$rows.length);
+				sizeEotRules();
 			};
+			var bindEotRemoval = function($row)
+			{
+				//261008.0548 Bind to the button itself so surrounding admin scripts cannot cancel removal by stopping click bubbling.
+				$row.find('[data-eot-remove]').on('click.s2memberEotDemotions', function(event)
+				{
+					event.preventDefault();
+					if($eotBehavior.val() === 'delete') return;
+					var $current = $(this).closest('tr[data-eot-rule]');
+					var $next = $current.next('tr[data-eot-rule]');
+					if(!$next.length) $next = $current.prev('tr[data-eot-rule]');
+					$current.remove();
+					syncEotRules();
+					($next.length ? $next.find('[data-eot-field="from_role"]') : $eotAdd).trigger('focus');
+				});
+			};
+			bindEotRemoval($eotRules.find('tbody tr[data-eot-rule]'));
 			$eotAdd.on('click', function(event)
 			{
 				event.preventDefault();
@@ -63,19 +85,15 @@ jQuery(document).ready(
 					$(this).attr('name', 'ws_plugin__s2member_pro_eot_demotion_rules[' + eotNextIndex + '][' + $(this).attr('data-eot-field') + ']');
 				});
 				eotNextIndex++;
+				bindEotRemoval($row);
 				$eotRules.find('tbody').append($row);
 				syncEotRules();
 				$row.find('[data-eot-field="from_role"]').trigger('focus');
 			});
-			$eotRules.on('click', '[data-eot-remove]', function(event)
-			{
-				event.preventDefault();
-				if($eotBehavior.val() === 'delete') return;
-				$(this).closest('tr[data-eot-rule]').remove();
-				syncEotRules();
-			});
 			$eotRules.on('change', '[data-eot-field="from_role"]', syncEotRules);
 			$eotBehavior.on('change', syncEotRules);
+			$(window).on('resize.s2memberEotDemotions', sizeEotRules);
+			if(window.ResizeObserver) new window.ResizeObserver(sizeEotRules).observe($eotEditor[0]);
 			syncEotRules();
 		}
 
