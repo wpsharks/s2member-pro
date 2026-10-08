@@ -247,7 +247,8 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam_recaptcha_v3')) {
          */
         protected static function expected_hostname()
         {
-            $host = !empty($_SERVER['HTTP_HOST']) ? (string)$_SERVER['HTTP_HOST'] : (string)wp_parse_url(home_url('/'), PHP_URL_HOST);
+            //261008.0325 Use s2Member's compatibility URL parser on WordPress versions older than 4.4.
+            $host = !empty($_SERVER['HTTP_HOST']) ? (string)$_SERVER['HTTP_HOST'] : (string)c_ws_plugin__s2member_utils_urls::parse_url(home_url('/'), PHP_URL_HOST);
             if (strpos($host, ':') !== false && substr_count($host, ':') === 1) {
                 $host = preg_replace('/:\d+$/', '', $host);
             }
