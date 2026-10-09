@@ -792,6 +792,8 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 			echo '</td>'."\n";
 
 			echo '</tr>'."\n";
+			//261008.0740 Keep Pro's per-level editor below the site-wide capability setting it can inherit.
+			do_action('ws_plugin__s2member_after_eot_ccap_options', get_defined_vars());
 			echo '</tbody>'."\n";
 			echo '</table>'."\n";
 
