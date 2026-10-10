@@ -632,10 +632,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_google_ops"))
 			echo '<p><em><strong>Limitation:</strong> Google Wallet currently does NOT notify s2Member about future payments that are processed against a recurring Subscription. For this reason, s2Member\'s API Notifications for Payments (see: <strong>Dashboard → s2Member → API Notifications</strong>); and s2Member\'s ability to accurately set an EOT Time when a Subscription is cancelled after X number of payments, may NOT work as expected in all cases. In many cases, upon being notified that a Subscription was cancelled, s2Member will terminate access immediately, because it has no way of knowing when the last payment was processed successfully; and thus, s2Member has no way to accurately define the amount of any remaining time that a customer may still have left.</em></p>'."\n";
 
 			//260821.0700 Mirror the shared Auto-EOT health/runtime controls anywhere these global settings are exposed; scheduler trouble must not blank the saved mode.
-			$auto_eot_health = c_ws_plugin__s2member_auto_eots::auto_eot_system_health(TRUE);
-			$auto_eot_legacy_cap = c_ws_plugin__s2member_auto_eots::auto_eot_system_legacy_cap_info();
+			$auto_eot_health = c_ws_plugin__s2member_eot::auto_eot_system_health(TRUE);
+			$auto_eot_legacy_cap = c_ws_plugin__s2member_eot::auto_eot_system_legacy_cap_info();
 			$auto_eot_mode = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"];
-			$auto_eot_runtime_target = c_ws_plugin__s2member_auto_eots::auto_eot_system_runtime_budget($auto_eot_mode === '2');
+			$auto_eot_runtime_target = c_ws_plugin__s2member_eot::auto_eot_system_runtime_budget($auto_eot_mode === '2');
 			$php_execution_limit = (int)ini_get('max_execution_time');
 			$auto_eot_status_labels = array('healthy' => 'Healthy', 'processing' => 'Processing', 'catching_up' => 'Catching up', 'attention' => 'Attention', 'error' => 'Needs attention', 'disabled' => 'Disabled');
 			$auto_eot_status_label = isset($auto_eot_status_labels[$auto_eot_health['status']]) ? $auto_eot_status_labels[$auto_eot_health['status']] : ucfirst($auto_eot_health['status']);

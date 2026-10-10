@@ -80,7 +80,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_eot_rules'))
 		{
 			if(isset($vars['eot_access_before']['previous_role']))
 				return (string)$vars['eot_access_before']['previous_role'];
-			$snapshot = c_ws_plugin__s2member_utils_eot::snapshot(isset($vars['user']) ? $vars['user'] : NULL);
+			$snapshot = c_ws_plugin__s2member_eot::access_snapshot(isset($vars['user']) ? $vars['user'] : NULL);
 			return $snapshot['previous_role'];
 		}
 

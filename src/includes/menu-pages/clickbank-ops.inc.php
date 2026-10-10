@@ -769,10 +769,10 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_page_clickbank_ops"))
 			echo '<p>The ClickBank IPN service will notify s2Member whenever a refund or chargeback occurs. For example, if you issue a refund to an unhappy Customer through ClickBank, s2Member will eventually be notified, and the account for that Customer will either be assigned the role selected under Demote To Role, or have the configured Delete behavior applied automatically. ~ Otherwise, under normal circumstances, s2Member will not process an EOT until the User has completely used up the time they paid for.</em></p>'."\n";
 
 			//260821.0700 Mirror the shared Auto-EOT health/runtime controls anywhere these global settings are exposed; scheduler trouble must not blank the saved mode.
-			$auto_eot_health = c_ws_plugin__s2member_auto_eots::auto_eot_system_health(TRUE);
-			$auto_eot_legacy_cap = c_ws_plugin__s2member_auto_eots::auto_eot_system_legacy_cap_info();
+			$auto_eot_health = c_ws_plugin__s2member_eot::auto_eot_system_health(TRUE);
+			$auto_eot_legacy_cap = c_ws_plugin__s2member_eot::auto_eot_system_legacy_cap_info();
 			$auto_eot_mode = (string)$GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["auto_eot_system_enabled"];
-			$auto_eot_runtime_target = c_ws_plugin__s2member_auto_eots::auto_eot_system_runtime_budget($auto_eot_mode === '2');
+			$auto_eot_runtime_target = c_ws_plugin__s2member_eot::auto_eot_system_runtime_budget($auto_eot_mode === '2');
 			$php_execution_limit = (int)ini_get('max_execution_time');
 			$auto_eot_status_labels = array('healthy' => 'Healthy', 'processing' => 'Processing', 'catching_up' => 'Catching up', 'attention' => 'Attention', 'error' => 'Needs attention', 'disabled' => 'Disabled');
 			$auto_eot_status_label = isset($auto_eot_status_labels[$auto_eot_health['status']]) ? $auto_eot_status_labels[$auto_eot_health['status']] : ucfirst($auto_eot_health['status']);
