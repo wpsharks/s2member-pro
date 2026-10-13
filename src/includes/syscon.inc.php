@@ -185,16 +185,20 @@ if(!function_exists('ws_plugin__s2member_pro_migrate_antispam_verification_provi
 		if(!is_array($options))
 			return FALSE;
 
+		$migrated = FALSE;
 		$provider = array_key_exists('pro_antispam_verification_provider', $options) ? trim((string)$options['pro_antispam_verification_provider']) : '';
-		if($provider !== '')
-			return FALSE; // Already migrated/configured; the new selector is authoritative from here forward.
+		if($provider === '')
+		{
+			$site_key = isset($options['pro_recaptcha2_public_key']) ? trim((string)$options['pro_recaptcha2_public_key']) : '';
+			$secret_key = isset($options['pro_recaptcha2_private_key']) ? trim((string)$options['pro_recaptcha2_private_key']) : '';
+			$options['pro_antispam_verification_provider'] = ($site_key !== '' && $secret_key !== '') ? 'recaptcha_v2' : 'none';
+			update_option('ws_plugin__s2member_options', $options);
+			if(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']))
+				$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider'] = $options['pro_antispam_verification_provider'];
+			$migrated = TRUE;
+		}
 
-		$site_key = isset($options['pro_recaptcha2_public_key']) ? trim((string)$options['pro_recaptcha2_public_key']) : '';
-		$secret_key = isset($options['pro_recaptcha2_private_key']) ? trim((string)$options['pro_recaptcha2_private_key']) : '';
-		$options['pro_antispam_verification_provider'] = ($site_key !== '' && $secret_key !== '') ? 'recaptcha_v2' : 'none';
-
-		update_option('ws_plugin__s2member_options', $options);
-		//261013.0251 A site-level migration must not overwrite network options; network migrations require network authorization.
+		//261013.2102 The network selector must migrate independently: an earlier guest request may already have migrated the site-local selector.
 		if(is_multisite() && is_main_site() && current_user_can('manage_network_options'))
 		{
 			$network_options = get_site_option('ws_plugin__s2member_options');
@@ -207,13 +211,11 @@ if(!function_exists('ws_plugin__s2member_pro_migrate_antispam_verification_provi
 					$network_secret_key = isset($network_options['pro_recaptcha2_private_key']) ? trim((string)$network_options['pro_recaptcha2_private_key']) : '';
 					$network_options['pro_antispam_verification_provider'] = ($network_site_key !== '' && $network_secret_key !== '') ? 'recaptcha_v2' : 'none';
 					update_site_option('ws_plugin__s2member_options', $network_options);
+					$migrated = TRUE;
 				}
 			}
 		}
-		if(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']))
-			$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider'] = $options['pro_antispam_verification_provider'];
-
-		return TRUE;
+		return $migrated;
 	}
 	//261005.0131 `init` covers normal upgrades (including Pro-only file replacement); `after_activation` also seeds a genuinely fresh installation after the Framework creates its options row.
 	add_action('init', 'ws_plugin__s2member_pro_migrate_antispam_verification_provider', 1);
