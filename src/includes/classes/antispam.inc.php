@@ -405,10 +405,21 @@ if (!class_exists('c_ws_plugin__s2member_pro_antispam')) {
          */
         protected static function persist_tested_fingerprint($option, $value)
         {
-            $GLOBALS['WS_PLUGIN__']['s2member']['o'][(string) $option] = (string) $value;
+            //261013.0251 Only the two provider-test fingerprints can be persisted by this helper.
+            $option = (string) $option;
+            $value = (string) $value;
+            if (!in_array($option, array('pro_antispam_turnstile_tested_fingerprint', 'pro_antispam_recaptcha_v3_tested_fingerprint'), true)) {
+                return;
+            }
+            $GLOBALS['WS_PLUGIN__']['s2member']['o'][$option] = $value;
             update_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
-            if (is_multisite() && is_main_site()) {
-                update_site_option('ws_plugin__s2member_options', $GLOBALS['WS_PLUGIN__']['s2member']['o']);
+            //261013.0251 An ordinary site admin can save local test metadata, but only network admins can write the network record.
+            if (is_multisite() && is_main_site() && current_user_can('manage_network_options')) {
+                $network_options = get_site_option('ws_plugin__s2member_options');
+                if (is_array($network_options)) {
+                    $network_options[$option] = $value;
+                    update_site_option('ws_plugin__s2member_options', $network_options);
+                }
             }
         }
 

@@ -194,8 +194,22 @@ if(!function_exists('ws_plugin__s2member_pro_migrate_antispam_verification_provi
 		$options['pro_antispam_verification_provider'] = ($site_key !== '' && $secret_key !== '') ? 'recaptcha_v2' : 'none';
 
 		update_option('ws_plugin__s2member_options', $options);
-		if(is_multisite() && is_main_site())
-			update_site_option('ws_plugin__s2member_options', $options);
+		//261013.0251 A site-level migration must not overwrite network options; network migrations require network authorization.
+		if(is_multisite() && is_main_site() && current_user_can('manage_network_options'))
+		{
+			$network_options = get_site_option('ws_plugin__s2member_options');
+			if(is_array($network_options))
+			{
+				$network_provider = array_key_exists('pro_antispam_verification_provider', $network_options) ? trim((string)$network_options['pro_antispam_verification_provider']) : '';
+				if($network_provider === '')
+				{
+					$network_site_key = isset($network_options['pro_recaptcha2_public_key']) ? trim((string)$network_options['pro_recaptcha2_public_key']) : '';
+					$network_secret_key = isset($network_options['pro_recaptcha2_private_key']) ? trim((string)$network_options['pro_recaptcha2_private_key']) : '';
+					$network_options['pro_antispam_verification_provider'] = ($network_site_key !== '' && $network_secret_key !== '') ? 'recaptcha_v2' : 'none';
+					update_site_option('ws_plugin__s2member_options', $network_options);
+				}
+			}
+		}
 		if(isset($GLOBALS['WS_PLUGIN__']['s2member']['o']) && is_array($GLOBALS['WS_PLUGIN__']['s2member']['o']))
 			$GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_antispam_verification_provider'] = $options['pro_antispam_verification_provider'];
 
