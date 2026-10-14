@@ -242,7 +242,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the description.
 								*/
-								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs($attr["desc"]), $code);
+								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr["desc"])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 								/*
 								Fill the captcha section.
 								*/
@@ -372,7 +372,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the description.
 								*/
-								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs($attr["desc"]), $code);
+								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr["desc"])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 								/*
 								Fill in the registration section.
 								*/
@@ -507,7 +507,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the description.
 								*/
-								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs($attr["desc"]), $code);
+								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr["desc"])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 								/*
 								Fill in the billing method section.
 								*/
@@ -676,7 +676,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the description.
 								*/
-								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs($attr["desc"]), $code);
+								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr["desc"])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 								/*
 								Fill in the coupon value.
 								*/
@@ -898,7 +898,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_form_in"))
 								/*
 								Fill in the description.
 								*/
-								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs($attr["desc"]), $code);
+								$code = preg_replace("/%%description%%/", c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr["desc"])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 								/*
 								Fill in the coupon value.
 								*/

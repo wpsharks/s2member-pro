@@ -259,7 +259,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
-				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr['desc'])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 				$code = preg_replace('/%%captcha%%/', c_ws_plugin__s2member_utils_strings::esc_refs($captcha), $code);
 				$code = preg_replace('/%%hidden_inputs%%/', c_ws_plugin__s2member_utils_strings::esc_refs($hidden_inputs), $code);
 
@@ -355,7 +355,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
 				$code = preg_replace('/%%options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($option_selections), $code);
-				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr['desc'])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 				$code = preg_replace('/%%first_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_registration']['first_name']))), $code);
 				$code = preg_replace('/%%last_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_registration']['last_name']))), $code);
 				$code = preg_replace('/%%email_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$_p['s2member_pro_stripe_registration']['email']))), $code);
@@ -434,7 +434,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
-				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr['desc'])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 				$code = preg_replace('/%%source_token%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html((string)(@$_p['s2member_pro_stripe_update']['source_token']))), $code);
 				$code = preg_replace('/%%source_token_summary%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_html((string)(@$_p['s2member_pro_stripe_update']['source_token_summary']))), $code);
 				$code = preg_replace('/%%captcha%%/', c_ws_plugin__s2member_utils_strings::esc_refs($captcha), $code);
@@ -567,7 +567,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
 				$code = preg_replace('/%%options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($option_selections), $code);
-				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr['desc'])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 				$code = preg_replace('/%%coupon_response%%/', c_ws_plugin__s2member_utils_strings::esc_refs(c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'], 'response', array('affiliates-1px-response'))), $code);
 				$code = preg_replace('/%%coupon_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$attr['coupon']))), $code);
 				$code = preg_replace('/%%first_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_sp_checkout']['first_name']))), $code);
@@ -753,7 +753,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				$code = preg_replace('/%%action%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr($_SERVER['REQUEST_URI'])), $code);
 				$code = preg_replace('/%%response%%/', c_ws_plugin__s2member_utils_strings::esc_refs($response['response']), $code);
 				$code = preg_replace('/%%options%%/', c_ws_plugin__s2member_utils_strings::esc_refs($option_selections), $code);
-				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs($attr['desc']), $code);
+				$code = preg_replace('/%%description%%/', c_ws_plugin__s2member_utils_strings::esc_refs(wp_kses_post($attr['desc'])), $code); //261014.1800 Sanitize shortcode description HTML at display time without modifying payment metadata.
 				$code = preg_replace('/%%coupon_response%%/', c_ws_plugin__s2member_utils_strings::esc_refs(c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($attr, $attr['coupon'], 'response', array('affiliates-1px-response'))), $code);
 				$code = preg_replace('/%%coupon_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(format_to_edit((string)(@$attr['coupon']))), $code);
 				$code = preg_replace('/%%first_name_value%%/', c_ws_plugin__s2member_utils_strings::esc_refs(esc_attr((string)(@$_p['s2member_pro_stripe_checkout']['first_name']))), $code);
