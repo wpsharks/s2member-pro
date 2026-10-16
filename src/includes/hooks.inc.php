@@ -77,6 +77,11 @@ add_filter('ws_plugin__s2member_during_add_admin_options_add_divider_3', 'c_ws_p
 
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_membership_levels', 'c_ws_plugin__s2member_pro_menu_pages::add_level_instructions');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_login_welcome_page', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_lwp_otos');
+
+//261016.1743 Provide inline profile success redirects only while Pro is loaded.
+add_action('ws_plugin__s2member_during_profile_after_table', 'c_ws_plugin__s2member_pro_login_redirects::profile_success_hidden_field');
+add_action('ws_plugin__s2member_after_handle_profile_modifications', 'c_ws_plugin__s2member_pro_login_redirects::profile_success_redirect');
+add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_profile_modifications', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_profile_success_attr');
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_url_shortening', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_captcha_ops');
 
 //260812 Add the Pro Shortcode Templates Whitelist after the shared Shortcode User Fields Whitelist panel.

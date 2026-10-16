@@ -337,5 +337,20 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		{
 			include_once dirname(dirname(__FILE__))."/menu-pages/mms-ops.inc.php";
 		}
+
+		/**
+		 * Document Pro's success attribute for the inline profile shortcode.
+		 *
+		 * @param array $vars Framework administration-page variables.
+		 */
+		public static function gen_ops_profile_success_attr($vars = array())
+		{
+			//261016.1831 Pro-only documentation is hooked into the existing Framework panel.
+			echo '<h3>Shortcode Attributes (Explained) — Pro</h3>'."\n";
+			echo '<ul>'."\n";
+			echo '<li><code>success=""</code> Success Redirect URL <em>(optional; Pro)</em>. After a successful update through the inline profile form, redirect the member to a page on this site. Leave this attribute empty or omit it to keep the normal confirmation message on the profile page. Failed updates do not redirect.</li>'."\n";
+			echo '</ul>'."\n";
+			echo '<p>Example: <code>[s2Member-Profile success="/account-updated/" /]</code>. This applies to the inline Shortcode form, not the Stand-Alone Profile Editing Panel.</p>'."\n";
+		}
 	}
 }

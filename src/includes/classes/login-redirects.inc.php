@@ -74,5 +74,40 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_redirects'))
 					}
 			return $redirect; // Filter through as-is.
 		}
+
+		/**
+		 * Render the optional Pro-only success redirect for the inline profile shortcode.
+		 *
+		 * @param array $vars Framework shortcode variables.
+		 */
+		public static function profile_success_hidden_field($vars = array())
+		{
+			//261016.1831 Only an explicit nonempty shortcode attribute is added to the form.
+			$attrs = isset($vars['attr']) && is_array($vars['attr']) ? $vars['attr'] : array();
+			if(isset($attrs['success']) && is_string($attrs['success']) && trim($attrs['success']) !== '')
+				echo '<input type="hidden" name="ws_plugin__s2member_profile_success" value="'.esc_attr(trim($attrs['success'])).'" />'."\n";
+		}
+
+		/**
+		 * Redirect after a successful inline profile save, never after a failed or stand-alone save.
+		 *
+		 * @param array $vars Framework profile-handler variables.
+		 */
+		public static function profile_success_redirect($vars = array())
+		{
+			//261016.1831 Require the successful save, inline-form nonce, and scalar destination.
+			if(empty($GLOBALS['ws_plugin__s2member_profile_saved']) || empty($vars['_p']) || !is_array($vars['_p']))
+				return;
+			$post = $vars['_p'];
+			if(empty($post['ws_plugin__s2member_sc_profile_save']) || !is_string($post['ws_plugin__s2member_sc_profile_save'])
+				|| !wp_verify_nonce($post['ws_plugin__s2member_sc_profile_save'], 'ws-plugin--s2member-sc-profile-save')
+				|| !isset($post['ws_plugin__s2member_profile_success']) || !is_string($post['ws_plugin__s2member_profile_success']))
+				return;
+
+			//261016.1831 WordPress validates the local destination and blocks external redirect hosts.
+			$url = wp_validate_redirect(trim($post['ws_plugin__s2member_profile_success']), '');
+			if($url && wp_safe_redirect($url, 303))
+				exit();
+		}
 	}
 }
