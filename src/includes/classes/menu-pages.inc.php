@@ -341,6 +341,11 @@ if(!class_exists("c_ws_plugin__s2member_pro_menu_pages"))
 		/**
 		 * Document Pro's success attribute for the inline profile shortcode.
 		 *
+		 * @package s2Member\Menu_Pages
+		 * @since 261016.1831
+		 *
+		 * @attaches-to ``add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_during_profile_modifications');``
+		 *
 		 * @param array $vars Framework administration-page variables.
 		 */
 		public static function gen_ops_profile_success_attr($vars = array())

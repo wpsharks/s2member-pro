@@ -78,6 +78,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_redirects'))
 		/**
 		 * Render the optional Pro-only success redirect for the inline profile shortcode.
 		 *
+		 * @package s2Member\Login_Redirects
+		 * @since 261016.1831
+		 *
+		 * @attaches-to ``add_action('ws_plugin__s2member_during_profile_after_table');``
+		 *
 		 * @param array $vars Framework shortcode variables.
 		 */
 		public static function profile_success_hidden_field($vars = array())
@@ -90,6 +95,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_login_redirects'))
 
 		/**
 		 * Redirect after a successful inline profile save, never after a failed or stand-alone save.
+		 *
+		 * @package s2Member\Login_Redirects
+		 * @since 261016.1831
+		 *
+		 * @attaches-to ``add_action('ws_plugin__s2member_after_handle_profile_modifications');``
 		 *
 		 * @param array $vars Framework profile-handler variables.
 		 */
