@@ -63,7 +63,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 
 						$attr = /* Force array. Trim quote entities. */ c_ws_plugin__s2member_utils_strings::trim_qts_deep((array)$attr);
 
-						$attr = shortcode_atts(array("cbp" => "0", "cbskin" => "", "cbfid" => "", "cbur" => "", "cbf" => "auto", "tid" => "", "vtid" => "", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "rs" => "", "sa" => "", "eot" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
+						$attr = shortcode_atts(array("cbp" => "0", "cbskin" => "", "cbfid" => "", "cbur" => "", "cbf" => "auto", "tid" => "", "vtid" => "", "ids" => "0", "exp" => "72", "level" => "1", "ccaps" => "", "desc" => "", "custom" => $_SERVER["HTTP_HOST"], "tp" => "0", "tt" => "D", "rp" => "1", "rt" => "M", "rr" => "1", "rs" => "", "sa" => "", "re" => "", "modify" => "0", "cancel" => "0", "sp" => "0", "image" => "default", "output" => "anchor"), $attr);
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper($attr["rt"]);
@@ -76,7 +76,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_clickbank_button_in"))
 						$calendar_terms = c_ws_plugin__s2member_pro_utilities::calendar_payment_terms($attr, "clickbank");
 						if($calendar_terms["error"] !== "") return '<div class="s2member-pro-calendar-error">'.esc_html($calendar_terms["error"]).'</div>';
 						$attr = $calendar_terms["attr"];
-						unset($attr["rs"], $attr["sa"], $attr["eot"]); //261018.0640 Do not alter standard ClickBank shortcode data.
+						unset($attr["rs"], $attr["sa"], $attr["re"]); //261018.0640 Do not alter standard ClickBank shortcode data.
 
 						//260811 Sanitize custom image URL.
 						if($attr["image"] !== "default")

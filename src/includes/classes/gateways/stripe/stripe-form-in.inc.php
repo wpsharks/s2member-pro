@@ -182,7 +182,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				'reject_prepaid'           => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid'],
 				'rs'                       => '',
 				'sa'                       => '',
-				'eot'                      => '',
+				're'                       => '',
 				'pform'                    => '', //240829
 			), $attr);
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().

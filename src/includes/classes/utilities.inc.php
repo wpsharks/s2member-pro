@@ -105,7 +105,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 						return $state; // Full state name.
 					}
 				/**
-				 * Resolve calendar-based start and expiration shortcuts into legacy payment terms.
+				 * Resolve calendar-based regular start and purchased-term end into legacy payment terms.
 				 *
 				 * @package s2Member\Utilities
 				 * @since 261018
@@ -120,13 +120,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 					$result = array('attr' => $attr, 'error' => '');
 					if(!is_array($attr))
 						return array('attr' => array(), 'error' => 'Invalid calendar payment attributes.');
-					foreach(array('rs', 'sa', 'eot') as $key)
+					foreach(array('rs', 'sa', 're') as $key)
 						if(isset($attr[$key]) && !is_scalar($attr[$key]))
 							return array('attr' => $attr, 'error' => 'Calendar payment date attributes must be strings.');
 					$rs = isset($attr['rs']) ? trim((string)$attr['rs']) : '';
 					$sa = isset($attr['sa']) ? trim((string)$attr['sa']) : '';
-					$eot = isset($attr['eot']) ? trim((string)$attr['eot']) : '';
-					if($rs === '' && $sa === '' && $eot === '') return $result;
+					$re = isset($attr['re']) ? trim((string)$attr['re']) : '';
+					if($rs === '' && $sa === '' && $re === '') return $result;
 
 					//261018.1856 Modification-only checkout (modify="1") is still a membership purchase, so it may use calendar terms.
 					//261018.0627 Keep calendar shortcuts out of non-purchase cancellation, registration, billing-update, and Specific Post/Page forms.
@@ -137,14 +137,14 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 						return array('attr' => $attr, 'error' => 'The sa attribute requires rs.');
 					$recurring = !in_array(strtoupper((string)$attr['rr']), array('BN', '0'), TRUE);
 					if($gateway === 'clickbank' && ($recurring || $rs !== '' || $sa !== ''))
-						return array('attr' => $attr, 'error' => 'ClickBank cannot dynamically alter initial charges or product subscription terms; only Buy Now eot is supported.');
+						return array('attr' => $attr, 'error' => 'ClickBank cannot dynamically alter initial charges or product subscription terms; only Buy Now re is supported.');
 					if($rs !== '' && !$recurring)
 						return array('attr' => $attr, 'error' => 'The rs attribute requires a recurring subscription.');
-					if($recurring && (string)$attr['rr'] !== '1' && $eot !== '')
-						return array('attr' => $attr, 'error' => 'Recurring eot requires rr="1".');
+					if($recurring && (string)$attr['rr'] !== '1' && $re !== '')
+						return array('attr' => $attr, 'error' => 'Recurring re requires rr="1".');
 					//261018.1622 Without rs, a legacy trial shifts the first charge; never count it as an immediate regular payment.
-					if($recurring && $eot !== '' && $rs === '' && isset($attr['tp']) && (int)$attr['tp'] > 0)
-						return array('attr' => $attr, 'error' => 'Recurring eot with an existing trial requires rs, so payment counts are unambiguous.');
+					if($recurring && $re !== '' && $rs === '' && isset($attr['tp']) && (int)$attr['tp'] > 0)
+						return array('attr' => $attr, 'error' => 'Recurring re with an existing trial requires rs, so payment counts are unambiguous.');
 					if($recurring && (!ctype_digit((string)$attr['rp']) || (int)$attr['rp'] < 1 || !in_array($attr['rt'], array('D', 'W', 'M', 'Y'), TRUE)))
 						return array('attr' => $attr, 'error' => 'Calendar subscription dates require a valid rp/rt regular period.');
 
@@ -175,19 +175,19 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 								$attr['ta'] = '0'; $attr['tp'] = '0'; $attr['tt'] = 'D';
 							}
 						}
-						if($eot !== '') {
-							$lastDay = self::calendar_date($eot, $today, TRUE);
-							if($lastDay < $today) throw new InvalidArgumentException('The requested eot date is already past this month.');
+						if($re !== '') {
+							$lastDay = self::calendar_date($re, $today, TRUE);
+							if($lastDay < $today) throw new InvalidArgumentException('The requested re date is already past this month.');
 							$exclusiveEnd = $lastDay->modify('+1 day');
 							$daysToEnd = (int)$today->diff($exclusiveEnd)->days;
-							if($daysToEnd < 1) throw new InvalidArgumentException('eot must cover at least the current day.');
+							if($daysToEnd < 1) throw new InvalidArgumentException('re must cover at least the current day.');
 							if(!$recurring) {
-								//261018.0627 Existing BN EOT and Auto-Extend logic consumes rp/rt; do not set user EOT here.
+								//261018.2354 Keep re as the purchased-term end: existing BN EOT/grace and Auto-Extend logic consumes rp/rt unchanged.
 								$attr['rp'] = (string)$daysToEnd; $attr['rt'] = 'D';
 							} else {
 								$chargeDate = $regularStart === NULL ? $today : $regularStart;
 								if($chargeDate >= $exclusiveEnd) {
-									//261018.1710 When EOT precedes regular billing, reuse Buy Now fulfillment for the initial period, including zero-cost access.
+									//261018.2354 When the purchased term ends before regular billing, reuse Buy Now fulfillment for the initial period, including zero-cost access.
 									$initialOnlyAmount = $rs === '' ? (float)$attr['ra'] : (float)$attr['ta'];
 									//261018.1800 Legacy PayPal Buttons cannot process a zero-cost BN; use their minimum payable amount instead of presenting a form error on an initial-only term.
 									if($initialOnlyAmount <= 0 && $gateway === 'paypal_button')
@@ -203,11 +203,11 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 										$chargeDate = self::calendar_add_period($chargeDate, (int)$attr['rp'], $attr['rt']);
 									}
 									if($cycles > 999 || $chargeDate->format('Y-m-d') !== $exclusiveEnd->format('Y-m-d'))
-										throw new InvalidArgumentException('eot must align with the end of a whole regular billing period.');
+										throw new InvalidArgumentException('re must align with the end of a whole regular billing period.');
 									if($gateway === 'authnet' && ($attr['rt'] === 'Y' || ($attr['rt'] === 'M' && (int)$attr['rp'] > 1)))
-										throw new InvalidArgumentException('Recurring eot does not support approximate Authorize.Net month/year billing terms.');
+										throw new InvalidArgumentException('Recurring re does not support approximate Authorize.Net month/year billing terms.');
 									if($gateway === 'stripe' && in_array($attr['rt'], array('M', 'Y'), TRUE))
-										throw new InvalidArgumentException('Recurring eot with Stripe month/year terms requires calendar billing support; use a Buy Now payment.');
+										throw new InvalidArgumentException('Recurring re with Stripe month/year terms requires calendar billing support; use a Buy Now payment.');
 									//261018.0632 Legacy PayPal Pro-Forms count the immediate checkout payment in addition to rrt.
 									if($gateway === 'paypal_form' && (int)$attr['tp'] === 0) $cycles--;
 									if($cycles < 1) {
@@ -230,7 +230,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				 * @since 261018
 				 * @param string $value `dd`, `mm-dd`, or `yyyy-mm-dd`.
 				 * @param DateTimeImmutable $today Local checkout day.
-				 * @param bool $expiration Whether `31` represents current month's last day.
+				 * @param bool $expiration Whether `31` represents current month's last purchased-term day.
 				 * @return DateTimeImmutable Resolved calendar day.
 				 */
 				public static function calendar_date($value, $today, $expiration)
@@ -336,13 +336,13 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 					if(empty($vars['__refs']['attr']) || !is_array($vars['__refs']['attr'])) return;
 					$attr = &$vars['__refs']['attr'];
 					$has_dates = FALSE;
-					foreach(array('rs', 'sa', 'eot') as $key)
+					foreach(array('rs', 'sa', 're') as $key)
 						if(isset($attr[$key]) && (!is_scalar($attr[$key]) || trim((string)$attr[$key]) !== '')) $has_dates = TRUE;
 					//261018.0640 Never introduce extra shortcode keys into ordinary signed checkout terms.
-					if(!$has_dates) { unset($attr['rs'], $attr['sa'], $attr['eot']); return; }
+					if(!$has_dates) { unset($attr['rs'], $attr['sa'], $attr['re']); return; }
 					$resolved = self::calendar_payment_terms($attr, $gateway);
 					$attr = $resolved['attr'];
-					unset($attr['rs'], $attr['sa'], $attr['eot']);
+					unset($attr['rs'], $attr['sa'], $attr['re']);
 					if($resolved['error'] !== '') $attr['calendar_payment_error'] = $resolved['error'];
 				}
 
