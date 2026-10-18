@@ -120,7 +120,7 @@ jQuery(document).ready(
 			var $eot_reminder_email_days = $('#ws-plugin--s2member-pro-eot-reminder-email-days'),
 
 				$eot_reminder_email_recipients = $('#ws-plugin--s2member-pro-eot-reminder-email-recipients'),
-				eot_reminder_email_recipients = $eot_reminder_email_recipients.length ? $.JSON.parse($eot_reminder_email_recipients.val()) : {},
+				eot_reminder_email_recipients = $eot_reminder_email_recipients.length ? JSON.parse($eot_reminder_email_recipients.val()) : {},
 
 				$eot_reminder_email_recipients_for_day = $('#ws-plugin--s2member-pro-eot-reminder-email-recipients-for-day'),
 				eot_reminder_email_recipients_for_day = function(day, _fallback) {
@@ -132,7 +132,7 @@ jQuery(document).ready(
 					return ''; // Default return value.
 				},
 				$eot_reminder_email_subject = $('#ws-plugin--s2member-pro-eot-reminder-email-subject'),
-				eot_reminder_email_subject = $eot_reminder_email_subject.length ? $.JSON.parse($eot_reminder_email_subject.val()) : {},
+				eot_reminder_email_subject = $eot_reminder_email_subject.length ? JSON.parse($eot_reminder_email_subject.val()) : {},
 
 				$eot_reminder_email_subject_for_day = $('#ws-plugin--s2member-pro-eot-reminder-email-subject-for-day'),
 				eot_reminder_email_subject_for_day = function(day, _fallback) {
@@ -144,7 +144,7 @@ jQuery(document).ready(
 					return ''; // Default return value.
 				},
 				$eot_reminder_email_message = $('#ws-plugin--s2member-pro-eot-reminder-email-message'),
-				eot_reminder_email_message = $eot_reminder_email_message.length ? $.JSON.parse($eot_reminder_email_message.val()) : {},
+				eot_reminder_email_message = $eot_reminder_email_message.length ? JSON.parse($eot_reminder_email_message.val()) : {},
 
 				$eot_reminder_email_message_for_day = $('#ws-plugin--s2member-pro-eot-reminder-email-message-for-day'),
 				eot_reminder_email_message_for_day = function(day, _fallback) {
@@ -231,9 +231,9 @@ jQuery(document).ready(
 					_eot_reminder_email_subject[day] = eot_reminder_email_subject_for_day(day);
 					_eot_reminder_email_message[day] = eot_reminder_email_message_for_day(day);
 				});
-				$eot_reminder_email_recipients.val($.JSON.stringify(_eot_reminder_email_recipients));
-				$eot_reminder_email_subject.val($.JSON.stringify(_eot_reminder_email_subject));
-				$eot_reminder_email_message.val($.JSON.stringify(_eot_reminder_email_message));
+				$eot_reminder_email_recipients.val(JSON.stringify(_eot_reminder_email_recipients));
+				$eot_reminder_email_subject.val(JSON.stringify(_eot_reminder_email_subject));
+				$eot_reminder_email_message.val(JSON.stringify(_eot_reminder_email_message));
 			});
 			if ($eot_reminder_email_days.length) {
 				eot_reminder_email_check_days(true); // Initialize.
