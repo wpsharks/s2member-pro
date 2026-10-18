@@ -58,7 +58,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 				*/
 				public static function paypal_button_default_attrs ($default_attrs = FALSE, $vars = FALSE)
 					{
-						return array_merge ((array)$default_attrs, array("success" => "", "accept" => ""));
+						return array_merge ((array)$default_attrs, array("success" => "", "accept" => "", "rs" => "", "sa" => "", "eot" => ""));
 					}
 				/**
 				* Cleans up extra Attributes in PayPal Button Shortcodes.
@@ -79,6 +79,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_extras"))
 						$attr["success"] = (isset($attr["success"]) && is_string($attr["success"])) ? str_ireplace (array("&#038;", "&amp;"), "&", $attr["success"]) : "";
 
 						$attr["accept"] = (trim ($attr["accept"])) ? preg_split ("/[;,]+/", preg_replace ("/[\r\n\t\s]+/", "", strtolower ($attr["accept"]))) : array();
+
+						//261018.0632 Resolve payment dates through Pro, retaining Framework button defaults and payment handling.
+						c_ws_plugin__s2member_pro_utilities::calendar_apply_hook($vars, "paypal_button");
 
 						return /* Return for uniformity. */;
 					}

@@ -180,6 +180,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 				'collect_billing_address'  => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_billing_address'],
 				'collect_shipping_address' => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_shipping_address'],
 				'reject_prepaid'           => $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_stripe_api_reject_prepaid'],
+				'rs'                       => '',
+				'sa'                       => '',
+				'eot'                      => '',
 				'pform'                    => '', //240829
 			), $attr);
 			$attr['tt']                   = strtoupper($attr['tt']); // Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts().
@@ -199,6 +202,9 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_form_in'))
 
 			foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 			do_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', get_defined_vars());
+
+			//261018.0627 Invalid calendar terms must not reach checkout or be signed.
+			if(!empty($attr['calendar_payment_error'])) return '<div class="s2member-pro-calendar-error">'.esc_html($attr['calendar_payment_error']).'</div>';
 			unset($__refs, $__v); // Ditch these temporary vars.
 
 			//260812 Match the final shortcode attributes to the standard template for this form.

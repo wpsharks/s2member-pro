@@ -134,7 +134,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 						if($option_placeholder_selected && empty($attr['desc']))
 							$attr['desc'] = 'Checkout Options Placeholder';
 
-						$attr = shortcode_atts (array("ids" => "0", "exp" => "72", "level" => ((@$attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "unsub" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => "", 'pform' => ''), $attr); //250214 Added pform
+						$attr = shortcode_atts (array("ids" => "0", "exp" => "72", "level" => ((@$attr["register"]) ? "0" : "1"), "ccaps" => "", "desc" => "", "cc" => "USD", "custom" => $_SERVER["HTTP_HOST"], "ta" => "0", "tp" => "0", "tt" => "D", "ra" => "0.01", "rp" => "1", "rt" => "M", "rr" => "1", "rrt" => "", "modify" => "0", "cancel" => "0", "unsub" => "0", "sp" => "0", "register" => "0", "update" => "0", "accept" => "visa,mastercard,amex,discover", "coupon" => "", "accept_coupons" => "0", "default_country_code" => "US", "captcha" => "", "template" => "", "success" => "", 'pform' => '', 'rs' => '', 'sa' => '', 'eot' => ''), $attr); //250214 Added pform
 
 						$attr["tt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["tt"]);
 						$attr["rt"] = /* Term lengths absolutely must be provided in upper-case format. Only after running shortcode_atts(). */ strtoupper ($attr["rt"]);
@@ -156,6 +156,9 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_form_in"))
 
 						foreach(array_keys(get_defined_vars())as$__v)$__refs[$__v]=&$$__v;
 						do_action("ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts", get_defined_vars ());
+
+						//261018.0627 Never render a payable form with silently discarded or invalid calendar terms.
+						if(!empty($attr["calendar_payment_error"])) return '<div class="s2member-pro-calendar-error">'.esc_html($attr["calendar_payment_error"]).'</div>';
 						unset($__refs, $__v);
 
 						//260812 Match the final shortcode attributes to the standard template for this form.

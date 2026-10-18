@@ -87,6 +87,10 @@ add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_u
 //260812 Add the Pro Shortcode Templates Whitelist after the shared Shortcode User Fields Whitelist panel.
 add_action('ws_plugin__s2member_during_gen_ops_page_during_left_sections_after_sc_s2get_shortcode', 'c_ws_plugin__s2member_pro_menu_pages::gen_ops_shortcode_templates');
 
+//261018.0627 Resolve Pro date shortcuts before each gateway creates or signs checkout terms.
+add_action('ws_plugin__s2member_pro_before_sc_paypal_form_after_shortcode_atts', 'c_ws_plugin__s2member_pro_utilities::calendar_paypal_form');
+add_action('ws_plugin__s2member_pro_before_sc_stripe_form_after_shortcode_atts', 'c_ws_plugin__s2member_pro_utilities::calendar_stripe_form');
+add_action('ws_plugin__s2member_pro_before_sc_authnet_form_after_shortcode_atts', 'c_ws_plugin__s2member_pro_utilities::calendar_authnet_form');
 add_filter('ws_plugin__s2member_sc_paypal_button_default_attrs', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_default_attrs', 10, 2);
 add_action('ws_plugin__s2member_before_sc_paypal_button_after_shortcode_atts', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_after_attrs');
 add_filter('ws_plugin__s2member_during_sc_paypal_button_success_return_url', 'c_ws_plugin__s2member_pro_paypal_extras::paypal_button_success_return_url', 10, 2);
