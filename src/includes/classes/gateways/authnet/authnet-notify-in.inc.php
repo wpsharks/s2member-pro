@@ -67,7 +67,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 					$authnet['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$authnet['s2member_log'][] = 's2Member POST vars verified with Authorize.Net.';
 
-					if($authnet['x_subscription_id'] && $authnet['x_subscription_paynum'] && $authnet['x_response_code'] === '1')
+					//261104.0544 Regular Authorize.Net Silent Posts omit ARB-only subscription fields.
+					if(!empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && $authnet['x_response_code'] === '1')
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
@@ -119,7 +120,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 							$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
 						}
 					}
-					else if($authnet['x_subscription_id'] && $authnet['x_subscription_paynum'] && preg_match('/^(2|3)$/', $authnet['x_response_code']))
+					else if(!empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && preg_match('/^(2|3)$/', $authnet['x_response_code']))
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
