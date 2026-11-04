@@ -136,20 +136,31 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 					if($rs === '' && $sa !== '')
 						return array('attr' => $attr, 'error' => 'The sa attribute requires rs.');
 					$recurring = !in_array(strtoupper((string)$attr['rr']), array('BN', '0'), TRUE);
+					//261019.2037 TODO: Support recurring re only after gateway-verified cutoff, paid-through tracking, and cancellation-aware EOT are implemented; rrt alone cannot guarantee a calendar end.
+					if($recurring && $re !== '')
+						return array('attr' => $attr, 'error' => 'The re attribute currently supports Buy Now purchases only; recurring calendar end dates are not yet supported.');
+					//261019.2037 rr=0 with a trial is still a delayed-payment subscription, not an exact Buy Now end date.
+					if($re !== '' && (string)$attr['rr'] === '0' && !empty($attr['tp']))
+						return array('attr' => $attr, 'error' => 'The re attribute does not support nonrecurring subscriptions with a trial; use rr="BN" without a trial.');
+					//261025.0102 ClickBank uses rr=0 for Standard products; rr=BN would omit the purchased-term duration from its checkout metadata.
+					if($gateway === 'clickbank' && (string)$attr['rr'] === 'BN')
+						return array('attr' => $attr, 'error' => 'ClickBank Buy Now products require rr="0"; rr="BN" is not supported.');
 					if($gateway === 'clickbank' && ($recurring || $rs !== '' || $sa !== ''))
 						return array('attr' => $attr, 'error' => 'ClickBank cannot dynamically alter initial charges or product subscription terms; only Buy Now re is supported.');
 					if($rs !== '' && !$recurring)
 						return array('attr' => $attr, 'error' => 'The rs attribute requires a recurring subscription.');
-					if($recurring && (string)$attr['rr'] !== '1' && $re !== '')
-						return array('attr' => $attr, 'error' => 'Recurring re requires rr="1".');
-					//261018.1622 Without rs, a legacy trial shifts the first charge; never count it as an immediate regular payment.
-					if($recurring && $re !== '' && $rs === '' && isset($attr['tp']) && (int)$attr['tp'] > 0)
-						return array('attr' => $attr, 'error' => 'Recurring re with an existing trial requires rs, so payment counts are unambiguous.');
 					if($recurring && (!ctype_digit((string)$attr['rp']) || (int)$attr['rp'] < 1 || !in_array($attr['rt'], array('D', 'W', 'M', 'Y'), TRUE)))
 						return array('attr' => $attr, 'error' => 'Calendar subscription dates require a valid rp/rt regular period.');
 
 					try {
-						$timezone = wp_timezone();
+						//261025.0102 wp_timezone() requires WP 5.3; retain calendar-shortcode support on the advertised WP 4.2+ minimum.
+						if(function_exists('wp_timezone')) $timezone = wp_timezone();
+						else if(($timezone_string = (string)get_option('timezone_string'))) $timezone = new DateTimeZone($timezone_string);
+						else {
+							$offset = (float)get_option('gmt_offset', 0);
+							$offset_abs = abs($offset);
+							$timezone = new DateTimeZone(sprintf('%s%02d:%02d', $offset < 0 ? '-' : '+', floor($offset_abs), round(($offset_abs - floor($offset_abs)) * 60)));
+						}
 						$today = (new DateTimeImmutable('@'.(int)($now === NULL ? time() : $now)))->setTimezone($timezone)->setTime(0, 0, 0);
 						$regularStart = NULL;
 						if($rs !== '') {
@@ -181,42 +192,8 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 							$exclusiveEnd = $lastDay->modify('+1 day');
 							$daysToEnd = (int)$today->diff($exclusiveEnd)->days;
 							if($daysToEnd < 1) throw new InvalidArgumentException('re must cover at least the current day.');
-							if(!$recurring) {
-								//261018.2354 Keep re as the purchased-term end: existing BN EOT/grace and Auto-Extend logic consumes rp/rt unchanged.
-								$attr['rp'] = (string)$daysToEnd; $attr['rt'] = 'D';
-							} else {
-								$chargeDate = $regularStart === NULL ? $today : $regularStart;
-								if($chargeDate >= $exclusiveEnd) {
-									//261018.2354 When the purchased term ends before regular billing, reuse Buy Now fulfillment for the initial period, including zero-cost access.
-									$initialOnlyAmount = $rs === '' ? (float)$attr['ra'] : (float)$attr['ta'];
-									//261018.1800 Legacy PayPal Buttons cannot process a zero-cost BN; use their minimum payable amount instead of presenting a form error on an initial-only term.
-									if($initialOnlyAmount <= 0 && $gateway === 'paypal_button')
-										$initialOnlyAmount = .01;
-									$attr['ra'] = number_format($initialOnlyAmount, 2, '.', ''); $attr['rr'] = 'BN'; $attr['rrt'] = '';
-									$attr['ta'] = '0'; $attr['tp'] = '0'; $attr['tt'] = 'D';
-									$attr['rp'] = (string)$daysToEnd; $attr['rt'] = 'D';
-								} else {
-									//261018.0627 Legacy rrt counts scheduled regular charges; do not change live subscriptions or provider cycles.
-									$cycles = 0;
-									while($chargeDate < $exclusiveEnd && $cycles <= 999) {
-										$cycles++;
-										$chargeDate = self::calendar_add_period($chargeDate, (int)$attr['rp'], $attr['rt']);
-									}
-									if($cycles > 999 || $chargeDate->format('Y-m-d') !== $exclusiveEnd->format('Y-m-d'))
-										throw new InvalidArgumentException('re must align with the end of a whole regular billing period.');
-									if($gateway === 'authnet' && ($attr['rt'] === 'Y' || ($attr['rt'] === 'M' && (int)$attr['rp'] > 1)))
-										throw new InvalidArgumentException('Recurring re does not support approximate Authorize.Net month/year billing terms.');
-									if($gateway === 'stripe' && in_array($attr['rt'], array('M', 'Y'), TRUE))
-										throw new InvalidArgumentException('Recurring re with Stripe month/year terms requires calendar billing support; use a Buy Now payment.');
-									//261018.0632 Legacy PayPal Pro-Forms count the immediate checkout payment in addition to rrt.
-									if($gateway === 'paypal_form' && (int)$attr['tp'] === 0) $cycles--;
-									if($cycles < 1) {
-										$attr['rr'] = 'BN'; $attr['rrt'] = '';
-										$attr['ta'] = '0'; $attr['tp'] = '0'; $attr['tt'] = 'D';
-										$attr['rp'] = (string)$daysToEnd; $attr['rt'] = 'D';
-									} else $attr['rrt'] = (string)$cycles;
-								}
-							}
+							//261019.2037 Only Buy Now re reaches this block; preserve the legacy rp/rt duration and EOT/grace behavior.
+							$attr['rp'] = (string)$daysToEnd; $attr['rt'] = 'D';
 						}
 					} catch(Exception $error) {
 						return array('attr' => $result['attr'], 'error' => $error->getMessage());
@@ -294,7 +271,7 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				}
 
 				/**
-				 * Round initial-price units up: annual by month, monthly by started week (four per month), weekly by day.
+				 * Prorate the initial charge by actual calendar days in the full billing period ending at rs.
 				 * @package s2Member\Utilities
 				 * @since 261018
 				 * @param array $attr Regular price/period.
@@ -306,21 +283,17 @@ if (!class_exists ("c_ws_plugin__s2member_pro_utilities"))
 				public static function calendar_initial_amount($attr, $today, $start, $days)
 				{
 					$rp = (int)$attr['rp']; $unit = $attr['rt'];
-					if($unit === 'Y') {
-						$used = ((int)$start->format('Y') - (int)$today->format('Y')) * 12 + (int)$start->format('n') - (int)$today->format('n');
-						if((int)$start->format('j') > (int)$today->format('j')) $used++;
-						$all = $rp * 12;
-					} else if($unit === 'M') {
-						//261018.1622 Bill one quarter per started week, never more than a full monthly amount.
-						$used = min($rp * 4, (int)ceil($days / 7));
-						$all = $rp * 4;
-					} else if($unit === 'W') {
-						$used = $days; $all = $rp * 7;
-					} else {
-						$used = $days; $all = $rp;
-					}
-					if($all < 1) throw new InvalidArgumentException('Invalid period for automatic starting amount.');
-					return round((float)$attr['ra'] * $used / $all, 2);
+					if($rp < 1 || !in_array($unit, array('D', 'W', 'M', 'Y'), TRUE))
+						throw new InvalidArgumentException('Invalid period for automatic starting amount.');
+					if($unit === 'M' || $unit === 'Y') {
+						//261019.2037 Subtract from day 1, then clamp to the prior month/year's last day; PHP's default subtraction can overflow at month ends and Feb 29.
+						$anchor = $start->modify('first day of this month')->sub(new DateInterval('P'.$rp.$unit));
+						$periodStart = $anchor->setDate((int)$anchor->format('Y'), (int)$anchor->format('m'), min((int)$start->format('j'), (int)$anchor->format('t')));
+					} else $periodStart = $start->sub(new DateInterval('P'.$rp.$unit));
+					$fullDays = (int)$periodStart->diff($start)->days;
+					if($fullDays < 1) throw new InvalidArgumentException('Invalid period for automatic starting amount.');
+					//261019.2037 The numerator is the checkout-to-rs calendar-day count; cap it at the full period so automatic proration never exceeds ra.
+					return round((float)$attr['ra'] * min(max(0, $days), $fullDays) / $fullDays, 2);
 				}
 
 				/**
