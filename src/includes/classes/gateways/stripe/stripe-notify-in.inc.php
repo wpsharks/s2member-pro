@@ -430,6 +430,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 								}
 								else
 								{
+									//261110.0051 TO-DO: Review early Stripe deletion during paid/promotional trials. `customer.subscription.deleted`
+									//261110.0051 maps to `subscr_eot`; without an Auto-EOT (normal for active subscriptions), Core may demote immediately.
+									//261110.0051 Signup vars (`initial`, `initial_term`, `mc_amount1`, `period1`) record intended terms, not proven payment.
+									//261110.0051 Verify Stripe invoices/payments and independently granted access; `trial_end` alone is insufficient.
+									//261110.0051 Evaluate before proxying: Core demotion removes saved signup vars. Preserve manual EOTs/replacement guards.
+									//261110.0051 Compare other gateway cancellation/EOT semantics
+									//261110.0051 and test free/paid trials, early/scheduled cancellation, and duplicate/out-of-order webhooks before changing this mapping.
 									$ipn['txn_type']   = 'subscr_eot';
 									$ipn['subscr_cid'] = $ipn_signup_vars['subscr_cid'];
 									$ipn['subscr_id']  = $ipn_signup_vars['subscr_id'];
