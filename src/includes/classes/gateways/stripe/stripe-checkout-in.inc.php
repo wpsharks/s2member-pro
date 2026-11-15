@@ -958,7 +958,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								{
 									//260619 Do not proxy pending subscription IPNs when the local user was not created.
 									if(empty($stripe_pending_subscr))
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn);
 									else
 									{
 										c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('s2member_log' => array('Local user creation failed during pending Stripe subscription checkout; attempting to cancel subscription.'), 'subscr_id' => $new__subscr_id, 'subscr_cid' => $new__subscr_cid));
@@ -1311,7 +1311,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								{
 									//260925.2349 Never send a synthetic web_accept while one-time 3DS is still pending; no successful payment exists yet.
 									if(empty($stripe_pending_payment))
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn);
 
 									$global_response = array('response' => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', 's2member-front', 's2member'), 'error' => TRUE);
 								}

@@ -1401,8 +1401,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 			$ipn['s2member_paypal_proxy']              = 'stripe';
 			$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-			$proxy_return_url = c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
-			$proxy_return_url = is_string($proxy_return_url) ? trim($proxy_return_url) : '';
+			//261115.2222 Reuse isolated Notify during pending subscription reconciliation; keep the subsequent fulfillment check.
+			$proxy_return_url = trim(self::stripe_notify_body($ipn));
 			//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
 			wp_cache_delete($user_id, 'user_meta');
 

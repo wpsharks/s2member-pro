@@ -44,6 +44,42 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 		*/
 		class c_ws_plugin__s2member_pro_authnet_utilities
 			{
+				/**
+				 * Deliver a verified, server-created Authorize.Net Pro-Form notification.
+				 *
+				 * @since 261115.2222
+				 * @param array $ipn Trusted checkout payment notification, not unverified browser input.
+				 * @return string Notify response body, or an empty string on failure.
+				 */
+				public static function authnet_notify_body($ipn)
+					{
+						if(!is_array($ipn) || !isset($ipn['s2member_paypal_proxy'], $ipn['s2member_paypal_proxy_use'])
+						   || $ipn['s2member_paypal_proxy'] !== 'authnet' || !is_string($ipn['s2member_paypal_proxy_use'])
+						   || !in_array('pro-emails', explode(',', $ipn['s2member_paypal_proxy_use']), TRUE))
+							return '';
+
+						//261115.2222 Keep the HTTP opt-out for sites relying on customized loopback transport hooks.
+						if(!apply_filters('ws_plugin__s2member_pro_authnet_notify_local_dispatch', TRUE, $ipn))
+							return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+						try
+							{
+								$result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn);
+							}
+						catch(\Exception $e)
+							{
+								c_ws_plugin__s2member_utils_logs::log_entry('authnet-checkout', array('event' => 'notify_local_exception', 'type' => get_class($e)));
+								return '';
+							}
+						catch(\Error $e)
+							{
+								c_ws_plugin__s2member_utils_logs::log_entry('authnet-checkout', array('event' => 'notify_local_error', 'type' => get_class($e)));
+								return '';
+							}
+						return is_array($result) && isset($result['code']) && (int)$result['code'] >= 200 && (int)$result['code'] < 300
+							&& isset($result['body']) ? (string)$result['body'] : '';
+					}
+
 		//260907.2110 TO-DO: Migrate supported Authorize.Net Pro-Forms onto Gateway Checkout, reviewing AIM and ARB separately for ambiguous responses, stable provider retries/idempotency, durable recovery, and preservation of existing duplicate-subscription protections.
 				/**
 				* Calls upon Authorize.Net AIM, and returns the response.
