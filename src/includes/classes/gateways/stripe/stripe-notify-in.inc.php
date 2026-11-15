@@ -719,8 +719,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 		 */
 		public static function _proxy_event_to_paypal($ipn, &$stripe)
 		{
-			//261111.0034 TO-DO: Enable signed internal proxy messages by default after fulfillment/idempotency handling can reliably report failures and recover retries.
-			if(apply_filters('ws_plugin__s2member_pro_stripe_notify_use_proxy_v2', FALSE, $ipn))
+			if(!is_array($ipn) || empty($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'stripe')
+				return FALSE;
+
+			//261115.2110 Verified Stripe webhook forwarding avoids loopback HTTP; the opt-out retains signed HTTP support.
+			$local_dispatch = apply_filters('ws_plugin__s2member_pro_stripe_notify_local_dispatch', TRUE, $ipn);
+			if(!$local_dispatch && apply_filters('ws_plugin__s2member_pro_stripe_notify_use_proxy_v2', FALSE, $ipn))
 			{
 				//261111.0034 Sign the final POST body here rather than at individual call sites; later additions to the payload must never invalidate the HMAC.
 				if(!is_array($ipn) || empty($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'stripe'
@@ -733,7 +737,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				$ipn['s2member_paypal_proxy_verification'] = $signature;
 			}
 
-			$r = c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20), TRUE);
+			try
+			{
+				$r = $local_dispatch
+					? c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn)
+					: c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20), TRUE);
+			}
+			catch(\Exception $e)
+			{
+				$r = array('code' => 0, 'message' => get_class($e), 'body' => '');
+			}
+			catch(\Error $e)
+			{
+				$r = array('code' => 0, 'message' => get_class($e), 'body' => '');
+			}
 
 			if(!is_array($r))
 				$r = array('code' => 0, 'message' => 'request_failed', 'body' => '');

@@ -61,6 +61,39 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Forward a server-created Stripe purchase notification and return its body.
+		 *
+		 * @since 261115.2110
+		 * @param array $ipn Verified Stripe checkout's Notify fields.
+		 * @return string The Notify response body, or an empty string after failed local forwarding.
+		 */
+		public static function stripe_notify_body($ipn)
+		{
+			if(!is_array($ipn) || !isset($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'stripe')
+				return '';
+
+			//261115.2110 Preserve loopback compatibility for sites depending on custom HTTP transport hooks.
+			if(!apply_filters('ws_plugin__s2member_pro_stripe_notify_local_dispatch', TRUE, $ipn))
+				return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+			try
+			{
+				$r = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn);
+			}
+			catch(\Exception $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('event' => 'notify_local_exception', 'type' => get_class($e)));
+				return '';
+			}
+			catch(\Error $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('stripe-checkout', array('event' => 'notify_local_error', 'type' => get_class($e)));
+				return '';
+			}
+			return is_array($r) && isset($r['code']) && (int)$r['code'] >= 200 && (int)$r['code'] < 300 && isset($r['body']) ? (string)$r['body'] : '';
+		}
+
+		/**
 		 * Prepares durable Gateway Checkout state for a Stripe Pro-Form submission.
 		 *
 		 * @since 260830.0052

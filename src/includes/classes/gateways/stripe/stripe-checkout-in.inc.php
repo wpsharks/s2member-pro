@@ -493,7 +493,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 										$ipn['s2member_stripe_proxy_return_url'] = '';
 									else
 									{
-										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn));
 										//260924.2301 The synchronous IPN request can race a webhook that updates this user in another PHP request; clear stale metadata before checking which side fulfilled first.
 										wp_cache_delete($user_id, 'user_meta');
 										$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $user_id);
@@ -900,7 +900,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 												$ipn['s2member_stripe_proxy_return_url'] = '';
 											else
 											{
-												$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+												$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn));
 												//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
 												wp_cache_delete($new__user_id, 'user_meta');
 												$pending_checkout_processed = c_ws_plugin__s2member_pro_stripe_utilities::pending_subscr_is_processed($new__subscr_id, $new__user_id);
@@ -1071,7 +1071,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 								$ipn['s2member_paypal_proxy_return_url']   = $post_vars['attr']['success'];
 
-								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+								$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn));
 
 								//260918 Buy-now checkouts use a transaction ID, not a new subscription ID; preserve the 260406 self-cancellation guard using the identifier created in this branch.
 								if(!$is_independent_ccaps_sale) // Independent?
@@ -1290,7 +1290,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$ipn['option_selection1'] = $new__user_id;
 										}
 
-										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20)));
+										$ipn['s2member_stripe_proxy_return_url'] = trim(c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn));
 
 										setcookie('s2member_tracking', ($s2member_tracking = c_ws_plugin__s2member_utils_encryption::encrypt($new__txn_id)), time() + 31556926, COOKIEPATH, COOKIE_DOMAIN).
 										setcookie('s2member_tracking', $s2member_tracking, time() + 31556926, SITECOOKIEPATH, COOKIE_DOMAIN).
