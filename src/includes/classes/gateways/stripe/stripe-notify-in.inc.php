@@ -661,6 +661,20 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 		 */
 		public static function _proxy_event_to_paypal($ipn, &$stripe)
 		{
+			//261111.0034 TO-DO: Enable signed internal proxy messages by default after fulfillment/idempotency handling can reliably report failures and recover retries.
+			if(apply_filters('ws_plugin__s2member_pro_stripe_notify_use_proxy_v2', FALSE, $ipn))
+			{
+				//261111.0034 Sign the final POST body here rather than at individual call sites; later additions to the payload must never invalidate the HMAC.
+				if(!is_array($ipn) || empty($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'stripe'
+				|| !method_exists('c_ws_plugin__s2member_paypal_utilities', 'paypal_proxy_v2_sign')
+				|| !is_string($signature = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_v2_sign($ipn)))
+				{
+					$stripe['s2member_log'][] = 'Unable to sign the Stripe gateway notification for internal processing. No proxy request was sent.';
+					return FALSE;
+				}
+				$ipn['s2member_paypal_proxy_verification'] = $signature;
+			}
+
 			$r = c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20), TRUE);
 
 			if(!is_array($r))
