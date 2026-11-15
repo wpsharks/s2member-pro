@@ -75,6 +75,42 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 		}
 
 		/**
+		 * Deliver an already verified, server-created PayPal Pro-Form notification.
+		 *
+		 * @since 261115.2150
+		 * @param array $ipn Verified server-created Pro-Form notification.
+		 * @return string The existing Notify response body, or an empty string if processing fails.
+		 */
+		public static function paypal_notify_body($ipn)
+		{
+			if(!is_array($ipn) || !isset($ipn['s2member_paypal_proxy'], $ipn['s2member_paypal_proxy_use'])
+			   || $ipn['s2member_paypal_proxy'] !== 'paypal' || !is_string($ipn['s2member_paypal_proxy_use'])
+			   || !in_array('pro-emails', explode(',', $ipn['s2member_paypal_proxy_use']), TRUE))
+				return '';
+
+			//261115.2150 Preserve the old HTTP transport for sites that intentionally depend on its hooks.
+			if(!apply_filters('ws_plugin__s2member_pro_paypal_notify_local_dispatch', TRUE, $ipn))
+				return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+
+			try
+			{
+				$result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn);
+			}
+			catch(\Exception $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('paypal-pro-checkout', array('event' => 'notify_local_exception', 'type' => get_class($e)));
+				return '';
+			}
+			catch(\Error $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('paypal-pro-checkout', array('event' => 'notify_local_error', 'type' => get_class($e)));
+				return '';
+			}
+			return is_array($result) && isset($result['code']) && (int)$result['code'] >= 200 && (int)$result['code'] < 300
+				&& isset($result['body']) ? (string)$result['body'] : '';
+		}
+
+		/**
 		 * Calculates start date for a Recurring Payment Profile.
 		 *
 		 * @package s2Member\PayPal

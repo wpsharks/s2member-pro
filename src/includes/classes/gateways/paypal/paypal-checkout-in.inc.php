@@ -340,7 +340,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																				$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 																			}
 																		if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
 																			c_ws_plugin__s2member_utilities::cancel_gateway_subscription($old__subscr_gateway, $old__subscr_id, $old__subscr_baid, $old__subscr_cid, $old__ipn_signup_vars); //260407
@@ -511,7 +511,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																					wp_new_user_notification($new__user_id, "admin", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 
 																				$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 
@@ -520,7 +520,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			}
 																		else // Else, an error response should be given.
 																			{
-																				c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 
 																				$global_response = array("response" => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 																			}
@@ -537,7 +537,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																					wp_new_user_notification($new__user_id, "both", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 
 																				$global_response = array("response" => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', "s2member-front", "s2member"));
 
@@ -546,7 +546,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			}
 																		else // Else, an error response should be given.
 																			{
-																				c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 
 																				$global_response = array("response" => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 																			}
@@ -673,7 +673,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																				$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 																				$ipn["s2member_paypal_proxy_return_url"] = $post_vars["attr"]["success"];
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 																			}
 																		if /* Independent? */(!$is_independent_ccaps_sale)
 																			if($old__subscr_id && apply_filters("s2member_pro_cancels_old_rp_before_new_rp", ($old__subscr_id !== $new__subscr_id), get_defined_vars())) //260406
@@ -838,7 +838,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																					wp_new_user_notification($new__user_id, "admin", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 
 																				$global_response = array("response" => sprintf(_x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; Please <a href="%s" rel="nofollow">log in</a>.', "s2member-front", "s2member"), esc_attr(wp_login_url())));
 
@@ -847,7 +847,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			}
 																		else // Else, an error response should be given.
 																			{
-																				c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 
 																				$global_response = array("response" => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 																			}
@@ -864,7 +864,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																					wp_new_user_notification($new__user_id, "both", $create_user["user_pass"]);
 																				else wp_new_user_notification($new__user_id, $create_user["user_pass"]);
 
-																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																				$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 
 																				$global_response = array("response" => _x('<strong>Thank you.</strong> Your account has been approved.<br />&mdash; You\'ll receive an email momentarily.', "s2member-front", "s2member"));
 
@@ -873,7 +873,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_checkout_in"))
 																			}
 																		else // Else, an error response should be given.
 																			{
-																				c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20));
+																				c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 
 																				$global_response = array("response" => _x('<strong>Oops.</strong> A slight problem. Please contact Support for assistance.', "s2member-front", "s2member"), "error" => true);
 																			}

@@ -483,7 +483,7 @@ if(!class_exists("c_ws_plugin__s2member_pro_paypal_sp_checkout_in"))
 																		if(!empty($ppco_return_vars))
 																			$ipn["s2member_paypal_proxy_return_url"] = isset($ppco_raw_return_vars["s2member_paypal_proxy_return_url"]) ? trim((string)$ppco_raw_return_vars["s2member_paypal_proxy_return_url"]) : "";
 																		else
-																			$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_utils_urls::remote(home_url("/?s2member_paypal_notify=1"), $ipn, array("timeout" => 20)));
+																			$ipn["s2member_paypal_proxy_return_url"] = trim(c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn));
 																	}
 																if(($sp_access_url = c_ws_plugin__s2member_sp_access::sp_access_link_gen($post_vars["attr"]["ids"], $post_vars["attr"]["exp"])))
 																	{
