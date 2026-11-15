@@ -71,10 +71,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 					$event_id                         = !empty($event->id) ? (string)$event->id : '';
 					$stripe_event_lock               = '';
-					$stripe_event_lock_acquired      = FALSE;
+					$stripe_event_lock_owner         = FALSE;
 					$stripe_event_processed_key      = '';
 					$stripe_event_processed          = FALSE;
 					$skip_event_switch               = FALSE;
+					$stripe_retry_required           = FALSE;
 
 					if($event_id)
 					{
@@ -89,16 +90,34 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 							$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
 							$stripe['s2member_log'][] = 'Ignoring duplicate Stripe Webhook/IPN event. s2Member has already processed Stripe event ID: `'.$event_id.'`.';
 						}
-						else if(($stripe_event_lock_acquired = self::_acquire_event_lock($stripe_event_lock)) === FALSE)
+						else if(!is_string($stripe_event_lock_owner = self::_acquire_event_lock($stripe_event_lock)))
 						{
 							$processing        = TRUE;
 							$skip_event_switch = TRUE;
+							//261115.2020 A concurrent delivery needs a Stripe retry unless its predecessor finished durably.
+							$stripe_retry_required = !get_transient($stripe_event_processed_key);
 
 							$stripe['s2member_log'][] = 'Stripe Webhook/IPN event type identified as: `'.$event->type.'` on: '.date('D M j, Y g:i:s a T');
-							$stripe['s2member_log'][] = 'Ignoring in-progress duplicate Stripe Webhook/IPN event. s2Member is already processing Stripe event ID: `'.$event_id.'`.';
+							$stripe['s2member_log'][] = 'A concurrent Stripe Webhook/IPN event is still in progress; retry is required unless its event ID is complete: `'.$event_id.'`.';
+						}
+						else if(get_transient($stripe_event_processed_key))
+						{
+							//261115.2020 Recheck after the lock: a previous owner may have finished since the initial read.
+							$processing        = TRUE;
+							$skip_event_switch = TRUE;
+							$stripe['s2member_log'][] = 'Ignoring completed Stripe Webhook/IPN event after lock acquisition: `'.$event_id.'`.';
 						}
 					}
+					else
+					{
+						$processing        = TRUE;
+						$skip_event_switch = TRUE;
+						$stripe_retry_required = TRUE;
+						$stripe['s2member_log'][] = 'Verified Stripe event has no usable event ID; no fulfillment was attempted.';
+					}
 
+					try
+					{
 					if(!$skip_event_switch)
 						switch($event->type)
 					{
@@ -580,11 +599,30 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 						$stripe['s2member_log'][] = 'Ignoring this Webhook/IPN. The event does NOT require any action on the part of s2Member.';
 						$stripe_event_processed = TRUE;
 					}
-					if($stripe_event_processed && $stripe_event_processed_key)
-						set_transient($stripe_event_processed_key, time(), 31556952);
-
-					if($stripe_event_lock_acquired && $stripe_event_lock)
-						self::_release_event_lock($stripe_event_lock);
+					if($stripe_event_processed && $stripe_event_processed_key && !$skip_event_switch)
+					{
+						//261115.2020 A failed completion marker must not be reported as a durable event acknowledgment.
+						if(!set_transient($stripe_event_processed_key, time(), 31556952))
+							$stripe_retry_required = TRUE;
+					}
+					if(!empty($processing) && !$stripe_event_processed && !$skip_event_switch)
+						$stripe_retry_required = TRUE;
+					}
+					catch(\Exception $exception)
+					{
+						$stripe_retry_required = TRUE;
+						$stripe['s2member_log'][] = 'Stripe processing interrupted: `'.get_class($exception).'`; fulfillment outcome may require reconciliation.';
+					}
+					catch(\Error $error)
+					{
+						$stripe_retry_required = TRUE;
+						$stripe['s2member_log'][] = 'Stripe processing interrupted: `'.get_class($error).'`; fulfillment outcome may require reconciliation.';
+					}
+					finally
+					{
+						if(is_string($stripe_event_lock_owner))
+							self::_release_event_lock($stripe_event_lock, $stripe_event_lock_owner);
+					}
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
@@ -595,57 +633,77 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 				}
 				c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', $stripe);
 
-				status_header(200);
+				//261115.2020 Do not acknowledge a verified event that must be retried after contention or failed processing.
+				status_header(!empty($stripe_retry_required) ? 503 : 200);
+				if(!empty($stripe_retry_required))
+					header('Retry-After: 30');
 				header('Content-Type: text/plain; charset=UTF-8');
 				while(@ob_end_clean()); exit();
 			}
 		}
 
 		/**
-		 * Attempts to acquire a short-lived lock for a Stripe webhook event.
+		 * Check old timestamp locks before allowing a migrated Stripe event worker to proceed.
 		 *
-		 * @package s2Member\Stripe
-		 * @since 260318
-		 *
-		 * @param string  $stripe_event_lock Stripe webhook event lock key.
-		 * @param integer $lock_timeout      Optional. Lock timeout in seconds.
-		 *
-		 * @return bool TRUE if lock acquired; else FALSE.
+		 * @since 261115.2020
+		 * @return bool Whether an old active or unknown lock prevents safe processing.
 		 */
-		public static function _acquire_event_lock($stripe_event_lock, $lock_timeout = 900)
+		private static function _legacy_event_lock_active($stripe_event_lock, $lock_timeout)
 		{
-			if(!$stripe_event_lock || !is_string($stripe_event_lock))
-				return FALSE;
+			global $wpdb;
 
-			if(add_option($stripe_event_lock, time(), '', 'no'))
+			$raw = $wpdb->get_var($wpdb->prepare("SELECT `option_value` FROM `{$wpdb->options}` WHERE `option_name` = %s LIMIT 1", $stripe_event_lock));
+			if($wpdb->last_error !== '')
 				return TRUE;
-
-			$stripe_event_lock_time = (int)get_option($stripe_event_lock);
-
-			if($stripe_event_lock_time > 0 && (time() - $stripe_event_lock_time) > abs($lock_timeout))
-			{
-				delete_option($stripe_event_lock);
-
-				if(add_option($stripe_event_lock, time(), '', 'no'))
-					return TRUE;
-			}
-			return FALSE;
+			if($raw === NULL)
+				return FALSE;
+			if(!is_string($raw) || !preg_match('/^[1-9][0-9]{0,12}$/D', $raw))
+				return TRUE;
+			return (int)$raw > time() - $lock_timeout;
 		}
 
 		/**
-		 * Releases a short-lived lock for a Stripe webhook event.
+		 * Claim one owner-aware Stripe webhook lease while respecting old timestamp locks.
 		 *
-		 * @package s2Member\Stripe
-		 * @since 260318
-		 *
-		 * @param string $stripe_event_lock Stripe webhook event lock key.
-		 *
-		 * @return void
+		 * @since 261115.2020
+		 * @param string $stripe_event_lock Historical event key retained as the lock identity.
+		 * @param int $lock_timeout Lease lifetime in seconds.
+		 * @return string|bool Owner token on success; FALSE on contention or database failure.
 		 */
-		public static function _release_event_lock($stripe_event_lock)
+		public static function _acquire_event_lock($stripe_event_lock, $lock_timeout = 900)
 		{
-			if($stripe_event_lock && is_string($stripe_event_lock))
-				delete_option($stripe_event_lock);
+			if(!is_string($stripe_event_lock) || !preg_match('/^s2m_stripe_wh_lock_[a-f0-9]{32}$/D', $stripe_event_lock)
+			   || !is_int($lock_timeout) || $lock_timeout < 1 || $lock_timeout > 86400)
+				return FALSE;
+			if(self::_legacy_event_lock_active($stripe_event_lock, $lock_timeout))
+				return FALSE;
+
+			$resource = 'stripe-webhook/'.$stripe_event_lock;
+			$owner = c_ws_plugin__s2member_database::lock_acquire($resource, $lock_timeout);
+			if(!is_string($owner))
+				return FALSE;
+			//261115.2020 The second check fences a still-running legacy worker during a rolling deployment.
+			if(self::_legacy_event_lock_active($stripe_event_lock, $lock_timeout))
+			{
+				c_ws_plugin__s2member_database::lock_release($resource, $owner);
+				return FALSE;
+			}
+			return $owner;
+		}
+
+		/**
+		 * Release an event lease only when the caller owns the exact database lock.
+		 *
+		 * @since 261115.2020
+		 * @param string $stripe_event_lock Event lock key.
+		 * @param string $owner Owner token returned by _acquire_event_lock().
+		 * @return bool Whether the exact lease was released.
+		 */
+		public static function _release_event_lock($stripe_event_lock, $owner = '')
+		{
+			if(!is_string($stripe_event_lock) || !preg_match('/^s2m_stripe_wh_lock_[a-f0-9]{32}$/D', $stripe_event_lock))
+				return FALSE;
+			return c_ws_plugin__s2member_database::lock_release('stripe-webhook/'.$stripe_event_lock, $owner) === TRUE;
 		}
 
 		/**
