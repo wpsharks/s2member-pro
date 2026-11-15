@@ -233,16 +233,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		public static function advance_gateway_checkout_generation($gateway_checkout_id = '', $object_type = '', $clear_gateway_ids = array())
 		{
 			$state = c_ws_plugin__s2member_gateway_checkouts::load_state($gateway_checkout_id);
-			if(!$state || !$object_type)
+			if(!$state || (string)$state['gateway'] !== 'stripe' || !$object_type)
 				return FALSE;
 
 			$key = 'stripe_'.sanitize_key((string)$object_type).'_generation';
-			$generation = max(1, (int)@$state['context'][$key]) + 1;
-			$gateway_ids = array();
-			foreach((array)$clear_gateway_ids as $gateway_id_key)
-				$gateway_ids[(string)$gateway_id_key] = '';
-
-			return self::update_gateway_checkout($gateway_checkout_id, $gateway_ids, '', array($key => $generation)) ? $generation : FALSE;
+			//261115.0528 Allocate and persist each Stripe generation atomically with its stale gateway-ID reset.
+			return c_ws_plugin__s2member_gateway_checkouts::advance_generation($gateway_checkout_id, $key, (array)$clear_gateway_ids);
 		}
 
 		/**
