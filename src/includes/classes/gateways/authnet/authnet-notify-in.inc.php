@@ -63,22 +63,33 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 				if(is_array($authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_postvars()) && ($_authnet = $authnet))
 				{
 					$processing = $processed = FALSE; // Initialize these flags.
+					$arb_http_status = 200;
+					$arb_receipt = FALSE;
+					$arb_complete = FALSE;
+					$arb_run = TRUE;
+
+					//261116.0245 A verified ARB callback must claim its billing identity before updating counters or membership.
+					if(!empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum'])
+					   && isset($authnet['x_response_code']) && in_array($authnet['x_response_code'], array('1', '2', '3'), TRUE))
+					{
+						$arb_receipt = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_receipt_key($authnet);
+						$arb_state = $arb_receipt === FALSE ? 'uncertain' : c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_receipt_claim($arb_receipt);
+						$arb_run = $arb_state === 'new';
+						if($arb_state === 'completed') $processed = TRUE;
+						else if(!$arb_run) $arb_http_status = 503;
+					}
 
 					$authnet['s2member_log'][] = 'IPN received on: '.date('D M j, Y g:i:s a T');
 					$authnet['s2member_log'][] = 's2Member POST vars verified with Authorize.Net.';
 
 					//261104.0544 Regular Authorize.Net Silent Posts omit ARB-only subscription fields.
-					if(!empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && $authnet['x_response_code'] === '1')
+					if($arb_run && !empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && $authnet['x_response_code'] === '1')
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
 							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'`).';
 
-							if(($user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id'])))
-							{
-								delete_user_option($user_id, 's2member_authnet_payment_failures');
-								$authnet['s2member_log'][] = 'Successful payment. Resetting payment failures to `0` for this subscription.';
-							}
+							$user_id = c_ws_plugin__s2member_utils_users::get_user_id_with($authnet['x_subscription_id']);
 							$authnet['s2member_log'][] = 'IPN reformulated. Piping through s2Member\'s core/standard PayPal processor as `txn_type` (`subscr_payment`).';
 							$authnet['s2member_log'][] = 'Please check PayPal IPN logs for further processing details.';
 
@@ -112,15 +123,27 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 							$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 							$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-							c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+							//261116.0245 Only trusted local completion plus the transaction marker can finish a recurring payment receipt.
+							try { $result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn, TRUE); }
+							catch(\Exception $e) { $result = FALSE; }
+							catch(\Error $e) { $result = FALSE; }
+							$payment_done = 's2m_paypal_txn_done_'.md5(strtolower((string)$ipn['subscr_id']).'|'.strtolower((string)$ipn['txn_id']));
+							$arb_complete = is_array($result) && isset($result['code']) && (int)$result['code'] === 200
+							                && c_ws_plugin__s2member_paypal_utilities::dedupe_done_time_get($payment_done, DAY_IN_SECONDS);
+							if($arb_complete && $user_id)
+							{
+								delete_user_option($user_id, 's2member_authnet_payment_failures');
+								$authnet['s2member_log'][] = 'Successful payment. Resetting payment failures to `0` for this subscription.';
+							}
 						}
 						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 						{
 							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / PAYMENT #'.$authnet['x_subscription_paynum'].'`).';
 							$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
+							$arb_complete = TRUE;
 						}
 					}
-					else if(!empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && preg_match('/^(2|3)$/', $authnet['x_response_code']))
+					else if($arb_run && !empty($authnet['x_subscription_id']) && !empty($authnet['x_subscription_paynum']) && preg_match('/^(2|3)$/', $authnet['x_response_code']))
 					{
 						if(($_authnet = c_ws_plugin__s2member_pro_authnet_utilities::authnet_parse_arb_desc($authnet)) && ($authnet = $_authnet))
 						{
@@ -163,14 +186,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 									$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-									c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
-
-									c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response(array('x_method' => 'cancel', 'x_subscription_id' => $authnet['x_subscription_id']));
+									//261116.0245 Never cancel a subscription until EOT processing reports a trusted accepted outcome.
+									try { $result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn, TRUE); }
+									catch(\Exception $e) { $result = FALSE; }
+									catch(\Error $e) { $result = FALSE; }
+									$eot_accepted = is_array($result) && isset($result['code'], $result['paypal']['s2member_eot_delivery_status'])
+									                && (int)$result['code'] === 200 && $result['paypal']['s2member_eot_delivery_status'] === 'accepted';
+									if($eot_accepted)
+									{
+										try { $cancel = c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_response(array('x_method' => 'cancel', 'x_subscription_id' => $authnet['x_subscription_id'])); }
+										catch(\Exception $e) { $cancel = FALSE; }
+										catch(\Error $e) { $cancel = FALSE; }
+										$arb_complete = is_array($cancel) && empty($cancel['__error']);
+									}
 								}
 								else // Bump the total number of failed payments by `1`; not at the limit yet.
 								{
 									$current_payment_failures = get_user_option('s2member_authnet_payment_failures', $user_id);
 									update_user_option($user_id, 's2member_authnet_payment_failures', $current_payment_failures + 1);
+									$arb_complete = (int)get_user_option('s2member_authnet_payment_failures', $user_id) === (int)($current_payment_failures + 1);
 									$authnet['s2member_log'][] = 'Bumping payment failures for subscription: `'.$authnet['x_subscription_id'].'`, to: `'.($current_payment_failures + 1).'`';
 									$authnet['s2member_log'][] = 'Recording number of payment failures only. This does not require any action (at the moment) on the part of s2Member.';
 								}
@@ -179,22 +213,32 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 							{
 								$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
 								$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference to an existing user/member.';
+								$arb_complete = TRUE;
 							}
 						}
 						else // Otherwise, we don't have enough information to reforumalte this IPN response. An error must be generated.
 						{
 							$authnet['s2member_log'][] = 'Authorize.Net transaction identified as (`ARB / FAILED PAYMENT`).';
 							$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT contain a valid reference value/desc.';
+							$arb_complete = TRUE;
 						}
 					}
 					else if(!$processed) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
 						$authnet['s2member_log'][] = 'Ignoring this IPN. The transaction does NOT require any action on the part of s2Member.';
+
+					if($arb_receipt !== FALSE && $arb_run)
+					{
+						if(!$arb_complete || !c_ws_plugin__s2member_pro_authnet_utilities::authnet_arb_receipt_complete($arb_receipt))
+							$arb_http_status = 503;
+					}
 				}
 				else // Extensive log reporting here. This is an area where many site owners find trouble. Depending on server configuration; remote HTTPS connections may fail.
 				{
 					//261116.0117 Failed verification returns FALSE, not a mutable log array.
 					if($authnet === false)
 						$authnet = array();
+					//261116.0245 Reject unverified provider data rather than returning the success acknowledgment.
+					$arb_http_status = 403;
 					$authnet['s2member_log'][] = 'Unable to verify POST vars. This is most likely related to an invalid Authorize.Net configuration. Please check: s2Member → Authorize.Net Options.';
 					$authnet['s2member_log'][] = 'If you\'re absolutely SURE that your Authorize.Net configuration is valid, you may want to run some tests on your server, just to be sure \$_POST variables are populated, and that your server is able to connect to Authorize.Net over an HTTPS connection.';
 					$authnet['s2member_log'][] = 's2Member uses the WP_Http class for remote connections; which will try to use cURL first, and then fall back on the FOPEN method when cURL is not available. On a Windows server, you may have to disable your cURL extension. Instead, set allow_url_fopen = yes in your php.ini file. The cURL extension (usually) does NOT support SSL connections on a Windows server.';
@@ -219,7 +263,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 							                  c_ws_plugin__s2member_utils_logs::conceal_private_info(var_export($authnet, TRUE))."\n\n",
 							                  FILE_APPEND);
 
-				status_header(200); // Send a 200 OK status header.
+				//261116.0245 Uncertain ARB outcomes request provider redelivery but remain nonreplayable until reconciled.
+				status_header(isset($arb_http_status) ? $arb_http_status : 200);
 				header('Content-Type: text/plain; charset=UTF-8'); // Content-Type text/plain with UTF-8.
 				while(@ob_end_clean()) ; // Clean any existing output buffers.
 

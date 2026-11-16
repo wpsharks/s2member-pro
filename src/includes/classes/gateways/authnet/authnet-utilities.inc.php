@@ -80,6 +80,61 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							&& isset($result['body']) ? (string)$result['body'] : '';
 					}
 
+				/**
+				 * Identify a verified recurring Authorize.Net billing attempt without exposing provider identifiers in option names.
+				 *
+				 * @since 261116.0245
+				 * @param array $event Verified Silent Post fields.
+				 * @return string|bool Durable option name, or false for an invalid billing identity.
+				 */
+				public static function authnet_arb_receipt_key($event)
+					{
+						$merchant = isset($GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_api_login_id']) ? $GLOBALS['WS_PLUGIN__']['s2member']['o']['pro_authnet_api_login_id'] : '';
+						if(!is_array($event) || !is_string($merchant) || $merchant === '' || !isset($event['x_subscription_id'], $event['x_subscription_paynum'], $event['x_response_code'])
+						|| !is_string($event['x_subscription_id']) || !preg_match('/^[a-zA-Z0-9_-]{1,64}$/D', $event['x_subscription_id'])
+						|| !is_string($event['x_subscription_paynum']) || !preg_match('/^[0-9]{1,16}$/D', $event['x_subscription_paynum'])
+						|| !is_string($event['x_response_code']) || !in_array($event['x_response_code'], array('1', '2', '3'), TRUE))
+							return false;
+						$paid = $event['x_response_code'] === '1';
+						$transaction = isset($event['x_trans_id']) ? $event['x_trans_id'] : '';
+						if($paid && (!is_string($transaction) || !preg_match('/^[a-zA-Z0-9_-]{1,64}$/D', $transaction) || $transaction === '0'))
+							return false;
+						//261116.0245 A failed billing attempt counts once per subscription/pay number; distinct successful transactions remain independent.
+						$identity = array($merchant, $event['x_subscription_id'], $event['x_subscription_paynum'], $paid ? 'paid:'.$transaction : 'failed');
+						return 's2m_authnet_arb_receipt_'.hash('sha256', implode("\0", $identity));
+					}
+
+				/**
+				 * Atomically claim an ARB event; an uncertain prior attempt must never run side effects again.
+				 *
+				 * @since 261116.0245
+				 * @return string One of new, completed, or uncertain.
+				 */
+				public static function authnet_arb_receipt_claim($key)
+					{
+						if(!is_string($key) || !preg_match('/^s2m_authnet_arb_receipt_[a-f0-9]{64}$/D', $key))
+							return 'uncertain';
+						$previous = get_option($key, FALSE);
+						if($previous === 'completed') return 'completed';
+						if($previous !== FALSE) return 'uncertain';
+						if(add_option($key, 'processing', '', 'no')) return get_option($key, FALSE) === 'processing' ? 'new' : 'uncertain';
+						return get_option($key, FALSE) === 'completed' ? 'completed' : 'uncertain';
+					}
+
+				/**
+				 * Mark an ARB callback complete only after all local and provider operations confirm success.
+				 *
+				 * @since 261116.0245
+				 * @return bool Persisted completion state.
+				 */
+				public static function authnet_arb_receipt_complete($key)
+					{
+						if(!is_string($key) || !preg_match('/^s2m_authnet_arb_receipt_[a-f0-9]{64}$/D', $key) || get_option($key, FALSE) !== 'processing')
+							return FALSE;
+						update_option($key, 'completed', FALSE);
+						return get_option($key, FALSE) === 'completed';
+					}
+
 		//260907.2110 TO-DO: Migrate supported Authorize.Net Pro-Forms onto Gateway Checkout, reviewing AIM and ARB separately for ambiguous responses, stable provider retries/idempotency, durable recovery, and preservation of existing duplicate-subscription protections.
 				/**
 				* Calls upon Authorize.Net AIM, and returns the response.
@@ -629,10 +684,15 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				*/
 				public static function authnet_parse_arb_desc($array)
 					{
-						if(is_array($array) && !empty($array["x_description"]) && preg_match("/\(\((.+?)\)\)/i", $array["x_description"], $m))
+						if(is_array($array) && isset($array["x_description"]) && is_string($array["x_description"]) && preg_match("/\(\((.+?)\)\)/i", $array["x_description"], $m))
 							{
-								list($array["s2_reference"], $array["s2_domain"], $array["s2_invoice"], $array["s2_currency"]) = preg_split("/~/", $m[1], 4);
-								list($array["s2_start_time"], $array["s2_p1"], $array["s2_p3"]) = preg_split("/\:/", $array["s2_reference"], 3);
+								//261116.0245 Reject incomplete ARB references rather than decoding absent fields as valid payment metadata.
+								$parts = explode('~', $m[1], 4);
+								if(count($parts) !== 4 || in_array('', $parts, TRUE)) return false;
+								$periods = explode(':', $parts[0], 3);
+								if(count($periods) !== 3 || in_array('', $periods, TRUE)) return false;
+								list($array["s2_reference"], $array["s2_domain"], $array["s2_invoice"], $array["s2_currency"]) = $parts;
+								list($array["s2_start_time"], $array["s2_p1"], $array["s2_p3"]) = $periods;
 
 								$array["x_description"] = preg_replace("/\(\((.+?)\)\)/i", "", $array["x_description"]);
 
