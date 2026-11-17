@@ -123,7 +123,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_arb'))
 
 										$ipn['s2member_paypal_proxy']              = 'authnet';
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 										//261117.0057 Avoid a reusable-key HTTP loopback for verified ARB status processing; HTTP opt-out remains available in the shared helper.
 										c_ws_plugin__s2member_pro_authnet_utilities::authnet_notify_body($ipn);
@@ -162,7 +161,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_arb'))
 
 										$ipn['s2member_paypal_proxy']              = 'authnet';
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 										//261117.0057 Avoid a reusable-key HTTP loopback for verified ARB status processing; HTTP opt-out remains available in the shared helper.
 										c_ws_plugin__s2member_pro_authnet_utilities::authnet_notify_body($ipn);

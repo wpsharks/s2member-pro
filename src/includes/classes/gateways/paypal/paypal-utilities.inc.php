@@ -89,8 +89,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 				return '';
 
 			//261115.2150 Preserve the old HTTP transport for sites that intentionally depend on its hooks.
+			//261117.0417 The bearer key belongs only to explicit HTTP compatibility, never to a trusted in-process Notify payload.
+			unset($ipn['s2member_paypal_proxy_verification']);
 			if(!apply_filters('ws_plugin__s2member_pro_paypal_notify_local_dispatch', TRUE, $ipn))
+			{
+				$key = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+				if(!is_string($key) || $key === '')
+					return '';
+				$ipn['s2member_paypal_proxy_verification'] = $key;
 				return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+			}
 
 			try
 			{
@@ -1786,7 +1794,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_utilities'))
 
 				's2member_paypal_proxy'              => 'paypal',
 				's2member_paypal_proxy_use'          => 'pro-emails',
-				's2member_paypal_proxy_verification' => c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen(),
 			);
 			//261117.0057 This server-verified subscription status update uses the common isolated Notify bridge instead of an extra HTTP request.
 			self::paypal_notify_body($ipn);

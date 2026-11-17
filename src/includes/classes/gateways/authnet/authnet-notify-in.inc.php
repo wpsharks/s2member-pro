@@ -121,7 +121,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 
 							$ipn['s2member_paypal_proxy']              = 'authnet';
 							$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-							$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 							//261116.0245 Only trusted local completion plus the transaction marker can finish a recurring payment receipt.
 							try { $result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn, TRUE); }
@@ -184,7 +183,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_notify_in'))
 
 									$ipn['s2member_paypal_proxy']              = 'authnet';
 									$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 									//261116.0245 Never cancel a subscription until EOT processing reports a trusted accepted outcome.
 									try { $result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn, TRUE); }

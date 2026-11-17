@@ -110,7 +110,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_cancellation_in'))
 
 												$ipn['s2member_paypal_proxy']              = 'stripe';
 												$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-												$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 												//261117.0057 Deliver the verified cancellation notification in-process; the shared helper preserves HTTP opt-out compatibility.
 												c_ws_plugin__s2member_pro_stripe_utilities::stripe_notify_body($ipn);

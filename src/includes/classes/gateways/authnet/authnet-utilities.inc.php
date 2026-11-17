@@ -59,8 +59,16 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 							return '';
 
 						//261115.2222 Keep the HTTP opt-out for sites relying on customized loopback transport hooks.
+						//261117.0417 The bearer key belongs only to explicit HTTP compatibility, never to a trusted in-process Notify payload.
+						unset($ipn['s2member_paypal_proxy_verification']);
 						if(!apply_filters('ws_plugin__s2member_pro_authnet_notify_local_dispatch', TRUE, $ipn))
+						{
+							$key = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+							if(!is_string($key) || $key === '')
+								return '';
+							$ipn['s2member_paypal_proxy_verification'] = $key;
 							return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						}
 
 						try
 							{
@@ -129,10 +137,13 @@ if(!class_exists("c_ws_plugin__s2member_pro_authnet_utilities"))
 				 */
 				public static function authnet_arb_receipt_complete($key)
 					{
-						if(!is_string($key) || !preg_match('/^s2m_authnet_arb_receipt_[a-f0-9]{64}$/D', $key) || get_option($key, FALSE) !== 'processing')
+						if(!is_string($key) || !preg_match('/^s2m_authnet_arb_receipt_[a-f0-9]{64}$/D', $key))
 							return FALSE;
-						update_option($key, 'completed', FALSE);
-						return get_option($key, FALSE) === 'completed';
+						global $wpdb;
+						//261117.0417 Complete only the exact claimed state; a cached read followed by update_option could overwrite a changed receipt.
+						$changed = $wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value = %s", 'completed', $key, 'processing'));
+						wp_cache_delete($key, 'options');
+						return $changed === 1 && get_option($key, FALSE) === 'completed';
 					}
 
 		//260907.2110 TO-DO: Migrate supported Authorize.Net Pro-Forms onto Gateway Checkout, reviewing AIM and ARB separately for ambiguous responses, stable provider retries/idempotency, durable recovery, and preservation of existing duplicate-subscription protections.

@@ -104,7 +104,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_paypal_cancellation_in"))
 
 																						$ipn["s2member_paypal_proxy"] = "paypal";
 																						$ipn["s2member_paypal_proxy_use"] = "pro-emails";
-																						$ipn["s2member_paypal_proxy_verification"] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 																						//261117.0112 Use the verified internal PayPal Pro Notify dispatcher; retain explicit HTTP opt-out in the shared helper.
 																						c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);

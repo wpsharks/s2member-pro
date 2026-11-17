@@ -73,8 +73,16 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				return '';
 
 			//261115.2110 Preserve loopback compatibility for sites depending on custom HTTP transport hooks.
+			//261117.0417 The bearer key belongs only to explicit HTTP compatibility, never to a trusted in-process Notify payload.
+			unset($ipn['s2member_paypal_proxy_verification']);
 			if(!apply_filters('ws_plugin__s2member_pro_stripe_notify_local_dispatch', TRUE, $ipn))
+			{
+				$key = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+				if(!is_string($key) || $key === '')
+					return '';
+				$ipn['s2member_paypal_proxy_verification'] = $key;
 				return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+			}
 
 			try
 			{
@@ -1408,7 +1416,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 				}
 
 				$ipn['s2member_paypal_proxy']              = 'stripe';
-				$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 				//261115.2222 Reuse isolated Notify during pending subscription reconciliation; keep the subsequent fulfillment check.
 				$proxy_return_url = trim(self::stripe_notify_body($ipn));

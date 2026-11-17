@@ -257,7 +257,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$ipn['s2member_paypal_proxy']              = 'stripe';
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
@@ -360,7 +359,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$ipn['s2member_paypal_proxy']              = 'stripe';
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
@@ -538,7 +536,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 									$ipn['s2member_paypal_proxy']              = 'stripe';
 									$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-									$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 									$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
@@ -589,7 +586,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$ipn['s2member_paypal_proxy']              = 'stripe';
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
@@ -639,7 +635,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 								$ipn['s2member_paypal_proxy']              = 'stripe';
 								$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-								$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 								$stripe_event_processed = self::_proxy_event_to_paypal($ipn, $stripe);
 
@@ -783,7 +778,10 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 			//261115.2110 Verified Stripe webhook forwarding avoids loopback HTTP; the opt-out retains signed HTTP support.
 			$local_dispatch = apply_filters('ws_plugin__s2member_pro_stripe_notify_local_dispatch', TRUE, $ipn);
-			if(!$local_dispatch && apply_filters('ws_plugin__s2member_pro_stripe_notify_use_proxy_v2', FALSE, $ipn))
+			//261117.0417 Internal PHP must not use a bearer key; only an explicitly selected HTTP fallback receives a signed credential.
+			unset($ipn['s2member_paypal_proxy_verification']);
+			$use_proxy_v2 = !$local_dispatch && apply_filters('ws_plugin__s2member_pro_stripe_notify_use_proxy_v2', FALSE, $ipn);
+			if($use_proxy_v2)
 			{
 				//261111.0034 Sign the final POST body here rather than at individual call sites; later additions to the payload must never invalidate the HMAC.
 				if(!is_array($ipn) || empty($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'stripe'
@@ -794,6 +792,14 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 					return FALSE;
 				}
 				$ipn['s2member_paypal_proxy_verification'] = $signature;
+			}
+			else if(!$local_dispatch)
+			{
+				//261117.0417 Retain the old credential only for opted-out, non-v2 HTTP transport; a missing key cannot authenticate a fallback.
+				$key = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+				if(!is_string($key) || $key === '')
+					return FALSE;
+				$ipn['s2member_paypal_proxy_verification'] = $key;
 			}
 
 			try

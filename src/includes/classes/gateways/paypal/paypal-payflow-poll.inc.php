@@ -127,7 +127,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										$ipn['s2member_paypal_proxy']              = 'paypal';
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 										//261117.0057 Process verified Payflow polling status through the PHP bridge, retaining the explicit HTTP fallback filter.
 										c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
@@ -172,7 +171,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 
 										$ipn['s2member_paypal_proxy']              = 'paypal';
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 										//261117.0057 Process verified Payflow polling status through the PHP bridge, retaining the explicit HTTP fallback filter.
 										c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);

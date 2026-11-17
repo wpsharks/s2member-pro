@@ -107,7 +107,6 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_cancellation_pf_in'))
 
 											$ipn['s2member_paypal_proxy']              = 'paypal';
 											$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
-											$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
 											//261117.0057 Send verified Payflow cancellation emails through the isolated PHP Notify bridge; preserve HTTP opt-out.
 											c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
