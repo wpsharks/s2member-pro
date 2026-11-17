@@ -1581,12 +1581,13 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 *
 		 * @return Stripe_Event|string Stripe event object; else error message.
 		 */
-		public static function get_event()
+		public static function get_event($verified_input = NULL)
 		{
 			if(empty($_REQUEST['s2member_pro_stripe_notify']))
 				return ''; // Not applicable.
 
-			$input = @file_get_contents('php://input');
+			//261117.0227 Use the exact bytes that passed Stripe's signature check; preserve the old no-argument request-body path.
+			$input = $verified_input !== NULL ? $verified_input : @file_get_contents('php://input');
 			$event = json_decode($input);
 
 			$input_time = time(); // Initialize.

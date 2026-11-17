@@ -45,6 +45,47 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 	class c_ws_plugin__s2member_pro_stripe_notify_in
 	{
 		/**
+		 * Verify a Stripe webhook's exact raw HTTP body before retrieving its event from the API.
+		 * Only a configured endpoint secret enables this gate; malformed or partly configured
+		 * lists fail closed. Multiple secrets permit an overlapping Stripe secret rotation.
+		 *
+		 * @since 261117.0221
+		 * @param string $payload Exact raw HTTP request body, unmodified by WordPress.
+		 * @param string $header Stripe-Signature request header.
+		 * @param string|array $secrets Endpoint signing secret(s), not the Stripe API secret key.
+		 * @return bool Whether the body has a current, valid Stripe signature.
+		 */
+		public static function stripe_webhook_origin_verified($payload, $header, $secrets)
+		{
+			if(!is_string($payload) || $payload === '' || !is_string($header) || $header === ''
+			|| strlen($header) > 4096
+			|| !preg_match('/(?:^|,)t=[0-9]{10,12}(?:,|$)/D', $header)
+			|| !preg_match('/(?:^|,)v1=[a-f0-9]{64}(?:,|$)/D', $header))
+				return FALSE;
+			//261117.0221 Validate header fields before the bundled Stripe SDK indexes them; malformed fields must not emit PHP warnings.
+			foreach(explode(',', $header) as $part)
+				if(strpos($part, '=') === FALSE)
+					return FALSE;
+			if(!is_array($secrets))
+				$secrets = array($secrets);
+			if(!$secrets)
+				return FALSE;
+			foreach($secrets as $secret)
+				if(!is_string($secret) || strpos($secret, 'whsec_') !== 0 || strlen($secret) <= 6)
+					return FALSE;
+			foreach($secrets as $secret)
+			{
+				try
+				{
+					if(\Stripe\WebhookSignature::verifyHeader($payload, $header, $secret, 300))
+						return TRUE;
+				}
+				catch(\Exception $exception) {} //261117.0221 Invalid signature; try another configured secret without logging the body or secret.
+			}
+			return FALSE;
+		}
+
+		/**
 		 * Handles Stripe Webhook/IPN event processing.
 		 *
 		 * @package s2Member\Stripe
@@ -63,7 +104,25 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 				c_ws_plugin__s2member_pro_stripe_utilities::init_stripe_sdk();
 
-				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event()) && ($stripe['event'] = $event))
+				//261117.0221 Authenticate Stripe's original signed HTTP body before its untrusted event ID reaches the Stripe API.
+				//261117.0221 Empty filter retains the historical API-retrieval path; a configured invalid secret/header never falls back.
+				$webhook_secrets = apply_filters('ws_plugin__s2member_pro_stripe_webhook_signing_secrets', '');
+				if($webhook_secrets !== '')
+				{
+					$raw_payload = @file_get_contents('php://input');
+					$signature_header = isset($_SERVER['HTTP_STRIPE_SIGNATURE']) ? $_SERVER['HTTP_STRIPE_SIGNATURE'] : NULL;
+					if(!self::stripe_webhook_origin_verified($raw_payload, $signature_header, $webhook_secrets))
+					{
+						//261117.0221 Do not log rejected request bodies, headers or signing secrets; never retrieve or process an event after rejection.
+						c_ws_plugin__s2member_utils_logs::log_entry('stripe-ipn', array('s2member_log' => array('Stripe webhook signature verification failed. No event was processed.')));
+						status_header(403);
+						header('Content-Type: text/plain; charset=UTF-8');
+						while(@ob_end_clean());
+						exit();
+					}
+				}
+
+				if(is_object($event = c_ws_plugin__s2member_pro_stripe_utilities::get_event($webhook_secrets !== '' ? $raw_payload : NULL)) && ($stripe['event'] = $event))
 				{
 					foreach(array_keys(get_defined_vars()) as $__v) $__refs[$__v] =& $$__v;
 					do_action('ws_plugin__s2member_pro_before_stripe_notify_event_switch', get_defined_vars());
