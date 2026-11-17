@@ -44,6 +44,47 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_utilities'))
 	 */
 	class c_ws_plugin__s2member_pro_clickbank_utilities
 	{
+		/**
+		 * Deliver an already provider-verified ClickBank notification through the isolated PHP Notify core.
+		 * External ClickBank acknowledgments remain owned by the existing callback handler.
+		 *
+		 * @since 261117.0409
+		 * @param array $ipn Trusted server-created s2Member notification.
+		 * @return string Notify body, or empty string after rejected/failed local processing.
+		 */
+		public static function clickbank_notify_body($ipn)
+		{
+			if(!is_array($ipn) || !isset($ipn['s2member_paypal_proxy']) || $ipn['s2member_paypal_proxy'] !== 'clickbank')
+				return '';
+
+			//261117.0420 Only the explicitly requested HTTP fallback needs a legacy bearer credential.
+			// Never generate or pass a reusable proxy key through normal trusted PHP fulfillment.
+			unset($ipn['s2member_paypal_proxy_verification']);
+			if(!apply_filters('ws_plugin__s2member_pro_clickbank_notify_local_dispatch', TRUE, $ipn))
+			{
+				$key = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+				if(!is_string($key) || $key === '')
+					return '';
+				$ipn['s2member_paypal_proxy_verification'] = $key;
+				return (string)c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+			}
+
+			try
+			{
+				$result = c_ws_plugin__s2member_paypal_utilities::paypal_checkout_notify_inprocess($ipn);
+			}
+			catch(\Exception $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('clickbank-ipn', array('event' => 'notify_local_exception', 'type' => get_class($e)));
+				return '';
+			}
+			catch(\Error $e)
+			{
+				c_ws_plugin__s2member_utils_logs::log_entry('clickbank-ipn', array('event' => 'notify_local_error', 'type' => get_class($e)));
+				return '';
+			}
+			return is_array($result) && isset($result['code']) && (int)$result['code'] >= 200 && (int)$result['code'] < 300 && isset($result['body']) ? (string)$result['body'] : '';
+		}
 		//260907.2110 TO-DO: Review ClickBank callback/fulfillment replay against the shared fulfillment/dedupe invariants so repeated provider callbacks cannot repeat entitlement or outer fulfillment side effects; checkout creation remains hosted by ClickBank.
 		/**
 		 * Get ``$_POST`` or ``$_REQUEST`` vars from ClickBank.

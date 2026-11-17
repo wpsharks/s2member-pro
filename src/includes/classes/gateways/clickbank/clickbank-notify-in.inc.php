@@ -109,9 +109,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['s2member_paypal_proxy']              = 'clickbank';
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
-						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_notify_body($ipn); //261117.0409 Use the trusted PHP core after ClickBank origin verification.
 					}
 					else if(preg_match('/^(?:TEST_)?SALE$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					{
@@ -157,9 +156,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 						$ipn['s2member_paypal_proxy']     = 'clickbank';
 						$ipn['s2member_paypal_proxy_use'] = 'standard-emails';
 						$ipn['s2member_paypal_proxy_use'] .= ($ipn['mc_gross'] > 0) ? ',subscr-signup-as-subscr-payment' : '';
-						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_notify_body($ipn); //261117.0409 Use the trusted PHP core after ClickBank origin verification.
 					}
 					else if(preg_match('/^(?:TEST_)?BILL$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring)
 					{
@@ -196,9 +194,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['s2member_paypal_proxy']              = 'clickbank';
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
-						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_notify_body($ipn); //261117.0409 Use the trusted PHP core after ClickBank origin verification.
 					}
 					else if(preg_match('/^(?:TEST_)?(?:RFND|CGBK|INSF)$/i', $clickbank['transactionType'])) // Product Type irrelevant here; checked below.
 					{
@@ -235,9 +232,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['s2member_paypal_proxy']              = 'clickbank';
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
-						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_notify_body($ipn); //261117.0409 Use the trusted PHP core after ClickBank origin verification.
 					}
 					if( // Here we handle Recurring cancellations, and/or EOT (End Of Term) through $clickbank['lineItems'][0]->paymentPlan->rebillStatus.
 						(preg_match('/^(?:TEST_)?(?:SALE|BILL)$/i', $clickbank['transactionType']) && $clickbank['lineItems'][0]->recurring && (preg_match('/^COMPLET(?:ED)?$/i', $clickbank['lineItems'][0]->paymentPlan->rebillStatus) || $clickbank['lineItems'][0]->paymentPlan->paymentsRemaining <= 0) && apply_filters('c_ws_plugin__s2member_pro_clickbank_notify_handles_completions', TRUE, get_defined_vars()))
@@ -274,9 +270,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_clickbank_notify_in'))
 
 						$ipn['s2member_paypal_proxy']              = 'clickbank';
 						$ipn['s2member_paypal_proxy_use']          = 'standard-emails';
-						$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-						c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+						c_ws_plugin__s2member_pro_clickbank_utilities::clickbank_notify_body($ipn); //261117.0409 Use the trusted PHP core after ClickBank origin verification.
 					}
 					if(empty($processed)) // If nothing was processed, here we add a message to the logs indicating the IPN was ignored.
 						$clickbank['s2member_log'][] = 'Ignoring this IPN request. The transaction does NOT require any action on the part of s2Member.';

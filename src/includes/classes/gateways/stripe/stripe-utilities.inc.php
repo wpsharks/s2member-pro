@@ -1367,81 +1367,102 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 */
 		public static function process_pending_subscr($subscr_id)
 		{
-			if(!($details = self::get_pending_subscr_details($subscr_id)))
+			if(!is_string($subscr_id) || $subscr_id === '')
 				return FALSE;
 
-			$lock_key = 's2m_stripe_pending_subscr_lock_'.md5((string)$subscr_id);
-
+			$lock_key = 's2m_stripe_pending_subscr_lock_'.md5($subscr_id);
+			$resource = 'stripe-pending-subscription/'.$lock_key;
+			//261117.0357 Preserve active old transient locks on upgrade; coordinate new workers atomically via the shared SQL lease.
 			if(get_transient($lock_key))
 				return FALSE;
-
-			set_transient($lock_key, time(), 10 * MINUTE_IN_SECONDS);
-
-			$user_id = !empty($details['user_id']) ? (int)$details['user_id'] : 0;
-			$ipn     = !empty($details['ipn']) && is_array($details['ipn']) ? $details['ipn'] : array();
-
-			if(!$user_id || empty($ipn['subscr_id']) || (string)$ipn['subscr_id'] !== (string)$subscr_id)
-			{
-				delete_transient($lock_key);
-
+			$owner = c_ws_plugin__s2member_database::lock_acquire($resource, 10 * MINUTE_IN_SECONDS);
+			if(!is_string($owner)) //261117.0357 Contention AND database failure must stop subscription side effects.
 				return FALSE;
-			}
 
-			if(self::pending_subscr_is_processed($subscr_id, $user_id))
+			try
 			{
+				if(get_transient($lock_key))
+					return FALSE;
+				set_transient($lock_key, $owner, 10 * MINUTE_IN_SECONDS);
+				if(get_transient($lock_key) !== $owner || c_ws_plugin__s2member_database::lock_is_owned($resource, $owner) !== TRUE)
+					return FALSE;
+
+				//261117.0410 Read or expire pending details only after this worker owns the subscription's lease.
+				if(!($details = self::get_pending_subscr_details($subscr_id)))
+					return FALSE;
+
+				$user_id = !empty($details['user_id']) ? (int)$details['user_id'] : 0;
+				$ipn     = !empty($details['ipn']) && is_array($details['ipn']) ? $details['ipn'] : array();
+
+				if(!$user_id || empty($ipn['subscr_id']) || (string)$ipn['subscr_id'] !== (string)$subscr_id)
+					return FALSE;
+
+				if(self::pending_subscr_is_processed($subscr_id, $user_id))
+				{
+					if(!empty($details['gateway_checkout_id']))
+						self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', array('browser_response' => _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member')), 'fulfilled');
+
+					self::delete_pending_subscr_details($subscr_id);
+
+					return 'Pending Stripe subscription already processed for subscription ID: `'.$subscr_id.'`.';
+				}
+
+				$ipn['s2member_paypal_proxy']              = 'stripe';
+				$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
+
+				//261115.2222 Reuse isolated Notify during pending subscription reconciliation; keep the subsequent fulfillment check.
+				$proxy_return_url = trim(self::stripe_notify_body($ipn));
+				//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
+				wp_cache_delete($user_id, 'user_meta');
+
+				if(!self::pending_subscr_is_processed($subscr_id, $user_id))
+					return FALSE;
+
+				//261117.0357 Stop before cancellation, emails/list updates or checkout completion if ownership was lost during Notify.
+				if(get_transient($lock_key) !== $owner || c_ws_plugin__s2member_database::lock_is_owned($resource, $owner) !== TRUE)
+					return FALSE;
+
+				if(!empty($details['old_subscr_id']) && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', ((string)$details['old_subscr_id'] !== (string)$ipn['subscr_id']), array('pending_subscr_details' => $details, 'ipn' => $ipn)))
+					c_ws_plugin__s2member_utilities::cancel_gateway_subscription(!empty($details['old_subscr_gateway']) ? $details['old_subscr_gateway'] : '', $details['old_subscr_id'], !empty($details['old_subscr_baid']) ? $details['old_subscr_baid'] : '', !empty($details['old_subscr_cid']) ? $details['old_subscr_cid'] : '', !empty($details['old_ipn_signup_vars']) && is_array($details['old_ipn_signup_vars']) ? $details['old_ipn_signup_vars'] : array());
+
+				if(array_key_exists('list_server_opt_in', $details))
+				{
+					$previous_user_id = get_current_user_id();
+
+					wp_set_current_user($user_id);
+					try
+					{
+						c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)$details['list_server_opt_in'], TRUE, TRUE);
+					}
+					finally
+					{
+						wp_set_current_user($previous_user_id); //261117.0411 An interrupted list-server hook must not leak the subscriber identity into the worker context.
+					}
+				}
+
+				//260830.0408 The asynchronous gateway confirmation completes the same Gateway Checkout, so later browser retries should recover success instead of the earlier pending message.
 				if(!empty($details['gateway_checkout_id']))
-					self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', array('browser_response' => _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member')), 'fulfilled');
+				{
+					$browser_response = _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member');
+					$gateway_checkout_context = array('browser_response' => $browser_response);
+					//260925.0232 Persist one unambiguous redirect value: the final signed browser destination, not the raw IPN proxy-return URL.
+					if(($redirect_url = self::gateway_checkout_success_redirect($proxy_return_url, (string)@$ipn['s2member_paypal_proxy_return_url'], $browser_response)))
+						$gateway_checkout_context['redirect_url'] = $redirect_url;
+
+					self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', $gateway_checkout_context, 'fulfilled');
+				}
 
 				self::delete_pending_subscr_details($subscr_id);
-				delete_transient($lock_key);
 
-				return 'Pending Stripe subscription already processed for subscription ID: `'.$subscr_id.'`.';
+				return 'Pending Stripe subscription processed for subscription ID: `'.$subscr_id.'`.';
 			}
-
-			$ipn['s2member_paypal_proxy']              = 'stripe';
-			$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
-
-			//261115.2222 Reuse isolated Notify during pending subscription reconciliation; keep the subsequent fulfillment check.
-			$proxy_return_url = trim(self::stripe_notify_body($ipn));
-			//260924.2239 The synchronous IPN request can update this user's metadata in another PHP request; clear this request's stale user-meta cache before checking fulfillment.
-			wp_cache_delete($user_id, 'user_meta');
-
-			if(!self::pending_subscr_is_processed($subscr_id, $user_id))
+			finally
 			{
-				delete_transient($lock_key);
-
-				return FALSE;
+				//261117.0357 Never erase a replacement worker's legacy marker; shared lease removal is owner-checked separately.
+				if(get_transient($lock_key) === $owner)
+					delete_transient($lock_key);
+				c_ws_plugin__s2member_database::lock_release($resource, $owner);
 			}
-
-			if(!empty($details['old_subscr_id']) && apply_filters('s2member_pro_cancels_old_rp_before_new_rp', ((string)$details['old_subscr_id'] !== (string)$ipn['subscr_id']), array('pending_subscr_details' => $details, 'ipn' => $ipn)))
-				c_ws_plugin__s2member_utilities::cancel_gateway_subscription(!empty($details['old_subscr_gateway']) ? $details['old_subscr_gateway'] : '', $details['old_subscr_id'], !empty($details['old_subscr_baid']) ? $details['old_subscr_baid'] : '', !empty($details['old_subscr_cid']) ? $details['old_subscr_cid'] : '', !empty($details['old_ipn_signup_vars']) && is_array($details['old_ipn_signup_vars']) ? $details['old_ipn_signup_vars'] : array());
-
-			if(array_key_exists('list_server_opt_in', $details))
-			{
-				$previous_user_id = get_current_user_id();
-
-				wp_set_current_user($user_id);
-				c_ws_plugin__s2member_list_servers::process_list_servers_against_current_user((bool)$details['list_server_opt_in'], TRUE, TRUE);
-
-				wp_set_current_user($previous_user_id);
-			}
-
-			//260830.0408 The asynchronous gateway confirmation completes the same Gateway Checkout, so later browser retries should recover success instead of the earlier pending message.
-			if(!empty($details['gateway_checkout_id']))
-			{
-				$browser_response = _x('<strong>Thank you.</strong> Your payment has been confirmed and your account has been updated.', 's2member-front', 's2member');
-				$gateway_checkout_context = array('browser_response' => $browser_response);
-				//260925.0232 Persist one unambiguous redirect value: the final signed browser destination, not the raw IPN proxy-return URL.
-				if(($redirect_url = self::gateway_checkout_success_redirect($proxy_return_url, (string)@$ipn['s2member_paypal_proxy_return_url'], $browser_response)))
-					$gateway_checkout_context['redirect_url'] = $redirect_url;
-
-				self::update_gateway_checkout((string)$details['gateway_checkout_id'], array(), '', $gateway_checkout_context, 'fulfilled');
-			}
-
-			self::delete_pending_subscr_details($subscr_id);
-			delete_transient($lock_key);
-
-			return 'Pending Stripe subscription processed for subscription ID: `'.$subscr_id.'`.';
 		}
 
 		/**
