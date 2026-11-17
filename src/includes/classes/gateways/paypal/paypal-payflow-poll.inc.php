@@ -129,7 +129,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										//261117.0057 Process verified Payflow polling status through the PHP bridge, retaining the explicit HTTP fallback filter.
+										c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 									}
 									else if($paypal['ipn_signup_vars'] && preg_match('/(expired|suspended|canceled|terminated|deactivated)/i', $paypal['STATUS']))
 									{
@@ -173,7 +174,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_paypal_payflow_poll'))
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										//261117.0057 Process verified Payflow polling status through the PHP bridge, retaining the explicit HTTP fallback filter.
+										c_ws_plugin__s2member_pro_paypal_utilities::paypal_notify_body($ipn);
 									}
 									else if(!$processed && !$paypal['ipn_signup_vars'])
 										$paypal['s2member_log'][] = 'Ignoring status (`'.$paypal['STATUS'].'`).'.

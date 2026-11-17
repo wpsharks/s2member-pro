@@ -125,7 +125,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_arb'))
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										//261117.0057 Avoid a reusable-key HTTP loopback for verified ARB status processing; HTTP opt-out remains available in the shared helper.
+										c_ws_plugin__s2member_pro_authnet_utilities::authnet_notify_body($ipn);
 									}
 									else if($authnet['arb_ipn_signup_vars'] && preg_match('/^(suspended|canceled|terminated)$/i', $authnet['subscription_status']))
 									{
@@ -163,7 +164,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_authnet_arb'))
 										$ipn['s2member_paypal_proxy_use']          = 'pro-emails';
 										$ipn['s2member_paypal_proxy_verification'] = c_ws_plugin__s2member_paypal_utilities::paypal_proxy_key_gen();
 
-										c_ws_plugin__s2member_utils_urls::remote(home_url('/?s2member_paypal_notify=1'), $ipn, array('timeout' => 20));
+										//261117.0057 Avoid a reusable-key HTTP loopback for verified ARB status processing; HTTP opt-out remains available in the shared helper.
+										c_ws_plugin__s2member_pro_authnet_utilities::authnet_notify_body($ipn);
 									}
 									else if(!$processed && !$authnet['arb_ipn_signup_vars'])
 										$authnet['s2member_log'][] = 'Ignoring status (`'.$authnet['subscription_status'].'`).'.
