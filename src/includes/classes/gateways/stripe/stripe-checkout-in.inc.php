@@ -263,6 +263,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								{
 									// The flow in this block is a bit complicated.
 
+									//261119.1845 Resume a successfully authenticated card from the signed checkout; Stripe's browser return may omit pm_id.
+									$setup_card_resume = c_ws_plugin__s2member_pro_stripe_utilities::resume_authenticated_subscription_payment_method($post_vars, $gateway_checkout_state);
+									if($setup_card_resume !== TRUE)
+										$global_response = array('response' => $setup_card_resume, 'error' => TRUE);
+
 									// First we check if we come from authorizing a payment, or setting up an intent
 									// If we have an payment intent ID, maybe its requirement was resolved.
 									if(!empty($post_vars['pi_id'])) {
@@ -273,7 +278,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$stripe_intent_succeeded = $handle_intent_status;
 									}
 									// If we have a setup intent ID, maybe its requirement was resolved.
-									if(!empty($post_vars['seti_id'])) {
+									//261119.1642 A pre-subscription SetupIntent authenticates a card but cannot complete the purchase without a subscription.
+									if(!empty($post_vars['seti_id']) && !empty($post_vars['sub_id'])) {
 										// Check status.
 										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
 										// If we get an object, then the setup succeeded!
@@ -282,7 +288,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									}
 
 									// If the above didn't succeed, and we have a payment method ID... 
-									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+									if(!$global_response && !isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
 										// Get the Customer object (create or retrieve).
 										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer($user_id, $user->user_email, $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
@@ -304,7 +310,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 												}
 											}
 											// Or if we have a Setup Intent ID, let's try to update it and handle it again.
-											elseif(!empty($post_vars['seti_id'])) {
+											//261119.1721 A pre-subscription SetupIntent only authenticates the card; it cannot satisfy purchase fulfillment or skip Subscription::create.
+											elseif(!empty($post_vars['seti_id']) && !empty($post_vars['sub_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
 												if(!is_object($stripe_intent))
 													$global_response = array('response' => $stripe_intent, 'error' => TRUE);
@@ -566,6 +573,11 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 								{
 									// The flow in this block is a bit complicated.
 
+									//261119.1845 Resume a successfully authenticated card from the signed checkout; Stripe's browser return may omit pm_id.
+									$setup_card_resume = c_ws_plugin__s2member_pro_stripe_utilities::resume_authenticated_subscription_payment_method($post_vars, $gateway_checkout_state);
+									if($setup_card_resume !== TRUE)
+										$global_response = array('response' => $setup_card_resume, 'error' => TRUE);
+
 									// First we check if we come from authorizing a payment, or setting up an intent
 									// If we have an payment intent ID, maybe its requirement was resolved.
 									if(!empty($post_vars['pi_id'])) {
@@ -576,7 +588,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 											$stripe_intent_succeeded = $handle_intent_status;
 									}
 									// If we have a setup intent ID, maybe its requirement was resolved.
-									if(!empty($post_vars['seti_id'])) {
+									//261119.1642 A pre-subscription SetupIntent authenticates a card but cannot complete the purchase without a subscription.
+									if(!empty($post_vars['seti_id']) && !empty($post_vars['sub_id'])) {
 										// Check status.
 										$handle_intent_status = c_ws_plugin__s2member_pro_stripe_utilities::handle_setup_intent_status($post_vars['seti_id']);
 										// If we get an object, then the setup succeeded!
@@ -585,7 +598,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 									}
 
 									// If the above didn't succeed, and we have a payment method ID... 
-									if(!isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
+									if(!$global_response && !isset($stripe_intent_succeeded) && !empty($post_vars['pm_id'])) {
 										// Get the Customer object (create or retrieve).
 										if(!is_object($stripe_customer = c_ws_plugin__s2member_pro_stripe_utilities::get_customer(0, $post_vars['email'], $post_vars['first_name'], $post_vars['last_name'], array(), $post_vars)))
 											$global_response = array('response' => $stripe_customer, 'error' => TRUE);
@@ -607,7 +620,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 												}
 											}
 											// Or if we have a Setup Intent ID, let's try to update it and handle it again.
-											elseif(!empty($post_vars['seti_id'])) {
+											//261119.1721 A pre-subscription SetupIntent only authenticates the card; it cannot satisfy purchase fulfillment or skip Subscription::create.
+											elseif(!empty($post_vars['seti_id']) && !empty($post_vars['sub_id'])) {
 												$stripe_intent = c_ws_plugin__s2member_pro_stripe_utilities::update_setup_intent($post_vars['seti_id'], array('payment_method'=>$payment_method->id));
 												if(!is_object($stripe_intent))
 													$global_response = array('response' => $stripe_intent, 'error' => TRUE);

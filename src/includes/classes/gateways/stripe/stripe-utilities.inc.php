@@ -839,6 +839,107 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		}
 
 		/**
+		 * Restores a card authenticated by a pre-subscription SetupIntent after browser 3DS.
+		 *
+		 * @since 261119.1845
+		 * @param array $post_vars Checkout data, updated only with a Stripe-verified PaymentMethod ID.
+		 * @param array $gateway_checkout_state Server-validated signed checkout state.
+		 * @return bool|string TRUE when not applicable or verified; a user-facing error otherwise.
+		 */
+		public static function resume_authenticated_subscription_payment_method(&$post_vars, $gateway_checkout_state)
+		{
+			//261119.1845 A SetupIntent with no subscription authenticates a card; the browser may not POST pm_id again after 3DS.
+			if(empty($post_vars['seti_id']) || !empty($post_vars['sub_id']))
+				return TRUE;
+			if(!is_array($gateway_checkout_state) || empty($gateway_checkout_state['gateway_ids']['setup_intent_id']) || empty($gateway_checkout_state['gateway_ids']['customer_id'])
+			   || !hash_equals((string)$gateway_checkout_state['gateway_ids']['setup_intent_id'], (string)$post_vars['seti_id']))
+				return _x('Card authentication does not match this checkout. Please reload and try again.', 's2member-front', 's2member');
+
+			self::init_stripe_sdk();
+			try
+			{
+				$setup_intent = \Stripe\SetupIntent::retrieve((string)$gateway_checkout_state['gateway_ids']['setup_intent_id']);
+				$payment_method_id = is_object($setup_intent) && !empty($setup_intent->payment_method)
+					? (is_object($setup_intent->payment_method) ? (string)$setup_intent->payment_method->id : (string)$setup_intent->payment_method) : '';
+				//261119.1845 Never let a succeeded *setup* stand in for a paid subscription; recover only its authenticated card.
+				if(!is_object($setup_intent) || (string)$setup_intent->status !== 'succeeded'
+				   || (string)$setup_intent->customer !== (string)$gateway_checkout_state['gateway_ids']['customer_id']
+				   || strpos($payment_method_id, 'pm_') !== 0)
+					return _x('Card authentication is not complete for this checkout. Please try again.', 's2member-front', 's2member');
+				if(!empty($post_vars['pm_id']) && !hash_equals($payment_method_id, (string)$post_vars['pm_id']))
+					return _x('The card used for authentication does not match this checkout. Please reload and try again.', 's2member-front', 's2member');
+				$payment_method = \Stripe\PaymentMethod::retrieve($payment_method_id);
+				if(!is_object($payment_method) || (string)$payment_method->customer !== (string)$gateway_checkout_state['gateway_ids']['customer_id'])
+					return _x('Stripe has not saved the authenticated card for this checkout. Please try again.', 's2member-front', 's2member');
+				$post_vars['pm_id'] = $payment_method_id;
+				return TRUE;
+			}
+			catch(exception $exception)
+			{
+				//261119.1845 Leave the purchase unpaid on provider failure; log only the checkout/intent identifiers, not credentials.
+				self::log_entry(__FUNCTION__, time(), array('gateway_checkout_id' => (string)$gateway_checkout_state['id']), time(), $exception);
+				return self::error_message($exception);
+			}
+		}
+
+		/**
+		 * Authenticates a new subscription card before it can be attached or used for billing.
+		 *
+		 * @since 261119.1642
+		 * @param string $customer_id Stripe customer ID.
+		 * @param object $payment_method Unattached Stripe PaymentMethod.
+		 * @param array  $gateway_checkout_state Server-verified durable checkout state.
+		 * @return object|string Attached PaymentMethod, or a user-facing error (including a 3DS continuation).
+		 */
+		public static function authenticate_subscription_payment_method($customer_id, $payment_method, $gateway_checkout_state)
+		{
+			//261119.1642 Bind the SetupIntent to the signed checkout before returning a browser challenge, so a retry cannot invent a Customer/Intent identity.
+			if(!is_array($gateway_checkout_state) || empty($gateway_checkout_state['id']) || empty($payment_method->id))
+				return _x('Unable to prepare card authentication. Please reload checkout and try again.', 's2member-front', 's2member');
+			if(!empty($payment_method->customer))
+				return (string)$payment_method->customer === (string)$customer_id ? $payment_method : _x('This card belongs to another Stripe customer.', 's2member-front', 's2member');
+
+			self::init_stripe_sdk();
+			try
+			{
+				$setup_intent_id = !empty($gateway_checkout_state['gateway_ids']['setup_intent_id']) ? (string)$gateway_checkout_state['gateway_ids']['setup_intent_id'] : '';
+				$setup_intent = $setup_intent_id ? \Stripe\SetupIntent::retrieve($setup_intent_id) : self::create_setup_intent($customer_id, (string)$payment_method->id);
+				if(!is_object($setup_intent))
+					return is_string($setup_intent) ? $setup_intent : _x('Unable to prepare card authentication. Please try again.', 's2member-front', 's2member');
+
+				//261119.1642 Do not reuse an authenticated SetupIntent for a different customer or card. Only an unconfirmed/failed attempt may accept a replacement card.
+				if(empty($setup_intent->id) || (string)$setup_intent->customer !== (string)$customer_id)
+					return _x('Card authentication does not match this checkout. Please reload and try again.', 's2member-front', 's2member');
+				if($setup_intent_id && (string)$setup_intent->payment_method !== (string)$payment_method->id)
+				{
+					if(!in_array((string)$setup_intent->status, array('requires_payment_method', 'requires_confirmation'), TRUE))
+						return _x('This checkout is awaiting authentication of a different card. Please finish or restart checkout.', 's2member-front', 's2member');
+					$setup_intent = self::update_setup_intent((string)$setup_intent->id, array('payment_method' => (string)$payment_method->id));
+					if(!is_object($setup_intent))
+						return is_string($setup_intent) ? $setup_intent : _x('Unable to update card authentication.', 's2member-front', 's2member');
+				}
+				if(!$setup_intent_id && !self::update_gateway_checkout((string)$gateway_checkout_state['id'], array('customer_id' => (string)$customer_id, 'setup_intent_id' => (string)$setup_intent->id)))
+					return _x('Unable to save card authentication for this checkout. Please try again.', 's2member-front', 's2member');
+
+				//261119.1642 Existing checkout JavaScript handles the 3DS secret and resubmits; only a succeeded SetupIntent can lead to Subscription::create.
+				//261119.1651 A pre-subscription setup must not replace the customer-wide default card before this purchase completes.
+				$authenticated = self::handle_setup_intent_status((string)$setup_intent->id, $setup_intent, FALSE);
+				if(!is_object($authenticated) || (string)$authenticated->status !== 'succeeded')
+					return is_array($authenticated) && isset($authenticated['response']) ? (string)$authenticated['response'] : _x('Card authentication did not complete. Please try again.', 's2member-front', 's2member');
+
+				$attached = \Stripe\PaymentMethod::retrieve((string)$payment_method->id);
+				if(!is_object($attached) || (string)$attached->customer !== (string)$customer_id)
+					return _x('Stripe did not attach the authenticated card to this customer. Please try again.', 's2member-front', 's2member');
+				return $attached;
+			}
+			catch(exception $exception)
+			{
+				self::log_entry(__FUNCTION__, time(), array('customer_id' => $customer_id), time(), $exception);
+				return self::error_message($exception);
+			}
+		}
+
+		/**
 		 * Create a Stripe customer subscription.
 		 *
 		 * @param string $customer_id Customer ID in Stripe.
@@ -993,16 +1094,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 					}
 					if(empty($payment_method->customer))
 					{
-						try
+						//261119.1642 Prepare a new card with Stripe's SCA-aware SetupIntent before subscription creation; attaching it directly cannot authenticate an issuer challenge.
+						$payment_method = self::authenticate_subscription_payment_method($customer_id, $payment_method, $gateway_checkout_state);
+						if(!is_object($payment_method))
 						{
-							$payment_method->attach(array('customer' => $customer_id));
-							$payment_method = \Stripe\PaymentMethod::retrieve($payment_method->id);
-						}
-						catch(exception $exception)
-						{
-							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $exception);
-
-							return self::error_message($exception);
+							self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), $payment_method);
+							return $payment_method;
 						}
 					}
 					$default_payment_method = (string)$payment_method->id;
@@ -2652,11 +2749,12 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 		 * Check the SetupIntent's status.
 		 * 
 		 * @param string|int $pi_id SetupIntent id.
-		 * @param object $intent Optional. StetupIntent object.
+		 * @param object $intent Optional. SetupIntent object.
+		 * @param bool $set_customer_default_payment_method Optional. Preserve existing behavior unless this is pre-subscription card authentication.
 		 * 
 		 * @return array|string Response if requires action, else empty string.
 		 */
-		public static function handle_setup_intent_status($seti_id, $intent='')
+		public static function handle_setup_intent_status($seti_id, $intent='', $set_customer_default_payment_method = TRUE)
 		{
 			$input_time = time(); // Initialize.
 			$input_vars = get_defined_vars(); // Arguments.
@@ -2696,7 +2794,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_utilities'))
 
 			// succeeded
 			if ($intent->status == 'succeeded') {
-				if(!empty($intent->customer) && !empty($intent->payment_method)) {
+				//261119.1651 Existing billing-update callers retain default-card updates; subscription pre-authentication may defer them.
+				if($set_customer_default_payment_method && !empty($intent->customer) && !empty($intent->payment_method)) {
 					$set_customer_default_payment_method = self::set_customer_default_payment_method($intent->customer, $intent->payment_method);
 					if(!is_object($set_customer_default_payment_method))
 						self::log_entry(__FUNCTION__, $input_time, $input_vars, time(), '260317 Non-fatal: unable to set customer default payment method after successful SetupIntent. '.print_r($set_customer_default_payment_method, TRUE));
