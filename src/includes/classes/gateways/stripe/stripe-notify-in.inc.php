@@ -106,6 +106,7 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_notify_in'))
 
 				//261117.0221 Authenticate Stripe's original signed HTTP body before its untrusted event ID reaches the Stripe API.
 				//261117.0221 Empty filter retains the historical API-retrieval path; a configured invalid secret/header never falls back.
+				//261118.0632 TO-DO: Offer a protected Stripe webhook signing-secret setting with test/live distinction, validation, masked storage/display, and rotation guidance. Keep signature enforcement opt-in until provider webhook validation and a clear rollout are available.
 				$webhook_secrets = apply_filters('ws_plugin__s2member_pro_stripe_webhook_signing_secrets', '');
 				if($webhook_secrets !== '')
 				{
