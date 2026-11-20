@@ -78,7 +78,6 @@ if (!class_exists ("c_ws_plugin__s2member_pro_authnet_sp_checkout_in"))
 									{
 										if (!($error = c_ws_plugin__s2member_pro_authnet_responses::authnet_form_submission_validation_errors ("sp-checkout", $post_vars)))
 											{
-												//261120.0515 The submitted coupon field is optional; omit PHP warnings without changing existing coupon handling.
 												$cp_attr = c_ws_plugin__s2member_pro_authnet_utilities::authnet_apply_coupon ($post_vars["attr"], (isset($post_vars["coupon"]) ? $post_vars["coupon"] : ""), "attr", array("affiliates-silent-post"));
 												$cost_calculations = c_ws_plugin__s2member_pro_authnet_utilities::authnet_cost (null, $cp_attr["ra"], $post_vars["state"], $post_vars["country"], $post_vars["zip"], $cp_attr["cc"], $cp_attr["desc"]);
 
