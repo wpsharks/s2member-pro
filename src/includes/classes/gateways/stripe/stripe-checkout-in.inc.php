@@ -155,7 +155,8 @@ if(!class_exists('c_ws_plugin__s2member_pro_stripe_checkout_in'))
 						unset($_POST['s2member_pro_stripe_checkout']['source_token_summary']); // Good one-time only.
 
 						$is_bitcoin        = !empty($post_vars['source_token']) && stripos($post_vars['source_token'], 'btcrcv_') === 0;
-						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], $post_vars['coupon'], 'attr', array('affiliates-silent-post'));
+						//261120.0537 The submitted coupon field is optional; avoid PHP warnings without changing coupon processing.
+						$cp_attr           = c_ws_plugin__s2member_pro_stripe_utilities::apply_coupon($post_vars['attr'], (isset($post_vars['coupon']) ? $post_vars['coupon'] : ''), 'attr', array('affiliates-silent-post'));
 						$cost_calculations = c_ws_plugin__s2member_pro_stripe_utilities::cost($cp_attr['ta'], $cp_attr['ra'], $post_vars['state'], $post_vars['country'], $post_vars['zip'], $cp_attr['cc'], $cp_attr['desc'], $is_bitcoin);
 
 						// So, if there's a trial cost or period (free trial period would not match here), but no regular cost...
