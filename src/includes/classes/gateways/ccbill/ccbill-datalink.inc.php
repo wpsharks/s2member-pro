@@ -118,8 +118,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 										$logm = c_ws_plugin__s2member_utilities::mem_details();
 										$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".@$_SERVER["HTTP_USER_AGENT"];
 										$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
-										//261118.1735 Payment log headers can contain shared proxy credentials; redact the request URL before writing.
-										$log4 = c_ws_plugin__s2member_utils_logs::conceal_private_info($log4);
 										$log2 = (is_multisite() && !is_main_site()) ? "ccbill-dl-4-".trim(preg_replace("/[^a-z0-9]/i", "-", $_log4), "-").".log" : "ccbill-dl.log";
 
 										if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
@@ -312,8 +310,6 @@ if(!class_exists("c_ws_plugin__s2member_pro_ccbill_datalink"))
 														$logm = c_ws_plugin__s2member_utilities::mem_details();
 														$log4 = $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]."\nUser-Agent: ".@$_SERVER["HTTP_USER_AGENT"];
 														$log4 = (is_multisite() && !is_main_site()) ? ($_log4 = $current_blog->domain.$current_blog->path)."\n".$log4 : $log4;
-														//261118.1735 Payment log headers can contain shared proxy credentials; redact the request URL before writing.
-														$log4 = c_ws_plugin__s2member_utils_logs::conceal_private_info($log4);
 														$log2 = (is_multisite() && !is_main_site()) ? "ccbill-dl-ipn-4-".trim(preg_replace("/[^a-z0-9]/i", "-", $_log4), "-").".log" : "ccbill-dl-ipn.log";
 
 														if($GLOBALS["WS_PLUGIN__"]["s2member"]["o"]["gateway_debug_logs"])
